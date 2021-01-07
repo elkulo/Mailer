@@ -1,0 +1,35 @@
+.pagination {
+	margin-bottom: 3rem;
+	text-align: center;
+	
+	.nav-links {
+
+		.page-numbers {
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			vertical-align: middle;
+			width: 2rem;
+			height: 2rem;
+			border-radius: 3px;
+			border: solid 1px currentColor;
+			color: #888;
+
+			&.current {
+				background: #fafafa;
+			}
+		}
+
+		a {
+			background: #eee;
+			transition: color 80ms ease-in, background 130ms ease-in-out;
+			box-shadow: none;
+			
+			&.page-numbers:hover,
+			&.page-numbers:focus {
+				background: #ddd;
+			}
+		}
+	}
+}

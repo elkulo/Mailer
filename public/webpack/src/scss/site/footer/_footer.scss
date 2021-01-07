@@ -1,0 +1,93 @@
+.site-footer {
+	font-size: 0.825rem;
+	border-top: solid 1px #ededed;
+
+	.site-endleaf {
+		padding: 1rem 0;
+		
+		p {
+			margin-bottom: 0;
+		}
+
+		@include media(tablet) {
+			.wrap {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				max-width: 100%;
+			}
+		}
+
+		.endleaf-branding {
+			margin-bottom: 0.5rem;
+			@include media(tablet) {
+				margin: 0;
+			}
+
+			.custom-logo {
+				display: block;
+				max-height: 30px;
+				width: auto;
+			}
+		}
+		
+		.endleaf-title > h2 {
+			font-size: 0.825rem;
+			margin-bottom: 0;
+		}
+		
+		@include media(tablet) {
+		
+			.endleaf-title {
+				margin-left: 1rem;
+			}
+
+			.endleaf-access {
+				margin-left: auto;
+			}
+		}
+	}
+
+	.site-info {
+		clear: both;
+		background: #17273C;
+		color: #fff;
+		text-align: center;
+		font-size: 0.75rem;
+		padding: 0.5rem 0;
+		overflow: hidden;
+		
+		p {
+			margin: 0;
+		}
+
+		a {
+			color: inherit;
+			text-decoration: none;
+			box-shadow: 0 0 0 currentColor;
+			transition: color 80ms ease-in, box-shadow 130ms ease-in-out;
+
+			&:focus,
+			&:hover {
+				color: currentColor;
+				box-shadow: 0 2px 0 currentColor;
+			}
+		}
+
+		.separator {
+			display: block;
+			visibility: hidden;
+			
+			@include media(tablet) {
+				display: inline;
+				visibility: visible;
+				
+				&::before {
+					display: inline-block;
+					margin: 0 0.5em;
+					content: '\002f';
+				}				
+			}
+		}
+	}
+}

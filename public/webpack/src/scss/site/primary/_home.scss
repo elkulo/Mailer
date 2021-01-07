@@ -1,0 +1,146 @@
+
+/* Contact */
+.contact-section {
+	background: #f7f7f7;
+	padding: 3rem 0;
+	border-bottom: solid 1px #ddd;
+
+	@include media(tablet) {
+		padding: 5rem 0;
+	}
+
+	.contact-header {
+		text-align: center;
+
+		&__title {
+			color: #31314c;
+			font-weight: 600;
+			letter-spacing: -0.05em;
+		}
+		
+		&__description {
+			font-size: 1rem;
+			color: #888;
+		}
+		
+		&__summary {
+			text-align: left;
+			background: #ededed;
+			border: solid 1px #31314c;
+			color: #31314c;
+			border-radius: 5px;
+			padding: 1rem 1rem 0.5rem;
+			margin-bottom: 1rem;
+	
+			@include media(tablet) {
+				text-align: center;
+			}
+			
+			> p {
+				margin: 0;
+				
+				> strong {
+					color: #ed831b;
+					font-weight: 900;
+					font-size: 1.75rem;
+					letter-spacing: -0.05em;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+
+	.contact-form {
+		background: #fff;
+		
+		&__ul {
+			margin: 0;
+
+			> li {
+				display: table;
+				list-style: none;
+				width: 100%;
+				border-top: dashed 1px #eee;
+				padding: 1rem;
+				font-size: 1rem;
+
+				@include media(tablet) {
+					padding: 1rem 2rem;
+				}
+
+				&:first-child {
+					border-top: none;
+				}
+
+				small {
+					font-size: 0.75em;
+
+					a {
+						color: #0c67a1;
+					}
+				}
+
+				.label,
+				> label[for] {
+					width: 100%;
+					color: inherit;
+					margin-bottom: 0.5rem;
+					font-size: 0.875rem;
+
+					@include media(tablet) {
+						display: table-cell;
+						vertical-align: middle;
+						width: 240px;
+						margin-bottom: 0;
+						font-size: 1rem;
+					}
+				}
+
+				input,
+				select,
+				textarea {
+					border: 1px solid #bbb;
+
+					@include media(tablet) {
+						display: table-cell;
+						vertical-align: middle;
+					}
+				}
+				select {
+					color: inherit;
+					text-indent: 0.25em;
+				}
+
+				input:focus,
+				select:focus,
+				textarea:focus {
+					box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.2);
+				}
+			}
+		}
+	}
+	
+	.submit-button {
+		clear: both;
+		text-align: center;
+		padding: 2em 0;
+	}
+
+	.validate {
+		font-size: 10px;
+		color: #fff;
+		background: #8B0002;
+		border-radius: 5px;	
+		padding: 0.25em 0.5em;
+		margin-left: 0.5rem;
+	}
+	
+	.novalidate {
+		font-size: 10px;
+		color: #bbb;
+		background: #eee;
+		border-radius: 5px;
+		padding: 0.25em 0.5em;
+		margin-left: 0.5rem;
+	}
+}

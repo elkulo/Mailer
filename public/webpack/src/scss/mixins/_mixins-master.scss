@@ -1,0 +1,158 @@
+// Image Center
+@mixin image-absolute-cover() {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	max-width: 1000%;
+	min-width: 100%;
+	width: 100%;
+	min-height: 100%;
+	height: auto;
+	transform: translateX(-50%) translateY(-50%);
+
+	@supports ( object-fit: cover ) {
+		transform: none;
+		object-fit: cover;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 100%;
+	}
+}
+
+// Rem output with px fallback
+@mixin font-size($sizeValue: 1) {
+	font-size: ($sizeValue * 16) * 1px;
+	font-size: $sizeValue * 1rem;
+}
+
+// Center block
+@mixin center-block {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+// Clearfix
+@mixin clearfix() {
+	content: "";
+	display: table;
+	table-layout: fixed;
+}
+
+// Clear after (not all clearfix need this also)
+@mixin clearfix-after() {
+	clear: both;
+}
+
+// Column width with margin
+@mixin column-width($numberColumns: 3) {
+	width: map-get($columns, $numberColumns) - (($columns__margin * ($numberColumns - 1)) / $numberColumns);
+}
+
+@mixin post-section-preface($text) {
+
+	text-align: center;
+	
+	&::before {
+		display: inline-block;
+		content: $text;
+		font-family: "Playfair Display", "Lucida Sans Unicode", "Lucida Grande", "sans-serif";
+		font-size: 3rem;
+		font-weight: 900;
+		line-height: 0.8;
+		color: inherit;
+		border-bottom: solid 1px currentColor;
+	}	
+}
+
+@mixin post-section-dash {
+
+	&:before {
+		background: $color__text-light;
+		content: "\020";
+		display: block;
+		height: 2px;
+		margin: $size__spacing-unit 0;
+		width: 1em;
+	}
+}
+
+@mixin post-section-solid {
+
+	position: relative;
+	padding-bottom: 1em;
+	margin-bottom: 1em;
+	
+	&:before {
+		background: #ccc;
+		position: absolute;
+		display: block;
+		content: '';
+		width: 20px;
+		height: 2px;
+		left: 50%;
+		bottom: 0;
+		margin-left: 40px;
+	}
+
+	&:after {
+		background: #c1a44a;
+		position: absolute;
+		display: block;
+		content: '';
+		width: 100px;
+		height: 2px;
+		right: 50%;
+		bottom: 0;
+		margin-right: -40px;
+	}	
+}
+
+/* If we add the border using a regular CSS border, it won't look good on non-retina devices,
+ * since its edges can look jagged due to lack of antialiasing. In this case, we are several
+ * layers of box-shadow to add the border visually, which will render the border smoother. */
+
+@mixin box-shadow( $size ) {
+	box-shadow:
+		0 0 0 $size $color__text-light inset,         	// Original border.
+		0 0 0 ($size + 1px) $color__text-light inset, 	// Antialiasing, inner edge.
+		0 0 1px 0 rgba( $color__text-light, 0.7 );  	// Antialiasing, outer edge.
+}
+
+/* Calculates maximum width for post content */
+@mixin postContentMaxWidth() {
+	max-width: $size__site-max-content;
+}
+
+/* Nested sub-menu padding: 10 levels deep */
+@mixin nestedSubMenuPadding() {
+
+	ul {
+		counter-reset: submenu;
+	}
+
+	ul > li > a::before {
+		font-family: $font__body;
+		font-weight: normal;
+		content: "\2013\00a0" counters(submenu, "\2013\00a0", none);
+		counter-increment: submenu
+	}
+}
+
+/* Ensure all font family declarations come with non-latin fallbacks */
+@mixin font-family( $font_family: $font__body ) {
+	font-family: $font_family;
+	@extend %non-latin-fonts;
+}
+
+/* Build our non-latin font styles */
+%non-latin-fonts {
+	@each $lang, $font__fallback in $font__fallbacks {
+		&:lang(#{$lang}) {
+			font-family: unquote( $font__fallback );
+		}
+	}
+}
+
+@import "utilities";
