@@ -1,3 +1,6 @@
+/**
+ * Webpack 5
+ */
 const dirscript = "./public/webpack";
 const path = require("path");
 
@@ -7,68 +10,69 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  mode: 'production',
+  mode: "production",
   entry: {
-    'app': path.resolve(__dirname, dirscript, './src/app.js')
+    app: path.resolve(__dirname, dirscript, "./src/app.js"),
   },
   output: {
-    path: path.resolve(__dirname, dirscript, './dest'),
-    filename: '[name].min.js'
+    path: path.resolve(__dirname, dirscript, "./dest"),
+    filename: "[name].min.js",
+    publicPath: "./",
   },
   module: {
     rules: [
       {
-        enforce: 'pre',
+        enforce: "pre",
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'eslint-loader'
-      }, {
+        loader: "eslint-loader",
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
-        }
-      }, {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
-      }, {
-        test: /\.s[ac]ss$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
-      }, {
-        test: /\.(gif|png|jpe?g|eot|wof|woff|woff2|ttf|svg)$/,
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
+      },
+      {
+        test: /\.(sa|sc|c)ss$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+      },
+      {
+        test: /\.(gif|png|jpe?g|eot|wof|woff|woff2|ttf|svg)$/i,
         use: [
           {
-            loader: 'url-loader',
+            loader: "url-loader",
             options: {
-              limit: 1024 * 100, /* 100KB以上のファイルは書き出し */
-              name: '[contenthash].[ext]',
-              outputPath : 'output_file',
+              limit: 1024 * 100 /* 100KB以上のファイルは書き出し */,
+              name: "[contenthash].[ext]",
+              outputPath: "_output",
             },
           },
-        ]
+        ],
       },
-    ]
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].min.css'
+      filename: "[name].min.css",
     }),
   ],
   optimization: {
-    minimizer: [
-      new TerserJSPlugin({}),
-      new OptimizeCSSAssetsPlugin({})
-    ],
+    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
   },
   resolve: {
-    extensions: ['.js', '.jsx'] /* モジュールの拡張子省略 */
+    extensions: [".js", ".jsx"] /* モジュールの拡張子省略 */,
   },
   performance: {
-    assetFilter: function(assetFilename) {
-      return assetFilename.endsWith('.js'); /* パフォーマンスヒントをjsのみに変更 */
+    assetFilter: function (assetFilename) {
+      return assetFilename.endsWith(
+        ".js"
+      ); /* パフォーマンスヒントをjsのみに変更 */
     },
-  }
+  },
+  target: ["web", "es5"],
 };
