@@ -1,0 +1,32 @@
+.alignleft,
+.entry-content img.alignleft,
+.page-content img.alignleft {
+	display: inline;
+	float: left;
+	margin-right: 1.5em;
+}
+
+.alignright,
+.entry-content img.alignright,
+.page-content img.alignright {
+	display: inline;
+	float: right;
+	margin-left: 1.5em;
+}
+
+.aligncenter,
+.entry-content img.aligncenter,
+.page-content img.aligncenter {
+	clear: both;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@include media(tablet) {
+
+	.entry-content blockquote.alignleft,
+	.entry-content blockquote.alignright {
+		font-size: 0.8125rem;
+	}
+}

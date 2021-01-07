@@ -1,0 +1,188 @@
+body:not(.single-attachment) .post-thumbnail {
+	position: relative;
+	padding-top: 56.25%; /* 16:9 Aspect Ratio */
+	overflow: hidden;
+
+	img {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		max-width: 100%;
+		height: auto;
+		transform: translateX(-50%) translateY(-50%);
+	}
+}
+
+.post-thumbnail {
+	
+	img {
+		vertical-align: bottom;
+	}
+
+	a {
+		-webkit-backface-visibility: hidden;
+		transition: opacity 0.2s;
+		
+		&:hover,
+		&:focus {
+			opacity: 0.7;
+		}	
+	}
+}
+
+/*--------------------------------------------------------------
+Media
+--------------------------------------------------------------*/
+
+img,
+video {
+	height: auto; /* Make sure images are scaled correctly. */
+	max-width: 100%; /* Adhere to container width. */
+}
+
+img.alignleft,
+img.alignright {
+	float: none;
+	margin: 0;
+}
+
+.page-content .wp-smiley,
+.entry-content .wp-smiley,
+.comment-content .wp-smiley {
+	border: none;
+	margin-bottom: 0;
+	margin-top: 0;
+	padding: 0;
+}
+
+/* Make sure embeds and iframes fit their containers. */
+
+embed,
+iframe,
+object {
+	margin-bottom: 1.5em;
+	max-width: 100%;
+}
+
+/* Remove bottom on embeds that wrapped in paragraphs via wpautop. */
+
+p > embed:only-child,
+p > iframe:only-child,
+p > object:only-child {
+	margin-bottom: 0;
+}
+
+.wp-caption,
+.gallery-caption {
+	color: #666;
+	font-size: 13px;
+	font-size: 0.8125rem;
+	font-style: italic;
+	margin-bottom: 1.5em;
+	max-width: 100%;
+}
+
+.wp-caption img[class*="wp-image-"] {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.wp-caption .wp-caption-text {
+	margin: 0.8075em 0;
+}
+
+/* SVG Icons base styles */
+
+.icon {
+	display: inline-block;
+	fill: currentColor;
+	height: 1em;
+	position: relative; /* Align more nicely with capital letters */
+	top: -0.0625em;
+	vertical-align: middle;
+	width: 1em;
+}
+
+/*--------------------------------------------------------------
+Galleries
+--------------------------------------------------------------*/
+
+.glide__slide,
+.glide__bullets {
+	cursor: default;
+}
+
+.glide__track,
+.glide__slides,
+.glide__slide {
+	padding: 0;
+	margin: 0;
+}
+
+.glide__slides {
+	will-change: auto; /* Glide Memory Over */
+	
+	.glide__slide img {
+		vertical-align: bottom;
+	}	
+}
+
+.glide__arrows {
+
+	.glide__arrow {
+		border-radius: 30px;
+		padding: 0;
+		height: 30px;
+		width: 30px;
+		
+		&--left {
+			left: auto;
+			right: 100%;
+			margin-right: 10px;
+		}
+
+		&--right {
+			left: 100%;
+			right: auto;
+			margin-left: 10px;
+		}
+	}
+}
+
+/*--------------------------------------------------------------
+SVGs Fallbacks
+--------------------------------------------------------------*/
+
+.svg-fallback {
+	display: none;
+}
+
+.no-svg {
+
+	.svg-fallback {
+		display: inline-block;
+	}
+
+	.dropdown-toggle {
+		padding: 0.5em 0 0;
+		right: 0;
+		text-align: center;
+		width: 2em;
+		
+		.svg-fallback.icon-angle-down {
+			font-size: 1.25rem;
+			font-weight: 400;
+			line-height: 1;
+			transform: rotate(180deg);
+
+			&::before {
+				content: "\005E";
+			}	
+		}
+
+		&.toggled-on .svg-fallback.icon-angle-down {
+			transform: rotate(0);
+		}	
+	}
+}

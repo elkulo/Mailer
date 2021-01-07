@@ -1,0 +1,35 @@
+table {
+	border-collapse: collapse;
+	margin: 0;
+	width: 100%;
+	max-width: 100%;
+	border: none;
+	
+	thead tr {
+		background: #333;
+		color: #fff;
+	}
+
+	th {
+		padding: 0.4em;
+		text-align: left;
+		border: solid 1px #ddd;
+	}
+
+	td {
+		padding: 0.4em;
+		border: solid 1px #ddd;
+	}
+
+	tfoot {
+		background: #ddd;
+	}	
+}
+
+.js__table--scroll {
+	margin-bottom: 1.5em;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	overflow-scrolling: touch;
+	white-space: nowrap;
+}
