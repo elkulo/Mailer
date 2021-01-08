@@ -1,5 +1,5 @@
 <?php
-namespace Pidgeot\Core;
+namespace App\Mailer\Core;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -23,8 +23,8 @@ abstract class SMTP
         $mailer->Host = SMTP_HOST;
         $mailer->Port = SMTP_PORT;
 
-                // メーラー名を変更.
-                $mailer->XMailer = 'PHPMailer';
+        // メーラー名を変更.
+        $mailer->XMailer = 'PHPMailer';
             
         if (defined('SMTP_USERNAME') && defined('SMTP_PASSWORD')) {
             $mailer->SMTPAuth = true;
@@ -57,14 +57,14 @@ abstract class SMTP
         $mailer->addAddress($to, $header);
         $mailer->Body = $body;
         
-                /**
-                 * デバックレベル 0 ~ 2
-                 * (0)デバッグを無効にします（これを完全に省略することもできます、0がデフォルト）
-                 * (1)クライアントから送信されたメッセージを出力
-                 * (2)1に加えて、サーバーから受信した応答
-                 * (3)2に加えて、初期接続についての詳細情報 - このレベルはSTARTTLSエラーの診断
-                 */
-                /** $mailer->SMTPDebug = 0; */
+        /**
+         * デバックレベル 0 ~ 2
+         * (0)デバッグを無効にします（これを完全に省略することもできます、0がデフォルト）
+         * (1)クライアントから送信されたメッセージを出力
+         * (2)1に加えて、サーバーから受信した応答
+         * (3)2に加えて、初期接続についての詳細情報 - このレベルはSTARTTLSエラーの診断
+         */
+        /** $mailer->SMTPDebug = 0; */
 
         // メール送信の実行.
         try {

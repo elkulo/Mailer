@@ -21,7 +21,7 @@
 	},
   "autoload": {
     "psr-4": {
-      "Pidgeot\\Core\\" : "core/"
+      "App\\Mailer\\Core\\" : "core/"
     }
   },
 	"scripts": {

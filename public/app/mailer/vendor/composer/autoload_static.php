@@ -24,7 +24,6 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         'P' => 
         array (
             'Psr\\Log\\' => 8,
-            'Pidgeot\\Core\\' => 13,
             'PhpOption\\' => 10,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
@@ -35,6 +34,10 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         'D' => 
         array (
             'Dotenv\\' => 7,
+        ),
+        'A' => 
+        array (
+            'App\\Mailer\\Core\\' => 16,
         ),
     );
 
@@ -59,10 +62,6 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'Pidgeot\\Core\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/core',
-        ),
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
@@ -79,9 +78,15 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
+        'App\\Mailer\\Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/core',
+        ),
     );
 
     public static $classMap = array (
+        'App\\Mailer\\Core\\Mailer' => __DIR__ . '/../..' . '/core/Mailer.php',
+        'App\\Mailer\\Core\\SMTP' => __DIR__ . '/../..' . '/core/SMTP.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Dotenv\\Dotenv' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Dotenv.php',
@@ -228,8 +233,6 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         'PhpOption\\None' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/None.php',
         'PhpOption\\Option' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Option.php',
         'PhpOption\\Some' => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption/Some.php',
-        'Pidgeot\\Core\\Mailer' => __DIR__ . '/../..' . '/core/Mailer.php',
-        'Pidgeot\\Core\\SMTP' => __DIR__ . '/../..' . '/core/SMTP.php',
         'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
         'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
         'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
