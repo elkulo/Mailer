@@ -2,7 +2,7 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Dotenv\Dotenv;
-use Pidgeot\Core\Mailer;
+use App\Mailer\Core\Mailer;
 
 (function () {
 
@@ -11,8 +11,9 @@ use Pidgeot\Core\Mailer;
     date_default_timezone_set(getenv('TIME_ZONE'));
     require_once  __DIR__.'/config/server.php';
     require_once  __DIR__.'/config/draft.php';
+    require_once  __DIR__.'/config/setting.php';
 
     // Core
-    $mailer = new Mailer($draft);
+    $mailer = new Mailer($setting);
     $mailer->init();
 })();

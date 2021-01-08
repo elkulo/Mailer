@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Mailer\\Core\\Mailer' => $baseDir . '/core/Mailer.php',
+    'App\\Mailer\\Core\\SMTP' => $baseDir . '/core/SMTP.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Dotenv\\Dotenv' => $vendorDir . '/vlucas/phpdotenv/src/Dotenv.php',
@@ -152,8 +154,6 @@ return array(
     'PhpOption\\None' => $vendorDir . '/phpoption/phpoption/src/PhpOption/None.php',
     'PhpOption\\Option' => $vendorDir . '/phpoption/phpoption/src/PhpOption/Option.php',
     'PhpOption\\Some' => $vendorDir . '/phpoption/phpoption/src/PhpOption/Some.php',
-    'Pidgeot\\Core\\Mailer' => $baseDir . '/core/Mailer.php',
-    'Pidgeot\\Core\\SMTP' => $baseDir . '/core/SMTP.php',
     'Psr\\Log\\AbstractLogger' => $vendorDir . '/psr/log/Psr/Log/AbstractLogger.php',
     'Psr\\Log\\InvalidArgumentException' => $vendorDir . '/psr/log/Psr/Log/InvalidArgumentException.php',
     'Psr\\Log\\LogLevel' => $vendorDir . '/psr/log/Psr/Log/LogLevel.php',
