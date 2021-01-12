@@ -84,10 +84,21 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'C' => 
+        array (
+            'ChromePhp' => 
+            array (
+                0 => __DIR__ . '/..' . '/ccampbell/chromephp',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'App\\Mailer\\Core\\Mailer' => __DIR__ . '/../..' . '/core/Mailer.php',
         'App\\Mailer\\Core\\SMTP' => __DIR__ . '/../..' . '/core/SMTP.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'ChromePhp' => __DIR__ . '/..' . '/ccampbell/chromephp/ChromePhp.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Dotenv\\Dotenv' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Dotenv.php',
         'Dotenv\\Environment\\AbstractVariables' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Environment/AbstractVariables.php',
@@ -318,6 +329,7 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit0644431d4f1a0e697da89bc474b67474::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit0644431d4f1a0e697da89bc474b67474::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit0644431d4f1a0e697da89bc474b67474::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit0644431d4f1a0e697da89bc474b67474::$classMap;
 
         }, null, ClassLoader::class);

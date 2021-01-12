@@ -1,9 +1,0 @@
-[2021-01-08T12:43:12.623278+09:00] send.ERROR: Failed [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T12:44:28.186759+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T12:44:33.011318+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T12:49:22.847321+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T12:49:27.623458+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T13:33:49.323256+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T13:33:55.030379+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T13:37:22.215679+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}
-[2021-01-08T13:37:25.980815+09:00] send.NOTICE: OK [] {"host":"localhost","ip":"127.0.0.1"}

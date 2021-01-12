@@ -9,6 +9,7 @@ return array(
     'App\\Mailer\\Core\\Mailer' => $baseDir . '/core/Mailer.php',
     'App\\Mailer\\Core\\SMTP' => $baseDir . '/core/SMTP.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'ChromePhp' => $vendorDir . '/ccampbell/chromephp/ChromePhp.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Dotenv\\Dotenv' => $vendorDir . '/vlucas/phpdotenv/src/Dotenv.php',
     'Dotenv\\Environment\\AbstractVariables' => $vendorDir . '/vlucas/phpdotenv/src/Environment/AbstractVariables.php',
