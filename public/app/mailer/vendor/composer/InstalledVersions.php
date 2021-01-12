@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'e6ca24f5244f15aa14cd518e94b6f441055c7d3d',
+    'reference' => '1298df333fe22a7aefd7f80e4f974e49d9d2b45a',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -50,7 +50,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'e6ca24f5244f15aa14cd518e94b6f441055c7d3d',
+      'reference' => '1298df333fe22a7aefd7f80e4f974e49d9d2b45a',
     ),
     'monolog/monolog' => 
     array (
