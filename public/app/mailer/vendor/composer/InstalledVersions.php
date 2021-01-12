@@ -29,11 +29,20 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'abf5f7bfe95cbd120dccd4eda87693aa8c57e9d5',
+    'reference' => 'e6ca24f5244f15aa14cd518e94b6f441055c7d3d',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
   array (
+    'ccampbell/chromephp' => 
+    array (
+      'pretty_version' => '4.1.0',
+      'version' => '4.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c3c297615d48ae5b2a86a82311152d1ed095fcef',
+    ),
     'elkulo/mailer' => 
     array (
       'pretty_version' => 'dev-main',
@@ -41,7 +50,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'abf5f7bfe95cbd120dccd4eda87693aa8c57e9d5',
+      'reference' => 'e6ca24f5244f15aa14cd518e94b6f441055c7d3d',
     ),
     'monolog/monolog' => 
     array (

@@ -6,8 +6,7 @@
 git clone https://github.com/elkulo/Mailer.git Mailer
 cd Mailer
 npm install
-cd public/app/mailer
-composer install
+npm develop
 ~~~
 
 env を .env にリネーム
