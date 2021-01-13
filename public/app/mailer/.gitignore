@@ -1,2 +1,11 @@
+# Env
 .env
+
+# Monolog
 /logs/
+!/logs/README.md
+
+# PHPUnit Test
+/results/
+/phpunit*.xml
+/.phpunit.*.cache
