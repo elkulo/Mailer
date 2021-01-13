@@ -5,8 +5,8 @@
   "license": "MIT",
   "minimum-stability": "stable",
   "config": {
-		"process-timeout": 0,
-		"sort-packages": true,
+    "process-timeout": 0,
+    "sort-packages": true,
     "optimize-autoloader": true
   },
   "require": {
@@ -14,26 +14,36 @@
     "vlucas/phpdotenv": "^3.6",
     "monolog/monolog": "^2.0"
   },
-	"require-dev": {
+  "require-dev": {
     "ccampbell/chromephp": "^4.1",
     "phpcompatibility/php-compatibility": "^9.3",
+    "phpunit/phpunit": "^8.5",
     "squizlabs/php_codesniffer": "^3.5",
     "symfony/var-dumper": "^5.1"
   },
   "autoload": {
     "psr-4": {
-      "App\\Mailer\\Core\\" : "core/"
+      "App\\Mailer\\Core\\": "core/"
+    },
+    "files": [
+      "helpers/console.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
     }
   },
-	"scripts": {
-		"post-install-cmd": "@init-config",
-		"post-update-cmd": "@init-config",
-		"init-config" : [
-			"@composer dump-autoload",
-			"phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility"
-		],
-  	"test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-",
-  	"phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php .",
-	  "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php ."
-	}
+  "scripts": {
+    "post-install-cmd": "@init-config",
+    "post-update-cmd": "@init-config",
+    "init-config": [
+      "@composer dump-autoload",
+      "phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+    ],
+    "test": "phpunit",
+    "test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-",
+    "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php .",
+    "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php ."
+  }
 }
