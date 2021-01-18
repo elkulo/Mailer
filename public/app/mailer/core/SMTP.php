@@ -1,4 +1,9 @@
 <?php
+/**
+ * SMTP
+ *
+ * @version 1.0.0
+ */
 namespace App\Mailer\Core;
 
 use PHPMailer\PHPMailer\PHPMailer;

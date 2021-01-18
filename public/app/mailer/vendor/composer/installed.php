@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'dc1553d362ebb5d98ddd0f994c1e924fe59c14ab',
+    'reference' => '270c0b835c61bbf72b502c90b16056e84c545f89',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -36,7 +36,16 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'dc1553d362ebb5d98ddd0f994c1e924fe59c14ab',
+      'reference' => '270c0b835c61bbf72b502c90b16056e84c545f89',
+    ),
+    'filp/whoops' => 
+    array (
+      'pretty_version' => '2.9.1',
+      'version' => '2.9.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '307fb34a5ab697461ec4c9db865b20ff2fd40771',
     ),
     'monolog/monolog' => 
     array (
@@ -188,12 +197,12 @@
     ),
     'phpunit/phpunit' => 
     array (
-      'pretty_version' => '8.5.13',
-      'version' => '8.5.13.0',
+      'pretty_version' => '8.5.14',
+      'version' => '8.5.14.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8e86be391a58104ef86037ba8a846524528d784e',
+      'reference' => 'c25f79895d27b6ecd5abfa63de1606b786a461a3',
     ),
     'psr/log' => 
     array (

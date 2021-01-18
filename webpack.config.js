@@ -3,8 +3,6 @@
  */
 const dirscript = "./public/webpack";
 const path = require("path");
-
-/* CSS Plugin */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
@@ -47,7 +45,7 @@ module.exports = {
           {
             loader: "url-loader",
             options: {
-              limit: 1024 * 100 /* 100KB以上のファイルは書き出し */,
+              limit: 1024 * 100,
               name: "[contenthash].[ext]",
               outputPath: "_output",
             },
@@ -65,13 +63,13 @@ module.exports = {
     minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
   },
   resolve: {
-    extensions: [".js", ".jsx"] /* モジュールの拡張子省略 */,
+    extensions: [".js", ".jsx"],
   },
   performance: {
     assetFilter: function (assetFilename) {
       return assetFilename.endsWith(
         ".js"
-      ); /* パフォーマンスヒントをjsのみに変更 */
+      );
     },
   },
   target: ["web", "es5"],
