@@ -15,7 +15,7 @@ $setting = [
     'ADMIN_MAIL' => ADMIN_MAIL,
 
     // WP:Bccで送るメールアドレス array()
-    //'ADMIN_MAIL_BCC' => [],
+    'ADMIN_BCC' => [],
 
     // ユーザー宛のメールの冒頭文言
     'BODY_BEGINNING' => $beginning,
