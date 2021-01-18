@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '270c0b835c61bbf72b502c90b16056e84c545f89',
+    'reference' => 'f55e038273df71a44875c7872bcc1c09c65eb997',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -36,7 +36,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '270c0b835c61bbf72b502c90b16056e84c545f89',
+      'reference' => 'f55e038273df71a44875c7872bcc1c09c65eb997',
     ),
     'filp/whoops' => 
     array (
@@ -381,6 +381,15 @@
       array (
       ),
       'reference' => '75a63c33a8577608444246075ea0af0d052e452a',
+    ),
+    'twig/twig' => 
+    array (
+      'pretty_version' => 'v3.2.1',
+      'version' => '3.2.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f795ca686d38530045859b0350b5352f7d63447d',
     ),
     'vlucas/phpdotenv' => 
     array (
