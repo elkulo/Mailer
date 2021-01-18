@@ -1,4 +1,9 @@
 <?php
+/**
+ * Mailer
+ *
+ * @version 1.0.0
+ */
 namespace App\Mailer\Core;
 
 class Mailer extends SMTP
@@ -10,29 +15,39 @@ class Mailer extends SMTP
 
     private $error_massage; // エラーメッセージ
 
-    private $user_name; // ユーザーネーム
-
-    private $user_mail; // ユーザーメール
-
     private $page_referer; // フォームの設置ページの格納
 
     public function __construct($draft_setting = null)
     {
-        if ($draft_setting) {
-            $this->settings = $draft_setting;
-        } else {
-            exit('Mail Error: Email settings do not exist.');
-        }
+        try {
+            if ($draft_setting) {
+                $this->settings = $draft_setting;
+            } else {
+                throw new \Exception('Mailer Error: Email settings do not exist.');
+            }
 
-        // トークンチェック用のセッションスタート
-        if (! isset($_SESSION)) {
-            session_name(MD5('SENDMAIL'));
-            session_start();
-        }
+            // 連続投稿防止
+            if (empty($_SESSION)) {
+                // トークンチェック用のセッション
+                session_name('_mailer_tookun');
+                session_start();
 
-        // NULLバイト除去して格納
-        if (isset($_POST)) {
-            $this->post_data = $this->ksesHTML($_POST);
+                // ワンタイムセッション
+                $session_tmp = $_SESSION;    // 変数値を退避
+                session_destroy();    // 破棄
+                session_id(md5(uniqid(rand(), 1)));    // セッションID更新
+                session_start();    // セッション再開
+                $_SESSION = $session_tmp;    // セッション変数値を引継ぎ
+            }
+
+            // NULLバイト除去して格納
+            if (isset($_POST)) {
+                $this->post_data = $this->ksesHTML($_POST);
+            } else {
+                throw new \Exception('Mailer Error: Not Post.');
+            }
+        } catch (\Exception $e) {
+            exit($e->getMessage());
         }
     }
 
@@ -228,12 +243,13 @@ class Mailer extends SMTP
             // 改行コードを変換
             $out = nl2br($this->ksesESC($out));
             $key = trim($this->ksesESC($key));
+            $content = str_replace(array('<br />', '<br>'), '', $out);
 
             // 全角を半角へ変換
             $out = $this->changeHankaku($out, $key);
 
             $html .= '<tr><th>' . $key . '</th><td>' . $out;
-            $html .= '<input type="hidden" name="' . $key . '" value="' . str_replace(array( '<br />', '<br>' ), '', $out) . '" />';
+            $html .= '<input type="hidden" name="' . $key . '" value="' . $content . '" />';
             $html .= '</td></tr>' . PHP_EOL;
         }
         echo $html;
@@ -267,7 +283,7 @@ class Mailer extends SMTP
         $error = '';
 
         // 必須項目チェック
-        if (! empty($this->settings['MANDATORY'])) {
+        if (!empty($this->settings['MANDATORY'])) {
             foreach ($this->settings['MANDATORY'] as $requireVal) {
                 $existsFalg = '';
                 foreach ($this->post_data as $key => $val) {
@@ -310,8 +326,8 @@ class Mailer extends SMTP
                 if ($key === $this->settings['Email_ATTRIBUTE']) {
                     $this->settings['USER_MAIL'] = $this->ksesRM($this->ksesESC($val));
                 }
-                if ($key === $this->settings['Email_ATTRIBUTE'] && ! empty($val)) {
-                    if (! $this->checkMailFormat($val)) {
+                if ($key === $this->settings['Email_ATTRIBUTE'] && !empty($val)) {
+                    if (!$this->isCheckMailFormat($val)) {
                         $error .= '<p class="error_messe">【' . $key . "】はメールアドレスの形式が正しくありません。</p>\n";
                     }
                 }
@@ -323,7 +339,11 @@ class Mailer extends SMTP
     // 送信画面判定
     private function isCheckSendmail()
     {
-        return ( isset($this->post_data['_confirm_submit']) && $this->post_data['_confirm_submit'] === '1' ) ? true : false;
+        if (isset($this->post_data['_confirm_submit']) && $this->post_data['_confirm_submit'] === '1') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // 必須エラー判定
@@ -333,11 +353,14 @@ class Mailer extends SMTP
     }
 
     // メール文字判定
-    private function checkMailFormat($str)
+    private function isCheckMailFormat($post)
     {
-        $str               = trim($str);
-        $mailaddress_array = explode('@', $str);
-        if (preg_match('/^[\.!#%&\-_0-9a-zA-Z\?\/\+]+\@[!#%&\-_0-9a-z]+(\.[!#%&\-_0-9a-z]+)+$/', "$str") && count($mailaddress_array) == 2) {
+        $post         = trim($post);
+        $mail_address = explode('@', $post);
+        $mail_match   = '/^[\.!#%&\-_0-9a-zA-Z\?\/\+]+\@[!#%&\-_0-9a-z]+(\.[!#%&\-_0-9a-z]+)+$/';
+
+        // メールアドレス形式チェック＆複数メール防止
+        if (preg_match($mail_match, $post) && count($mail_address) == 2) {
             return true;
         } else {
             return false;
@@ -347,8 +370,7 @@ class Mailer extends SMTP
     // 禁止ワード
     private function checkNGWord()
     {
-        $str      = $this->settings['NG_WORD'];
-        $NG_words = explode(',', $str);
+        $NG_words = explode(',', $this->settings['NG_WORD']);
 
         if (empty($NG_words[0])) {
             return;
@@ -395,19 +417,19 @@ class Mailer extends SMTP
     // トークンチェック
     private function checkinToken()
     {
-        if (empty($_SESSION['_mailer_nonce']) || ( $_SESSION['_mailer_nonce'] !== $_POST['_mailer_nonce'] )) {
+        if (empty($_SESSION['_mailer_nonce']) || ($_SESSION['_mailer_nonce'] !== $_POST['_mailer_nonce'])) {
             // 再読み込みで発行されたセッションを破壊
             if (ini_get('session.use_cookies')) {
-                    $params = session_get_cookie_params();
-                    setcookie(
-                        session_name(),
-                        '',
-                        time() - 42000,
-                        $params['path'],
-                        $params['domain'],
-                        $params['secure'],
-                        $params['httponly']
-                    );
+                $params = session_get_cookie_params();
+                setcookie(
+                    session_name(),
+                    '',
+                    time() - 42000,
+                    $params['path'],
+                    $params['domain'],
+                    $params['secure'],
+                    $params['httponly']
+                );
             }
             if (isset($_SESSION['_mailer_nonce'])) {
                 session_destroy();
@@ -418,16 +440,16 @@ class Mailer extends SMTP
             // セッションを破壊してクッキーを削除
             if (isset($_SESSION['_mailer_nonce'])) {
                 if (ini_get('session.use_cookies')) {
-                        $params = session_get_cookie_params();
-                        setcookie(
-                            session_name(),
-                            '',
-                            time() - 42000,
-                            $params['path'],
-                            $params['domain'],
-                            $params['secure'],
-                            $params['httponly']
-                        );
+                    $params = session_get_cookie_params();
+                    setcookie(
+                        session_name(),
+                        '',
+                        time() - 42000,
+                        $params['path'],
+                        $params['domain'],
+                        $params['secure'],
+                        $params['httponly']
+                    );
                 }
                 session_destroy();
             }
@@ -437,7 +459,7 @@ class Mailer extends SMTP
     // 全角→半角変換
     private function changeHankaku($out, $key)
     {
-        if (empty($this->settings['HANKAKU']) || ! function_exists('mb_convert_kana')) {
+        if (empty($this->settings['HANKAKU']) || !function_exists('mb_convert_kana')) {
             return $out;
         }
         if (is_array($this->settings['HANKAKU'])) {
@@ -473,9 +495,9 @@ class Mailer extends SMTP
     private function replaceDisplayName($rep)
     {
         $str = $this->settings['DISPLAY_NAME'];
-        $pos = $this->post_data[ $str ];
+        $pos = $this->post_data[$str];
         // {お名前}変換
-        $name_a = array( '{' . $str . '}', '｛' . $str . '｝', '{' . $str . '｝', '｛' . $str . '}' );
+        $name_a = array('{' . $str . '}', '｛' . $str . '｝', '{' . $str . '｝', '｛' . $str . '}');
         $name_b = $this->ksesESC($pos);
         // 置換
         $txt = str_replace($name_a, $name_b, $rep);
@@ -485,7 +507,7 @@ class Mailer extends SMTP
     // 空白と改行を消すインジェクション対策
     private function ksesRM($str)
     {
-        $str = str_replace(array( "\r\n", "\r", "\n" ), '', $str);
+        $str = str_replace(array("\r\n", "\r", "\n"), '', $str);
         return trim($str);
     }
 
@@ -493,7 +515,7 @@ class Mailer extends SMTP
     private function ksesESC($value, $enc = 'UTF-8')
     {
         if (is_array($value)) {
-            return array_map(array( $this, 'esc' ), $value);
+            return array_map(array($this, 'esc'), $value);
         }
         return htmlspecialchars($value, ENT_QUOTES, $enc);
     }
@@ -504,7 +526,7 @@ class Mailer extends SMTP
         $sanitized = array();
         if (is_array($str)) {
             foreach ($str as $key => $val) {
-                $sanitized[ $key ] = strip_tags(str_replace("\0", '', $val));
+                $sanitized[$key] = strip_tags(str_replace("\0", '', $val));
             }
         } else {
             return strip_tags(str_replace("\0", '', $str));
