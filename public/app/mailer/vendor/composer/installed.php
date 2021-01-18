@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'cb4f77ac433c77de62966a07137935be7a70e27b',
+    'reference' => '11b9c340e11c47fa06a0fc68dce2258cc02c8286',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -36,7 +36,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'cb4f77ac433c77de62966a07137935be7a70e27b',
+      'reference' => '11b9c340e11c47fa06a0fc68dce2258cc02c8286',
     ),
     'filp/whoops' => 
     array (
@@ -399,6 +399,15 @@
       array (
       ),
       'reference' => '2065beda6cbe75e2603686907b2e45f6f3a5ad82',
+    ),
+    'vlucas/valitron' => 
+    array (
+      'pretty_version' => 'v1.4.9',
+      'version' => '1.4.9.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '81515dcc951e1f636a1a18ece2f4154dfa123438',
     ),
     'webmozart/assert' => 
     array (
