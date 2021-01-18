@@ -2,7 +2,7 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Dotenv\Dotenv;
-use App\Mailer\Core\Mailer;
+use App\Application\Mailer;
 
 (function () {
 

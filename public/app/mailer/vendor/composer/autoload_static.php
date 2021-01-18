@@ -13,6 +13,7 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'ef363ff452e99382eaa244b2adaac167' => __DIR__ . '/../..' . '/helpers/console.php',
+        '808681bf4d9d3703859cb5972e56ab0a' => __DIR__ . '/../..' . '/helpers/logger.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -24,6 +25,10 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         array (
             'Whoops\\' => 7,
             'Webmozart\\Assert\\' => 17,
+        ),
+        'V' => 
+        array (
+            'Valitron\\' => 9,
         ),
         'T' => 
         array (
@@ -56,7 +61,7 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         ),
         'A' => 
         array (
-            'App\\Mailer\\Core\\' => 16,
+            'App\\' => 4,
         ),
     );
 
@@ -74,6 +79,10 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Valitron\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/valitron/src/Valitron',
         ),
         'Twig\\' => 
         array (
@@ -131,9 +140,9 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'App\\Mailer\\Core\\' => 
+        'App\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/core',
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
@@ -148,8 +157,10 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
     );
 
     public static $classMap = array (
-        'App\\Mailer\\Core\\Mailer' => __DIR__ . '/../..' . '/core/Mailer.php',
-        'App\\Mailer\\Core\\SMTP' => __DIR__ . '/../..' . '/core/SMTP.php',
+        'App\\Application\\Mailer' => __DIR__ . '/../..' . '/src/Application/Mailer.php',
+        'App\\Handler\\HandlerInterface' => __DIR__ . '/../..' . '/src/Handler/HandlerInterface.php',
+        'App\\Handler\\PHPMailerHandler' => __DIR__ . '/../..' . '/src/Handler/PHPMailerHandler.php',
+        'App\\Handler\\WordPressHandler' => __DIR__ . '/../..' . '/src/Handler/WordPressHandler.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'ChromePhp' => __DIR__ . '/..' . '/ccampbell/chromephp/ChromePhp.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -1254,6 +1265,7 @@ class ComposerStaticInit0644431d4f1a0e697da89bc474b67474
         'Twig\\Util\\DeprecationCollector' => __DIR__ . '/..' . '/twig/twig/src/Util/DeprecationCollector.php',
         'Twig\\Util\\TemplateDirIterator' => __DIR__ . '/..' . '/twig/twig/src/Util/TemplateDirIterator.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'Valitron\\Validator' => __DIR__ . '/..' . '/vlucas/valitron/src/Valitron/Validator.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',
         'Webmozart\\Assert\\Mixin' => __DIR__ . '/..' . '/webmozart/assert/src/Mixin.php',

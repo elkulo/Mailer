@@ -1,10 +1,9 @@
 <?php
-/**
- * Mailer
- *
- * @version 1.0.0
- */
-namespace App\Mailer\Core;
+declare(strict_types=1);
+
+namespace App\Application;
+
+use App\Handler\PHPMailerHandler as SMTP;
 
 class Mailer extends SMTP
 {
@@ -35,7 +34,7 @@ class Mailer extends SMTP
                 // ワンタイムセッション
                 $session_tmp = $_SESSION;    // 変数値を退避
                 session_destroy();    // 破棄
-                session_id(md5(uniqid(rand(), 1)));    // セッションID更新
+                session_id(md5(uniqid((string)rand(), true)));    // セッションID更新
                 session_start();    // セッション再開
                 $_SESSION = $session_tmp;    // セッション変数値を引継ぎ
             }
@@ -91,13 +90,13 @@ class Mailer extends SMTP
             }
 
             // 送信完了画面
-            require dirname(__DIR__) . '/templates/completion.php';
+            require __DIR__ . '/../../templates/completion.php';
         } else {
             // 確認画面とエラー画面の分岐
             if ($this->isCheckRequire()) {
-                require dirname(__DIR__) . '/templates/confirm.php';
+                require __DIR__ . '/../../templates/confirm.php';
             } else {
-                require dirname(__DIR__) . '/templates/error.php';
+                require __DIR__ . '/../../templates/error.php';
             }
         }
     }
@@ -270,7 +269,7 @@ class Mailer extends SMTP
     // トークン出力
     private function theCreateNonce()
     {
-        $token                     = sha1(uniqid(mt_rand(), true));
+        $token                     = sha1(uniqid((string)mt_rand(), true));
         $_SESSION['_mailer_nonce'] = $token;
         echo '<input type="hidden" name="_mailer_nonce" value="' . $token . '" />';
         echo '<input type="hidden" name="_http_referer" value="' . $this->ksesESC($_SERVER['HTTP_REFERER']) . '" />';

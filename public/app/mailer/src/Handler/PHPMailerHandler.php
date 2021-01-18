@@ -1,27 +1,16 @@
 <?php
-/**
- * SMTP
- *
- * @version 1.0.0
- */
-namespace App\Mailer\Core;
+declare(strict_types=1);
+
+namespace App\Handler;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use Monolog\Logger;
-use Monolog\Handler\RotatingFileHandler;
 
-abstract class SMTP
+abstract class PHPMailerHandler implements HandlerInterface
 {
 
-    final protected function sendmail($to, $header, $subject, $body)
+    final public function sendmail(string $to, string $header, string $subject, string $body): void
     {
-
-        // Monolog.
-        $logfile = new RotatingFileHandler(dirname(__DIR__).'/logs/send.log', 31);
-        $logs = new Logger('send');
-        $logs->pushHandler($logfile);
-
         // SMTP認証.
         $mailer = new PHPMailer;
         $mailer->isSMTP();
@@ -30,7 +19,7 @@ abstract class SMTP
 
         // メーラー名を変更.
         $mailer->XMailer = 'PHPMailer';
-            
+
         if (defined('SMTP_USERNAME') && defined('SMTP_PASSWORD')) {
             $mailer->SMTPAuth = true;
             $mailer->Username = SMTP_USERNAME;
@@ -43,13 +32,13 @@ abstract class SMTP
             $mailer->SMTPSecure = SMTP_ENCRYPTION;
             $mailer->SMTPAutoTLS = true;
         }
-        
+
         // エンコード.
         $mailer->CharSet = 'ISO-2022-JP';
         $mailer->Encoding = 'base64';
-                $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
-                $header = mb_encode_mimeheader($header, 'ISO-2022-JP', 'UTF-8');
-                $from_name = mb_encode_mimeheader(FROM_NAME, 'ISO-2022-JP', 'UTF-8');
+        $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
+        $header = mb_encode_mimeheader($header, 'ISO-2022-JP', 'UTF-8');
+        $from_name = mb_encode_mimeheader(FROM_NAME, 'ISO-2022-JP', 'UTF-8');
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         // 配信元.
@@ -61,7 +50,7 @@ abstract class SMTP
         $mailer->Subject = $subject;
         $mailer->addAddress($to, $header);
         $mailer->Body = $body;
-        
+
         /**
          * デバックレベル 0 ~ 2
          * (0)デバッグを無効にします（これを完全に省略することもできます、0がデフォルト）
@@ -73,16 +62,8 @@ abstract class SMTP
 
         // メール送信の実行.
         try {
-            $logs->pushProcessor(function ($record) {
-                $record['extra']['host'] = getHostByAddr($_SERVER['REMOTE_ADDR']);
-                $record['extra']['ip'] = $_SERVER['REMOTE_ADDR'];
-                return $record;
-            });
-
-            if ($mailer->send()) {
-                $logs->notice('OK');
-            } else {
-                $logs->error('Failed');
+            if (!$mailer->send()) {
+                logger('Failed', 'error');
                 throw new Exception('Mailer Error');
             }
         } catch (Exception $e) {

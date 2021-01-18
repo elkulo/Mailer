@@ -15,7 +15,8 @@
     "monolog/monolog": "^2.0",
     "phpmailer/phpmailer": "^6.0",
     "twig/twig": "^3.2",
-    "vlucas/phpdotenv": "^3.6"
+    "vlucas/phpdotenv": "^3.6",
+    "vlucas/valitron": "^1.4"
   },
   "require-dev": {
     "ccampbell/chromephp": "^4.1",
@@ -26,10 +27,11 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\Mailer\\Core\\": "core/"
+      "App\\": "src/"
     },
     "files": [
-      "helpers/console.php"
+      "helpers/console.php",
+      "helpers/logger.php"
     ]
   },
   "autoload-dev": {

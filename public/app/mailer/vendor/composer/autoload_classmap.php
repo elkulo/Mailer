@@ -6,8 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Mailer\\Core\\Mailer' => $baseDir . '/core/Mailer.php',
-    'App\\Mailer\\Core\\SMTP' => $baseDir . '/core/SMTP.php',
+    'App\\Application\\Mailer' => $baseDir . '/src/Application/Mailer.php',
+    'App\\Handler\\HandlerInterface' => $baseDir . '/src/Handler/HandlerInterface.php',
+    'App\\Handler\\PHPMailerHandler' => $baseDir . '/src/Handler/PHPMailerHandler.php',
+    'App\\Handler\\WordPressHandler' => $baseDir . '/src/Handler/WordPressHandler.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'ChromePhp' => $vendorDir . '/ccampbell/chromephp/ChromePhp.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
@@ -1112,6 +1114,7 @@ return array(
     'Twig\\Util\\DeprecationCollector' => $vendorDir . '/twig/twig/src/Util/DeprecationCollector.php',
     'Twig\\Util\\TemplateDirIterator' => $vendorDir . '/twig/twig/src/Util/TemplateDirIterator.php',
     'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'Valitron\\Validator' => $vendorDir . '/vlucas/valitron/src/Valitron/Validator.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     'Webmozart\\Assert\\Assert' => $vendorDir . '/webmozart/assert/src/Assert.php',
     'Webmozart\\Assert\\Mixin' => $vendorDir . '/webmozart/assert/src/Mixin.php',

@@ -8,7 +8,7 @@ define('SMTP_USERNAME', getenv('SMTP_USERNAME'));
 // メールパスワード
 define('SMTP_PASSWORD', getenv('SMTP_PASSWORD'));
 
- // SMTPプロトコル(sslまたはtls)
+// SMTPプロトコル(sslまたはtls)
 define('SMTP_ENCRYPTION', getenv('SMTP_ENCRYPTION'));
 
 // 送信ポート(ssl:465, tls:587)

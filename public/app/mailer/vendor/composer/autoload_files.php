@@ -12,4 +12,5 @@ return array(
     '6124b4c8570aa390c21fafd04a26c69f' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     '667aeda72477189d0494fecd327c3641' => $vendorDir . '/symfony/var-dumper/Resources/functions/dump.php',
     'ef363ff452e99382eaa244b2adaac167' => $baseDir . '/helpers/console.php',
+    '808681bf4d9d3703859cb5972e56ab0a' => $baseDir . '/helpers/logger.php',
 );
