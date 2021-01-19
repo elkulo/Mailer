@@ -1,0 +1,53 @@
+{
+  "name": "elkulo/mailer",
+  "description": "Mail form using PHPMailer",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "config": {
+    "process-timeout": 0,
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "require": {
+    "php": ">=7.4",
+    "filp/whoops": "^2.9",
+    "monolog/monolog": "^2.0",
+    "phpmailer/phpmailer": "^6.0",
+    "twig/twig": "^3.2",
+    "vlucas/phpdotenv": "^3.6"
+  },
+  "require-dev": {
+    "ccampbell/chromephp": "^4.1",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "phpunit/phpunit": "^8.5",
+    "squizlabs/php_codesniffer": "^3.5",
+    "symfony/var-dumper": "^5.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    },
+    "files": [
+      "helpers/console.php",
+      "helpers/logger.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": "@init-config",
+    "post-update-cmd": "@init-config",
+    "init-config": [
+      "@composer dump-autoload",
+      "phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+    ],
+    "test": "phpunit",
+    "test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-",
+    "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php .",
+    "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php ."
+  }
+}
