@@ -9,12 +9,19 @@ namespace App\Application;
  * 例）WordPressのハンドラーに切り替える
  * use App\Handler\WordPressHandler as MailerHandler;
  */
+
 use App\Handler\PHPMailerHandler as MailerHandler;
 
 class Mailer extends MailerHandler
 {
 
-    private $settings = array(); // 設定
+    // 設定
+    private $setting = array(
+        'FROM_NAME' => FROM_NAME, // 送信元の宛名
+        'FROM_MAIL' => FROM_MAIL, // 送信元のメールアドレス(SMTPの設定で上書きされる)
+        'ADMIN_NAME' => ADMIN_NAME, // 管理者の宛名
+        'ADMIN_MAIL' => ADMIN_MAIL, // 管理者メールアドレス
+    );
 
     private $post_data; // $_POST
 
@@ -22,11 +29,11 @@ class Mailer extends MailerHandler
 
     private $page_referer; // フォームの設置ページの格納
 
-    public function __construct($draft_setting = null)
+    public function __construct($config_setting = null)
     {
         try {
-            if ($draft_setting) {
-                $this->settings = $draft_setting;
+            if ($config_setting) {
+                $this->setting = array_merge($this->setting, $config_setting);
             } else {
                 throw new \Exception('Mailer Error: Email settings do not exist.');
             }
@@ -51,6 +58,9 @@ class Mailer extends MailerHandler
             } else {
                 throw new \Exception('Mailer Error: Not Post.');
             }
+
+            // Bccで送るメールアドレス ADMIN_BCC
+            $this->setting['ADMIN_BCC'] = [];
         } catch (\Exception $e) {
             exit($e->getMessage());
         }
@@ -79,16 +89,16 @@ class Mailer extends MailerHandler
 
             // 管理者宛に届くメールをセット
             $this->sendMail(
-                $this->settings['ADMIN_MAIL'],
+                $this->setting['ADMIN_MAIL'],
                 $this->getMailSubject(),
                 $this->getAdminBody(),
                 $this->getAdminHeader()
             );
 
             // ユーザーに届くメールをセット
-            if ($this->settings['RETURN_USER'] == 1) {
+            if ($this->setting['RETURN_USER'] == 1) {
                 $this->sendMail(
-                    $this->settings['USER_MAIL'],
+                    $this->setting['USER_MAIL'],
                     $this->getMailSubject(),
                     $this->getUserBody(),
                     $this->getUserHeader()
@@ -112,15 +122,15 @@ class Mailer extends MailerHandler
     {
         $subject = 'No Subject';
         $before  = $after = '';
-        if ($this->settings['SUBJECT_BEFORE']) {
-            $before = $this->settings['SUBJECT_BEFORE'];
+        if ($this->setting['SUBJECT_BEFORE']) {
+            $before = $this->setting['SUBJECT_BEFORE'];
         }
-        if ($this->settings['SUBJECT_AFTER']) {
-            $after = $this->settings['SUBJECT_AFTER'];
+        if ($this->setting['SUBJECT_AFTER']) {
+            $after = $this->setting['SUBJECT_AFTER'];
         }
 
         foreach ($this->post_data as $key => $val) {
-            if ($key === $this->settings['SUBJECT_ATTRIBUTE']) {
+            if ($key === $this->setting['SUBJECT_ATTRIBUTE']) {
                 $subject = $val;
             }
         }
@@ -132,25 +142,25 @@ class Mailer extends MailerHandler
     {
 
         $header = array(
-            'From: ' . $this->settings['FROM_NAME'] . ' <' . $this->settings['FROM_MAIL'] . '>',
+            'From: ' . $this->setting['FROM_NAME'] . ' <' . $this->setting['FROM_MAIL'] . '>',
         );
 
-        if ($this->settings['IS_FROM_USERMAIL'] == 1) {
-            $header[] = 'Reply-To: ' . $this->settings['USER_NAME'] . ' <' . $this->settings['USER_MAIL'] . '>';
+        if ($this->setting['IS_FROM_USERMAIL'] == 1) {
+            $header[] = 'Reply-To: ' . $this->setting['USER_NAME'] . ' <' . $this->setting['USER_MAIL'] . '>';
         }
-        if (!empty($this->settings['ADMIN_BCC'])) {
-            $header[] = 'Bcc: ' . $this->settings['ADMIN_BCC'];
+        if (!empty($this->setting['ADMIN_BCC'])) {
+            $header[] = 'Bcc: ' . $this->setting['ADMIN_BCC'];
         }
 
         //return $header;
-        return $this->settings['ADMIN_NAME'];
+        return $this->setting['ADMIN_NAME'];
     }
 
     // 管理者宛送信メールボディ
     private function getAdminBody()
     {
 
-        $body  = 'サイト「' . $this->settings['FROM_NAME'] . '」でお問い合わせがありました。';
+        $body  = 'サイト「' . $this->setting['FROM_NAME'] . '」でお問い合わせがありました。';
         $body .= "\n------------------------------------------------------\n";
         $body .= $this->getPost();
         $body .= "\n------------------------------------------------------\n";
@@ -168,25 +178,25 @@ class Mailer extends MailerHandler
     {
 
         $header = array(
-            'From: ' . $this->settings['FROM_NAME'] . ' <' . $this->settings['FROM_MAIL'] . '>',
+            'From: ' . $this->setting['FROM_NAME'] . ' <' . $this->setting['FROM_MAIL'] . '>',
         );
 
         //return $header;
-        return $this->settings['USER_NAME'];
+        return $this->setting['USER_NAME'];
     }
 
     // ユーザ宛送信メールボディ
     private function getUserBody()
     {
 
-        $body  = $this->replaceDisplayName($this->settings['BODY_BEGINNING']);
+        $body  = $this->replaceDisplayName($this->setting['BODY_BEGINNING']);
         $body .= "\n------------------------------------------------------\n";
         $body .= $this->getPost();
         $body .= "\n------------------------------------------------------\n";
         $body .= '送信日時：' . date('Y/m/d (D) H:i:s', time()) . "\n";
         $body .= "\n※ この通知は送信専用のメールアドレスから送られています。";
         $body .= "\n※ ご連絡の際はメールの送り先にご注意ください。\n\n";
-        $body .= $this->replaceDisplayName($this->settings['BODY_SIGNATURE']);
+        $body .= $this->replaceDisplayName($this->setting['BODY_SIGNATURE']);
 
         return $body;
     }
@@ -273,7 +283,7 @@ class Mailer extends MailerHandler
     // 完了後のリンク先
     private function theReturnURL()
     {
-        echo $this->ksesESC($this->settings['END_URL']);
+        echo $this->ksesESC($this->setting['END_URL']);
     }
 
     // トークン出力
@@ -292,8 +302,8 @@ class Mailer extends MailerHandler
         $error = '';
 
         // 必須項目チェック
-        if (!empty($this->settings['MANDATORY_ATTRIBUTE'])) {
-            foreach ($this->settings['MANDATORY_ATTRIBUTE'] as $requireVal) {
+        if (!empty($this->setting['MANDATORY_ATTRIBUTE'])) {
+            foreach ($this->setting['MANDATORY_ATTRIBUTE'] as $requireVal) {
                 $existsFalg = '';
                 foreach ($this->post_data as $key => $val) {
                     if ($key === $requireVal) {
@@ -329,13 +339,13 @@ class Mailer extends MailerHandler
         // メール形式チェック
         if (empty($error)) {
             foreach ($this->post_data as $key => $val) {
-                if ($key === $this->settings['DISPLAY_NAME']) {
-                    $this->settings['USER_NAME'] = $this->ksesRM($this->ksesESC($val));
+                if ($key === $this->setting['DISPLAY_NAME']) {
+                    $this->setting['USER_NAME'] = $this->ksesRM($this->ksesESC($val));
                 }
-                if ($key === $this->settings['EMAIL_ATTRIBUTE']) {
-                    $this->settings['USER_MAIL'] = $this->ksesRM($this->ksesESC($val));
+                if ($key === $this->setting['EMAIL_ATTRIBUTE']) {
+                    $this->setting['USER_MAIL'] = $this->ksesRM($this->ksesESC($val));
                 }
-                if ($key === $this->settings['EMAIL_ATTRIBUTE'] && !empty($val)) {
+                if ($key === $this->setting['EMAIL_ATTRIBUTE'] && !empty($val)) {
                     if (!$this->isCheckMailFormat($val)) {
                         $error .= '<p class="error_messe">【' . $key . "】はメールアドレスの形式が正しくありません。</p>\n";
                     }
@@ -379,7 +389,7 @@ class Mailer extends MailerHandler
     // 禁止ワード
     private function checkNGWord()
     {
-        $ng_words = explode(',', $this->settings['NG_WORD']);
+        $ng_words = explode(',', $this->setting['NG_WORD']);
 
         if (empty($ng_words[0])) {
             return;
@@ -397,7 +407,7 @@ class Mailer extends MailerHandler
     // 日本語チェック
     private function checkMBWord()
     {
-        $mb_word = $this->settings['MB_WORD'];
+        $mb_word = $this->setting['MB_WORD'];
 
         if (empty($mb_word)) {
             return;
@@ -468,11 +478,11 @@ class Mailer extends MailerHandler
     // 全角→半角変換
     private function changeHankaku($out, $key)
     {
-        if (empty($this->settings['HANKAKU_ATTRIBUTE']) || !function_exists('mb_convert_kana')) {
+        if (empty($this->setting['HANKAKU_ATTRIBUTE']) || !function_exists('mb_convert_kana')) {
             return $out;
         }
-        if (is_array($this->settings['HANKAKU_ATTRIBUTE'])) {
-            foreach ($this->settings['HANKAKU_ATTRIBUTE'] as $val) {
+        if (is_array($this->setting['HANKAKU_ATTRIBUTE'])) {
+            foreach ($this->setting['HANKAKU_ATTRIBUTE'] as $val) {
                 if ($key === $val) {
                     $out = mb_convert_kana($out, 'a', 'UTF-8');
                 }
@@ -503,7 +513,7 @@ class Mailer extends MailerHandler
     // 名前置換え
     private function replaceDisplayName($rep)
     {
-        $str = $this->settings['DISPLAY_NAME'];
+        $str = $this->setting['DISPLAY_NAME'];
         $pos = $this->post_data[$str];
         // {お名前}変換
         $name_a = array('{' . $str . '}', '｛' . $str . '｝', '{' . $str . '｝', '｛' . $str . '}');

@@ -2,36 +2,6 @@
 
 $setting = array(
 
-    // 送信元の宛名
-    'FROM_NAME'  => FROM_NAME,
-
-    // 送信元のメールアドレス(SMTPの設定で上書きされる)
-    'FROM_MAIL'  => FROM_MAIL,
-    
-    // 管理者の宛名
-    'ADMIN_NAME' => ADMIN_NAME,
-
-    // 管理者メールアドレス
-    'ADMIN_MAIL' => ADMIN_MAIL,
-
-    // WP:Bccで送るメールアドレス array()
-    'ADMIN_BCC' => [],
-
-    // ユーザー宛のメールの冒頭文言(削除予定)
-    'BODY_BEGINNING' => <<< EOM
-{お名前}様
-
-お問い合わせありがとうございました。
-
-内容を確認後、担当の者からご連絡いたします。
-送信内容は以下になります。
-EOM,
-
-    // ユーザー宛のメールの署名文言(削除予定)
-    'BODY_SIGNATURE' => <<< EOM
-Mailerから送信
-EOM,
-
     // 差出人（$Emailのname属性の値）に自動返信メールを送る(送る=1, 送らない=0)
     'RETURN_USER' => 1,
 
@@ -90,4 +60,20 @@ EOM,
     // メールテンプレート
     'MAIL_TEMPLATE_ADMIN' => file_get_contents(__DIR__.'/mail/send-to-admin.tpl'),
     'MAIL_TEMPLATE_USER' => file_get_contents(__DIR__.'/mail/send-to-user.tpl'),
+
+    // ユーザー宛のメールの冒頭文言(削除予定)
+    'BODY_BEGINNING' => <<< EOM
+{お名前}様
+
+お問い合わせありがとうございました。
+
+内容を確認後、担当の者からご連絡いたします。
+送信内容は以下になります。
+EOM,
+
+    // ユーザー宛のメールの署名文言(削除予定)
+    'BODY_SIGNATURE' => <<< EOM
+Mailerから送信
+EOM,
+
 );
