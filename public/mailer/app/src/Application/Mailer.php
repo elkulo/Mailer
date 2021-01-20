@@ -9,7 +9,6 @@ namespace App\Application;
  * 例）WordPressのハンドラーに切り替える
  * use App\Handler\WordPressHandler as MailerHandler;
  */
-
 use App\Handler\PHPMailerHandler as MailerHandler;
 
 class Mailer extends MailerHandler
@@ -29,9 +28,12 @@ class Mailer extends MailerHandler
 
     private $page_referer; // フォームの設置ページの格納
 
+    protected $view;
+
     public function __construct($config_setting = null)
     {
         try {
+            // コンフィグをセット
             if ($config_setting) {
                 $this->setting = array_merge($this->setting, $config_setting);
             } else {
@@ -64,6 +66,12 @@ class Mailer extends MailerHandler
         } catch (\Exception $e) {
             exit($e->getMessage());
         }
+
+        // Twigの初期化
+        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../view');
+        $this->view = new \Twig\Environment($loader, array(
+            'cache' => __DIR__ . '/../../cache',
+        ));
     }
 
     // 基本機能
@@ -106,13 +114,24 @@ class Mailer extends MailerHandler
             }
 
             // 送信完了画面
-            require __DIR__ . '/../../../view/completion.php';
+            //require __DIR__ . '/../../../view/completion.php';
+            $this->view->display('/completion.twig', array(
+                'theReturnURL' => $this->theReturnURL(),
+            ));
         } else {
             // 確認画面とエラー画面の分岐
             if ($this->isCheckRequire()) {
-                require __DIR__ . '/../../../view/confirm.php';
+                //require __DIR__ . '/../../../view/confirm.php';
+                $this->view->display('/confirm.twig', array(
+                    'theActionURL' => $this->theActionURL(),
+                    'theConfirm' => $this->theConfirm(),
+                    'theCreateNonce' => $this->theCreateNonce(),
+                ));
             } else {
-                require __DIR__ . '/../../../view/error.php';
+                //require __DIR__ . '/../../../view/error.php';
+                $this->view->display('/error.twig', array(
+                    'theErrorMassage' => $this->error_massage,
+                ));
             }
         }
     }
@@ -271,19 +290,19 @@ class Mailer extends MailerHandler
             $html .= '<input type="hidden" name="' . $key . '" value="' . $content . '" />';
             $html .= '</td></tr>' . PHP_EOL;
         }
-        echo $html;
+        return '<table>' . $html . '</table>';
     }
 
     // 確認画面のフォームにアクション先出力
     private function theActionURL()
     {
-        echo $this->ksesESC($this->ksesHTML($_SERVER['SCRIPT_NAME']));
+        return $this->ksesESC($this->ksesHTML($_SERVER['SCRIPT_NAME']));
     }
 
     // 完了後のリンク先
     private function theReturnURL()
     {
-        echo $this->ksesESC($this->setting['END_URL']);
+        return $this->ksesESC($this->setting['END_URL']);
     }
 
     // トークン出力
@@ -291,9 +310,11 @@ class Mailer extends MailerHandler
     {
         $token                     = sha1(uniqid((string)mt_rand(), true));
         $_SESSION['_mailer_nonce'] = $token;
-        echo '<input type="hidden" name="_mailer_nonce" value="' . $token . '" />';
-        echo '<input type="hidden" name="_http_referer" value="' . $this->ksesESC($_SERVER['HTTP_REFERER']) . '" />';
-        echo '<input type="hidden" name="_confirm_submit" value="1">' . PHP_EOL;
+        $referer = $this->ksesESC($_SERVER['HTTP_REFERER']);
+        $html  = '<input type="hidden" name="_mailer_nonce" value="' . $token . '" />';
+        $html .= '<input type="hidden" name="_http_referer" value="' . $referer . '" />';
+        $html .= '<input type="hidden" name="_confirm_submit" value="1" />' . PHP_EOL;
+        return $html;
     }
 
     // 必須チェック
