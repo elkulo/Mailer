@@ -1,8 +1,3 @@
-<?php if (! get_class()) {
-    exit;
-}
-header('Content-Type:text/html;charset=utf-8');
-?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -17,11 +12,9 @@ header('Content-Type:text/html;charset=utf-8');
     <div class="page">
         <h1>確認画面</h1>
         <p>以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
-        <form action="<?php $this->theActionURL(); ?>" method="POST">
-            <table>
-                <?php $this->theConfirm(); ?>
-            </table>
-            <?php $this->theCreateNonce(); ?>
+        <form action="{{theActionURL}}" method="POST">
+            {{theConfirm|raw}}
+            {{theCreateNonce|raw}}
             <input type="submit" value="送信する" class="btn btn-lg btn-primary">
             <input type="button" value="キャンセル" class="btn btn-lg btn-default" onClick="history.back()">
         </form>
