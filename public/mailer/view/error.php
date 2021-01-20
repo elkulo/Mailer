@@ -10,7 +10,7 @@ header('Content-Type:text/html;charset=utf-8');
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name='robots' content='noindex,nofollow' />
 <title>入力エラー</title>
-<link rel="stylesheet" type="text/css" media="all" href="templates/style.css" />
+<link rel="stylesheet" type="text/css" media="all" href="view/style.css" />
 </head>
 <body>
 <div id="error" class="wrapper">
