@@ -11,13 +11,7 @@ header('Content-Type:text/html;charset=utf-8');
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name='robots' content='noindex,nofollow' />
     <title>完了画面</title>
-    <link rel="stylesheet" type="text/css" media="all" href="templates/style.css" />
-    <script>
-        window.history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function(e) {
-            window.history.go(1);
-        });
-    </script>
+    <link rel="stylesheet" type="text/css" media="all" href="view/style.css" />
 </head>
 
 <body>
@@ -28,6 +22,11 @@ header('Content-Type:text/html;charset=utf-8');
             <button class="btn btn-default" onclick="location.href='<?php $this->theReturnURL(); ?>'">ホームページに戻る</button>
         </div>
     </div>
+    <script>
+        window.history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function(e) {
+            window.history.go(1);
+        });
+    </script>
 </body>
-
 </html>

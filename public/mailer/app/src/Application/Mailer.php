@@ -45,11 +45,11 @@ class Mailer extends MailerHandler
                 session_start();
 
                 // ワンタイムセッション
-                $session_tmp = $_SESSION;    // 変数値を退避
-                session_destroy();    // 破棄
-                session_id(md5(uniqid((string)rand(), true)));    // セッションID更新
-                session_start();    // セッション再開
-                $_SESSION = $session_tmp;    // セッション変数値を引継ぎ
+                $session_tmp = $_SESSION; // 退避
+                session_destroy(); // 一度削除
+                session_id(md5(uniqid((string)rand(), true))); // セッションID変更
+                session_start(); // セッション再開
+                $_SESSION = $session_tmp; // セッション変数値を引継ぎ
             }
 
             // NULLバイト除去して格納
@@ -106,13 +106,13 @@ class Mailer extends MailerHandler
             }
 
             // 送信完了画面
-            require __DIR__ . '/../../../templates/completion.php';
+            require __DIR__ . '/../../../view/completion.php';
         } else {
             // 確認画面とエラー画面の分岐
             if ($this->isCheckRequire()) {
-                require __DIR__ . '/../../../templates/confirm.php';
+                require __DIR__ . '/../../../view/confirm.php';
             } else {
-                require __DIR__ . '/../../../templates/error.php';
+                require __DIR__ . '/../../../view/error.php';
             }
         }
     }

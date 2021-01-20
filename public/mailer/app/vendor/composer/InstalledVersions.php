@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '6d8e514c24a63c93fe7c2f51ba6ea3f911821a08',
+    'reference' => 'd062d4b0184cb43dcbf1ed795d576ca23e4ab48f',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -59,7 +59,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '6d8e514c24a63c93fe7c2f51ba6ea3f911821a08',
+      'reference' => 'd062d4b0184cb43dcbf1ed795d576ca23e4ab48f',
     ),
     'filp/whoops' => 
     array (
@@ -416,12 +416,12 @@ private static $installed = array (
     ),
     'vlucas/phpdotenv' => 
     array (
-      'pretty_version' => 'v3.6.7',
-      'version' => '3.6.7.0',
+      'pretty_version' => 'v3.6.8',
+      'version' => '3.6.8.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2065beda6cbe75e2603686907b2e45f6f3a5ad82',
+      'reference' => '5e679f7616db829358341e2d5cccbd18773bdab8',
     ),
     'webmozart/assert' => 
     array (

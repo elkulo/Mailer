@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Monolog\Logger;
@@ -19,20 +20,24 @@ function logger($message, $level = 1)
 
     switch ($level) {
         case 'error':
-        case 4:
+        case 5:
             $logs->error($message);
             break;
         case 'warning':
         case 'warn':
-        case 3:
+        case 4:
             $logs->warning($message);
+            break;
+        case 'notice':
+        case 3:
+            $logs->notice($message);
             break;
         case 'info':
         case 2:
             $logs->info($message);
             break;
-        case 'log':
         case 'debug':
+        case 'dump':
         case 1:
         default:
             $logs->debug($message);
