@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application;
@@ -9,6 +10,7 @@ namespace App\Application;
  * 例）WordPressのハンドラーに切り替える
  * use App\Handler\WordPressHandler as MailerHandler;
  */
+
 use App\Handler\PHPMailerHandler as MailerHandler;
 
 class Mailer extends MailerHandler
@@ -67,11 +69,15 @@ class Mailer extends MailerHandler
             exit($e->getMessage());
         }
 
+        // デバックモード
+        $debug_mode = getenv('MAILER_DEBUG') ? getenv('MAILER_DEBUG') : false;
+
         // Twigの初期化
-        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../view');
-        $this->view = new \Twig\Environment($loader, array(
-            'cache' => __DIR__ . '/../../cache',
-        ));
+        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../templates');
+        $this->view = new \Twig\Environment(
+            $loader,
+            $debug_mode ? array() : array('cache' => __DIR__ . '/../../cache')
+        );
     }
 
     // 基本機能
@@ -114,21 +120,17 @@ class Mailer extends MailerHandler
             }
 
             // 送信完了画面
-            //require __DIR__ . '/../../../view/completion.php';
-            $this->view->display('/completion.twig', array(
-                'theReturnURL' => $this->theReturnURL(),
+            $this->view->display('/complet.twig', array(
+                'theReturnURL' => $this->getReturnURL(),
             ));
         } else {
             // 確認画面とエラー画面の分岐
             if ($this->isCheckRequire()) {
-                //require __DIR__ . '/../../../view/confirm.php';
                 $this->view->display('/confirm.twig', array(
-                    'theActionURL' => $this->theActionURL(),
-                    'theConfirm' => $this->theConfirm(),
-                    'theCreateNonce' => $this->theCreateNonce(),
+                    'theActionURL' => $this->getActionURL(),
+                    'theConfirm' => $this->getConfirm() . $this->getCreateNonce(),
                 ));
             } else {
-                //require __DIR__ . '/../../../view/error.php';
                 $this->view->display('/error.twig', array(
                     'theErrorMassage' => $this->error_massage,
                 ));
@@ -257,7 +259,7 @@ class Mailer extends MailerHandler
     }
 
     // 確認画面の入力内容出力用関数
-    private function theConfirm()
+    private function getConfirm()
     {
         $html = '';
 
@@ -294,19 +296,19 @@ class Mailer extends MailerHandler
     }
 
     // 確認画面のフォームにアクション先出力
-    private function theActionURL()
+    private function getActionURL()
     {
         return $this->ksesESC($this->ksesHTML($_SERVER['SCRIPT_NAME']));
     }
 
     // 完了後のリンク先
-    private function theReturnURL()
+    private function getReturnURL()
     {
         return $this->ksesESC($this->setting['END_URL']);
     }
 
     // トークン出力
-    private function theCreateNonce()
+    private function getCreateNonce()
     {
         $token                     = sha1(uniqid((string)mt_rand(), true));
         $_SESSION['_mailer_nonce'] = $token;
@@ -341,18 +343,18 @@ class Mailer extends MailerHandler
                                 }
                             }
                             if ($connectEmpty > 0) {
-                                $error .= '<p class="error_messe">【' . $this->ksesESC($key) . "】は必須項目です。</p>\n";
+                                $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>'.PHP_EOL;
                             }
                         } elseif ($val === '') {
                             // デフォルト必須チェック
-                            $error .= '<p class="error_messe">【' . $this->ksesESC($key) . "】は必須項目です。</p>\n";
+                            $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>'.PHP_EOL;
                         }
                         $existsFalg = 1;
                         break;
                     }
                 }
                 if ($existsFalg !== 1) {
-                    $error .= '<p class="error_messe">【' . $requireVal . "】が選択されていません。</p>\n";
+                    $error .= '<p>【' . $requireVal . '】が選択されていません。</p>'.PHP_EOL;
                 }
             }
         }
@@ -368,7 +370,7 @@ class Mailer extends MailerHandler
                 }
                 if ($key === $this->setting['EMAIL_ATTRIBUTE'] && !empty($val)) {
                     if (!$this->isCheckMailFormat($val)) {
-                        $error .= '<p class="error_messe">【' . $key . "】はメールアドレスの形式が正しくありません。</p>\n";
+                        $error .= '<p>【' . $key . '】はメールアドレスの形式が正しくありません。</p>'.PHP_EOL;
                     }
                 }
             }

@@ -58,8 +58,10 @@ $setting = array(
     'MB_WORD' => 'ご要望',
 
     // メールテンプレート
-    'MAIL_TEMPLATE_ADMIN' => file_get_contents(__DIR__.'/mail/send-to-admin.tpl'),
-    'MAIL_TEMPLATE_USER' => file_get_contents(__DIR__.'/mail/send-to-user.tpl'),
+    //'MAIL_TEMPLATE_ADMIN' => file_get_contents(__DIR__.'/mail/send-to-admin.tpl'),
+    //'MAIL_TEMPLATE_USER' => file_get_contents(__DIR__.'/mail/send-to-user.tpl'),
+    'MAIL_TEMPLATE_ADMIN' => '/templates/mail/send-to-admin.twig',
+    'MAIL_TEMPLATE_USER' => '/templates/mail/send-to-user.twig',
 
     // ユーザー宛のメールの冒頭文言(削除予定)
     'BODY_BEGINNING' => <<< EOM
