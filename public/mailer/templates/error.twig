@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name='robots' content='noindex,nofollow' />
+<title>入力エラー</title>
+{% include 'style.twig' %}
+</head>
+<body>
+  <div id="error" class="page">
+    <div class="wrap">
+        <h1>入力エラー</h1>
+        <p>下記をご確認の上「前画面に戻る」ボタンにて修正をお願いします。</p>
+        <div class="error-message">
+          {{theErrorMassage|raw}}
+        </div>
+        <div class="btn-group">
+          <input type="button" value="前画面に戻る" class="btn btn-lg btn-danger" onClick="history.back()">
+        </div>
+    </div>
+  </div>
+</body>
+</html>
