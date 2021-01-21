@@ -1,31 +1,31 @@
 
 // Backgrounds
-$color__background-body: #fff;
+$color__background-body: #121212;
 $color__background-input: #fff;
 $color__background-screen: #f1f1f1;
 $color__background-hr: #ccc;
-$color__background-button: #0073aa;
-$color__background-button-hover: #111;
+$color__background-button: #074a75;
+$color__background-button-hover: lighten( $color__background-button, 16.6% );;
 $color__background-pre: #eee;
 $color__background-ins: #fff9c0;
 $color__background_selection: mix( $color__background-body, $color__background-button, 75% );
 
 // Text
-$color__text-main: #111;
-$color__text-light: #767676;
+$color__text-main: #f1f1f1;
+$color__text-light: #ddd;
 $color__text-hover: lighten( $color__text-main, 22.5% );
 $color__text-screen: #21759b;
 $color__text-input: #666;
 $color__text-input-focus: #111;
 
 // Links
-$color__link: #074a75;
+$color__link: #3283b6;
 $color__link-visited: #c16f4a;
 $color__link-hover: lighten( $color__link, 16.6% );
 
 // Borders
-$color__border: #ccc;
-$color__border-link: #0073aa;
+$color__border: #767676;
+$color__border-link: #4994c2;
 $color__border-link-hover: darken( $color__link, 10% );
 $color__border-button: #ccc #ccc #bbb;
 $color__border-button-hover: #ccc #bbb #aaa;
