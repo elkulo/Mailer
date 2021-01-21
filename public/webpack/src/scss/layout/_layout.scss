@@ -1,13 +1,3 @@
-
-.site-content-contain {
-	background-color: #fff;
-	position: relative;
-	
-	.site-content {
-		min-height: 50vh;
-	}	
-}
-
 .wrap {
 	margin-left: auto;
 	margin-right: auto;
@@ -18,54 +8,6 @@
 	.page-for-posts .type-post &,
 	.page-for-posts .type-page & {
 		max-width: 720px;
-	}
-}
-
-.sm {
-	display: inline;
-	
-	@include media(tablet) {
-		display: none;
-	}
-}
-
-.md {
-	display: none;
-	@include media(tablet) {
-		display: inline;
-	}
-}
-
-.lg {
-	display: none;
-	@include media(desktop) {
-		display: inline;
-	}
-}
-
-.xs-hide {
-	display: none;
-
-	@include media(mobile) { 
-		display: block;
-	}
-}
-
-@include media(mobile) { 
-	.sm-hide {
-		display: none;
-	}
-}
-
-@include media(tablet) { 
-	.md-hide {
-		display: none;
-	}
-}
-
-@include media(desktop) { 
-	.lg-hide {
-		display: none;
 	}
 }
 

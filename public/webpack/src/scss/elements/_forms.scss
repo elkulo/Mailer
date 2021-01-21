@@ -65,7 +65,7 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-	background: linear-gradient(to right, $color__link, $color__link-hover );
+	background: linear-gradient(to right, $color__background-button, $color__background-button-hover );
 	border: 0;
 	border-radius: 30px;
 	box-shadow: none;

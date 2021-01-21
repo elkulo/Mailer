@@ -1,7 +1,6 @@
 
 /* Contact */
 .contact-section {
-	background: #f7f7f7;
 	padding: 3rem 0;
 	border-bottom: solid 1px #ddd;
 
@@ -10,24 +9,19 @@
 	}
 
 	.contact-header {
-		text-align: center;
 
 		&__title {
-			color: #31314c;
-			font-weight: 600;
-			letter-spacing: -0.05em;
+			color: $color__text-main;
+			text-align: center;
 		}
 		
 		&__description {
-			font-size: 1rem;
-			color: #888;
+			text-align: center;
 		}
 		
 		&__summary {
 			text-align: left;
-			background: #ededed;
-			border: solid 1px #31314c;
-			color: #31314c;
+			border: solid 1px $color__border;
 			border-radius: 5px;
 			padding: 1rem 1rem 0.5rem;
 			margin-bottom: 1rem;
@@ -52,6 +46,7 @@
 
 	.contact-form {
 		background: #fff;
+		color: #212121;
 		
 		&__ul {
 			margin: 0;
