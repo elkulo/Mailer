@@ -1,10 +1,5 @@
 
 .site-branding {
-	padding: 0.25em 1em;
-	
-	@include media(desktop) {
-		padding: 0.5em 0;
-	}
 
 	.custom-logo-link {
 		display: inline-block;
@@ -28,45 +23,20 @@
 		}
 	}
 	
-	a {
-		text-decoration: none;
-		transition: opacity 0.2s;
+	.site-title {
+		display: inline-block;
+		clear: none;
+		font-size: 1.325rem;
+		font-weight: 400;
+		line-height: 1.25;
+		letter-spacing: 0.02em;
+		margin: 0;
+		padding: 0;
+		color: inherit;
 
-		&:hover,
-		&:focus {
-			opacity: 0.7;
+		a {
+			color: inherit;
+			opacity: 1;
 		}
 	}
-	
-	.site-branding-text {
-		display: inline-block;
-		vertical-align: middle;
-		color: #212121;
-
-		.site-title {
-			display: inline-block;
-			clear: none;
-			font-size: 1rem;
-			font-weight: 500;
-			line-height: 1.25;
-			letter-spacing: 0.08em;
-			margin: 0;
-			padding: 0;
-			color: inherit;
-
-			a {
-				color: inherit;
-				opacity: 1;
-			}
-		}
-	}	
-}
-
-.title-tagline-hidden .site-title {
-	clip: rect(1px, 1px, 1px, 1px);
-	height: 1px;
-	overflow: hidden;
-	position: absolute !important;
-	width: 1px;
-	word-wrap: normal !important;
 }

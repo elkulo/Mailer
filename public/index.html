@@ -7,18 +7,17 @@
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Source+Serif+Pro&display=swap" rel="stylesheet">
 <link rel="stylesheet" id="design-css" href="webpack/dest/app.min.css?ver=202009117" type="text/css" media="all" />
 </head>
-<body id="home" class="home has-header-image title-tagline-hidden">
+<body id="home" class="home">
 <div id="page" class="site">
 	<header id="masthead" class="site-header" role="banner">
 		<div class="wrap">
 			<div class="site-header-contain">
 				<div class="site-branding">
-					<a href="./" class="custom-logo-link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">
-						<img src="webpack/src/images/logotype.png" class="custom-logo" alt="Mailer &#124; el.kulo" itemprop="logo" />
-					</a>
-					<div class="site-branding-text">
-						<h1 class="site-title">Mailer &#124; 通信・弱電工事全般から各種機器取付までお任せください</h1>
-					</div>
+					<h1 class="site-title">
+						<a href="./" class="custom-logo-link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">
+							<span class="custom-logo">Mailer &#124; el.kulo</span>
+						</a>
+					</h1>
 				</div>
 				<div class="navigation-top">
 					<button class="menu-trigger" aria-controls="top-menu" aria-expanded="false">
@@ -27,15 +26,11 @@
 					<div class="site-description">電気設備のパフォーマンス向上で、理想的な環境をご提案いたします。</div>
 					<nav id="site-navigation" class="main-navigation" role="navigation">
 						<ul id="top-menu" class="menu">
-							<li class="menu-item"><a href="./">ホーム</a> </li>
-							<li class="menu-item"><a href="/#contact">お問い合わせ</a> </li>
-							<li class="menu-item"><a href="/#about">会社案内</a> </li>
-							<li class="menu-item"><a href="/#access">アクセス</a> </li>
+							<li class="menu-item"><a href="/#docs">DOCS</a> </li>
+							<li class="menu-item"><a href="/#contact">DEMO</a> </li>
+							<li class="menu-item"><a href="/#license">LICENSE</a> </li>
 						</ul>
 					</nav>
-				</div>
-				<div class="navigation-guide">
-					<span class="tel"><strong>03-XXX-XXXX</strong>（ 電話受付｜平日 10:00-17:00 ）</span>
 				</div>
 			</div>
 		</div>
@@ -44,14 +39,9 @@
 			<div class="custom-header__hero">
 				<h2 class="custom-header__hero__title">As Your Partner!</h2>
 				<p class="custom-header__hero__description">
-					弱電工事から各種機器取付まで<br class="sm-hide">お任せください。
+					ダウンロードはGithubから
 				</p>
-				<span class="button-wrap"><a href="/#contact" class="button">御見積・ご相談はこちら</a></span>
-			</div>
-			<div class="custom-header-media">
-				<div class="custom-header-image">
-					<img src="webpack/src/images/header.jpg" class="header-image" alt="">
-				</div>
+				<span class="button-wrap"><a href="https://github.com/elkulo/Mailer" target="_blank" class="button">Github</a></span>
 			</div>
 		</div>
 	</header>
@@ -137,12 +127,12 @@
 			</section>
 		</div>
 	</div>
-	<footer id="colophon" class="site-footer" role="contentinfo">
+	<footer id="colophon" class="site-footer">
 		<div class="site-endleaf">
 			<div class="wrap">
-				<div class="endleaf-branding">
+				<div class="site-endleaf-branding">
 					<a href="./" class="custom-logo-link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">
-						<img src="webpack/src/images/logotype.png" class="custom-logo" alt="Mailer &#124; el.kulo" itemprop="logo" />
+						<span class="custom-logo">Mailer &#124; el.kulo</span>
 					</a>
 				</div>
 			</div>

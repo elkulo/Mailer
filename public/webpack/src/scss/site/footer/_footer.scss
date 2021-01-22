@@ -1,6 +1,6 @@
 .site-footer {
 	font-size: 0.825rem;
-	border-top: solid 1px #ededed;
+	border-top: solid 1px $color__border;
 
 	.site-endleaf {
 		padding: 1rem 0;
@@ -18,7 +18,7 @@
 			}
 		}
 
-		.endleaf-branding {
+		.site-endleaf-branding {
 			margin-bottom: 0.5rem;
 			@include media(tablet) {
 				margin: 0;
@@ -30,27 +30,11 @@
 				width: auto;
 			}
 		}
-		
-		.endleaf-title > h2 {
-			font-size: 0.825rem;
-			margin-bottom: 0;
-		}
-		
-		@include media(tablet) {
-		
-			.endleaf-title {
-				margin-left: 1rem;
-			}
-
-			.endleaf-access {
-				margin-left: auto;
-			}
-		}
 	}
 
 	.site-info {
 		clear: both;
-		background: #17273C;
+		background: #111;
 		color: #fff;
 		text-align: center;
 		font-size: 0.75rem;

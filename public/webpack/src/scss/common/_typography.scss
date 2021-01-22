@@ -7,7 +7,7 @@ button,
 input,
 select,
 textarea {
-	color: #333;
+	color: $color__text-main;
 	font-family: $font__body;
 	font-size: 0.9375rem;
 	font-weight: 400;
@@ -47,25 +47,21 @@ h1 {
 }
 
 h2 {
-	color: #666;
 	font-size: 1.25rem;
 	font-weight: 300;
 }
 
 h3 {
-	color: #888;
 	font-size: 1.125rem;
 	font-weight: 300;
 }
 
 h4 {
-	color: #333;
 	font-size: 1rem;
 	font-weight: 800;
 }
 
 h5 {
-	color: #767676;
 	font-size: 0.8125rem;
 	font-weight: 800;
 	letter-spacing: 0.15em;
@@ -73,7 +69,6 @@ h5 {
 }
 
 h6 {
-	color: #333;
 	font-size: 0.9375rem;
 	font-weight: 800;
 }
@@ -91,7 +86,6 @@ i {
 }
 
 blockquote {
-	color: #666;
 	font-size: 1.125rem;
 	font-style: italic;
 	line-height: 1.7;
@@ -112,7 +106,6 @@ address {
 }
 
 pre {
-	background: #eee;
 	font-family: "Courier 10 Pitch", Courier, monospace;
 	font-size: 0.9375rem;
 	line-height: 1.6;
@@ -164,8 +157,6 @@ blockquote:after {
 	outline: none;
 }
 
-/* Twenty Seventeen font resize */
-
 @include media(mobile) {
 
 	body,
@@ -180,9 +171,7 @@ blockquote:after {
 		font-size: 1.875rem;
 	}
 
-	h2,
-	.home.blog .entry-title,
-	.page .panel-content .recent-posts .entry-title {
+	h2 {
 		font-size: 1.625rem;
 	}
 

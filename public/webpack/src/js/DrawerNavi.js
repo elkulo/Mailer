@@ -1,83 +1,90 @@
-/*
- * DrawerNavi@1.0.0
+/**
+ * DrawerNavi.js
+ *
+ * @version 2.0.0
  */
 const DrawerNavi = () => {
+	const run = () => {
+		const $body = document.body;
+		const $drawerOpenButton = document.querySelector( '.menu-trigger' );
+		const $mainNavi = document.querySelector( '.main-navigation' );
+		const $mainNaviList = $mainNavi.querySelectorAll( 'a' );
+		let timer = 0;
 
-	const $body = document.body;
-	const $drawerOpenButton = document.querySelector( '.menu-trigger' );
-	const $mainNavi = document.querySelector( '.main-navigation' );
-	const $mainNaviList = $mainNavi.querySelectorAll( 'a' );
-	let timer = 0;
+		// メニュートグルボタン
+		const addDrawerToggle = ( e ) => {
+			$body.classList.toggle( 'drawer-on' );
+			$mainNavi.classList.toggle( 'toggle-on' );
 
-	// 閉じるボタン
-	/*
-	let $drawerCloseButton = document.createElement( 'button' );
-	$drawerCloseButton.classList.add( 'drawer-close' );
-	$drawerCloseButton.innerHTML = '<svg class="icon icon-close" aria-hidden="true" role="img"><use href="#icon-close" xlink:href="#icon-close"></use></svg>';
-	$mainNavi.insertBefore( $drawerCloseButton, $mainNavi.firstElementChild );
-	*/
+			if ( e.type === 'resize' ) {
+				$body.classList.remove( 'drawer-on' );
+				$mainNavi.classList.remove( 'toggle-on' );
+			}
+		};
 
-	// メニュートグルボタン
-	const addDrawerToggle = e => {
+		$drawerOpenButton.addEventListener(
+			'click',
+			( e ) => {
+				e.preventDefault();
+				addDrawerToggle( e );
+			},
+			false
+		);
 
-		$body.classList.toggle( 'drawer-on' );
-		$mainNavi.classList.toggle( 'toggle-on' );
+		for ( let i = 0; i < $mainNaviList.length; i++ ) {
+			$mainNaviList[i].addEventListener(
+				'click',
+				( e ) => {
+					if ( $body.classList.contains( 'drawer-on' ) ) {
+						addDrawerToggle( e );
+					}
+				},
+				false
+			);
+		}
 
-		if ( e.type === 'resize' ) {
-			$body.classList.remove( 'drawer-on' );
-			$mainNavi.classList.remove( 'toggle-on' );
+		window.addEventListener(
+			'resize',
+			( e ) => {
+				if ( 0 < timer ) {
+					clearTimeout( timer );
+				}
+				timer = setTimeout( () => {
+					addDrawerToggle( e );
+				}, 100 );
+			},
+			false
+		);
+
+		// サブメニューのボタン
+		let $button = document.createElement( 'button' );
+		$button.classList.add( 'dropdown-toggle' );
+		$button.setAttribute( 'aria-expanded', 'true' );
+		$button.innerHTML =
+      '<svg class="icon icon-angle-down" aria-hidden="true" role="img"><use href="#icon-angle-down" xlink:href="#icon-angle-down"></use></svg>';
+
+		let $subMenu = document.querySelectorAll( '.sub-menu' );
+
+		// ボタンノードの複製の器
+		let $buttonClone;
+
+		// ボタンノードの複製を追加
+		for ( let i = 0; i < $subMenu.length; i++ ) {
+			$buttonClone = $button.cloneNode( true );
+			$subMenu[i].parentNode.insertBefore( $buttonClone, $subMenu[i]);
+
+			$buttonClone.addEventListener(
+				'click',
+				( e ) => {
+					e.preventDefault();
+					e.target.parentNode.parentNode
+						.querySelector( '.current-menu-ancestor > .sub-menu' )
+						.classList.toggle( 'toggled-on' );
+				},
+				false
+			);
 		}
 	};
-
-	$drawerOpenButton.addEventListener( 'click', e => {
-		e.preventDefault();
-		addDrawerToggle( e );
-	}, false );
-
-	/*
-	$drawerCloseButton.addEventListener( 'click', e => {
-		e.preventDefault();
-		addDrawerToggle( e );
-	}, false );
-	*/
-
-	for ( let i = 0; i < $mainNaviList.length; i++ ) {
-		$mainNaviList[i].addEventListener( 'click', e => {
-			if ( $body.classList.contains( 'drawer-on' ) ) {
-				addDrawerToggle( e );
-			}
-		}, false );
-	}
-
-	window.addEventListener( 'resize', e => {
-		if ( 0 < timer ) {
-			clearTimeout( timer );
-		}
-		timer = setTimeout( () => {
-			addDrawerToggle( e );
-		}, 100 );
-	}, false );
-
-	// サブメニューのボタン
-	let $button = document.createElement( 'button' );
-	$button.classList.add( 'dropdown-toggle' );
-	$button.setAttribute( 'aria-expanded', 'true' );
-	$button.innerHTML = '<svg class="icon icon-angle-down" aria-hidden="true" role="img"><use href="#icon-angle-down" xlink:href="#icon-angle-down"></use></svg>';
-
-	let $subMenu = document.querySelectorAll( '.sub-menu' );
-
-	// ボタンノードの複製の器
-	let $buttonClone;
-
-	// ボタンノードの複製を追加
-	for ( let i = 0; i < $subMenu.length; i++ ) {
-		$buttonClone = $button.cloneNode( true );
-		$subMenu[i].parentNode.insertBefore( $buttonClone, $subMenu[i]);
-
-		$buttonClone.addEventListener( 'click', e => {
-			e.preventDefault();
-			e.target.parentNode.parentNode.querySelector( '.current-menu-ancestor > .sub-menu' ).classList.toggle( 'toggled-on' );
-		}, false );
-	}
+	window.addEventListener( 'load', run, false );
 };
 export default DrawerNavi;

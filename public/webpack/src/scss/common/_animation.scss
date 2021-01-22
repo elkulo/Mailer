@@ -8,3 +8,9 @@
 		transform:scale(1,1);
 	}
 }
+
+@keyframes active-toggle-line {
+	100% {
+		height: 0;
+	}
+}
