@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-abstract class WordPressHandler implements HandlerInterface
+class WordPressHandler implements HandlerInterface
 {
-    final public function sendMail(string $to, string $subject, string $body, string $header): void
+    final public function send(string $to, string $subject, string $body, string $header): void
     {
         try {
             if (defined('ABSPATH')) {

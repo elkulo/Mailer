@@ -1,19 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application;
 
-/**
- * メール送信のハンドラーを選択
- *
- * 例）WordPressのハンドラーに切り替える
- * use App\Handler\WordPressHandler as MailerHandler;
- */
-
-use App\Handler\PHPMailerHandler as MailerHandler;
-
-class Mailer extends MailerHandler
+class Mailer
 {
 
     // 設定
@@ -30,17 +20,26 @@ class Mailer extends MailerHandler
 
     private $page_referer; // フォームの設置ページの格納
 
-    protected $view;
+    protected $mail; // メールハンドラー
 
-    public function __construct($config_setting = null)
+    protected $view; // Twigテンプレート
+
+    public function __construct($handler, array $config_setting)
     {
         try {
+
+            // ハンドラーをセット
+            $this->mail = $handler;
+
             // コンフィグをセット
-            if ($config_setting) {
-                $this->setting = array_merge($this->setting, $config_setting);
-            } else {
-                throw new \Exception('Mailer Error: Email settings do not exist.');
-            }
+            $this->setting = array_merge($this->setting, $config_setting);
+
+            // Twigの初期化
+            $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../templates');
+            $this->view = new \Twig\Environment(
+                $loader,
+                getenv('MAILER_DEBUG') ? array() : array('cache' => __DIR__ . '/../../cache')
+            );
 
             // 連続投稿防止
             if (empty($_SESSION)) {
@@ -68,16 +67,6 @@ class Mailer extends MailerHandler
         } catch (\Exception $e) {
             exit($e->getMessage());
         }
-
-        // デバックモード
-        $debug_mode = getenv('MAILER_DEBUG') ? getenv('MAILER_DEBUG') : false;
-
-        // Twigの初期化
-        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../templates');
-        $this->view = new \Twig\Environment(
-            $loader,
-            $debug_mode ? array() : array('cache' => __DIR__ . '/../../cache')
-        );
     }
 
     // 基本機能
@@ -102,7 +91,7 @@ class Mailer extends MailerHandler
             $this->checkinToken();
 
             // 管理者宛に届くメールをセット
-            $this->sendMail(
+            $this->mail->send(
                 $this->setting['ADMIN_MAIL'],
                 $this->getMailSubject(),
                 $this->getAdminBody(),
@@ -111,7 +100,7 @@ class Mailer extends MailerHandler
 
             // ユーザーに届くメールをセット
             if ($this->setting['RETURN_USER'] == 1) {
-                $this->sendMail(
+                $this->mail->send(
                     $this->setting['USER_MAIL'],
                     $this->getMailSubject(),
                     $this->getUserBody(),
@@ -343,18 +332,18 @@ class Mailer extends MailerHandler
                                 }
                             }
                             if ($connectEmpty > 0) {
-                                $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>'.PHP_EOL;
+                                $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>' . PHP_EOL;
                             }
                         } elseif ($val === '') {
                             // デフォルト必須チェック
-                            $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>'.PHP_EOL;
+                            $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>' . PHP_EOL;
                         }
                         $existsFalg = 1;
                         break;
                     }
                 }
                 if ($existsFalg !== 1) {
-                    $error .= '<p>【' . $requireVal . '】が選択されていません。</p>'.PHP_EOL;
+                    $error .= '<p>【' . $requireVal . '】が選択されていません。</p>' . PHP_EOL;
                 }
             }
         }
@@ -370,7 +359,7 @@ class Mailer extends MailerHandler
                 }
                 if ($key === $this->setting['EMAIL_ATTRIBUTE'] && !empty($val)) {
                     if (!$this->isCheckMailFormat($val)) {
-                        $error .= '<p>【' . $key . '】はメールアドレスの形式が正しくありません。</p>'.PHP_EOL;
+                        $error .= '<p>【' . $key . '】はメールアドレスの形式が正しくありません。</p>' . PHP_EOL;
                     }
                 }
             }

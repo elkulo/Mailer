@@ -5,5 +5,5 @@ namespace App\Handler;
 
 interface HandlerInterface
 {
-    public function sendMail(string $to, string $subject, string $body, string $header): void;
+    public function send(string $to, string $subject, string $body, string $header): void;
 }

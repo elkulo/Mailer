@@ -1,11 +1,19 @@
 <?php
 require_once __DIR__ . '/app/vendor/autoload.php';
 
-use App\Application\Mailer;
 use Dotenv\Dotenv;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
+use App\Application\Mailer;
+
+/**
+ * メール送信のハンドラーを選択
+ *
+ * 例）WordPressのハンドラーに切り替える
+ * PHPMailerHandler -> WordPressHandler
+ */
+use App\Handler\PHPMailerHandler as MailerHandler;
 
 (function () {
 
@@ -37,6 +45,6 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
     $whoops->register();
 
     // Mailer
-    $mailer = new Mailer($setting);
+    $mailer = new Mailer(new MailerHandler, $setting);
     $mailer->init();
 })();
