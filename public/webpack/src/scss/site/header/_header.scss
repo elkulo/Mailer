@@ -1,11 +1,7 @@
-
 .site-header {
-	position: relative;
-	width: 100%;
 	
 	.wrap {
-		position: relative;
-		padding: 0;
+		padding: 0 0 0 1rem;
 		
 		@include media(desktop) {
 			padding: 0 2rem;
@@ -14,63 +10,14 @@
 	}
 	
 	.site-header-contain {
-	
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 
-		@include media(desktop) {
-			height: 100px; /* = .custom-header to height size */
-		}
-
 		.site-branding {
-			margin-right: 1rem;
 		}
 
 		.navigation-top {
-			margin-left: auto;
-			
-			@include media(desktop) {
-				margin-left: 0;
-				margin-right: auto;
-			}
-		}
-		
-		.navigation-guide {
-			display: none;
-
-			@include media(desktop) {
-				display: flex;
-				align-items: center;
-				margin-left: auto;
-			}
-			
-			.tel {
-				text-align: center;
-				font-size: 0.875rem;
-				font-weight: 900;
-				white-space: nowrap;
-				font-family: $font__heading;
-				line-height: 1.2;
-				color: $color__link;
-				border: solid 1px currentColor;
-				border-radius: 6px;
-
-				> strong {
-					display: block;
-					font-size: 2.25em;
-				}
-			}
-		}
-	}
-
-	.custom-header {
-		.home & {
-			height: 64vh;
-
-			@include media(desktop) {
-				height: calc(100vh - 100px); /* .site-header-contain to height size */
-			}
 		}
 	}
 }

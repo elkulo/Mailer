@@ -1,6 +1,17 @@
 .custom-header {
 	position: relative;
 	overflow: hidden;
+	background: {
+		image: url("../images/header.jpg");
+		position: 50% 50%;
+		size: cover;
+	}
+	padding-bottom: 100%;
+
+	@include media(tablet) {
+		padding: 0;
+		height: 600px;
+	}
 	
 	&__hero {
 		position: absolute;
@@ -9,7 +20,6 @@
 		width: 100%;
 		z-index: 1;
 		transform: translate(-50%, -50%);
-		text-align: center;
 		text-align: center;
 
 		&__title {
@@ -36,67 +46,6 @@
 		
 		.button {
 			font-size: 1.125rem;
-		}
-	}
-	
-	.custom-header-media {
-
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		width: 100%;
-		height: 100%;
-
-		.custom-header-slider {
-			height: 100%;
-			background: #212121;
-
-			.glide__track,
-			.glide__slides,
-			.glide__slide {
-				width: 100%;
-				height: 100%;
-			}
-			.glide__slides {
-				position: relative;
-
-				.glide__slide {
-					position: absolute;
-					left: 0;
-					top: 0;
-					right: 0;
-					bottom: 0;
-					opacity: 0;
-					transition: opacity 2000ms ease;
-				
-					&--active {
-						opacity: 1;
-					}
-				}
-			}
-		}
-
-		img {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			max-width: 1000%;
-			min-width: 100vw;
-			width: auto;
-			min-height: 100%;
-			height: auto;
-			transform: translateX(-50%) translateY(-50%);
-
-			@supports ( object-fit: cover ) {
-				transform: none;
-				object-fit: cover;
-				left: 0;
-				top: 0;
-				height: 100%;
-				width: 100%;
-			}
 		}
 	}
 }

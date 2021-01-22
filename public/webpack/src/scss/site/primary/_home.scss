@@ -2,7 +2,6 @@
 /* Contact */
 .contact-section {
 	padding: 3rem 0;
-	border-bottom: solid 1px #ddd;
 
 	@include media(tablet) {
 		padding: 5rem 0;
@@ -47,6 +46,7 @@
 	.contact-form {
 		background: #fff;
 		color: #212121;
+		box-shadow: 0 0 3px #000;
 		
 		&__ul {
 			margin: 0;
