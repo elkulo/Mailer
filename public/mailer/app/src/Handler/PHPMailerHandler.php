@@ -6,9 +6,21 @@ namespace App\Handler;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+/**
+ * PHPMailerHandler
+ */
 class PHPMailerHandler implements HandlerInterface
 {
-
+    
+    /**
+     * send
+     *
+     * @param  string $to
+     * @param  string $subject
+     * @param  string $body
+     * @param  string $header
+     * @return void
+     */
     final public function send(string $to, string $subject, string $body, string $header): void
     {
         // SMTP認証.

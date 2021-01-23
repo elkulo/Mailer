@@ -3,31 +3,71 @@ declare(strict_types=1);
 
 namespace App\Application;
 
+use App\Handler\HandlerInterface;
+
+/**
+ * Mailer
+ */
 class Mailer
 {
 
-    // 設定
+    /**
+     * 設定
+     *
+     * @var array
+     */
     private $setting = array(
         'FROM_NAME' => FROM_NAME, // 送信元の宛名
         'FROM_MAIL' => FROM_MAIL, // 送信元のメールアドレス(SMTPの設定で上書きされる)
         'ADMIN_NAME' => ADMIN_NAME, // 管理者の宛名
         'ADMIN_MAIL' => ADMIN_MAIL, // 管理者メールアドレス
     );
-
-    private $post_data; // $_POST
-
-    private $error_massage; // エラーメッセージ
-
-    private $page_referer; // フォームの設置ページの格納
-
-    protected $mail; // メールハンドラー
-
-    protected $view; // Twigテンプレート
-
-    public function __construct($handler, array $config_setting)
+    
+    /**
+     * $_POST
+     *
+     * @var mixed
+     */
+    private $post_data;
+    
+    /**
+     * エラーメッセージ
+     *
+     * @var mixed
+     */
+    private $error_massage;
+    
+    /**
+     * フォームの設置ページの格納
+     *
+     * @var mixed
+     */
+    private $page_referer;
+    
+    /**
+     * メールハンドラー
+     *
+     * @var mixed
+     */
+    protected $mail;
+    
+    /**
+     * Twigテンプレート
+     *
+     * @var mixed
+     */
+    protected $view;
+    
+    /**
+     * __construct
+     *
+     * @param  mixed $handler
+     * @param  mixed $config_setting
+     * @return void
+     */
+    public function __construct(HandlerInterface $handler, array $config_setting)
     {
         try {
-
             // ハンドラーをセット
             $this->mail = $handler;
 
@@ -69,8 +109,12 @@ class Mailer
         }
     }
 
-    // 基本機能
-    public function init()
+    /**
+     * 基本機能
+     *
+     * @return void
+     */
+    public function init(): void
     {
 
         // リファラチェック
@@ -127,8 +171,12 @@ class Mailer
         }
     }
 
-    // 件名（共通）
-    private function getMailSubject()
+    /**
+     * 件名（共通）
+     *
+     * @return string
+     */
+    private function getMailSubject(): string
     {
         $subject = 'No Subject';
         $before  = $after = '';
@@ -147,8 +195,12 @@ class Mailer
         return $this->ksesRM($this->ksesESC($before . $subject . $after));
     }
 
-    // 管理者宛送信メールヘッダ
-    private function getAdminHeader()
+    /**
+     * 管理者宛送信メールヘッダ
+     *
+     * @return string
+     */
+    private function getAdminHeader(): string
     {
 
         $header = array(
@@ -166,8 +218,12 @@ class Mailer
         return $this->setting['ADMIN_NAME'];
     }
 
-    // 管理者宛送信メールボディ
-    private function getAdminBody()
+    /**
+     * 管理者宛送信メールボディ
+     *
+     * @return string
+     */
+    private function getAdminBody(): string
     {
 
         $body  = 'サイト「' . $this->setting['FROM_NAME'] . '」でお問い合わせがありました。';
@@ -183,8 +239,12 @@ class Mailer
         return $body;
     }
 
-    // ユーザ宛送信メールヘッダ
-    private function getUserHeader()
+    /**
+     * ユーザ宛送信メールヘッダ
+     *
+     * @return string
+     */
+    private function getUserHeader(): string
     {
 
         $header = array(
@@ -195,8 +255,12 @@ class Mailer
         return $this->setting['USER_NAME'];
     }
 
-    // ユーザ宛送信メールボディ
-    private function getUserBody()
+    /**
+     * ユーザ宛送信メールボディ
+     *
+     * @return string
+     */
+    private function getUserBody(): string
     {
 
         $body  = $this->replaceDisplayName($this->setting['BODY_BEGINNING']);
@@ -211,105 +275,135 @@ class Mailer
         return $body;
     }
 
-    // 送信メールにPOSTデータをセットする関数
-    private function getPost()
+    /**
+     * 送信メールにPOSTデータをセットする関数
+     *
+     * @return string
+     */
+    private function getPost(): string
     {
-        $resArray = '';
+        $response = '';
         foreach ($this->post_data as $key => $val) {
-            $out = '';
+            $output = '';
             if (is_array($val)) {
-                foreach ($val as $key02 => $item) {
+                foreach ($val as $item) {
                     // 連結項目の処理
                     if (is_array($item)) {
-                        $out .= $this->changeJoin($item);
+                        $output .= $this->changeJoin($item);
                     } else {
-                        $out .= $item . ', ';
+                        $output .= $item . ', ';
                     }
                 }
-                $out = rtrim($out, ', ');
+                $output = rtrim($output, ', ');
             } else {
-                $out = $val;
+                $output = $val;
             }
 
             // 全角を半角へ変換
-            $out = $this->changeHankaku($out, $key);
+            $output = $this->changeHankaku($output, $key);
 
             // アンダースコアで始まる文字は除外
             if (substr($key, 0, 1) !== '_') {
-                $resArray .= '【 ' . $this->ksesESC($key) . ' 】 ' . $this->ksesESC($out) . PHP_EOL;
+                $response .= '【' . $this->ksesESC($key) . '】' . $this->ksesESC($output) . PHP_EOL;
             }
 
             // フォームの設置ページを保存
             if ($key === '_http_referer') {
-                $this->page_referer = $this->ksesESC($out);
+                $this->page_referer = $this->ksesESC($output);
             }
         }
-        return $resArray;
+        return $response;
     }
 
-    // 確認画面の入力内容出力用関数
-    private function getConfirm()
+    /**
+     * 確認画面の入力内容出力用関数
+     *
+     * @return string
+     */
+    private function getConfirm(): string
     {
         $html = '';
 
         foreach ($this->post_data as $key => $val) {
-            $out = '';
+            $output = '';
 
             // チェックボックス（配列）の結合
             if (is_array($val)) {
-                foreach ($val as $key02 => $item) {
+                foreach ($val as $item) {
                     if (is_array($item)) {
-                        $out .= $this->changeJoin($item);
+                        $output .= $this->changeJoin($item);
                     } else {
-                        $out .= $item . ', ';
+                        $output .= $item . ', ';
                     }
                 }
-                $out = rtrim($out, ', ');
+                $output = rtrim($output, ', ');
             } else {
-                $out = $val;
+                $output = $val;
             }
 
             // 改行コードを変換
-            $out = nl2br($this->ksesESC($out));
+            $output = nl2br($this->ksesESC($output));
             $key = trim($this->ksesESC($key));
-            $content = str_replace(array('<br />', '<br>'), '', $out);
+            $content = str_replace(array('<br />', '<br>'), '', $output);
 
             // 全角を半角へ変換
-            $out = $this->changeHankaku($out, $key);
+            $output = $this->changeHankaku($output, $key);
 
-            $html .= '<tr><th>' . $key . '</th><td>' . $out;
-            $html .= '<input type="hidden" name="' . $key . '" value="' . $content . '" />';
-            $html .= '</td></tr>' . PHP_EOL;
+            // 確認をセット
+            $html .= sprintf(
+                '<tr><th>%1$s</th><td>%2$s<input type="hidden" name="%1$s" value="%3$s" /></td></tr>' . PHP_EOL,
+                $key,
+                $output,
+                $content
+            );
         }
         return '<table>' . $html . '</table>';
     }
 
-    // 確認画面のフォームにアクション先出力
-    private function getActionURL()
+    /**
+     * 確認画面のフォームにアクション先出力
+     *
+     * @return string
+     */
+    private function getActionURL(): string
     {
         return $this->ksesESC($this->ksesHTML($_SERVER['SCRIPT_NAME']));
     }
 
-    // 完了後のリンク先
-    private function getReturnURL()
+    /**
+     * 完了後のリンク先
+     *
+     * @return string
+     */
+    private function getReturnURL(): string
     {
         return $this->ksesESC($this->setting['END_URL']);
     }
 
-    // トークン出力
-    private function getCreateNonce()
+    /**
+     * トークン出力
+     *
+     * @return string
+     */
+    private function getCreateNonce(): string
     {
         $token                     = sha1(uniqid((string)mt_rand(), true));
         $_SESSION['_mailer_nonce'] = $token;
-        $referer = $this->ksesESC($_SERVER['HTTP_REFERER']);
-        $html  = '<input type="hidden" name="_mailer_nonce" value="' . $token . '" />';
-        $html .= '<input type="hidden" name="_http_referer" value="' . $referer . '" />';
-        $html .= '<input type="hidden" name="_confirm_submit" value="1" />' . PHP_EOL;
-        return $html;
+        return sprintf(
+            '<input type="hidden" name="_mailer_nonce" value="%1$s" />
+            <input type="hidden" name="_http_referer" value="%2$s" />
+            <input type="hidden" name="_confirm_submit" value="1" />' . PHP_EOL,
+            $token,
+            $this->ksesESC($_SERVER['HTTP_REFERER'])
+        );
     }
 
-    // 必須チェック
-    private function checkinRequire()
+    /**
+     * 必須チェック
+     *
+     * @return void
+     */
+    private function checkinRequire(): void
     {
         $error = '';
 
@@ -367,8 +461,12 @@ class Mailer
         $this->error_massage = isset($error) ? $error : 0;
     }
 
-    // 送信画面判定
-    private function isCheckConfirm()
+    /**
+     * 送信画面判定
+     *
+     * @return bool
+     */
+    private function isCheckConfirm(): bool
     {
         if (isset($this->post_data['_confirm_submit']) && $this->post_data['_confirm_submit'] === '1') {
             return true;
@@ -377,14 +475,23 @@ class Mailer
         }
     }
 
-    // 必須エラー判定
-    private function isCheckRequire()
+    /**
+     * 必須エラー判定
+     *
+     * @return bool
+     */
+    private function isCheckRequire(): bool
     {
         return empty($this->error_massage) ? true : false;
     }
 
-    // メール文字判定
-    private function isCheckMailFormat($post)
+    /**
+     * メール文字判定
+     *
+     * @param  string $post
+     * @return bool
+     */
+    private function isCheckMailFormat(string $post): bool
     {
         $post         = trim($post);
         $mail_address = explode('@', $post);
@@ -398,55 +505,67 @@ class Mailer
         }
     }
 
-    // 禁止ワード
-    private function checkNGWord()
+    /**
+     * 禁止ワード
+     *
+     * @return void
+     */
+    private function checkNGWord(): void
     {
-        $ng_words = explode(',', $this->setting['NG_WORD']);
+        $ng_words = (array) explode(' ', $this->setting['NG_WORD']);
 
-        if (empty($ng_words[0])) {
-            return;
-        } else {
+        if (isset($ng_words[0])) {
             foreach ($this->post_data as $val) {
                 foreach ($ng_words as $word) {
                     if (mb_strpos($val, $word, 0, 'UTF-8') !== false) {
-                        return exit('「' . $word . '」を含む単語はブロックされています。');
+                        exit('"' . $word . '"を含む単語はブロックされています。');
                     }
                 }
             }
         }
     }
 
-    // 日本語チェック
-    private function checkMBWord()
+    /**
+     * 日本語チェック
+     *
+     * @return void
+     */
+    private function checkMBWord(): void
     {
-        $mb_word = $this->setting['MB_WORD'];
+        $mb_word = (string) $this->setting['MB_WORD'];
 
-        if (empty($mb_word)) {
-            return;
-        } else {
+        if ($mb_word) {
             foreach ($this->post_data as $key => $val) {
                 if ($key === $mb_word) {
                     if (strlen($val) == mb_strlen($val, 'UTF-8')) {
-                        return exit('日本語を含まない文章はブロックされています。');
+                        exit('日本語を含まない文章はブロックされています。');
                     }
                 }
             }
         }
     }
 
-    // リファラチェック
-    private function checkinReferer()
+    /**
+     * リファラチェック
+     *
+     * @return void
+     */
+    private function checkinReferer(): void
     {
         if (empty($_SERVER['HTTP_REFERER']) || empty($_SERVER['SERVER_NAME'])) {
-            return exit('リファラチェックエラー');
+            exit('リファラチェックエラー');
         }
         if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) === false) {
-            return exit('リファラチェックエラー');
+            exit('リファラチェックエラー');
         }
     }
 
-    // トークンチェック
-    private function checkinToken()
+    /**
+     * トークンチェック
+     *
+     * @return void
+     */
+    private function checkinToken(): void
     {
         if (empty($_SESSION['_mailer_nonce']) || ($_SESSION['_mailer_nonce'] !== $_POST['_mailer_nonce'])) {
             // 再読み込みで発行されたセッションを破壊
@@ -465,7 +584,7 @@ class Mailer
             if (isset($_SESSION['_mailer_nonce'])) {
                 session_destroy();
             }
-            return exit('タイムアウトエラー');
+            exit('タイムアウトエラー');
         } else {
             // 多重投稿を防ぐ
             // セッションを破壊してクッキーを削除
@@ -487,29 +606,40 @@ class Mailer
         }
     }
 
-    // 全角→半角変換
-    private function changeHankaku($out, $key)
+    /**
+     * 全角半角変換
+     *
+     * @param  string $output
+     * @param  string $key
+     * @return string
+     */
+    private function changeHankaku(string $output, string $key): string
     {
         if (empty($this->setting['HANKAKU_ATTRIBUTE']) || !function_exists('mb_convert_kana')) {
-            return $out;
+            return $output;
         }
         if (is_array($this->setting['HANKAKU_ATTRIBUTE'])) {
             foreach ($this->setting['HANKAKU_ATTRIBUTE'] as $val) {
                 if ($key === $val) {
-                    $out = mb_convert_kana($out, 'a', 'UTF-8');
+                    $output = mb_convert_kana($output, 'a', 'UTF-8');
                 }
             }
         } else {
-            $out = mb_convert_kana($out, 'a', 'UTF-8');
+            $output = mb_convert_kana($output, 'a', 'UTF-8');
         }
-        return $out;
+        return $output;
     }
 
-    // 配列連結の処理
-    private function changeJoin($arr)
+    /**
+     * 配列連結の処理
+     *
+     * @param  array $items
+     * @return string
+     */
+    private function changeJoin(array $items): string
     {
-        $out = '';
-        foreach ($arr as $key => $val) {
+        $output = '';
+        foreach ($items as $key => $val) {
             if ($key === 0 || $val == '') {
                 // 配列が0、または内容が空の場合は連結文字を付加しない
                 $key = '';
@@ -517,13 +647,18 @@ class Mailer
                 // 金額の場合には3桁ごとにカンマを追加
                 $val = number_format($val);
             }
-            $out .= $val . $key;
+            $output .= $val . $key;
         }
-        return $out;
+        return $output;
     }
 
-    // 名前置換え
-    private function replaceDisplayName($rep)
+    /**
+     * 名前置換え
+     *
+     * @param  string $attr
+     * @return string
+     */
+    private function replaceDisplayName(string $attr): string
     {
         $str = $this->setting['DISPLAY_NAME'];
         $pos = $this->post_data[$str];
@@ -531,19 +666,29 @@ class Mailer
         $name_a = array('{' . $str . '}', '｛' . $str . '｝', '{' . $str . '｝', '｛' . $str . '}');
         $name_b = $this->ksesESC($pos);
         // 置換
-        $txt = str_replace($name_a, $name_b, $rep);
-        return $txt;
+        return str_replace($name_a, $name_b, $attr);
     }
 
-    // 空白と改行を消すインジェクション対策
-    private function ksesRM($str)
+    /**
+     * 空白と改行を消すインジェクション対策
+     *
+     * @param  string $str
+     * @return string
+     */
+    private function ksesRM(string $str): string
     {
         $str = str_replace(array("\r\n", "\r", "\n"), '', $str);
         return trim($str);
     }
 
-    // エスケープ
-    private function ksesESC($value, $enc = 'UTF-8')
+    /**
+     * エスケープ
+     *
+     * @param  mixed $value
+     * @param  string $enc
+     * @return void
+     */
+    private function ksesESC($value, string $enc = 'UTF-8')
     {
         if (is_array($value)) {
             return array_map(array($this, 'esc'), $value);
@@ -551,7 +696,12 @@ class Mailer
         return htmlspecialchars($value, ENT_QUOTES, $enc);
     }
 
-    // NULLバイトとHTMLタグ除去
+    /**
+     * NULLバイトとHTMLタグ除去
+     *
+     * @param  mixed $str
+     * @return void
+     */
     private function ksesHTML($str)
     {
         $sanitized = array();
