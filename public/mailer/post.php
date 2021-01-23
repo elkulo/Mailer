@@ -17,18 +17,16 @@ use App\Handler\PHPMailerHandler as MailerHandler;
 
 (function () {
 
-    /**
-     * 設定ファイル(.env)までのパス
-     */
+    // 設定ファイル(.env)までのパス.
     $env_path = __DIR__;
 
-    // Config
+    // Config.
     Dotenv::create($env_path)->load();
     require_once  __DIR__ . '/config/server.php';
     require_once  __DIR__ . '/config/setting.php';
     date_default_timezone_set(TIME_ZONE);
 
-    // Whoops
+    // Whoops.
     $debug_mode = getenv('MAILER_DEBUG') ? getenv('MAILER_DEBUG') : false;
     $whoops     = new Whoops();
     if ($debug_mode) {
@@ -36,7 +34,7 @@ use App\Handler\PHPMailerHandler as MailerHandler;
     } else {
         $whoops->pushHandler(
             function ($exception, $inspector, $run) {
-                // エラーログの出力.
+                // Error Log.
                 logger($exception->getMessage());
                 return WhoopsHandler::DONE;
             }
@@ -44,7 +42,7 @@ use App\Handler\PHPMailerHandler as MailerHandler;
     }
     $whoops->register();
 
-    // Mailer
+    // Mailer.
     $mailer = new Mailer(new MailerHandler, $setting);
     $mailer->init();
 })();

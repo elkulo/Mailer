@@ -2,11 +2,12 @@
 .env
 
 # Monolog
-logs/
+logs/*
 !/logs/README.md
+!/logs/.htaccess
 
 # Twig
-cache/
+cache/*
 
 # PHPUnit Test
 /results/

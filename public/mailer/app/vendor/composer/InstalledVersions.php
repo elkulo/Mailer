@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'fd2ee747fcf50a1741010debb2c94569e0d09fad',
+    'reference' => '27adedea61518de45913b212f1f6939affdc2349',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -59,7 +59,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'fd2ee747fcf50a1741010debb2c94569e0d09fad',
+      'reference' => '27adedea61518de45913b212f1f6939affdc2349',
     ),
     'filp/whoops' => 
     array (

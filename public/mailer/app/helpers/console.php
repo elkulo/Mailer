@@ -1,9 +1,14 @@
 <?php
-
 declare(strict_types=1);
 
-// Chrome Logger.
-function console($message, $level = 1)
+/**
+ * Chrome Logger.
+ *
+ * @param  string $message
+ * @param  string|int $level
+ * @return void
+ */
+function console(string $message, $level = 1): void
 {
     switch ($level) {
         case 'error':
@@ -31,5 +36,4 @@ function console($message, $level = 1)
             \ChromePhp::log($message);
             break;
     }
-    return;
 }

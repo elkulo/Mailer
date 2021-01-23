@@ -1,12 +1,17 @@
 <?php
-
 declare(strict_types=1);
 
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;
 
-// Monolog.
-function logger($message, $level = 1)
+/**
+ * Monolog
+ *
+ * @param  string $message
+ * @param  string|int $level
+ * @return void
+ */
+function logger(string $message, $level = 1): void
 {
     $logfile = new RotatingFileHandler(dirname(__DIR__) . '/logs/send.log', 31);
     $logs = new Logger('send');
@@ -43,5 +48,4 @@ function logger($message, $level = 1)
             $logs->debug($message);
             break;
     }
-    return;
 }

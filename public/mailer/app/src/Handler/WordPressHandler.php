@@ -3,8 +3,21 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+/**
+ * WordPressHandler
+ */
 class WordPressHandler implements HandlerInterface
 {
+
+    /**
+     * send
+     *
+     * @param  string $to
+     * @param  string $subject
+     * @param  string $body
+     * @param  string $header
+     * @return void
+     */
     final public function send(string $to, string $subject, string $body, string $header): void
     {
         try {
