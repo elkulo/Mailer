@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '27adedea61518de45913b212f1f6939affdc2349',
+    'reference' => '7cb91ab17455651d0d37e892eb2dd9188b08dccc',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -36,16 +36,16 @@
       'aliases' => 
       array (
       ),
-      'reference' => '27adedea61518de45913b212f1f6939affdc2349',
+      'reference' => '7cb91ab17455651d0d37e892eb2dd9188b08dccc',
     ),
     'filp/whoops' => 
     array (
-      'pretty_version' => '2.9.1',
-      'version' => '2.9.1.0',
+      'pretty_version' => '2.9.2',
+      'version' => '2.9.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '307fb34a5ab697461ec4c9db865b20ff2fd40771',
+      'reference' => 'df7933820090489623ce0be5e85c7e693638e536',
     ),
     'monolog/monolog' => 
     array (
