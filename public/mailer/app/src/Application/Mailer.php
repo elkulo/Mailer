@@ -225,18 +225,15 @@ class Mailer
      */
     private function getAdminBody(): string
     {
-
-        $body  = 'サイト「' . $this->setting['FROM_NAME'] . '」でお問い合わせがありました。';
-        $body .= "\n------------------------------------------------------\n";
-        $body .= $this->getPost();
-        $body .= "\n------------------------------------------------------\n";
-        $body .= "\n※ この通知は送信専用のメールアドレスから送られています。";
-        $body .= "\n※ ご連絡の際はメールの送り先にご注意ください。\n\n";
-        $body .= '送信された日時：' . date('Y/m/d (D) H:i:s', time()) . "\n";
-        $body .= '送信者のIPアドレス：' . @$_SERVER['REMOTE_ADDR'] . "\n";
-        $body .= '送信者のホスト名：' . getHostByAddr($_SERVER['REMOTE_ADDR']) . "\n";
-        $body .= 'お問い合わせページURL：' . $this->page_referer . "\n";
-        return $body;
+        $value = array(
+            '__FROM_SITE_NAME' => $this->setting['FROM_NAME'],
+            '__POST_ALL' => $this->getPost(),
+            '__TIME' => date('Y/m/d (D) H:i:s', time()),
+            '__IP' => $_SERVER['REMOTE_ADDR'],
+            '__HOST' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+            '__URL' => $this->page_referer,
+        );
+        return $this->view->render('/mail/admin.mail.twig', $value);
     }
 
     /**
@@ -262,17 +259,18 @@ class Mailer
      */
     private function getUserBody(): string
     {
+        // FIXME name属性変換
+        //$body  = $this->replaceDisplayName($this->setting['BODY_BEGINNING']);
 
-        $body  = $this->replaceDisplayName($this->setting['BODY_BEGINNING']);
-        $body .= "\n------------------------------------------------------\n";
-        $body .= $this->getPost();
-        $body .= "\n------------------------------------------------------\n";
-        $body .= '送信日時：' . date('Y/m/d (D) H:i:s', time()) . "\n";
-        $body .= "\n※ この通知は送信専用のメールアドレスから送られています。";
-        $body .= "\n※ ご連絡の際はメールの送り先にご注意ください。\n\n";
-        $body .= $this->replaceDisplayName($this->setting['BODY_SIGNATURE']);
-
-        return $body;
+        $value = array(
+            '__FROM_SITE_NAME' => $this->setting['FROM_NAME'],
+            '__POST_ALL' => $this->getPost(),
+            '__TIME' => date('Y/m/d (D) H:i:s', time()),
+            '__IP' => $_SERVER['REMOTE_ADDR'],
+            '__HOST' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+            '__URL' => $this->page_referer,
+        );
+        return $this->view->render('/mail/user.mail.twig', $value);
     }
 
     /**
@@ -686,7 +684,7 @@ class Mailer
      *
      * @param  mixed $value
      * @param  string $enc
-     * @return void
+     * @return mixed
      */
     private function ksesESC($value, string $enc = 'UTF-8')
     {
