@@ -2,8 +2,15 @@
 
 $setting = array(
 
+    // 送信完了後に戻るページURL
+    'RETURN_PAGE' => '/',
+
     // 差出人（$Emailのname属性の値）に自動返信メールを送る(送る=1, 送らない=0)
-    'RETURN_USER' => 1,
+    'REPLY_USERMAIL' => 1,
+
+    // 管理者宛のメールで差出人を送信者のメールアドレスにする(する=1, しない=0)
+    // SMTPのメールアドレスが優先される。
+    'IS_FROM_USERMAIL' => 0,
 
     /**
      * 件名の形式
@@ -15,14 +22,17 @@ $setting = array(
     // 件名の後ろにつける文字
     'SUBJECT_AFTER' => ' - Mailer',
 
-    // 件名にするname属性(name属性に該当なしの場合はNo Subject)
+    // 件名にするname属性(該当なしの場合はNo Subject)
     'SUBJECT_ATTRIBUTE' => '件名',
     
-    // Emailのname属性
+    // ユーザーの宛名にするname属性
+    'USERNAME_ATTRIBUTE' => 'お名前',
+
+    // ユーザーのEmailのname属性(メールアドレス形式チェックあり)
     'EMAIL_ATTRIBUTE' => 'Email',
 
     // 必須項目のname属性
-    'MANDATORY_ATTRIBUTE' => [
+    'REQUIRED_ATTRIBUTE' => [
         'お名前',
         'Email',
         'フリガナ',
@@ -31,21 +41,10 @@ $setting = array(
         '個人情報取扱',
     ],
 
-    // {名前}のname属性
-    // フォーム側の「名前」箇所のname属性の値　※自動返信メールで置き換えが必要な場合
-    'DISPLAY_NAME' => 'お名前',
-    
-    // 管理者宛のメールで差出人を送信者のメールアドレスにする(する=1, しない=0)
-    // SMTPのメールアドレスが優先される。
-    'IS_FROM_USERMAIL' => 0,
-
     // 全角英数字を半角変換
     // 全角英数字→半角変換を行う項目のname属性の値（name="○○"の「○○」部分）
     // 配列の形「name="○○[]"」の場合には必ず後ろの[]を取ったものを指定して下さい。
     'HANKAKU_ATTRIBUTE' => ['電話番号','金額'],
-
-    // 送信完了後に戻るページURL
-    'END_URL' => '/',
 
     // 禁止ワードを含む文章をブロック
     // すべての入力フォームが対象のため、例えば @ を禁止にした場合メールアドレスそのものがNGになります。

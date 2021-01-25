@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '7cb91ab17455651d0d37e892eb2dd9188b08dccc',
+    'reference' => 'ead73918cd5c5d458ebca356df51ec76fc4b7609',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -36,7 +36,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '7cb91ab17455651d0d37e892eb2dd9188b08dccc',
+      'reference' => 'ead73918cd5c5d458ebca356df51ec76fc4b7609',
     ),
     'filp/whoops' => 
     array (
