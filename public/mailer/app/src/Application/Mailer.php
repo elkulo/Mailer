@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Application;
 
 use App\Handler\HandlerInterface;
+use Twig\Loader\FilesystemLoader as TwigLoader;
+use Twig\Environment as TwigEnvironment;
 
 /**
  * Mailer
@@ -52,11 +54,18 @@ class Mailer
     protected $mail;
 
     /**
-     * Twigテンプレート
+     * Twig ハンドラー
      *
      * @var object
      */
     protected $view;
+    
+    /**
+     * Twig キャッシュディレクトリ
+     *
+     * @var string
+     */
+    protected $view_cache_dir = __DIR__ . '/../../cache';
 
     /**
      * __construct
@@ -75,10 +84,10 @@ class Mailer
             $this->setting = array_merge($this->setting, $config_setting);
 
             // Twigの初期化
-            $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../templates');
-            $this->view = new \Twig\Environment(
+            $loader = new TwigLoader(__DIR__ . '/../../../templates');
+            $this->view = new TwigEnvironment(
                 $loader,
-                getenv('MAILER_DEBUG') ? array() : array('cache' => __DIR__ . '/../../cache')
+                getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
             );
 
             // 連続投稿防止
@@ -114,34 +123,37 @@ class Mailer
     public function init(): void
     {
 
-        // リファラチェック $error_massage にエラー格納
+        // リファラチェック
         $this->checkinReferer();
 
-        // 日本語チェック $error_massage にエラー格納
+        // 日本語チェック
         $this->checkinMBWord();
 
-        // NGワードチェック $error_massage にエラー格納
+        // NGワードチェック
         $this->checkinNGWord();
 
         // 必須項目チェックで $error_massage にエラー格納
         $this->checkinRequire();
 
         // エラー判定
-        $this->checkinErrorExit();
+        if ($this->isErrorMassage()) {
+            $this->view->display('/error.twig', array(
+                'theErrorMassage' => $this->error_massage,
+            ));
+            // エラーメッセージがある場合は処理を止める
+            exit;
+        }
 
-        // 確認画面通過チェック
+        // 確認画面の判定
         if (!$this->isConfirmSubmit()) {
             // 確認画面から送信されていない場合
             $this->view->display('/confirm.twig', array(
                 'theActionURL' => $this->getActionURL(),
-                'theConfirm' => $this->getConfirm() . $this->getCreateNonce(),
+                'theConfirmContent' => $this->getConfirm() . PHP_EOL . $this->getCreateNonce(),
             ));
         } else {
             // トークンチェック
             $this->checkinToken();
-
-            // 重複投稿のエラー判定
-            $this->checkinErrorExit();
 
             // 管理者宛に届くメールをセット
             $this->mail->send(
@@ -162,7 +174,7 @@ class Mailer
             }
 
             // 送信完了画面
-            $this->view->display('/complet.twig', array(
+            $this->view->display('/complete.twig', array(
                 'theReturnURL' => $this->getReturnURL(),
             ));
         }
@@ -287,20 +299,22 @@ class Mailer
                 $output = $val;
             }
 
-            // 全角を半角へ変換
+            // 全角を半角へ変換.
             $output = $this->changeHankaku($output, $key);
 
-            // アンダースコアで始まる文字は除外
+            // アンダースコアで始まる文字は除外.
             if (substr($key, 0, 1) !== '_') {
                 $response .= '【' . $this->ksesESC($key) . '】' . $this->ksesESC($output) . PHP_EOL;
             }
 
-            // フォームの設置ページを保存
+            // フォームの設置ページを保存.
             if ($key === '_http_referer') {
                 $this->page_referer = $this->ksesESC($output);
             }
         }
-        return $response;
+
+        // 不要な改行を整形.
+        return trim($response);
     }
 
     /**
@@ -446,7 +460,7 @@ class Mailer
                 }
             }
         }
-        $this->error_massage = $this->error_massage ? $this->error_massage : $error;
+        $this->error_massage = $error;
     }
 
     /**
@@ -470,6 +484,16 @@ class Mailer
     }
 
     /**
+     * エラーメッセージの判定
+     *
+     * @return bool
+     */
+    private function isErrorMassage(): bool
+    {
+        return $this->error_massage ? true : false;
+    }
+
+    /**
      * 送信画面判定
      *
      * @return bool
@@ -478,9 +502,8 @@ class Mailer
     {
         if (isset($this->post_data['_confirm_submit']) && $this->post_data['_confirm_submit'] === '1') {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -496,7 +519,7 @@ class Mailer
             foreach ($this->post_data as $value) {
                 foreach ($ng_words as $word) {
                     if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
-                        $this->error_massage = '"' . $word . '"を含む単語はブロックされています。';
+                        $this->addExceptionExit('"' . $word . '"を含む単語は送信できません');
                     }
                 }
             }
@@ -516,7 +539,7 @@ class Mailer
             foreach ($this->post_data as $key => $value) {
                 if ($key === $mb_word) {
                     if (strlen($value) == mb_strlen($value, 'UTF-8')) {
-                        $this->error_massage = '日本語を含まない文章はブロックされています。';
+                        $this->addExceptionExit('日本語を含まない文章は送信できません');
                     }
                 }
             }
@@ -532,11 +555,11 @@ class Mailer
     {
         if (isset($_SERVER['HTTP_REFERER']) && isset($_SERVER['SERVER_NAME'])) {
             if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) === false) {
-                $this->error_massage = '指定のページ以外から送信されています。';
+                $this->addExceptionExit('指定のページ以外から送信されています');
             }
         }
         if (empty($_SERVER['HTTP_REFERER']) || empty($_SERVER['SERVER_NAME'])) {
-            $this->error_massage = '指定のページ以外から送信されています。';
+            $this->addExceptionExit('指定のページ以外から送信されています');
         }
     }
 
@@ -564,7 +587,7 @@ class Mailer
             if (isset($_SESSION['_mailer_nonce'])) {
                 session_destroy();
             }
-            $this->error_massage = '連続した投稿の可能性があるためエラーとなりました。';
+            $this->addExceptionExit('連続した投稿の可能性があるため送信できません');
         } else {
             // 多重投稿を防ぐ
             // セッションを破壊してクッキーを削除
@@ -587,19 +610,20 @@ class Mailer
     }
 
     /**
-     * エラーメッセージの判定
+     * 例外発生時の停止
      *
+     * @param  string $massage
      * @return void
      */
-    private function checkinErrorExit(): void
+    private function addExceptionExit(string $massage): void
     {
-        if ($this->error_massage) {
-            $this->view->display('/error.twig', array(
-                'theErrorMassage' => $this->error_massage,
-            ));
-            // エラーの場合は処理を止める
-            exit;
-        }
+        (new TwigEnvironment(
+            new TwigLoader(__DIR__ . '/../View'),
+            getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
+        ))->display('/Exception.twig', array(
+            'theExceptionMassage' => $massage,
+        ));
+        exit;
     }
 
     /**
