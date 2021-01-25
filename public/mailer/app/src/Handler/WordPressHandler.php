@@ -24,12 +24,13 @@ class WordPressHandler implements HandlerInterface
             if (defined('ABSPATH')) {
                 // WordPress関数で送信
                 if (!wp_mail($to, $subject, $body, $header)) {
-                    wp_die('システムエラー: 申し訳御座いません。お問い合わせの送信に失敗しました。');
+                    throw new \Exception('Error wp_mail.');
                 }
             } else {
-                throw new \Exception('WordPress Mail Error');
+                throw new \Exception('Error ABSPATH.');
             }
         } catch (\Exception $e) {
+            logger($e->getMessage(), 'error');
             exit($e->getMessage());
         }
     }

@@ -42,29 +42,3 @@ p > object:only-child {
 	vertical-align: middle;
 	width: 1em;
 }
-
-/* Thumbnail */
-.post-thumbnail {
-	position: relative;
-	padding-top: 56.25%; /* 16:9 Aspect Ratio */
-	overflow: hidden;
-
-	img {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		max-width: 100%;
-		height: auto;
-		transform: translateX(-50%) translateY(-50%);
-	}
-
-	a {
-		-webkit-backface-visibility: hidden;
-		transition: opacity 0.2s;
-		
-		&:hover,
-		&:focus {
-			opacity: 0.7;
-		}	
-	}
-}

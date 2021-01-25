@@ -46,8 +46,8 @@
       "phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility"
     ],
     "test": "phpunit",
-    "test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-",
-    "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php .",
-    "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php ."
+    "test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=/vendor/*,/cache/* --extensions=php ./ --runtime-set testVersion 7.4-",
+    "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=/vendor/*,/cache/* --extensions=php .",
+    "phpcbf": "phpcbf -p --standard=PSR2 --ignore=/vendor/*,/cache/* --extensions=php ."
   }
 }

@@ -200,19 +200,20 @@ a:hover {
   margin-top: 1em;
 }
 
-/* ページデザイン設定 */
+/* Layout */
 .page {
   background: #fff;
   color: #444;
-  margin: 2em auto;
+  margin: 2em 1em;
   padding: 1em 2em 2em;
-  max-width: 700px;
+  max-width: 680px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.13);
 }
 
-.wrap {
-  max-width: 600px;
-  margin: auto;
+@media screen and (min-width:768px) {   
+  .page {
+      margin: 2em auto;
+  }
 }
 
 .page table {
