@@ -33,11 +33,11 @@ class Mailer
     private $post_data;
 
     /**
-     * エラーメッセージ
+     * バリデートメッセージ
      *
      * @var mixed
      */
-    private $error_massage;
+    private $validate_massage;
 
     /**
      * フォームの設置ページの格納
@@ -59,7 +59,14 @@ class Mailer
      * @var object
      */
     protected $view;
-    
+
+    /**
+     * Twig テンプレートディレクトリ
+     *
+     * @var string
+     */
+    protected $view_tamplete_dir = __DIR__ . '/../../../templates';
+
     /**
      * Twig キャッシュディレクトリ
      *
@@ -84,7 +91,7 @@ class Mailer
             $this->setting = array_merge($this->setting, $config_setting);
 
             // Twigの初期化
-            $loader = new TwigLoader(__DIR__ . '/../../../templates');
+            $loader = new TwigLoader($this->view_tamplete_dir);
             $this->view = new TwigEnvironment(
                 $loader,
                 getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
@@ -132,13 +139,13 @@ class Mailer
         // NGワードチェック
         $this->checkinNGWord();
 
-        // 必須項目チェックで $error_massage にエラー格納
+        // 必須項目チェックで $validate_massage にエラー格納
         $this->checkinRequire();
 
         // エラー判定
-        if ($this->isErrorMassage()) {
-            $this->view->display('/error.twig', array(
-                'theErrorMassage' => $this->error_massage,
+        if ($this->isValidateMassage()) {
+            $this->view->display('/validate.twig', array(
+                'theValidateMassage' => $this->validate_massage,
             ));
             // エラーメッセージがある場合は処理を止める
             exit;
@@ -411,35 +418,35 @@ class Mailer
 
         // 必須項目チェック
         if (!empty($this->setting['REQUIRED_ATTRIBUTE'])) {
-            foreach ($this->setting['REQUIRED_ATTRIBUTE'] as $requireValue) {
-                $existsFlag = '';
+            foreach ($this->setting['REQUIRED_ATTRIBUTE'] as $require) {
+                $exists_flag = '';
                 foreach ($this->post_data as $key => $value) {
-                    if ($key === $requireValue) {
+                    if ($key === $require) {
                         // 連結指定の項目（配列）のための必須チェック
                         if (is_array($value)) {
-                            $connectEmpty = 0;
-                            foreach ($value as $vv) {
-                                if (is_array($vv)) {
-                                    foreach ($vv as $vv02) {
-                                        if ($vv02 === '') {
-                                            $connectEmpty++;
+                            $connect_empty = 0;
+                            foreach ($value as $value_depth_1) {
+                                if (is_array($value_depth_1)) {
+                                    foreach ($value_depth_1 as $value_depth_2) {
+                                        if ($value_depth_2 === '') {
+                                            $connect_empty++;
                                         }
                                     }
                                 }
                             }
-                            if ($connectEmpty > 0) {
+                            if ($connect_empty > 0) {
                                 $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>' . PHP_EOL;
                             }
                         } elseif ($value === '') {
                             // デフォルト必須チェック
                             $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>' . PHP_EOL;
                         }
-                        $existsFlag = 1;
+                        $exists_flag = 1;
                         break;
                     }
                 }
-                if ($existsFlag !== 1) {
-                    $error .= '<p>【' . $requireValue . '】が選択されていません。</p>' . PHP_EOL;
+                if ($exists_flag !== 1) {
+                    $error .= '<p>【' . $require . '】が選択されていません。</p>' . PHP_EOL;
                 }
             }
         }
@@ -460,7 +467,7 @@ class Mailer
                 }
             }
         }
-        $this->error_massage = $error;
+        $this->validate_massage = $error;
     }
 
     /**
@@ -488,9 +495,9 @@ class Mailer
      *
      * @return bool
      */
-    private function isErrorMassage(): bool
+    private function isValidateMassage(): bool
     {
-        return $this->error_massage ? true : false;
+        return $this->validate_massage ? true : false;
     }
 
     /**
