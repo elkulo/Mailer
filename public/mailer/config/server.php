@@ -31,11 +31,11 @@ define('FROM_NAME', getenv('FROM_SITE_NAME'));
 // 配信元のメールアドレス
 define('FROM_MAIL', getenv('SMTP_MAIL'));
 
-// 管理者の宛名
-define('ADMIN_NAME', getenv('ADMIN_NAME'));
-
 // 管理者メールアドレス
 define('ADMIN_MAIL', getenv('ADMIN_MAIL'));
+
+// 管理者メールCC
+define('ADMIN_CC', getenv('ADMIN_CC'));
 
 // 管理者メールBCC
 define('ADMIN_BCC', getenv('ADMIN_BCC'));

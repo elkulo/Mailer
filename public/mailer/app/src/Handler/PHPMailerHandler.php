@@ -11,17 +11,17 @@ use PHPMailer\PHPMailer\Exception;
  */
 class PHPMailerHandler implements HandlerInterface
 {
-    
+
     /**
      * send
      *
      * @param  string $to
      * @param  string $subject
      * @param  string $body
-     * @param  string $header
+     * @param  array $header
      * @return void
      */
-    final public function send(string $to, string $subject, string $body, string $header): void
+    final public function send(string $to, string $subject, string $body, array $header = array()): void
     {
         // SMTP認証.
         $mailer = new PHPMailer;
@@ -49,19 +49,22 @@ class PHPMailerHandler implements HandlerInterface
         $mailer->CharSet = 'ISO-2022-JP';
         $mailer->Encoding = 'base64';
         $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
-        $header = mb_encode_mimeheader($header, 'ISO-2022-JP', 'UTF-8');
         $from_name = mb_encode_mimeheader(FROM_NAME, 'ISO-2022-JP', 'UTF-8');
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         // 配信元.
         $mailer->setFrom(FROM_MAIL, $from_name);
-        /** $mailer->addReplyTo(FROM_MAIL, $from_name); */
 
         // 送信メール.
         $mailer->isHTML(false);
         $mailer->Subject = $subject;
-        $mailer->addAddress($to, $header);
         $mailer->Body = $body;
+
+        // メールヘッダ.
+        $mailer->addAddress($to);
+        if ($header) {
+            $this->addMailHeader($mailer, $header);
+        }
 
         /**
          * デバックレベル 0 ~ 2
@@ -80,6 +83,85 @@ class PHPMailerHandler implements HandlerInterface
             }
         } catch (Exception $e) {
             exit($e->getMessage());
+        }
+    }
+
+    /**
+     * メールヘッダ
+     *
+     * @param  PHPMailer $phpmailer
+     * @param  array $headers
+     * @return void
+     */
+    private function addMailHeader(PHPMailer $phpmailer, array $headers): void
+    {
+        $cc       = array();
+        $bcc      = array();
+        $reply_to = array();
+
+        // タイプ別の配列へ.
+        foreach ((array) $headers as $header) {
+            list($name, $content) = explode(':', trim($header), 2);
+
+            // 前後の空白除去.
+            $name    = trim($name);
+            $content = trim($content);
+
+            switch (strtolower($name)) {
+                case 'cc':
+                    $cc = array_merge((array) $cc, explode(',', $content));
+                    break;
+                case 'bcc':
+                    $bcc = array_merge((array) $bcc, explode(',', $content));
+                    break;
+                case 'reply-to':
+                    $reply_to = array_merge((array) $reply_to, explode(',', $content));
+                    break;
+                default:
+                    // Add it to our grand headers array.
+                    $headers[trim($name)] = trim($content);
+                    break;
+            }
+        }
+
+        // 配列にまとめる.
+        $address_headers = compact('cc', 'bcc', 'reply_to');
+
+        foreach ($address_headers as $address_header => $addresses) {
+            if (empty($addresses)) {
+                continue;
+            }
+
+            foreach ((array) $addresses as $address) {
+                try {
+                    $recipient_name = '';
+
+                    // "Foo <mail@example.com>" を "Foo" と "mail@example.com" に分解.
+                    if (preg_match('/(.*)<(.+)>/', $address, $matches)) {
+                        if (count($matches) == 3) {
+                            $recipient_name = $matches[1];
+                            $address        = $matches[2];
+                        }
+                    }
+
+                    // エンコード.
+                    $recipient_name = mb_encode_mimeheader($recipient_name, 'ISO-2022-JP', 'UTF-8');
+
+                    switch ($address_header) {
+                        case 'cc':
+                            $phpmailer->addCc($address, $recipient_name);
+                            break;
+                        case 'bcc':
+                            $phpmailer->addBcc($address, $recipient_name);
+                            break;
+                        case 'reply_to':
+                            $phpmailer->addReplyTo($address, $recipient_name);
+                            break;
+                    }
+                } catch (Exception $e) {
+                    continue;
+                }
+            }
         }
     }
 }
