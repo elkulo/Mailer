@@ -1,11 +1,6 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/app/vendor/autoload.php';
-
-use Dotenv\Dotenv;
-use Whoops\Run as Whoops;
-use Whoops\Handler\Handler as WhoopsHandler;
-use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
-use App\Application\Mailer;
 
 /**
  * メール送信のハンドラーを選択
@@ -13,7 +8,12 @@ use App\Application\Mailer;
  * 例）WordPressのハンドラーに切り替える
  * PHPMailerHandler -> WordPressHandler
  */
+
 use App\Handler\PHPMailerHandler as MailerHandler;
+use App\Application\Mailer;
+use Whoops\Run as Whoops;
+use Whoops\Handler\Handler as WhoopsHandler;
+use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
 (function () {
 
@@ -21,7 +21,7 @@ use App\Handler\PHPMailerHandler as MailerHandler;
     $env_path = __DIR__;
 
     // Config.
-    Dotenv::create($env_path)->load();
+    Dotenv\Dotenv::create($env_path)->load();
     require_once  __DIR__ . '/config/server.php';
     require_once  __DIR__ . '/config/setting.php';
     date_default_timezone_set(TIME_ZONE);

@@ -15,10 +15,10 @@ class WordPressHandler implements HandlerInterface
      * @param  string $to
      * @param  string $subject
      * @param  string $body
-     * @param  string $header
+     * @param  array $header
      * @return void
      */
-    final public function send(string $to, string $subject, string $body, string $header): void
+    final public function send(string $to, string $subject, string $body, array $header = array()): void
     {
         try {
             if (defined('ABSPATH')) {

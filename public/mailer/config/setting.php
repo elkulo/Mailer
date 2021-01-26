@@ -56,4 +56,13 @@ $setting = array(
     // 本文にあたるname属性を1つ指定してください。
     'MB_WORD' => 'ご要望',
 
+    // 管理者宛のメールテンプレート(オプション)
+    // PHPで生成したテンプレートを使用する場合
+    // admin.mail.twig より優先されます。
+    'TEMPLATE_MAIL_ADMIN' => '',
+
+    // ユーザ宛のメールテンプレート(オプション)
+    // PHPで生成したテンプレートを使用する場合
+    // user.mail.twig より優先されます。
+    'TEMPLATE_MAIL_USER' => '',
 );

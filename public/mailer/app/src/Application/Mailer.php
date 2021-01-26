@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application;
 
 use App\Handler\HandlerInterface;
-use Twig\Loader\FilesystemLoader as TwigLoader;
+use Twig\Loader\FilesystemLoader as TwigFileLoader;
+use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
 
 /**
@@ -18,11 +20,12 @@ class Mailer
      *
      * @var array
      */
-    private $setting = array(
+    private array $setting = array(
         'FROM_NAME' => FROM_NAME, // 送信元の宛名
-        'FROM_MAIL' => FROM_MAIL, // 送信元のメールアドレス(SMTPの設定で上書きされる)
-        'ADMIN_NAME' => ADMIN_NAME, // 管理者の宛名
+        'FROM_MAIL' => FROM_MAIL, // 送信元のメールアドレス
         'ADMIN_MAIL' => ADMIN_MAIL, // 管理者メールアドレス
+        'ADMIN_CC' => ADMIN_CC, // 管理者CC
+        'ADMIN_BCC' => ADMIN_BCC, // 管理者BCC
     );
 
     /**
@@ -30,68 +33,71 @@ class Mailer
      *
      * @var array
      */
-    private $post_data;
+    private array $post_data;
 
     /**
      * バリデートメッセージ
      *
-     * @var mixed
+     * @var string
      */
-    private $validate_massage;
+    private string $validate_massage;
 
     /**
      * フォームの設置ページの格納
      *
      * @var string
      */
-    private $page_referer;
+    private string $page_referer;
 
     /**
      * メールハンドラー
      *
      * @var object
      */
-    protected $mail;
+    protected object $mail;
 
     /**
      * Twig ハンドラー
      *
      * @var object
      */
-    protected $view;
+    protected object $view;
 
     /**
      * Twig テンプレートディレクトリ
      *
-     * @var string
+     * @var array
      */
-    protected $view_tamplete_dir = __DIR__ . '/../../../templates';
+    protected array $view_tamplete_dir = array(
+        __DIR__ . '/../../../templates',
+        __DIR__ . '/../View',
+    );
 
     /**
      * Twig キャッシュディレクトリ
      *
      * @var string
      */
-    protected $view_cache_dir = __DIR__ . '/../../cache';
+    protected string $view_cache_dir = __DIR__ . '/../../cache';
 
     /**
      * __construct
      *
      * @param  HandlerInterface $handler
-     * @param  array $config_setting
+     * @param  array $config
      * @return void
      */
-    public function __construct(HandlerInterface $handler, array $config_setting)
+    public function __construct(HandlerInterface $handler, array $config)
     {
         try {
             // ハンドラーをセット
             $this->mail = $handler;
 
             // コンフィグをセット
-            $this->setting = array_merge($this->setting, $config_setting);
+            $this->setting = array_merge($this->setting, $config);
 
             // Twigの初期化
-            $loader = new TwigLoader($this->view_tamplete_dir);
+            $loader = new TwigFileLoader($this->view_tamplete_dir);
             $this->view = new TwigEnvironment(
                 $loader,
                 getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
@@ -167,7 +173,7 @@ class Mailer
                 $this->setting['ADMIN_MAIL'],
                 $this->getMailSubject(),
                 $this->getMailBody('admin'),
-                $this->getAdminHeader()
+                $this->getMailAdminHeader()
             );
 
             // ユーザーに届くメールをセット
@@ -175,8 +181,7 @@ class Mailer
                 $this->mail->send(
                     $this->setting['USER_MAIL'],
                     $this->getMailSubject(),
-                    $this->getMailBody('user'),
-                    $this->getUserHeader()
+                    $this->getMailBody('user')
                 );
             }
 
@@ -188,7 +193,7 @@ class Mailer
     }
 
     /**
-     * 送信メール件名（共通）
+     * メール件名（共通）
      *
      * @return string
      */
@@ -206,7 +211,7 @@ class Mailer
     }
 
     /**
-     * 送信メールボディ（共通）
+     * メールボディ.
      *
      * @param  string $type
      * @return string
@@ -234,52 +239,51 @@ class Mailer
 
         if ($type === 'admin') {
             // 管理者宛送信メール.
+            if (!empty($this->setting['TEMPLATE_MAIL_ADMIN'])) {
+                return (new TwigEnvironment(
+                    new TwigArrayLoader(array(
+                        'admin.mail.tpl' => $this->setting['TEMPLATE_MAIL_ADMIN']
+                    ))
+                ))->render('admin.mail.tpl', array_merge($posts, $value));
+            }
+
             return $this->view->render('/mail/admin.mail.twig', array_merge($posts, $value));
         } else {
             // ユーザ宛送信メール.
+            if (!empty($this->setting['TEMPLATE_MAIL_USER'])) {
+                return (new TwigEnvironment(
+                    new TwigArrayLoader(array(
+                        'user.mail.tpl' => $this->setting['TEMPLATE_MAIL_USER']
+                    ))
+                ))->render('user.mail.tpl', array_merge($posts, $value));
+            }
+
             return $this->view->render('/mail/user.mail.twig', array_merge($posts, $value));
         }
     }
 
     /**
-     * 管理者宛送信メールヘッダ
+     * 管理者メールヘッダ.
      *
-     * @return string
+     * @param  string $type
+     * @return array
      */
-    private function getAdminHeader(): string
+    private function getMailAdminHeader(): array
     {
+        $header = array();
 
-        $header = array(
-            'From: ' . $this->setting['FROM_NAME'] . ' <' . $this->setting['FROM_MAIL'] . '>',
-        );
-
-        if ($this->setting['IS_FROM_USERMAIL'] == 1) {
-            $header[] = 'Reply-To: ' . $this->setting['USER_NAME'] . ' <' . $this->setting['USER_MAIL'] . '>';
+        // 管理者宛送信メール.
+        if (!empty($this->setting['ADMIN_CC'])) {
+            $header[] = 'Cc: ' . $this->setting['ADMIN_CC'];
         }
         if (!empty($this->setting['ADMIN_BCC'])) {
             $header[] = 'Bcc: ' . $this->setting['ADMIN_BCC'];
         }
+        if ($this->setting['IS_FROM_USERMAIL'] !== 0) {
+            $header[] = 'Reply-To: ' . $this->setting['USER_MAIL'];
+        }
 
-        // FIXME BCCで送るメールアドレス
-        //$this->setting['ADMIN_BCC'] = [];
-        //return $header;
-        return $this->setting['ADMIN_NAME'];
-    }
-
-    /**
-     * ユーザ宛送信メールヘッダ
-     *
-     * @return string
-     */
-    private function getUserHeader(): string
-    {
-
-        $header = array(
-            'From: ' . $this->setting['FROM_NAME'] . ' <' . $this->setting['FROM_MAIL'] . '>',
-        );
-
-        //return $header;
-        return $this->setting['USER_NAME'];
+        return $header;
     }
 
     /**
@@ -452,15 +456,11 @@ class Mailer
         }
 
         // メール形式チェック
-        if (empty($error)) {
+        if (!$error) {
             foreach ($this->post_data as $key => $value) {
-                if ($key === $this->setting['USERNAME_ATTRIBUTE']) {
-                    $this->setting['USER_NAME'] = $this->ksesRM($this->ksesESC($value));
-                }
                 if ($key === $this->setting['EMAIL_ATTRIBUTE']) {
                     $this->setting['USER_MAIL'] = $this->ksesRM($this->ksesESC($value));
-                }
-                if ($key === $this->setting['EMAIL_ATTRIBUTE'] && !empty($value)) {
+
                     if (!$this->isCheckMailFormat($value)) {
                         $error .= '<p>【' . $key . '】はメールアドレスの形式が正しくありません。</p>' . PHP_EOL;
                     }
@@ -483,7 +483,7 @@ class Mailer
         $mail_match   = '/^[\.!#%&\-_0-9a-zA-Z\?\/\+]+\@[!#%&\-_0-9a-z]+(\.[!#%&\-_0-9a-z]+)+$/';
 
         // メールアドレス形式チェック＆複数メール防止
-        if (preg_match($mail_match, $post) && count($mail_address) == 2) {
+        if (preg_match($mail_match, $post) && count($mail_address) === 2) {
             return true;
         } else {
             return false;
@@ -545,7 +545,7 @@ class Mailer
         if ($mb_word) {
             foreach ($this->post_data as $key => $value) {
                 if ($key === $mb_word) {
-                    if (strlen($value) == mb_strlen($value, 'UTF-8')) {
+                    if (strlen($value) === mb_strlen($value, 'UTF-8')) {
                         $this->addExceptionExit('日本語を含まない文章は送信できません');
                     }
                 }
@@ -624,10 +624,7 @@ class Mailer
      */
     private function addExceptionExit(string $massage): void
     {
-        (new TwigEnvironment(
-            new TwigLoader(__DIR__ . '/../View'),
-            getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
-        ))->display('/Exception.twig', array(
+        $this->view->display('/exception.twig', array(
             'theExceptionMassage' => $massage,
         ));
         exit;

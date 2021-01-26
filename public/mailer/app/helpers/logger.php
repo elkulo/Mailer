@@ -13,7 +13,7 @@ use Monolog\Handler\RotatingFileHandler;
  */
 function logger(string $message, $level = 1): void
 {
-    $logfile = new RotatingFileHandler(dirname(__DIR__) . '/logs/send.log', 31);
+    $logfile = new RotatingFileHandler(__DIR__ . '/../logs/send.log', 31);
     $logs = new Logger('send');
     $logs->pushHandler($logfile);
 

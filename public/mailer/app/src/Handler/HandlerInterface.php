@@ -12,8 +12,8 @@ interface HandlerInterface
      * @param  string $to
      * @param  string $subject
      * @param  string $body
-     * @param  string $header
+     * @param  array $header
      * @return void
      */
-    public function send(string $to, string $subject, string $body, string $header): void;
+    public function send(string $to, string $subject, string $body, array $header): void;
 }
