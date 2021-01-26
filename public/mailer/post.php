@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 require_once __DIR__ . '/app/vendor/autoload.php';
 
 /**
@@ -8,7 +9,6 @@ require_once __DIR__ . '/app/vendor/autoload.php';
  * 例）WordPressのハンドラーに切り替える
  * PHPMailerHandler -> WordPressHandler
  */
-
 use App\Handler\PHPMailerHandler as MailerHandler;
 use App\Application\Mailer;
 use Whoops\Run as Whoops;

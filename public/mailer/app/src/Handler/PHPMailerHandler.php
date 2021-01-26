@@ -62,6 +62,8 @@ class PHPMailerHandler implements HandlerInterface
 
         // メールヘッダ.
         $mailer->addAddress($to);
+
+        // 追加のメールヘッダ.
         if ($header) {
             $this->addMailHeader($mailer, $header);
         }
@@ -87,7 +89,7 @@ class PHPMailerHandler implements HandlerInterface
     }
 
     /**
-     * メールヘッダ
+     * 追加のメールヘッダ
      *
      * @param  PHPMailer $phpmailer
      * @param  array $headers

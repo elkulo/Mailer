@@ -6,7 +6,7 @@ $setting = array(
     'RETURN_PAGE' => '/',
 
     // 差出人（$Emailのname属性の値）に自動返信メールを送る(送る=1, 送らない=0)
-    'REPLY_USERMAIL' => 1,
+    'IS_REPLY_USERMAIL' => 1,
 
     // 管理者宛のメールで差出人を送信者のメールアドレスにする(する=1, しない=0)
     // SMTPのメールアドレスが優先される。
@@ -20,13 +20,10 @@ $setting = array(
     'SUBJECT_BEFORE' => '',
 
     // 件名の後ろにつける文字
-    'SUBJECT_AFTER' => ' - Mailer',
+    'SUBJECT_AFTER' => ' - by el.Mailer',
 
     // 件名にするname属性(該当なしの場合はNo Subject)
     'SUBJECT_ATTRIBUTE' => '件名',
-    
-    // ユーザーの宛名にするname属性
-    'USERNAME_ATTRIBUTE' => 'お名前',
 
     // ユーザーのEmailのname属性(メールアドレス形式チェックあり)
     'EMAIL_ATTRIBUTE' => 'Email',
