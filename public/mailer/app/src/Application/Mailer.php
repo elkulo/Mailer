@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application;
@@ -177,7 +176,7 @@ class Mailer
             );
 
             // ユーザーに届くメールをセット
-            if (!empty($this->setting['REPLY_USERMAIL'])) {
+            if (!empty($this->setting['IS_REPLY_USERMAIL'])) {
                 $this->mail->send(
                     $this->setting['USER_MAIL'],
                     $this->getMailSubject(),
@@ -279,7 +278,7 @@ class Mailer
         if (!empty($this->setting['ADMIN_BCC'])) {
             $header[] = 'Bcc: ' . $this->setting['ADMIN_BCC'];
         }
-        if ($this->setting['IS_FROM_USERMAIL'] !== 0) {
+        if (!empty($this->setting['IS_FROM_USERMAIL'])) {
             $header[] = 'Reply-To: ' . $this->setting['USER_MAIL'];
         }
 
