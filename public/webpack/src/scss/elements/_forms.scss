@@ -171,6 +171,7 @@ input[type="checkbox"].styled-checkbox {
 		width: 2px;
 		height: 2px;
 		box-shadow: 
+			1px 0 0 white,
 			2px 0 0 white,
 			3px 0 0 white,
 			4px 0 0 white,
@@ -383,6 +384,7 @@ textarea.js__error--field {
 			width: 2px;
 			height: 2px;
 			box-shadow: 
+				1px 0 0 white,
 				2px 0 0 white,
 				3px 0 0 white,
 				4px 0 0 white,
