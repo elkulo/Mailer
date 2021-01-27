@@ -80,7 +80,7 @@ class Mailer
     protected string $view_cache_dir = __DIR__ . '/../../cache';
 
     /**
-     * __construct
+     * コンストラクタ
      *
      * @param  HandlerInterface $handler
      * @param  array $config
@@ -128,11 +128,11 @@ class Mailer
     }
 
     /**
-     * 基本機能
+     * 実行
      *
      * @return void
      */
-    public function init(): void
+    public function run(): void
     {
 
         // リファラチェック
