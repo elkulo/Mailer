@@ -10,7 +10,7 @@ class WordPressHandler implements HandlerInterface
 {
 
     /**
-     * send
+     * メール送信
      *
      * @param  string $to
      * @param  string $subject

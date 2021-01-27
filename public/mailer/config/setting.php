@@ -1,6 +1,6 @@
 <?php
 
-$setting = array(
+return array(
 
     // 送信完了後に戻るページURL
     'RETURN_PAGE' => '/',
@@ -54,12 +54,12 @@ $setting = array(
     'MB_WORD' => 'ご要望',
 
     // 管理者宛のメールテンプレート(オプション)
-    // PHPで生成したテンプレートを使用する場合
-    // admin.mail.twig より優先されます。
+    // PHPで生成したTwigテンプレートを使用する場合
+    // admin.mail.twig を上書きします。
     'TEMPLATE_MAIL_ADMIN' => '',
 
     // ユーザ宛のメールテンプレート(オプション)
-    // PHPで生成したテンプレートを使用する場合
-    // user.mail.twig より優先されます。
+    // PHPで生成したTwigテンプレートを使用する場合
+    // user.mail.twig を上書きします。
     'TEMPLATE_MAIL_USER' => '',
 );

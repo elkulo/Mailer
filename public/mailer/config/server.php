@@ -1,14 +1,4 @@
 <?php
-/**
- * WordPress 連携
- *
- * !! WordPress と連携する場合のみ書き換える !!
- *
- * wp-load.php を読み込むことでWordPressの関数が使用可能になる。
- * さらに、app/src/Applecation/Mailer.php のハンドラーを WordPressHandler にすることで、
- * メール送信を wp_mail() に切り替えるためWordPressのSMTP等のプラグインとも連携できる。
- */
-// require_once __DIR__ . '/../../../../../../../wp-load.php';
 
 // SMTPサーバー
 define('SMTP_HOST', getenv('SMTP_HOST'));
