@@ -1,15 +1,20 @@
 
 /* Contact */
 .contact-section {
-	padding: 3rem 0;
+	position: relative;
+	z-index: 1;
+	padding: 0 0 3rem;
+	margin-top: -5rem;
 
 	@include media(tablet) {
-		padding: 5rem 0;
+		padding: 0rem 0 5rem;
+		margin-top: -8rem;
 	}
 
 	.contact-header {
-		background: #212121;
+		background: linear-gradient(45deg, #a24bcf, #3f67b1, #41aeb8);
 		padding: 3rem 2rem;
+		box-shadow: 0 -2px 8px 1px #000;
 
 		&__title {
 			color: $color__text-main;
@@ -22,7 +27,7 @@
 		
 		&__summary {
 			text-align: left;
-			background: #333;
+			background: rgba(255,255,255,0.1);
 			border-radius: 5px;
 			padding: 1rem 1rem 0.5rem;
 			margin: 0 auto 1rem;
@@ -36,7 +41,7 @@
 				margin: 0;
 				
 				> strong {
-					color: #ed831b;
+					color: #ffaa55;
 					font-weight: 900;
 					font-size: 1.75rem;
 					letter-spacing: -0.05em;
@@ -49,7 +54,6 @@
 	.contact-form {
 		background: #fff;
 		color: #212121;
-		box-shadow: 0 0 3px #000;
 		
 		&__ul {
 			margin: 0;
@@ -58,12 +62,12 @@
 				display: table;
 				list-style: none;
 				width: 100%;
-				border-top: dashed 1px #eee;
-				padding: 1rem;
+				border-top: dotted 1px #ddd;
+				padding: 0.75rem 1rem;
 				font-size: 1rem;
 
 				@include media(tablet) {
-					padding: 1rem 2rem;
+					padding: 0.75rem 2rem;
 				}
 
 				&:first-child {
@@ -97,7 +101,7 @@
 				input,
 				select,
 				textarea {
-					border: 1px solid #bbb;
+					border: 1px solid #ddd;
 
 					@include media(tablet) {
 						display: table-cell;
@@ -121,24 +125,26 @@
 	.submit-button {
 		clear: both;
 		text-align: center;
-		padding: 2em 0;
+		padding: 0.5rem 0 2rem;
 	}
 
 	.validate {
 		font-size: 10px;
 		color: #fff;
-		background: #8B0002;
+		background: #994142;
 		border-radius: 5px;	
-		padding: 0.25em 0.5em;
+		padding: 0.325em 0.5em 0.25em;
 		margin-left: 0.5rem;
+		vertical-align: middle;
 	}
 	
 	.novalidate {
 		font-size: 10px;
-		color: #bbb;
+		color: #aaa;
 		background: #eee;
 		border-radius: 5px;
-		padding: 0.25em 0.5em;
+		padding: 0.325em 0.5em 0.25em;
 		margin-left: 0.5rem;
+		vertical-align: middle;
 	}
 }
