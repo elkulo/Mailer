@@ -314,7 +314,7 @@ class Mailer
 
             // アンダースコアで始まる文字は除外.
             if (substr($key, 0, 1) !== '_') {
-                $response .= '【' . $this->ksesESC($key) . '】' . $this->ksesESC($output) . PHP_EOL;
+                $response .= $this->ksesESC($key) . ': ' . $this->ksesESC($output) . PHP_EOL;
             }
 
             // フォームの設置ページを保存.
@@ -438,18 +438,18 @@ class Mailer
                                 }
                             }
                             if ($connect_empty > 0) {
-                                $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>' . PHP_EOL;
+                                $error .= '<p>"' . $this->ksesESC($key) . '"の記入は必須です</p>' . PHP_EOL;
                             }
                         } elseif ($value === '') {
                             // デフォルト必須チェック
-                            $error .= '<p>【' . $this->ksesESC($key) . '】は必須項目です。</p>' . PHP_EOL;
+                            $error .= '<p>"' . $this->ksesESC($key) . '"の記入は必須です</p>' . PHP_EOL;
                         }
                         $exists_flag = 1;
                         break;
                     }
                 }
                 if ($exists_flag !== 1) {
-                    $error .= '<p>【' . $require . '】が選択されていません。</p>' . PHP_EOL;
+                    $error .= '<p>"' . $require . '"が選択されていません</p>' . PHP_EOL;
                 }
             }
         }
@@ -461,7 +461,7 @@ class Mailer
                     $this->setting['USER_MAIL'] = $this->ksesRM($this->ksesESC($value));
 
                     if (!$this->isCheckMailFormat($value)) {
-                        $error .= '<p>【' . $key . '】はメールアドレスの形式が正しくありません。</p>' . PHP_EOL;
+                        $error .= '<p>"' . $key . '"はメールアドレスの形式が正しくありません。</p>' . PHP_EOL;
                     }
                 }
             }
