@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '8b3198a0aa21dcd7b45c282f47f284dac5b5c149',
+    'reference' => '5821c99c63f0831c2df45538d4bfbf90ba74665b',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -36,7 +36,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '8b3198a0aa21dcd7b45c282f47f284dac5b5c149',
+      'reference' => '5821c99c63f0831c2df45538d4bfbf90ba74665b',
     ),
     'filp/whoops' => 
     array (
@@ -366,12 +366,12 @@
     ),
     'symfony/var-dumper' => 
     array (
-      'pretty_version' => 'v5.2.1',
-      'version' => '5.2.1.0',
+      'pretty_version' => 'v5.2.2',
+      'version' => '5.2.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => '13e7e882eaa55863faa7c4ad7c60f12f1a8b5089',
+      'reference' => '72ca213014a92223a5d18651ce79ef441c12b694',
     ),
     'theseer/tokenizer' => 
     array (

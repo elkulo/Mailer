@@ -16,7 +16,7 @@
 	&__hero {
 		position: absolute;
 		left: 50%;
-		top: 50%;
+		top: 40%;
 		width: 100%;
 		z-index: 1;
 		transform: translate(-50%, -50%);
@@ -37,7 +37,6 @@
 		&__description {
 			color: #fff;
 			font-size: 1rem;
-			padding: 0 1rem;
 
 			@include media(tablet) {
 				font-size: 1.5rem;
@@ -46,6 +45,13 @@
 		
 		.button {
 			font-size: 1.125rem;
+			letter-spacing: 0.02em;
+		}
+
+		&__phpver {
+			color: #eee;
+			margin-top: 0.25rem;
+			text-shadow: 0 0 3px #000;
 		}
 	}
 }
