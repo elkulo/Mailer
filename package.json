@@ -7,7 +7,8 @@
     "start": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "format": "eslint --fix './public/webpack/src/**/*.+(js|jsx|json)'",
-    "develop": "php -S localhost:8000 -t ./public"
+    "develop": "php -S localhost:8000 -t ./public",
+    "deploy:dist": "cd public && zip -r dist/el.mailer.zip mailer/ -x '*.git' -x '*.env*'"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -18,7 +19,7 @@
     "eslint": "^7.18.0",
     "eslint-loader": "^4.0.2",
     "file-loader": "^6.2.0",
-    "mini-css-extract-plugin": "^1.3.4",
+    "mini-css-extract-plugin": "^1.3.5",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "prettier": "^2.2.1",
     "sass": "^1.32.5",
