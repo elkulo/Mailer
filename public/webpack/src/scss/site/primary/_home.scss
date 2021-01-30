@@ -13,8 +13,10 @@
 
 	.contact-header {
 		background: linear-gradient(45deg, #a24bcf, #3f67b1, #41aeb8);
+		background-attachment: fixed;
 		padding: 3rem 2rem;
 		box-shadow: 0 -2px 8px 1px #000;
+		border-radius: 10px 10px 0 0;
 
 		&__title {
 			color: $color__text-main;
@@ -52,8 +54,10 @@
 	}
 
 	.contact-form {
-		background: #fff;
+		background: #fafafa;
 		color: #212121;
+		border-radius: 0 0 10px 10px;
+		box-shadow: 0 2px 8px 1px #000;
 		
 		&__ul {
 			margin: 0;
@@ -101,22 +105,10 @@
 				input,
 				select,
 				textarea {
-					border: 1px solid #ddd;
-
 					@include media(tablet) {
 						display: table-cell;
 						vertical-align: middle;
 					}
-				}
-				select {
-					color: inherit;
-					text-indent: 0.25em;
-				}
-
-				input:focus,
-				select:focus,
-				textarea:focus {
-					box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.2);
 				}
 			}
 		}

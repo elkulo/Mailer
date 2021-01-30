@@ -4,14 +4,15 @@
   "description": "Built locally with Webpack",
   "private": true,
   "scripts": {
-    "start": "npm run develop",
-    "develop": "php -S localhost:8000 -t ./public & webpack --mode development --watch",
+    "start": "npm run develop & npm run serve",
+    "develop": "webpack --mode development --watch",
     "format": "eslint --fix './public/webpack/src/**/*.+(js|jsx|json)'",
     "build": "webpack --mode production",
-    "composer:update": "cd public/mailer/app/ && composer update",
-    "composer:lint": "cd public/mailer/app/ && composer phpcs",
-    "composer:format": "cd public/mailer/app/ && composer phpcbf",
-    "deploy:dist": "cd public && zip -r dist/el.mailer.zip mailer/ -x '*.git' -x '*.env*'"
+    "serve": "php -S localhost:8000 -t ./public",
+    "composer:update": "cd public/chidori/mailer/app/ && composer update",
+    "composer:lint": "cd public/chidori/mailer/app/ && composer phpcs",
+    "composer:format": "cd public/chidori/mailer/app/ && composer phpcbf",
+    "deploy:zip": "cd public && zip -r download/Chidori.zip chidori/ -x '*.git' -x '*.env*'"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
