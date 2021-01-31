@@ -230,7 +230,7 @@ class Mailer
         $value = array(
             '__FROM_SITE_NAME' => $this->setting['FROM_NAME'],
             '__POST_ALL' => $this->getPost(),
-            '__TIME' => date('Y/m/d (D) H:i:s', time()),
+            '__DATE' => date('Y/m/d (D) H:i:s', time()),
             '__IP' => $_SERVER['REMOTE_ADDR'],
             '__HOST' => getHostByAddr($_SERVER['REMOTE_ADDR']),
             '__URL' => $this->page_referer,
