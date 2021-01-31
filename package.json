@@ -9,6 +9,7 @@
     "format": "eslint --fix './public/webpack/src/**/*.+(js|jsx|json)'",
     "build": "webpack --mode production",
     "serve": "php -S localhost:8000 -t ./public",
+    "serve:demo": "php -S localhost:8000 -t ./chidori",
     "composer:update": "cd chidori/mailer/app/ && composer update",
     "composer:lint": "cd chidori/mailer/app/ && composer phpcs",
     "composer:format": "cd chidori/mailer/app/ && composer phpcbf",
