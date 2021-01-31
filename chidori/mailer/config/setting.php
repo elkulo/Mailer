@@ -20,7 +20,7 @@ return array(
     'SUBJECT_BEFORE' => '',
 
     // 件名の後ろにつける文字
-    'SUBJECT_AFTER' => ' - by el.Mailer',
+    'SUBJECT_AFTER' => ' - by Mailer',
 
     // 件名にするname属性(該当なしの場合はNo Subject)
     'SUBJECT_ATTRIBUTE' => '件名',
