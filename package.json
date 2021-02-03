@@ -13,7 +13,7 @@
     "composer:update": "cd chidori/mailer/app/ && composer update",
     "composer:lint": "cd chidori/mailer/app/ && composer phpcs",
     "composer:format": "cd chidori/mailer/app/ && composer phpcbf",
-    "deploy:zip": "zip -r public/download/Chidori.zip chidori/ -x '*.git' -x '*.env*'"
+    "deploy:zip": "zip -r public/download/Chidori.zip chidori/ -x '*.git*' -x '*.env*' -x '*.DS_Store'"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
