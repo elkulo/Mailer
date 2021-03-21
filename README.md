@@ -8,14 +8,16 @@ cd Mailer
 npm install
 ~~~
 
-## Develop
+## Command Line
+
+### Develop
 ~~~
 npm run develop
 ~~~
 
-## Deploy
+### Deploy
 ~~~
-npm run deploy:zip
+npm run deploy
 ~~~
 
 ## How To Mailer

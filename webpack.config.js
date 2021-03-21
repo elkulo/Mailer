@@ -1,10 +1,14 @@
 /**
  * Webpack 5
+ *
+ * @version 2021.03.22
  */
 const dirscript = "./public/webpack";
+
+/* Plugins */
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
 
 module.exports = {
@@ -16,6 +20,7 @@ module.exports = {
     path: path.resolve(__dirname, dirscript, "./dest"),
     filename: "[name].min.js",
     publicPath: "./",
+    assetModuleFilename: "_output/[hash][ext]",
   },
   module: {
     rules: [
@@ -31,7 +36,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
+            presets: ["@babel/preset-env"],
           },
         },
       },
@@ -41,16 +46,12 @@ module.exports = {
       },
       {
         test: /\.(gif|png|jpe?g|eot|wof|woff|woff2|ttf|svg)$/i,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 1024 * 100,
-              name: "[contenthash].[ext]",
-              outputPath: "_output",
-            },
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 1024 * 100 /* 100KB以上のファイルは書き出し */,
           },
-        ],
+        },
       },
     ],
   },
@@ -60,16 +61,14 @@ module.exports = {
     }),
   ],
   optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    minimizer: [new TerserJSPlugin({}), new CssMinimizerPlugin()],
   },
   resolve: {
     extensions: [".js", ".jsx"],
   },
   performance: {
     assetFilter: function (assetFilename) {
-      return assetFilename.endsWith(
-        ".js"
-      );
+      return assetFilename.endsWith(".js");
     },
   },
   target: ["web", "es5"],
