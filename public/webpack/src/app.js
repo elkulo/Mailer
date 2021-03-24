@@ -5,14 +5,11 @@ import SmoothScroll from './js/SmoothScroll';
 import VerifySubmit from './js/VerifySubmit';
 import './scss/style.scss';
 
-( function() {
+// ナビゲーション.
+DrawerNavi();
 
-	// ナビゲーション.
-	DrawerNavi();
+// スムーススクロール.
+SmoothScroll();
 
-	// スムーススクロール.
-	SmoothScroll();
-
-	// フォームバリデーション.
-	VerifySubmit( '#mailform' );
-})();
+// フォームバリデーション.
+VerifySubmit( '#mailform' );

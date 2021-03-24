@@ -15,12 +15,6 @@ body {
 
 @import "links";
 
-/* Inherit text color of parent element. */
-a[href^="tel"] {
-  color: inherit;
-  text-decoration: none;
-}
-
 h1,
 h2,
 h3,
@@ -60,3 +54,5 @@ blockquote {
 @import "tables";
 
 @import "forms";
+
+@import 'media';
