@@ -16,5 +16,10 @@ a {
 		outline: thin;
 		outline-style: dotted;
 		text-decoration: none;
-	}	
+	}
+
+	&[href^="tel"] {
+		color: inherit;
+		text-decoration: none;
+	}
 }
