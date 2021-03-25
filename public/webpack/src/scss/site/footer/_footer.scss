@@ -5,12 +5,14 @@
 
 		&__branding {
 			margin-bottom: 0.5rem;
-			font-size: 1.5rem;
+			font-size: 1.325rem;
+			font-weight: 700;
 			font-family: $font__heading;
 			text-align: center;
 
 			@include media(tablet) {
 				margin: 0;
+				font-size: 1.5rem;
 			}
 
 			&__link {

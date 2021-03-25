@@ -23,24 +23,28 @@
 		text-align: center;
 
 		&__title {
-			margin: 0;
+			margin: 0 0 1rem;
 			color: #fff;
-			font-size: 2.5rem;
+			font-size: 2rem;
 			font-weight: 900;
 			letter-spacing: -0.02em;
-			
+
 			@include media(tablet) {
 				font-size: 3rem;
+			}
+
+			small {
+				display: block;
+				font-size: 0.75em;
+				color: #ffaa55;
+				margin: 0 0 0.25rem;
 			}
 		}
 		
 		&__description {
-			color: #fff;
-			font-size: 1rem;
-
-			@include media(tablet) {
-				font-size: 1.5rem;
-			}
+			padding: 0 1rem;
+			color: #f1f1f1;
+			font-size: 0.875rem;
 		}
 		
 		.button {
@@ -52,6 +56,7 @@
 			color: #eee;
 			margin-top: 0.25rem;
 			text-shadow: 0 0 3px #000;
+			font-family: $font__heading;
 		}
 	}
 }
