@@ -15,6 +15,11 @@ module.exports = {
   mode: "production",
   entry: {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
+    "app-verifysubmit": path.resolve(
+      __dirname,
+      dirscript,
+      "./src/app-verifysubmit.js"
+    ),
   },
   output: {
     path: path.resolve(__dirname, dirscript, "./dest"),
