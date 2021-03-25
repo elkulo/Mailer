@@ -1,12 +1,8 @@
 .wrap {
+	display: flow-root;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 1080px;
-	padding-left: 2em;
-	padding-right: 2em;
-	
-	.page-for-posts .type-post &,
-	.page-for-posts .type-page & {
-		max-width: 720px;
-	}
+	max-width: $desktop_width;
+	padding-left: $size__spacing-unit;
+	padding-right: $size__spacing-unit;
 }
