@@ -12,7 +12,7 @@
     "composer:update": "cd public/mailer/app/ && composer update",
     "composer:lint": "cd public/mailer/app/ && composer phpcs",
     "composer:format": "cd public/mailer/app/ && composer phpcbf",
-    "deploy": "zip -r dist/Chidori.zip public/ -x '*.git*' -x '*.env*' -x '*.DS_Store'"
+    "bundle:dist": "cd public/ && zip -r ../dist/Mailer.zip mailer/ -x '*.git*' '*.env*' '*.DS_Store' '*__MACOSX*'"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
