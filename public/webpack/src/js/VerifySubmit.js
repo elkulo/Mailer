@@ -1,13 +1,30 @@
 /**
  * VerifySubmit.js
  *
- * @version 2.0.0
+ * @version 3.0.0
  */
-const VerifySubmit = ( $formElement = '#mailform' ) => {
+class VerifySubmit {
 
-	const run = () => {
+	/**
+	 * コンストラクタ
+	 *
+	 * @param {string} [$formElement='#mailform']
+	 * @memberof VerifySubmit
+	 */
+	constructor( $formElement = '#mailform' ) {
+		this.$formElement = $formElement;
+		this.run = this.run.bind( this );
+		document.addEventListener( 'DOMContentLoaded', this.run, false );
+	}
 
-		const $mailform = document.querySelector( $formElement + ':not([novalidate])' );
+	/**
+	 * 実行
+	 * @returns void
+	 */
+	run() {
+		const $mailform = document.querySelector(
+			this.$formElement + ':not([novalidate])'
+		);
 
 		// form要素がなければ終了
 		if ( ! $mailform ) {
@@ -51,17 +68,16 @@ const VerifySubmit = ( $formElement = '#mailform' ) => {
 				$validItems.forEach( ( item ) => {
 
 					// 必須項目のチェック
-					errorItem = applyFilterRequired( item, errorItem );
+					errorItem = this.applyFilterRequired( item, errorItem );
 
 					// メールアドレスのチェック
-					errorItem = applyFilterMailAddress( item, errorItem );
+					errorItem = this.applyFilterMailAddress( item, errorItem );
 
 					// 電話番号のチェック
-					errorItem = applyFilterPhoneNumber( item, errorItem );
+					errorItem = this.applyFilterPhoneNumber( item, errorItem );
 
 					// 数値のチェック
-					errorItem = applyFilterInteger( item, errorItem );
-
+					errorItem = this.applyFilterInteger( item, errorItem );
 				});
 			}
 
@@ -69,12 +85,14 @@ const VerifySubmit = ( $formElement = '#mailform' ) => {
 			if ( errorItem.length ) {
 
 				// エラーの結合
-				const result = Object.keys( errorItem ).map( ( item ) => {
-					return '<li>' + errorItem[item] + '</li>';
-				}).join( '' );
+				const result = Object.keys( errorItem )
+					.map( ( item ) => {
+						return '<li>' + errorItem[item] + '</li>';
+					})
+					.join( '' );
 
 				// エラーメッセージをセット
-				$messageError.innerHTML = ( '<ul>' + result + '</ul>' );
+				$messageError.innerHTML = '<ul>' + result + '</ul>';
 				$messageError.style.opacity = 1;
 				removeError();
 			} else {
@@ -87,74 +105,22 @@ const VerifySubmit = ( $formElement = '#mailform' ) => {
 		};
 
 		// 送信イベント
-		$submit.addEventListener( 'click', e => {
-			if ( preventEvent ) {
+		$submit.addEventListener(
+			'click',
+			( e ) => {
+				if ( preventEvent ) {
 
-				// 送信を一度無効にして必須チェック
-				e.preventDefault();
-				ConfirmRequired();
-			} else {
+					// 送信を一度無効にして必須チェック
+					e.preventDefault();
+					ConfirmRequired();
+				} else {
 
-				// 送信処理後に再び無効にする
-				preventEvent = true;
-			}
-		}, false );
-
-		// 必須項目の記入確認
-		const applyFilterRequired = ( item, error ) => {
-
-			// テキスト
-			if ( ! item.value ) {
-				error.push( item.name + ' が記入されておりません。' );
-				item.classList.add( 'js__error--field' );
-
-				// チェックボックス
-			} else if ( item.type === 'checkbox' && item.checked === false ) {
-				error.push( item.name + ' がチェックされていません。' );
-				item.classList.add( 'js__error--field' );
-
-			}
-			return error;
-		};
-
-		// メールアドレスの確認
-		const applyFilterMailAddress = ( item, error ) => {
-			if ( item.classList.contains( 'js__error--field' ) || item.type !== 'email' ) {
-				return error;
-			}
-
-			if ( ! item.value.match( /.+@.+\..+/g ) ) {
-				error.push( 'メールアドレスの形式が異なります。' );
-				item.classList.add( 'js__error--field' );
-			}
-			return error;
-		};
-
-		// 電話番号の確認
-		const applyFilterPhoneNumber = ( item, error ) => {
-			if ( item.classList.contains( 'js__error--field' ) || item.type !== 'tel' ) {
-				return error;
-			}
-
-			if ( ! item.value.match( /^[0-9|０-９|ー|-]+$/ ) ) {
-				error.push( item.name + ' の形式が異なります。' );
-				item.classList.add( 'js__error--field' );
-			}
-			return error;
-		};
-
-		// 数値の確認
-		const applyFilterInteger = ( item, error ) => {
-			if ( item.classList.contains( 'js__error--field' ) || item.type !== 'number' ) {
-				return error;
-			}
-
-			if ( isNaN( item.value ) ) {
-				error.push( item.name + ' は数値のみ入力してください。' );
-				item.classList.add( 'js__error--field' );
-			}
-			return error;
-		};
+					// 送信処理後に再び無効にする
+					preventEvent = true;
+				}
+			},
+			false
+		);
 
 		// エラーの自動非表示
 		let timer = 0;
@@ -166,7 +132,93 @@ const VerifySubmit = ( $formElement = '#mailform' ) => {
 				$messageError.style.opacity = 0;
 			}, 4000 );
 		};
-	};
-	window.addEventListener( 'load', run, false );
-};
+	}
+
+	/**
+	 * 必須項目
+	 *
+	 * @param {*} item
+	 * @param {*} error
+	 * @returns
+	 * @memberof VerifySubmit
+	 */
+	applyFilterRequired( item, error ) {
+
+		// テキスト
+		if ( ! item.value ) {
+			error.push( item.name + ' が記入されておりません' );
+			item.classList.add( 'js__error--field' );
+
+		// チェックボックス
+		} else if ( item.type === 'checkbox' && item.checked === false ) {
+			error.push( item.name + ' がチェックされていません' );
+			item.classList.add( 'js__error--field' );
+		}
+		return error;
+	}
+
+	/**
+	 * メールアドレスの確認
+	 *
+	 * @param {*} item
+	 * @param {*} error
+	 * @returns
+	 * @memberof VerifySubmit
+	 */
+	applyFilterMailAddress( item, error ) {
+		if (
+			item.classList.contains( 'js__error--field' ) ||
+			item.type !== 'email'
+		) {
+			return error;
+		}
+
+		if ( ! item.value.match( /.+@.+\..+/g ) ) {
+			error.push( 'メールアドレスの形式が異なります' );
+			item.classList.add( 'js__error--field' );
+		}
+		return error;
+	}
+
+	/**
+	 * 電話番号の確認
+	 *
+	 * @param {*} item
+	 * @param {*} error
+	 * @returns
+	 * @memberof VerifySubmit
+	 */
+	applyFilterPhoneNumber( item, error ) {
+		if ( item.classList.contains( 'js__error--field' ) || item.type !== 'tel' ) {
+			return error;
+		}
+
+		if ( ! item.value.match( /^[0-9|０-９|ー|-]+$/ ) ) {
+			error.push( item.name + ' の形式が異なります' );
+			item.classList.add( 'js__error--field' );
+		}
+		return error;
+	}
+
+	/**
+	 * 数値の確認
+	 *
+	 * @param {*} item
+	 * @param {*} error
+	 * @returns
+	 * @memberof VerifySubmit
+	 */
+	applyFilterInteger( item, error ) {
+		if ( item.classList.contains( 'js__error--field' ) || item.type !== 'number' ) {
+			return error;
+		}
+
+		if ( isNaN( item.value ) ) {
+			error.push( item.name + ' は数値のみ入力してください' );
+			item.classList.add( 'js__error--field' );
+		}
+		return error;
+	}
+}
+
 export default VerifySubmit;

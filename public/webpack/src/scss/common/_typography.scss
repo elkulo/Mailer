@@ -11,11 +11,10 @@ textarea {
 	font-family: $font__body;
 	font-size: 0.9375rem;
 	font-weight: 400;
-	line-height: 1.66;
+	line-height: $font__line-height-body;
 	
 	@include media(tablet) {
 		font-size: 1rem;
-		line-height: 1.5;
 	}	
 }
 
@@ -26,7 +25,7 @@ h4,
 h5,
 h6 {
 	clear: both;
-	line-height: 1.4;
+	line-height: $font__line-height-heading;
 	margin: 0 0 0.75em;
 	padding: 1.5em 0 0;
 	font-family: $font__heading;
@@ -108,7 +107,7 @@ address {
 pre {
 	font-family: "Courier 10 Pitch", Courier, monospace;
 	font-size: 0.9375rem;
-	line-height: 1.6;
+	line-height: $font__line-height-pre;
 	margin-bottom: 1.6em;
 	max-width: 100%;
 	overflow: auto;
@@ -201,6 +200,5 @@ blockquote:after {
 	select,
 	textarea {
 		font-size: 1rem;
-		line-height: 1.5;
 	}
 }
