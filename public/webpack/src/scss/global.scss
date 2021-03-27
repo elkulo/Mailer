@@ -1,5 +1,5 @@
 /**
- * SASS Utils
+ * Sass(SCSS) Utils
 **/
 @import "variables-site/variables-site";
 @import "mixins/mixins-master";
@@ -26,8 +26,6 @@
 
 /**
  * Layout
- *  - Media
- *  - Overlay Layer
 **/
 @import 'layout/layout';
 
@@ -36,13 +34,6 @@
  *  - Header
  *  - Navigation
  *  - Primary
- *  - Secondary - Widgets
  *  - Footer
- *  - Color Scheme
 **/
 @import 'site/site';
-
-/**
- * Print
-**/
-@import 'print/print';

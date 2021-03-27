@@ -1,15 +1,15 @@
 /**
- * VerifySubmit.js
+ * VerifyForm.js
  *
  * @version 3.0.0
  */
-class VerifySubmit {
+class VerifyForm {
 
 	/**
 	 * コンストラクタ
 	 *
 	 * @param {string} [$formElement='#mailform']
-	 * @memberof VerifySubmit
+	 * @memberof VerifyForm
 	 */
 	constructor( $formElement = '#mailform' ) {
 		this.$formElement = $formElement;
@@ -140,7 +140,7 @@ class VerifySubmit {
 	 * @param {*} item
 	 * @param {*} error
 	 * @returns
-	 * @memberof VerifySubmit
+	 * @memberof VerifyForm
 	 */
 	applyFilterRequired( item, error ) {
 
@@ -163,7 +163,7 @@ class VerifySubmit {
 	 * @param {*} item
 	 * @param {*} error
 	 * @returns
-	 * @memberof VerifySubmit
+	 * @memberof VerifyForm
 	 */
 	applyFilterMailAddress( item, error ) {
 		if (
@@ -186,7 +186,7 @@ class VerifySubmit {
 	 * @param {*} item
 	 * @param {*} error
 	 * @returns
-	 * @memberof VerifySubmit
+	 * @memberof VerifyForm
 	 */
 	applyFilterPhoneNumber( item, error ) {
 		if ( item.classList.contains( 'js__error--field' ) || item.type !== 'tel' ) {
@@ -206,7 +206,7 @@ class VerifySubmit {
 	 * @param {*} item
 	 * @param {*} error
 	 * @returns
-	 * @memberof VerifySubmit
+	 * @memberof VerifyForm
 	 */
 	applyFilterInteger( item, error ) {
 		if ( item.classList.contains( 'js__error--field' ) || item.type !== 'number' ) {
@@ -221,4 +221,4 @@ class VerifySubmit {
 	}
 }
 
-export default VerifySubmit;
+export default VerifyForm;
