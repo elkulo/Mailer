@@ -1,10 +1,5 @@
 .js__error--field {
 	box-shadow: 0px 0px 0px 1px #fafafa, 0px 0px 0px 2px #e88a00;
-
-	&:required {
-		border: none;
-		outline: none;
-	}
 }
 
 .js__error--message {

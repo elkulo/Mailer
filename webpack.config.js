@@ -15,10 +15,10 @@ module.exports = {
   mode: "production",
   entry: {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
-    "app-verifysubmit": path.resolve(
+    "app-verifyform": path.resolve(
       __dirname,
       dirscript,
-      "./src/app-verifysubmit.js"
+      "./src/app-verifyform.js"
     ),
   },
   output: {
@@ -69,7 +69,7 @@ module.exports = {
     minimizer: [new TerserJSPlugin({}), new CssMinimizerPlugin()],
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".js"],
   },
   performance: {
     assetFilter: function (assetFilename) {
