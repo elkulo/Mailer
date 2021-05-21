@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'd638b53e585c44e8c21538a95fe97c317b9e3c81',
+    'reference' => '01a2a0d619802a33b479b0697961df52f789493c',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -62,7 +62,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'd638b53e585c44e8c21538a95fe97c317b9e3c81',
+      'reference' => '01a2a0d619802a33b479b0697961df52f789493c',
     ),
     'filp/whoops' => 
     array (
@@ -72,6 +72,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'c13c0be93cff50f88bbd70827d993026821914dd',
+    ),
+    'google/recaptcha' => 
+    array (
+      'pretty_version' => '1.2.4',
+      'version' => '1.2.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '614f25a9038be4f3f2da7cbfd778dc5b357d2419',
     ),
     'monolog/monolog' => 
     array (
