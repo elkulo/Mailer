@@ -1,7 +1,7 @@
 /**
  * Webpack 5
  *
- * @version 2021.03.22
+ * @version 2021.05.21
  */
 const dirscript = "./public/webpack";
 
@@ -76,5 +76,4 @@ module.exports = {
       return assetFilename.endsWith(".js");
     },
   },
-  target: ["web", "es5"],
 };
