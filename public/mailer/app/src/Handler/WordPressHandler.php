@@ -30,7 +30,7 @@ class WordPressHandler implements HandlerInterface
                 throw new \Exception('Error ABSPATH.');
             }
         } catch (\Exception $e) {
-            logger($e->getMessage(), 'error');
+            logger($e->getMessage(), [], 'error');
             exit($e->getMessage());
         }
     }

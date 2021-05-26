@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '01a2a0d619802a33b479b0697961df52f789493c',
+    'reference' => '097020c0cc29f6377cb3fd31b9805ff5f191862a',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -62,7 +62,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '01a2a0d619802a33b479b0697961df52f789493c',
+      'reference' => '097020c0cc29f6377cb3fd31b9805ff5f191862a',
     ),
     'filp/whoops' => 
     array (
@@ -625,9 +625,23 @@ return $installed[0]['root'];
 
 
 
+
 public static function getRawData()
 {
+@trigger_error('getRawData only returns the first dataset loaded, which may not be what you expect. Use getAllRawData() instead which returns all datasets for all autoloaders present in the process.', E_USER_DEPRECATED);
+
 return self::$installed;
+}
+
+
+
+
+
+
+
+public static function getAllRawData()
+{
+return self::getInstalled();
 }
 
 
