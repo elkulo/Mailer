@@ -8,10 +8,11 @@ use Monolog\Handler\RotatingFileHandler;
  * Monolog
  *
  * @param  string $message
+ * @param  array  $content
  * @param  string|int $level
  * @return void
  */
-function logger(string $message, $level = 1): void
+function logger(string $message, array $content = array(), $level = 1): void
 {
     $logfile = new RotatingFileHandler(__DIR__ . '/../logs/send.log', 31);
     $logs = new Logger('send');
@@ -26,26 +27,26 @@ function logger(string $message, $level = 1): void
     switch ($level) {
         case 'error':
         case 5:
-            $logs->error($message);
+            $logs->error($message, $content);
             break;
         case 'warning':
         case 'warn':
         case 4:
-            $logs->warning($message);
+            $logs->warning($message, $content);
             break;
         case 'notice':
         case 3:
-            $logs->notice($message);
+            $logs->notice($message, $content);
             break;
         case 'info':
         case 2:
-            $logs->info($message);
+            $logs->info($message, $content);
             break;
         case 'debug':
         case 'dump':
         case 1:
         default:
-            $logs->debug($message);
+            $logs->debug($message, $content);
             break;
     }
 }
