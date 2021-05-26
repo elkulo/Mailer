@@ -1,8 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
-use Monolog\Logger;
+use Monolog\Logger as Monolog;
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Processor\MemoryUsageProcessor;
+use Monolog\Processor\WebProcessor;
 
 /**
  * Monolog
@@ -14,39 +18,49 @@ use Monolog\Handler\RotatingFileHandler;
  */
 function logger(string $message, array $content = array(), $level = 1): void
 {
-    $logfile = new RotatingFileHandler(__DIR__ . '/../logs/send.log', 31);
-    $logs = new Logger('send');
-    $logs->pushHandler($logfile);
+    $monolog = new Monolog('mailer');
 
-    $logs->pushProcessor(function ($record) {
-        $record['extra']['host'] = getHostByAddr($_SERVER['REMOTE_ADDR']);
-        $record['extra']['ip'] = $_SERVER['REMOTE_ADDR'];
-        return $record;
-    });
+    // 書式.
+    $date_format = 'Y-m-d H:i:s';
+    $output      = '[%datetime%][%level_name%]> %message% : %context% : %extra%' . PHP_EOL;
+    $formatter   = new LineFormatter($output, $date_format);
+    $formatter->includeStacktraces(true);
+
+    // 月単位でログを記録: RotatingFileHandler(<ログファイルへのパス>, <保存数>, <適用する最低レベル>).
+    $rotating_file = new RotatingFileHandler(__DIR__ . '/../logs/mailer.log', 180, Monolog::DEBUG);
+    $rotating_file->setFilenameFormat('{filename}-{date}-' . date('m-d'), 'Y');
+    $rotating_file->setFormatter($formatter);
+    $monolog->pushHandler($rotating_file);
+
+    // メモリー使用量を記録.
+    $monolog->pushProcessor(new MemoryUsageProcessor());
+
+    // クライアント情報を記録.
+    $monolog->pushProcessor(new WebProcessor());
 
     switch ($level) {
         case 'error':
         case 5:
-            $logs->error($message, $content);
+            $monolog->error($message, $content);
             break;
         case 'warning':
         case 'warn':
         case 4:
-            $logs->warning($message, $content);
+            $monolog->warning($message, $content);
             break;
         case 'notice':
         case 3:
-            $logs->notice($message, $content);
+            $monolog->notice($message, $content);
             break;
         case 'info':
         case 2:
-            $logs->info($message, $content);
+            $monolog->info($message, $content);
             break;
         case 'debug':
         case 'dump':
         case 1:
         default:
-            $logs->debug($message, $content);
+            $monolog->debug($message, $content);
             break;
     }
 }
