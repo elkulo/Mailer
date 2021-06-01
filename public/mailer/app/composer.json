@@ -10,7 +10,7 @@
     "optimize-autoloader": true
   },
   "require": {
-    "php": ">=7.4",
+    "php": "^7.4 || ^8.0",
     "filp/whoops": "^2.9",
     "google/recaptcha": "^1.2",
     "monolog/monolog": "^2.0",
