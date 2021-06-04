@@ -95,4 +95,4 @@ jspm_packages/
 package-lock.json
 
 # Composer
-logs/
+*.log
