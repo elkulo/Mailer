@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '6ea483f2df541fd5a3d30a2dc76f04321df17c2d',
+    'reference' => '9f08c82be0e6f2493fe1d6ffc95326cc4cfb539e',
     'name' => 'elkulo/mailer',
   ),
   'versions' => 
@@ -62,16 +62,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '6ea483f2df541fd5a3d30a2dc76f04321df17c2d',
+      'reference' => '9f08c82be0e6f2493fe1d6ffc95326cc4cfb539e',
     ),
     'filp/whoops' => 
     array (
-      'pretty_version' => '2.12.1',
-      'version' => '2.12.1.0',
+      'pretty_version' => '2.13.0',
+      'version' => '2.13.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c13c0be93cff50f88bbd70827d993026821914dd',
+      'reference' => '2edbc73a4687d9085c8f20f398eebade844e8424',
     ),
     'google/recaptcha' => 
     array (
@@ -232,12 +232,12 @@ private static $installed = array (
     ),
     'phpunit/phpunit' => 
     array (
-      'pretty_version' => '8.5.15',
-      'version' => '8.5.15.0',
+      'pretty_version' => '8.5.16',
+      'version' => '8.5.16.0',
       'aliases' => 
       array (
       ),
-      'reference' => '038d4196d8e8cb405cd5e82cedfe413ad6eef9ef',
+      'reference' => 'cc66f2fc61296be66c99931a862200e7456b9a01',
     ),
     'psr/log' => 
     array (
