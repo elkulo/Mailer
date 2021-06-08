@@ -45,7 +45,7 @@
 				
 				> strong {
 					color: #f0bb1e;
-					font-weight: 900;
+					font-weight: 400;
 					font-size: 2rem;
 					letter-spacing: -0.05em;
 					white-space: nowrap;
@@ -107,6 +107,7 @@
 				input,
 				select,
 				textarea {
+
 					@include media(tablet) {
 						display: table-cell;
 						vertical-align: middle;

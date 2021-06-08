@@ -1,130 +1,57 @@
-/* Placeholder text color -- selectors need to be separate to work. */
-::-webkit-input-placeholder {
-	color: #ddd;
-	font-family: "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
-}
-
-::-moz-placeholder {
-	color: #ddd;
-	font-family: "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
-	opacity: 1;
-}
-
-::placeholder {
-	color: #ddd;
-	font-family: "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
-}
-
-label {
-	color: #333;
-	display: block;
-	font-weight: 300;
-}
-
-fieldset {
-	margin-bottom: 1em;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="url"],
-input[type="password"],
-input[type="search"],
-input[type="number"],
-input[type="tel"],
-input[type="range"],
-input[type="date"],
-input[type="month"],
-input[type="week"],
-input[type="time"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="color"],
-textarea {
-	display: block;
-	color: #666;
-	background: #fff;
-	border: solid 1px #ddd;
-	border-radius: 3px;
-	padding: 0.5em;
-	width: 100%;
-
-	&:focus {
-		color: #212121;
-		box-shadow: 0 0 0 1px #fafafa, 0 0 0 2px #1471ad;
-	}
-}
-
-select {
-	cursor: pointer;
-	color: #666;
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	height: 3em;
-	max-width: 100%;
-	text-indent: 0.25em;
-	z-index: 1;
-
-	> option {
-		text-align: center;
-	}
-}
-
-input[type="radio"],
-input[type="checkbox"] {
-	margin-right: 0.5em;
- 
-	+ label {
-		font-weight: 400;
-	}
-}
-
-.button,
 button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	outline: none;
+	padding: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+	@include button-all-transition;
 	background: linear-gradient(to right, $color__background-button, $color__background-button-hover );
+	background-size: 200% 100%;
+	background-position: 0 0;
 	border: 0;
 	border-radius: 30px;
-	box-shadow: none;
-	color: #fff;
-	cursor: pointer;
-	display: inline-block;
-	font-size: 1rem;
-	font-weight: 800;
-	line-height: 1;
-	padding: 0.75em 1.75em;
-	white-space: nowrap;
-	text-shadow: none;
-	z-index: 1;
-	transition: opacity 300ms ease;
+	box-sizing: border-box;
+	color: $color__text-button;
+	font-weight: 600;
+	font-size: 1.125em;
+	line-height: 1.6;
+	padding: ($size__spacing-unit * 0.625) $size__spacing-unit;
+	text-decoration: none;
+	vertical-align: bottom;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) inset, 0 0 0 2px rgba(0, 0, 0, 0.1);
+	text-shadow: 0 0 1px #000;
 
-	&:hover,
+	&:hover {
+		background-position: 100% 0;
+		color: $color__text-button;
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) inset, 0 0 0 2px rgba(0, 0, 0, 0.1);
+	}
+
+	&:visited {
+		color: $color__text-button;
+		text-decoration: none;
+	}
+
 	&:focus {
-		opacity: 0.66;
-		color: #fff;
-		box-shadow: none;
+		//background: $color__background-button-hover;
+		background-position: 100% 0;
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) inset, 0 0 0 2px rgba(0, 0, 0, 0.2);
+		outline: thin dotted;
+		outline-offset: -4px;
 	}
 }
 
-input {
-	+ button,
-	+ input[type="button"],
-	+ input[type="submit"] {
-		padding: 0.75em 2em;
-	}
-}
-
-/**
- * ボタンデザイン
- */
-.button-wrap {
-	display: inline-block;
-	background: #212121;
-	border-radius: 30px;
-	box-shadow: 0 0 0 1px #000, 0 0 5px rgba(0,0,0,0.5);
-}
 
 /**
  * チェックボックスデザイン
@@ -141,7 +68,7 @@ input[type="checkbox"].styled-checkbox {
 
 	// Box.
 	& + label:before {
-		content: '';
+		content: "";
 		margin-right: 0.5em;
 		display: inline-block;
 		vertical-align: text-top;
@@ -157,7 +84,7 @@ input[type="checkbox"].styled-checkbox {
 	&:hover + label:before {
 		background: #8b0002;
 	}
-	
+
 	// Box focus
 	&:focus + label:before {
 		box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
@@ -167,7 +94,7 @@ input[type="checkbox"].styled-checkbox {
 	&:checked + label:before {
 		background: #212121;
 	}
-	
+
 	// Disabled state label.
 	&:disabled + label {
 		color: #b8b8b8;
@@ -182,26 +109,15 @@ input[type="checkbox"].styled-checkbox {
 
 	// Checkmark. Could be replaced with an image
 	&:checked + label:after {
-		content: '';
+		content: "";
 		position: absolute;
 		left: 5px;
 		top: 13px;
 		background: white;
 		width: 2px;
 		height: 2px;
-		box-shadow: 
-			1px 0 0 white,
-			2px 0 0 white,
-			3px 0 0 white,
-			4px 0 0 white,
-			4px -1px 0 white,
-			4px -2px 0 white,
-			4px -3px 0 white,
-			4px -4px 0 white,
-			4px -5px 0 white,
-			4px -6px 0 white,
-			4px -7px 0 white,
-			4px -8px 0 white;
+		box-shadow: 1px 0 0 white, 2px 0 0 white, 3px 0 0 white, 4px 0 0 white, 4px -1px 0 white, 4px -2px 0 white,
+			4px -3px 0 white, 4px -4px 0 white, 4px -5px 0 white, 4px -6px 0 white, 4px -7px 0 white, 4px -8px 0 white;
 		transform: rotate(45deg);
 	}
 }
@@ -210,7 +126,7 @@ input[type="checkbox"].styled-checkbox {
 .cheack-group {
 	display: flex;
 	align-items: center;
-	
+
 	label > small {
 		display: block;
 	}
@@ -231,7 +147,7 @@ input[type="checkbox"].styled-checkbox {
 			color: #777;
 			white-space: nowrap;
 			line-height: 1.6;
-			font-weight: 900;
+			font-weight: 500;
 			font-size: 0.875rem;
 			transition: background 80ms ease-in;
 
@@ -251,7 +167,7 @@ input[type="checkbox"].styled-checkbox {
 		// Box.
 		& + label::before {
 			display: block;
-			content: '';
+			content: "";
 			position: absolute;
 			left: 1rem;
 			top: calc(50% - 20px / 2);
@@ -260,7 +176,7 @@ input[type="checkbox"].styled-checkbox {
 			background: #bbb;
 			border: solid 1px #eee;
 			border-radius: 100%;
-			
+
 			@include media(tablet) {
 				left: 2rem;
 			}
@@ -274,10 +190,10 @@ input[type="checkbox"].styled-checkbox {
 				background: #41465c;
 			}
 			&[for="CustomerSubject-2"] {
-				background: #415C56;
+				background: #415c56;
 			}
 		}
- 
+
 		// Box focus
 		&:focus + label {
 			box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
@@ -287,9 +203,9 @@ input[type="checkbox"].styled-checkbox {
 		&:hover + label:before,
 		&:focus + label:before,
 		&:checked + label:before {
-			background: rgba(0,0,0,0.5);
+			background: rgba(0, 0, 0, 0.5);
 		}
-		
+
 		// Checked box state label.
 		&:checked + label {
 			color: #fff;
@@ -298,7 +214,7 @@ input[type="checkbox"].styled-checkbox {
 				background: #41465c;
 			}
 			&[for="CustomerSubject-2"] {
-				background: #415C56;
+				background: #415c56;
 			}
 		}
 
@@ -316,28 +232,18 @@ input[type="checkbox"].styled-checkbox {
 
 		// Checkmark. Could be replaced with an image
 		&:checked + label:after {
-			content: '';
+			content: "";
 			position: absolute;
 			left: calc(5px + 1rem);
 			top: calc(8px + 50% - 18px / 2);
 			background: white;
 			width: 2px;
 			height: 2px;
-			box-shadow: 
-				1px 0 0 white,
-				2px 0 0 white,
-				3px 0 0 white,
-				4px 0 0 white,
-				4px -1px 0 white,
-				4px -2px 0 white,
-				4px -3px 0 white,
-				4px -4px 0 white,
-				4px -5px 0 white,
-				4px -6px 0 white,
-				4px -7px 0 white,
+			box-shadow: 1px 0 0 white, 2px 0 0 white, 3px 0 0 white, 4px 0 0 white, 4px -1px 0 white, 4px -2px 0 white,
+				4px -3px 0 white, 4px -4px 0 white, 4px -5px 0 white, 4px -6px 0 white, 4px -7px 0 white,
 				4px -8px 0 white;
 			transform: rotate(45deg);
-			
+
 			@include media(tablet) {
 				left: calc(5px + 2rem);
 			}

@@ -1,27 +1,13 @@
 table {
+	margin: 0 0 $size__spacing-unit;
 	border-collapse: collapse;
-	margin: 0;
 	width: 100%;
-	max-width: 100%;
-	border: none;
-	
-	thead tr {
-		background: #333;
-		color: #fff;
-	}
+	font-family: $font__heading;
 
+	td,
 	th {
-		padding: 0.4em;
-		text-align: left;
-		border: solid 1px #ddd;
+		padding: 0.5em;
+		border: 1px solid $color__text-light;
+		word-break: break-all;
 	}
-
-	td {
-		padding: 0.4em;
-		border: solid 1px #ddd;
-	}
-
-	tfoot {
-		background: #ddd;
-	}	
 }

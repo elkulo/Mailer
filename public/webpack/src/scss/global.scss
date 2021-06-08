@@ -1,39 +1,31 @@
 /**
- * Sass(SCSS) Utils
-**/
+ * [命名規則] BEMによるSass(SCSS)
+ * 
+ * 例1: .block__element--modifier
+ * 例2: .block__block__list__item
+ */
+
+/* 1.SCSS Config */
+
 @import "variables-site/variables-site";
 @import "mixins/mixins-master";
 
-/**
- * Common
- *  - Normalize
- *  - Animation
- *  - Accessibility
- *  - Alignments
- *  - Clearings
- *  - Typography
-**/
-@import 'common/common';
+/* 2.Typography */
 
-/**
- * Elements
- *  - Links
- *  - Lists
- *  - Tables
- *  - Forms
-**/
-@import 'elements/elements';
+@import "typography/typography";
 
-/**
- * Layout
-**/
-@import 'layout/layout';
+/* 3.Elements */
 
-/**
- * Site Theme
- *  - Header
- *  - Navigation
- *  - Primary
- *  - Footer
-**/
-@import 'site/site';
+@import "elements/elements";
+
+/* 4.Forms */
+
+@import "forms/forms";
+
+/* 5.Layout */
+
+@import "layout/layout";
+
+/* 6.Site */
+
+@import "site/site";

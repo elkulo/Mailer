@@ -5,9 +5,9 @@
 
 		&__branding {
 			margin-bottom: 0.5rem;
+			font-family: $font__heading;
 			font-size: 1.325rem;
 			font-weight: 700;
-			font-family: $font__heading;
 			text-align: center;
 
 			@include media(tablet) {
@@ -24,6 +24,7 @@
 	&__info {
 		clear: both;
 		color: #fff;
+		font-family: $font__heading;
 		text-align: center;
 		font-size: 0.75rem;
 		padding: 0 0 1.5rem;
