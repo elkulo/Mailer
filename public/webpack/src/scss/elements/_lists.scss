@@ -1,27 +1,33 @@
 ul,
 ol {
-	margin: 0 0 1.5em;
-	padding: 0;
+	padding-left: (0.5 * $size__spacing-unit);
 }
 
 ul {
 	list-style: disc;
+
+	ul {
+		list-style-type: circle;
+	}
 }
 
 ol {
 	list-style: decimal;
 }
 
+li {
+	line-height: $font__line-height-body;
+}
+
 li > ul,
 li > ol {
-	margin-bottom: 0;
-	margin-left: 1.5em;
+	padding-left: $size__spacing-unit;
 }
 
 dt {
-	font-weight: 700;
+	font-weight: bold;
 }
 
 dd {
-	margin: 0 1.5em 1.5em;
+	margin: 0 $size__spacing-unit $size__spacing-unit;
 }

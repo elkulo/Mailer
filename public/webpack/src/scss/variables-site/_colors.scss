@@ -17,10 +17,14 @@ $color__text-hover: lighten( $color__text-main, 22.5% );
 $color__text-screen: #21759b;
 $color__text-input: #666;
 $color__text-input-focus: #111;
+$color__text-header: #fff;
+$color__text_accent: #B69649;
+$color__text-button: #f1f1f1;
+$color__text_selection: #f1f1f1; // lighten( salmon, 22.5% ); // lighten( #0999d4, 48% );
 
 // Links
 $color__link: #3283b6;
-$color__link-visited: #c16f4a;
+$color__link-visited: #3283b6;
 $color__link-hover: lighten( $color__link, 16.6% );
 
 // Borders

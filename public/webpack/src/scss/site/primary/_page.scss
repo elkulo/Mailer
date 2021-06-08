@@ -3,10 +3,9 @@
 
 	.page-header{
 		text-align: center;
-		margin: ($size__spacing-unit * 3) 0;
+		margin: ($size__spacing-unit * 5) 0;
 
 		.page-title {
-			@include post-section-solid();
 		}
 
 		.page-summary {

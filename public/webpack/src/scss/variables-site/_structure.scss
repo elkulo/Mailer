@@ -4,11 +4,17 @@ $size__spacing-unit: 1rem;
 $size__site-main: 100%;
 $size__site-sidebar: 25%;
 $size__site-margins: calc(10% + 60px);
-$size__site-tablet-content: calc(8 * (100vw / 12) - 28px);
-$size__site-desktop-content: calc(6 * (100vw / 12) - 28px);
+$size__site-tablet-content: calc(12 * (100vw / 12) - 28px);
+$size__site-desktop-content: calc(10 * (100vw / 12) - 28px);
 $size__site-max-content: 1168px;
+$size__posts-max-content: 720px;
+
+// Responsive widths.
 
 $mobile_width: 600px;
 $tablet_width: 768px;
-$desktop_width: 1080px;
+$desktop_width: 1168px;
 $wide_width: 1379px;
+
+// Sidebar width.
+$sidebar_width: 400px;

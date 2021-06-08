@@ -6,11 +6,19 @@
 		position: 50% 50%;
 		size: cover;
 	}
+	box-sizing: border-box;
 	padding-bottom: 100%;
+	min-height: 600px;
 
 	@include media(tablet) {
-		padding: 0;
-		height: 600px;
+		padding-bottom: 75%;
+	}
+	@include media(desktop) {
+		padding-bottom: 50%;
+	}
+	@include media(wide) {
+		padding-bottom: 0;
+		min-height: 800px;
 	}
 	
 	&__hero {
@@ -46,17 +54,18 @@
 			color: #f1f1f1;
 			font-size: 0.875rem;
 		}
-		
-		.button {
-			font-size: 1.125rem;
-			letter-spacing: 0.02em;
+
+		&__button {
+			margin-top: 2rem;
 		}
 
 		&__phpver {
+			margin-top: 0.5rem;
 			color: #eee;
-			margin-top: 0.25rem;
 			text-shadow: 0 0 3px #000;
-			font-family: $font__heading;
+			font-family: $font__code;
+			font-size: $font__size-sm;
+			font-weight: 400;
 		}
 	}
 }

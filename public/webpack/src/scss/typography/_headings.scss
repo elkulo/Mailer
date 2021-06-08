@@ -1,0 +1,54 @@
+h1,
+h2 {
+	font-family: $font__heading;
+	letter-spacing: -0.02em;
+	line-height: $font__line-height-heading;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+h3,
+h4,
+h5,
+h6 {
+	font-family: $font__body;
+	letter-spacing: -0.02em;
+	line-height: $font__line-height-heading;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+	font-size: $font__size-xl;
+	font-weight: 900;
+}
+
+h2 {
+	font-size: $font__size-lg;
+	font-weight: 700;
+}
+
+h3 {
+	font-size: $font__size-md;
+	font-weight: 700;
+}
+
+h4 {
+	font-size: $font__size-sm;
+	font-weight: 700;
+}
+
+h5 {
+	font-size: $font__size-sm;
+	font-weight: 500;
+}
+
+h6 {
+	font-size: $font__size-xs;
+	font-weight: 700;
+}
+
+blockquote {
+	hyphens: auto;
+	word-break: break-word;
+}

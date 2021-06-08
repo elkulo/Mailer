@@ -1,0 +1,77 @@
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea {
+	-webkit-backface-visibility: hidden;
+	background: $color__background-input;
+	box-sizing: border-box;
+	outline: none;
+	padding: #{.36 * $size__spacing-unit} #{.66 * $size__spacing-unit};
+	-webkit-appearance: none;
+	outline-offset: 0;
+	border-radius: 3px;
+	color: #212121;
+	border: solid 1px #ddd;
+	width: 100%;
+
+	&:focus {
+		border-color: $color__link;
+		outline: thin solid rgba( $color__link, 0.15 );
+		outline-offset: -4px;
+	}
+}
+
+input[type="search"] {
+	&::-webkit-search-decoration {
+		display: none;
+	}
+}
+
+select {
+	cursor: pointer;
+	color: #212121;
+	border: solid 1px #ddd;
+	border-radius: 3px;
+	height: 3em;
+	max-width: 100%;
+	text-indent: 0.25em;
+	z-index: 1;
+
+	> option {
+		text-align: center;
+	}
+}
+
+textarea {
+	box-sizing: border-box;
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	resize: vertical;
+}
+
+/* Placeholder text color -- selectors need to be separate to work. */
+::-webkit-input-placeholder {
+	color: #ddd;
+}
+
+::-moz-placeholder {
+	color: #ddd;
+	opacity: 1;
+}
+
+::placeholder {
+	color: #ddd;
+}
