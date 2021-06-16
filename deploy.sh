@@ -3,13 +3,9 @@
 # mailerディレクトリのZipを作成
 zip -r dist/Mailer-latest-ja.zip mailer/ -x '*.git*' '*.env*' '*.DS_Store' '*__MACOSX*' '*.log*'
 
-# publicディレクトリをexample名でコピー
+# publicディレクトリをexample名でZipに追加
 cp -R public/ example/
-
-# exampleディレクトリをZipに追加
 zip -r dist/Mailer-latest-ja.zip example/ -x '*.git*' '*.env*' '*.DS_Store' '*__MACOSX*'
-
-# exampleディレクトリを削除
 rm -rf example
 
 # LICENSEをLICENSE.txtにしてZipに追加
