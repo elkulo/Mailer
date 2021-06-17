@@ -1,34 +1,33 @@
 .site-footer {
+	&__branding {
+		font-family: $font__heading;
+		font-size: 1.5rem;
+		font-weight: 500;
+		white-space: nowrap;
+		letter-spacing: -0.02em;
+		text-align: center;
 
-	&__endleaf {
-		padding: 0 0 3rem;
+		@include media(tablet) {
+			font-size: 2rem;
+		}
 
-		&__branding {
-			margin-bottom: 0.5rem;
-			font-family: $font__heading;
-			font-size: 1.325rem;
-			font-weight: 700;
-			text-align: center;
+		&__link {
 
-			@include media(tablet) {
-				margin: 0;
-				font-size: 1.5rem;
-			}
-
-			&__link {
-				display: inline-block;
+			&:hover,
+			&:focus {
+				box-shadow: none;
 			}
 		}
 	}
 
-	&__info {
+	&__copyright {
 		clear: both;
 		color: #fff;
 		font-family: $font__heading;
 		text-align: center;
-		font-size: 0.75rem;
-		padding: 0 0 1.5rem;
-		
+		font-size: 0.875rem;
+		margin: 3rem 0;
+
 		p {
 			margin: 0;
 		}

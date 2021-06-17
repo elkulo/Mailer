@@ -28,10 +28,11 @@
 		clear: none;
 		font-size: 1.325rem;
 		font-weight: 500;
-		letter-spacing: 0.02em;
+		letter-spacing: -0.02em;
 		margin: 0;
 		padding: 0;
 		color: inherit;
+		white-space: nowrap;
 
 		@include media(tablet) {
 			font-size: 1.5rem;
