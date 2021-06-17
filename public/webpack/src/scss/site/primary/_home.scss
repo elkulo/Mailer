@@ -145,7 +145,7 @@
 }
 
 .license-section {
-	padding: 0;
+	padding: 0 1rem;
 
 	.license-header {
 		position: relative;
@@ -199,6 +199,12 @@
 
 		&__title {
 			margin: 0 1rem;
+		}
+	}
+
+	.document-content {
+		p {
+			margin: 1.5rem 0;
 		}
 	}
 }
