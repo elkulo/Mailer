@@ -1,8 +1,8 @@
-/**
- * AppForm.js
- *
- * @version 4.0.0
- */
+/*!
+* Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
+* Copyright 2020-2021 A.Sudo
+* Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
+*/
 class AppForm {
 
 	/**
@@ -13,6 +13,8 @@ class AppForm {
 	 * @memberof AppForm
 	 */
 	constructor( $formElement = '#mailform', config = {}) {
+
+		// 初期設定.
 		this.config = {
 			error: {
 				required: '{name} が記入されておりません',
@@ -24,7 +26,16 @@ class AppForm {
 		};
 		this.config.error = { ...this.config.error, ...config.error };
 		this.$formElement = $formElement;
+		this.timer = 0;
+
+		// エラーメッセージボックス生成.
+		this.$messageError = document.createElement( 'div' );
+		this.$messageError.classList.add( 'js__error--message' );
+		this.$messageError.style.opacity = 0;
+
+		// イベント.
 		this.run = this.run.bind( this );
+		this.removeError = this.removeError.bind( this );
 		document.addEventListener( 'DOMContentLoaded', this.run, false );
 	}
 
@@ -49,17 +60,14 @@ class AppForm {
 		let preventEvent = true;
 
 		// エラーメッセージボックス生成
-		let $messageError = document.createElement( 'div' );
-		$messageError.classList.add( 'js__error--message' );
-		$messageError.style.opacity = 0;
-		$mailform.insertBefore( $messageError, $mailform.firstElementChild );
+		$mailform.insertBefore( this.$messageError, $mailform.firstElementChild );
 
 		// 必須チェック
 		const ConfirmRequired = () => {
 
 			// エラーの初期化
 			let errorItem = [];
-			$messageError.style.opacity = 0;
+			this.$messageError.style.opacity = 0;
 
 			let $errorElements = $mailform.querySelectorAll( '.js__error--field' );
 			if ( $errorElements.length ) {
@@ -103,9 +111,9 @@ class AppForm {
 					.join( '' );
 
 				// エラーメッセージをセット
-				$messageError.innerHTML = '<ul>' + result + '</ul>';
-				$messageError.style.opacity = 1;
-				removeError();
+				this.$messageError.innerHTML = '<ul>' + result + '</ul>';
+				this.$messageError.style.opacity = 1;
+				this.removeError();
 			} else {
 
 				// エラーなしの場合、送信処理を有効にして送信イベントを再開
@@ -132,17 +140,21 @@ class AppForm {
 			},
 			false
 		);
+	}
 
-		// エラーの自動非表示
-		let timer = 0;
-		const removeError = () => {
-			if ( 0 < timer ) {
-				clearTimeout( timer );
-			}
-			timer = setTimeout( () => {
-				$messageError.style.opacity = 0;
-			}, 4000 );
-		};
+	/**
+	 * エラーの自動非表示
+	 *
+	 * @returns void
+	 * @memberof AppForm
+	 */
+	removeError() {
+		if ( 0 < this.timer ) {
+			clearTimeout( this.timer );
+		}
+		this.timer = setTimeout( () => {
+			this.$messageError.style.opacity = 0;
+		}, 4000 );
 	}
 
 	/**
@@ -150,8 +162,8 @@ class AppForm {
 	 *
 	 * @param {*} item
 	 * @param {*} error
-	 * @returns
-	 * @memberof VerifyForm
+	 * @returns string
+	 * @memberof AppForm
 	 */
 	applyFilterRequired( item, error ) {
 
@@ -173,8 +185,8 @@ class AppForm {
 	 *
 	 * @param {*} item
 	 * @param {*} error
-	 * @returns
-	 * @memberof VerifyForm
+	 * @returns string
+	 * @memberof AppForm
 	 */
 	applyFilterMailAddress( item, error ) {
 		if (
@@ -196,8 +208,8 @@ class AppForm {
 	 *
 	 * @param {*} item
 	 * @param {*} error
-	 * @returns
-	 * @memberof VerifyForm
+	 * @returns string
+	 * @memberof AppForm
 	 */
 	applyFilterPhoneNumber( item, error ) {
 		if ( item.classList.contains( 'js__error--field' ) || item.type !== 'tel' ) {
@@ -216,8 +228,8 @@ class AppForm {
 	 *
 	 * @param {*} item
 	 * @param {*} error
-	 * @returns
-	 * @memberof VerifyForm
+	 * @returns string
+	 * @memberof AppForm
 	 */
 	applyFilterInteger( item, error ) {
 		if ( item.classList.contains( 'js__error--field' ) || item.type !== 'number' ) {
