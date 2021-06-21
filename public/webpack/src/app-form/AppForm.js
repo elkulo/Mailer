@@ -1,17 +1,28 @@
 /**
- * VerifyForm.js
+ * AppForm.js
  *
- * @version 3.0.0
+ * @version 4.0.0
  */
-class VerifyForm {
+class AppForm {
 
 	/**
 	 * コンストラクタ
 	 *
 	 * @param {string} [$formElement='#mailform']
-	 * @memberof VerifyForm
+	 * @param {object} [config = {}]
+	 * @memberof AppForm
 	 */
-	constructor( $formElement = '#mailform' ) {
+	constructor( $formElement = '#mailform', config = {}) {
+		this.config = {
+			error: {
+				required: '{name} が記入されておりません',
+				checked: '{name} がチェックされていません',
+				mailaddress: 'メールアドレスの形式が異なります',
+				phonenumber: '{name} の形式が異なります',
+				number: '{name} は数値のみ入力してください'
+			}
+		};
+		this.config.error = { ...this.config.error, ...config.error };
 		this.$formElement = $formElement;
 		this.run = this.run.bind( this );
 		document.addEventListener( 'DOMContentLoaded', this.run, false );
@@ -221,4 +232,4 @@ class VerifyForm {
 	}
 }
 
-export default VerifyForm;
+export default AppForm;

@@ -1,4 +1,3 @@
-
 /* Contact */
 .contact-section {
 	position: relative;
@@ -22,27 +21,27 @@
 			color: $color__text-main;
 			text-align: center;
 		}
-		
+
 		&__description {
 			text-align: center;
 		}
-		
+
 		&__summary {
 			text-align: left;
-			background: rgba(255,255,255,0.1);
+			background: rgba(255, 255, 255, 0.1);
 			border-radius: 5px;
 			padding: 1rem 1rem 0.5rem;
 			margin: 0 auto 1rem;
 			max-width: 600px;
 			font-size: 0.875rem;
-	
+
 			@include media(tablet) {
 				text-align: center;
 			}
-			
+
 			> p {
 				margin: 0;
-				
+
 				> strong {
 					color: #f0bb1e;
 					font-weight: 400;
@@ -53,71 +52,70 @@
 			}
 		}
 	}
+}
 
-	.contact-form {
-		background: #fafafa;
-		color: #212121;
-		border-radius: 0 0 10px 10px;
-		box-shadow: 0 2px 8px 1px #000;
-		
-		&__list {
-			margin: 0;
+.contact-form {
+	background: #fafafa;
+	color: #212121;
+	border-radius: 0 0 10px 10px;
+	box-shadow: 0 2px 8px 1px #000;
 
-			&__item {
-				display: table;
-				list-style: none;
+	&__list {
+		margin: 0;
+
+		&__item {
+			display: table;
+			list-style: none;
+			width: 100%;
+			border-top: dotted 1px #ddd;
+			padding: 0.75rem 1rem;
+			font-size: 1rem;
+
+			@include media(tablet) {
+				padding: 0.75rem 2rem;
+			}
+
+			&:first-child {
+				border-top: none;
+			}
+
+			p:last-child {
+				font-size: 0.75rem;
+				margin: 0;
+			}
+
+			a {
+				color: #0c67a1;
+			}
+
+			.label,
+			> label[for] {
 				width: 100%;
-				border-top: dotted 1px #ddd;
-				padding: 0.75rem 1rem;
-				font-size: 1rem;
+				color: inherit;
+				margin-bottom: 0.5rem;
+				font-size: 0.875rem;
 
 				@include media(tablet) {
-					padding: 0.75rem 2rem;
+					display: table-cell;
+					vertical-align: middle;
+					width: 240px;
+					margin-bottom: 0;
+					font-size: 1rem;
 				}
+			}
 
-				&:first-child {
-					border-top: none;
-				}
-
-				p:last-child {
-					font-size: 0.75rem;
-					margin: 0;
-				}
-
-				a {
-					color: #0c67a1;
-				}
-
-				.label,
-				> label[for] {
-					width: 100%;
-					color: inherit;
-					margin-bottom: 0.5rem;
-					font-size: 0.875rem;
-
-					@include media(tablet) {
-						display: table-cell;
-						vertical-align: middle;
-						width: 240px;
-						margin-bottom: 0;
-						font-size: 1rem;
-					}
-				}
-
-				input,
-				select,
-				textarea {
-
-					@include media(tablet) {
-						display: table-cell;
-						vertical-align: middle;
-					}
+			input,
+			select,
+			textarea {
+				@include media(tablet) {
+					display: table-cell;
+					vertical-align: middle;
 				}
 			}
 		}
 	}
-	
-	.submit-button {
+
+	&__submit {
 		clear: both;
 		text-align: center;
 		padding: 0.5rem 0 2rem;
@@ -127,12 +125,12 @@
 		font-size: 10px;
 		color: #fff;
 		background: #994142;
-		border-radius: 5px;	
+		border-radius: 5px;
 		padding: 0.325em 0.5em 0.25em;
 		margin-left: 0.5rem;
 		vertical-align: middle;
 	}
-	
+
 	.novalidate {
 		font-size: 10px;
 		color: #aaa;
@@ -141,6 +139,42 @@
 		padding: 0.325em 0.5em 0.25em;
 		margin-left: 0.5rem;
 		vertical-align: middle;
+	}
+
+	.js__error--field {
+		box-shadow: 0px 0px 0px 1px #fafafa, 0px 0px 0px 2px #e88a00;
+	}
+
+	.js__error--message {
+		position: fixed;
+		z-index: 100;
+		right: 20px;
+		bottom: 20px;
+		color: #f8cf94;
+		background: #190f00;
+		border: solid 1px #e88a00;
+		border-radius: 5px;
+		padding: 0.5em 1em 0.5em 0.5em;
+		font-size: 0.825rem;
+		opacity: 0;
+		transition: opacity 200ms ease;
+
+		ul {
+			margin: 0;
+			padding: 0;
+
+			li {
+				list-style: none;
+				margin: 0.125em 0;
+
+				&::before {
+					content: "\30FB";
+					display: inline-block;
+					margin-right: 0.5em;
+					opacity: 0.5;
+				}
+			}
+		}
 	}
 }
 
@@ -154,11 +188,11 @@
 		align-items: center;
 		text-align: center;
 		margin-bottom: 1.5rem;
-		
+
 		&::before,
 		&::after {
 			display: block;
-			content: '';
+			content: "";
 			border-top: solid 1px #bbb;
 			width: 40px;
 			height: 1px;
@@ -187,11 +221,11 @@
 		align-items: center;
 		text-align: center;
 		margin-bottom: 1.5rem;
-		
+
 		&::before,
 		&::after {
 			display: block;
-			content: '';
+			content: "";
 			border-top: solid 1px #bbb;
 			width: 40px;
 			height: 1px;
