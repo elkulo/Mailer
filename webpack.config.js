@@ -16,10 +16,10 @@ module.exports = {
   mode: "production",
   entry: {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
-    "app-verifyform": path.resolve(
+    "app-form": path.resolve(
       __dirname,
       dirscript,
-      "./src/app-verifyform.js"
+      "./src/app-form.js"
     ),
   },
   output: {

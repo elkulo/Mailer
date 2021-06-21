@@ -5,8 +5,8 @@
 .js__error--message {
 	position: fixed;
 	z-index: 100;
-	right: 8px;
-	bottom: 8px;
+	right: 20px;
+	bottom: 20px;
 	color: #f8cf94;
 	background: #190f00;
 	border: solid 1px #e88a00;
@@ -19,17 +19,17 @@
 	ul {
 		margin: 0;
 		padding: 0;
-		
+
 		li {
 			list-style: none;
 			margin: 0.125em 0;
-			
+
 			&::before {
-				content: '\30FB';
+				content: "\30FB";
 				display: inline-block;
 				margin-right: 0.5em;
 				opacity: 0.5;
-			}			
+			}
 		}
 	}
 }

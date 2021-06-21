@@ -16,7 +16,7 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"] {
 	@include button-all-transition;
-	background: linear-gradient(to right, $color__background-button, $color__background-button-hover );
+	background: linear-gradient(to right, $color__background-button, $color__background-button-hover);
 	background-size: 200% 100%;
 	background-position: 0 0;
 	border: 0;
@@ -51,7 +51,6 @@ input[type="submit"] {
 		outline-offset: -4px;
 	}
 }
-
 
 /**
  * チェックボックスデザイン
