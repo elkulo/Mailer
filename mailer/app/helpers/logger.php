@@ -16,11 +16,11 @@ use Monolog\Processor\WebProcessor;
  * Monolog
  *
  * @param  string $message
- * @param  array  $content
  * @param  string|int $level
+ * @param  array  $content
  * @return void
  */
-function logger(string $message, array $content = array(), $level = 1): void
+function logger(string $message, $level = 1, array $content = array()): void
 {
     $monolog = new Monolog('mailer');
 

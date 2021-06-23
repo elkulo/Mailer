@@ -85,7 +85,7 @@ class PHPMailerHandler implements HandlerInterface
         // メール送信の実行.
         try {
             if (!$mailer->send()) {
-                logger('Failed', [], 'error');
+                logger('Failed', 'error');
                 throw new Exception('Mailer Error');
             }
         } catch (Exception $e) {

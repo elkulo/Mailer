@@ -5,9 +5,13 @@
 */
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import BootstrapVaridation from './js/BootstrapVaridation';
 import DrawerNavi from './js/DrawerNavi';
 import SmoothScroll from './js/SmoothScroll';
 import './scss/global.scss';
+
+// Bootstrap バリデーション.
+window.addBootstrapVaridation = ( element ) => BootstrapVaridation( element );
 
 // ナビゲーション.
 DrawerNavi();
