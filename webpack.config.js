@@ -16,11 +16,6 @@ module.exports = {
   mode: "production",
   entry: {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
-    "app-form": path.resolve(
-      __dirname,
-      dirscript,
-      "./src/app-form.js"
-    ),
   },
   output: {
     path: path.resolve(__dirname, dirscript, "./dest"),

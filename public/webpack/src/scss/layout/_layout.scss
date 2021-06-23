@@ -1,8 +1,14 @@
 .wrap {
+	box-sizing: content-box;
 	display: flow-root;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: $desktop_width;
+	max-width: $size__site-max-content;
 	padding-left: $size__spacing-unit;
 	padding-right: $size__spacing-unit;
+	
+	@include media(desktop) {
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
