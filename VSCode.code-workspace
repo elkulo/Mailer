@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"editor.insertSpaces": false,
+		"editor.insertSpaces": true,
 		"editor.tabSize": 2
 	}
 }
