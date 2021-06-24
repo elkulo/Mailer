@@ -13,9 +13,13 @@ input[type="time"],
 input[type="datetime"],
 input[type="datetime-local"],
 input[type="color"],
-textarea {
+textarea[name] {
 	-webkit-backface-visibility: hidden;
 	-webkit-appearance: none;
+
+	&::placeholder {
+		color: #dbdbdb;
+	}
 }
 
 input[type="search"] {

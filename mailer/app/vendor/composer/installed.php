@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'd4173fe0250816693c3cdaabfd0ce817fd78476e',
+        'reference' => 'ff0deb63d3fa31061114fc1a4963d0d927c83c7e',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -34,7 +34,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'd4173fe0250816693c3cdaabfd0ce817fd78476e',
+            'reference' => 'ff0deb63d3fa31061114fc1a4963d0d927c83c7e',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -203,12 +203,12 @@
             'dev_requirement' => true,
         ),
         'phpunit/phpunit' => array(
-            'pretty_version' => '8.5.16',
-            'version' => '8.5.16.0',
+            'pretty_version' => '8.5.17',
+            'version' => '8.5.17.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(),
-            'reference' => 'cc66f2fc61296be66c99931a862200e7456b9a01',
+            'reference' => '79067856d85421c56d413bd238d4e2cd6b0e54da',
             'dev_requirement' => true,
         ),
         'psr/log' => array(
