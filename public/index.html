@@ -10,212 +10,212 @@
 </head>
 <body id="home" class="home">
 <div id="page" class="site">
-	<header id="masthead" class="site-header" role="banner">
-		<div class="wrap">
-			<div class="site-header-contain">
-				<div class="site-branding">
-					<h1 class="site-title">
-						<a href="./" class="custom-logo-link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">
-							<span class="custom-logo">Mailer &#124; el.kulo</span>
-						</a>
-					</h1>
-				</div>
-				<div class="navigation-top">
-					<button class="menu-trigger" aria-controls="top-menu" aria-expanded="false">
-						<span></span><span></span><span></span>
-					</button>
-					<div class="site-description">オープンソースのPHPメールフォーム"Chidori"の開発</div>
-					<nav id="site-navigation" class="main-navigation" role="navigation">
-						<ul id="top-menu" class="menu">
-							<li class="menu__item"><a href="/">HOME</a></li>
-							<li class="menu__item"><a href="/#demo">DEMO</a></li>
-							<li class="menu__item"><a href="/#license">LICENSE</a></li>
-							<li class="menu__item"><a href="/#document">DOCUMENT</a></li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
-		 
-		<div class="custom-header">
-			<div class="custom-header__hero">
-				<h2 class="custom-header__hero__title"><small>As Your Partner!</small>Chidori for PHPMailer</h2>
-				<p class="custom-header__hero__description">
-					開発バージョンでは、<span style="display: inline-block;">意図しない不具合が発生する可能性があります。</span><br />
-					開発以外では本番バージョンの<span style="display: inline-block;">最新パッケージをご利用ください。</span>
-				</p>
-				<div class="custom-header__hero__button"><a href="https://github.com/elkulo/Mailer" target="_blank" class="button">開発バージョンのGit</a></div>
-				<div class="custom-header__hero__phpver">PHP 7.4 or 8.0</div>
-			</div>
-		</div>
-	</header>
-	<div class="site-content-contain">
-		<div id="content" class="site-content">
+  <header id="masthead" class="site-header" role="banner">
+    <div class="wrap">
+      <div class="site-header-contain">
+        <div class="site-branding">
+          <h1 class="site-title">
+            <a href="./" class="custom-logo-link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">
+              <span class="custom-logo">Mailer &#124; el.kulo</span>
+            </a>
+          </h1>
+        </div>
+        <div class="navigation-top">
+          <button class="menu-trigger" aria-controls="top-menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="site-description">オープンソースのPHPメールフォーム"Chidori"の開発</div>
+          <nav id="site-navigation" class="main-navigation" role="navigation">
+            <ul id="top-menu" class="menu">
+              <li class="menu__item"><a href="/">HOME</a></li>
+              <li class="menu__item"><a href="/#demo">DEMO</a></li>
+              <li class="menu__item"><a href="/#license">LICENSE</a></li>
+              <li class="menu__item"><a href="/#document">DOCUMENT</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+     
+    <div class="custom-header">
+      <div class="custom-header__hero">
+        <h2 class="custom-header__hero__title"><small>As Your Partner!</small>Chidori for PHPMailer</h2>
+        <p class="custom-header__hero__description">
+          開発バージョンでは、<span style="display: inline-block;">意図しない不具合が発生する可能性があります。</span><br />
+          開発以外では本番バージョンの<span style="display: inline-block;">最新パッケージをご利用ください。</span>
+        </p>
+        <div class="custom-header__hero__button"><a href="https://github.com/elkulo/Mailer" target="_blank" class="button">開発バージョンのGit</a></div>
+        <div class="custom-header__hero__phpver">PHP 7.4 or 8.0</div>
+      </div>
+    </div>
+  </header>
+  <div class="site-content-contain">
+    <div id="content" class="site-content">
 
-			<section id="demo" class="demo-section">
-				<div class="wrap">
-					<div class="demo-header">
-						<h2 class="demo-header__title">DEMO</h2>
-						<div class="demo-header__summary">
-							<p>このメールフォームはお試し用のサンプルです。<br class="xs-hide" />実際にメールは送信されません。</p>
-						</div>
-						<div class="demo-header__description">次の項目にご入力をお願いいたします。</div>
-					</div>
+      <section id="demo" class="demo-section">
+        <div class="wrap">
+          <div class="demo-header">
+            <h2 class="demo-header__title">DEMO</h2>
+            <div class="demo-header__summary">
+              <p>このメールフォームはお試し用のサンプルです。<br class="xs-hide" />実際にメールは送信されません。</p>
+            </div>
+            <div class="demo-header__description">次の項目にご入力をお願いいたします。</div>
+          </div>
 
-					<div class="demo-content">
+          <div class="demo-content">
 
-						<!-- BEGIN: Form Style Framework by Bootstrap(https://getbootstrap.jp/docs/5.0/forms/overview/) -->
-						<div class="container py-5 px-3 px-lg-5">
-							<form id="mailform" class="needs-validation" name="mailform" method="post" action="./mailer.php" novalidate>
+            <!-- BEGIN: Form Style Framework by Bootstrap(https://getbootstrap.jp/docs/5.0/forms/overview/) -->
+            <div class="container py-5 px-3 px-lg-5">
+              <form id="mailform" class="needs-validation" name="mailform" method="post" action="./mailer.php" novalidate>
 
-								<div class="mb-3">
-									<div class="label">件名<span class="validate">必須</span></div>
-									<div class="form-check form-check-inline">
-										<input type="radio" id="CustomerSubject1" class="form-check-input" name="件名" value="お問い合わせ（一般のお客様）" checked>
-										<label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input type="radio" id="CustomerSubject2" class="form-check-input" name="件名" value="工事のご依頼（事業関係者様）">
-										<label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
-									</div>
-								</div>
+                <div class="mb-3">
+                  <div class="label">件名<span class="validate">必須</span></div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" id="CustomerSubject1" class="form-check-input" name="件名" value="お問い合わせ（一般のお客様）" checked>
+                    <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input type="radio" id="CustomerSubject2" class="form-check-input" name="件名" value="工事のご依頼（事業関係者様）">
+                    <label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
+                  </div>
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerType" class="form-label">種別<span class="validate">必須</span></label>
-									<select name="種別" id="CustomerType" class="form-select" required>
-										<option value="見積希望" selected>見積希望</option>
-										<option value="通信・弱電工事全般">通信・弱電工事全般</option>
-										<option value="音響・映像機器設置">音響・映像機器設置</option>
-										<option value="LED照明取付工事">LED照明取付工事</option>
-										<option value="通信ケーブル各種配線">通信ケーブル各種配線</option>
-										<option value="各種家電商品販売">各種家電商品販売</option>
-										<option value="セキュリティ機器取付">セキュリティ機器取付</option>
-										<option value="その他">その他</option>
-									</select>
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerType" class="form-label">種別<span class="validate">必須</span></label>
+                  <select name="種別" id="CustomerType" class="form-select" required>
+                    <option value="見積希望" selected>見積希望</option>
+                    <option value="通信・弱電工事全般">通信・弱電工事全般</option>
+                    <option value="音響・映像機器設置">音響・映像機器設置</option>
+                    <option value="LED照明取付工事">LED照明取付工事</option>
+                    <option value="通信ケーブル各種配線">通信ケーブル各種配線</option>
+                    <option value="各種家電商品販売">各種家電商品販売</option>
+                    <option value="セキュリティ機器取付">セキュリティ機器取付</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerName" class="form-label">お名前<span class="validate">必須</span></label>
-									<input type="tel" id="CustomerName" class="form-control" name="お名前" placeholder="お名前" required>
-									<div class="invalid-feedback">
-										お名前を記入してください。
-									</div>
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerName" class="form-label">お名前<span class="validate">必須</span></label>
+                  <input type="tel" id="CustomerName" class="form-control" name="お名前" placeholder="お名前" required>
+                  <div class="invalid-feedback">
+                    お名前を記入してください。
+                  </div>
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerPhonetic" class="form-label">フリガナ<span class="validate">必須</span></label>
-									<input type="text" id="CustomerPhonetic" class="form-control" name="フリガナ" placeholder="フリガナ" required>
-									<div class="invalid-feedback">
-										フリガナを記入してください。
-									</div>
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerPhonetic" class="form-label">フリガナ<span class="validate">必須</span></label>
+                  <input type="text" id="CustomerPhonetic" class="form-control" name="フリガナ" placeholder="フリガナ" required>
+                  <div class="invalid-feedback">
+                    フリガナを記入してください。
+                  </div>
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerDomicile" class="form-label">ご住所<span class="novalidate">任意</span></label>
-									<input type="text" id="CustomerDomicile" class="form-control" name="ご住所" placeholder="東京都千代田区">
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerDomicile" class="form-label">ご住所<span class="novalidate">任意</span></label>
+                  <input type="text" id="CustomerDomicile" class="form-control" name="ご住所" placeholder="東京都千代田区">
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerEmail" class="form-label">メールアドレス<span class="validate">必須</span></label>
-									<input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="Email" placeholder="mail@example.com" required>
-									<div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
-									<div class="invalid-feedback">
-										メールアドレスを記入してください。
-									</div>
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerEmail" class="form-label">メールアドレス<span class="validate">必須</span></label>
+                  <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="Email" placeholder="mail@example.com" required>
+                  <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
+                  <div class="invalid-feedback">
+                    メールアドレスを記入してください。
+                  </div>
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerTell" class="form-label">電話番号<span class="novalidate">任意</span></label>
-									<input type="tel" id="CustomerTell" class="form-control" name="電話番号" placeholder="03-1234-00XX">
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerTell" class="form-label">電話番号<span class="novalidate">任意</span></label>
+                  <input type="tel" id="CustomerTell" class="form-control" name="電話番号" placeholder="03-1234-00XX">
+                </div>
 
-								<div class="mb-3">
-									<label for="CustomerComment" class="form-label">ご要望<span class="validate">必須</span></label>
-									<textarea id="CustomerComment" class="form-control" name="ご要望" placeholder="ご要望などお書きください..." rows="5" required></textarea>
-									<div class="invalid-feedback">
-										 ご要望を記入してください。
-									</div>
-								</div>
+                <div class="mb-3">
+                  <label for="CustomerComment" class="form-label">ご要望<span class="validate">必須</span></label>
+                  <textarea id="CustomerComment" class="form-control" name="ご要望" placeholder="ご要望などお書きください..." rows="5" required></textarea>
+                  <div class="invalid-feedback">
+                     ご要望を記入してください。
+                  </div>
+                </div>
 
-								<div class="mb-3 form-check">
-									<input type="checkbox" id="CustomerConsent" class="form-check-input" name="個人情報取扱" value="同意します" required>
-									<label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
-									<div id="consentHelp" class="form-text">通信はSSLにより暗号化されています。当サイトの個人情報保護方針については<a href="privacy-policy.html" target="_blank" title="プライバシーポリシー">プライバシーポリシー</a>をご覧ください。</div>
-								</div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" id="CustomerConsent" class="form-check-input" name="個人情報取扱" value="同意します" required>
+                  <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
+                  <div id="consentHelp" class="form-text">通信はSSLにより暗号化されています。当サイトの個人情報保護方針については<a href="privacy-policy.html" target="_blank" title="プライバシーポリシー">プライバシーポリシー</a>をご覧ください。</div>
+                </div>
 
-								<div class="d-grid gap-2 col-10 col-sm-6 mt-5 mx-auto">
-									<button type="submit" class="btn btn-primary">上記内容を送信する</button>
-								</div>
-							</form>
-						</div>
-						<!-- END: Form Style Framework by Bootstrap(https://getbootstrap.jp/docs/5.0/forms/overview/) -->
+                <div class="d-grid gap-2 col-10 col-sm-6 mt-5 mx-auto">
+                  <button type="submit" class="btn btn-primary">上記内容を送信する</button>
+                </div>
+              </form>
+            </div>
+            <!-- END: Form Style Framework by Bootstrap(https://getbootstrap.jp/docs/5.0/forms/overview/) -->
 
-					</div>
-				</div>
-			</section>
-			<section id="license" class="license-section">
-				<div class="wrap">
-					<header class="license-header">
-						<h2 class="license-header__title">MIT License</h2>
-					</header>
-					<div class="license-content">
-						<p>Copyright (c) 2021 A.Sudo</p>
-							
-						<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-							of this software and associated documentation files (the "Software"), to deal
-							in the Software without restriction, including without limitation the rights
-							to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-							copies of the Software, and to permit persons to whom the Software is
-							furnished to do so, subject to the following conditions:</p>
-							
-						<p>The above copyright notice and this permission notice shall be included in all
-							copies or substantial portions of the Software.</p>
-							
-						<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-							IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-							FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-							AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-							LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-							OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-							SOFTWARE.</p>
+          </div>
+        </div>
+      </section>
+      <section id="license" class="license-section">
+        <div class="wrap">
+          <header class="license-header">
+            <h2 class="license-header__title">MIT License</h2>
+          </header>
+          <div class="license-content">
+            <p>Copyright (c) 2021 A.Sudo</p>
+              
+            <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+              of this software and associated documentation files (the "Software"), to deal
+              in the Software without restriction, including without limitation the rights
+              to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+              copies of the Software, and to permit persons to whom the Software is
+              furnished to do so, subject to the following conditions:</p>
+              
+            <p>The above copyright notice and this permission notice shall be included in all
+              copies or substantial portions of the Software.</p>
+              
+            <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+              IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+              FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+              AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+              LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+              OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+              SOFTWARE.</p>
 
-						<hr />
+            <hr />
 
-						<p>以下に定める条件に従い、本ソフトウェアおよび関連文書のファイル（以下「ソフトウェア」）の複製を取得するすべての人に対し、
-							ソフトウェアを無制限に扱うことを無償で許可します。これには、ソフトウェアの複製を使用、複写、変更、結合、掲載、頒布、
-							サブライセンス、および/または販売する権利、およびソフトウェアを提供する相手に同じことを許可する権利も無制限に含まれます。</p>
+            <p>以下に定める条件に従い、本ソフトウェアおよび関連文書のファイル（以下「ソフトウェア」）の複製を取得するすべての人に対し、
+              ソフトウェアを無制限に扱うことを無償で許可します。これには、ソフトウェアの複製を使用、複写、変更、結合、掲載、頒布、
+              サブライセンス、および/または販売する権利、およびソフトウェアを提供する相手に同じことを許可する権利も無制限に含まれます。</p>
 
-						<p>上記の著作権表示および本許諾表示を、ソフトウェアのすべての複製または重要な部分に記載するものとします。</p>
-						
-						<p>ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、
-							商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。
-							作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、
-							あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。</p>
-					</div>
-				</div>
-			</section>
-			<section id="document" class="document-section">
-				<div class="wrap">
-					<header class="document-header">
-						<h2 class="document-header__title">DOCUMENT</h2>
-					</header>
-					<div class="document-content">
-						<p>最新パッケージのダウンロードとドキュメントはこちら</p>
-						<p><a href="https://walkyxwalky.jp/download" title="Publisher Blog" target="_blank" class="button">Publisher Blog</a></p>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
-	<footer id="colophon" class="site-footer">
-		<div class="site-footer__branding">
-			<a href="./" class="site-footer__branding__link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">Mailer &#124; el.kulo</a>
-		</div>
-		<div class="site-footer__copyright">
-			<p>Copyright &copy; Mailer | el.kulo, all rights reserved. </p>
-		</div>
-	</footer>
-	<!-- #colophon --> 
+            <p>上記の著作権表示および本許諾表示を、ソフトウェアのすべての複製または重要な部分に記載するものとします。</p>
+            
+            <p>ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、
+              商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。
+              作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、
+              あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。</p>
+          </div>
+        </div>
+      </section>
+      <section id="document" class="document-section">
+        <div class="wrap">
+          <header class="document-header">
+            <h2 class="document-header__title">DOCUMENT</h2>
+          </header>
+          <div class="document-content">
+            <p>最新パッケージのダウンロードとドキュメントはこちら</p>
+            <p><a href="https://walkyxwalky.jp/download" title="Publisher Blog" target="_blank" class="button">Publisher Blog</a></p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <footer id="colophon" class="site-footer">
+    <div class="site-footer__branding">
+      <a href="./" class="site-footer__branding__link" rel="home" itemprop="url" title="Mailer &#124; el.kulo">Mailer &#124; el.kulo</a>
+    </div>
+    <div class="site-footer__copyright">
+      <p>Copyright &copy; Mailer | el.kulo, all rights reserved. </p>
+    </div>
+  </footer>
+  <!-- #colophon --> 
 </div>
 <!-- #page --> 
 <script type="text/javascript" src="webpack/dest/app.min.js?ver=20210623"></script>
