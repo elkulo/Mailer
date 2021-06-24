@@ -14,7 +14,7 @@
 .demo-header {
 	background: linear-gradient(45deg, #a24bcf, #3f67b1, #41aeb8);
 	background-attachment: fixed;
-	padding: 3rem 2rem;
+	padding: 2rem 1rem;
 	box-shadow: 0 -2px 8px 1px #000;
 	border-radius: 10px 10px 0 0;
 
@@ -23,15 +23,11 @@
 		text-align: center;
 	}
 
-	&__description {
-		text-align: center;
-	}
-
 	&__summary {
 		text-align: left;
 		background: rgba(255, 255, 255, 0.1);
 		border-radius: 5px;
-		padding: 1rem 1rem 0.5rem;
+		padding: 1rem 1rem 1px;
 		margin: 0 auto 1rem;
 		max-width: 600px;
 		font-size: 0.875rem;
@@ -39,18 +35,10 @@
 		@include media(tablet) {
 			text-align: center;
 		}
+	}
 
-		> p {
-			margin: 0;
-
-			> strong {
-				color: #f0bb1e;
-				font-weight: 400;
-				font-size: 2rem;
-				letter-spacing: -0.05em;
-				white-space: nowrap;
-			}
-		}
+	&__description {
+		text-align: center;
 	}
 }
 
