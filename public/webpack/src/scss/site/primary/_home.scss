@@ -130,8 +130,13 @@
 	}
 
 	.document-content {
-		p {
-			margin: 1.5rem 0;
+		.button {
+			.bi {
+				margin: 0 0.125em 0.125em 0;
+				width: 1.125em;
+				height: 1.125em;
+				filter: drop-shadow(0 0 1px #000);
+			}
 		}
 	}
 }
