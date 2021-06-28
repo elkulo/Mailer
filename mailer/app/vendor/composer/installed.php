@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'ff0deb63d3fa31061114fc1a4963d0d927c83c7e',
+        'reference' => '9c408ed46175cc9c365c2cbfe7018d28cba574ed',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -34,7 +34,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'ff0deb63d3fa31061114fc1a4963d0d927c83c7e',
+            'reference' => '9c408ed46175cc9c365c2cbfe7018d28cba574ed',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
