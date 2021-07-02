@@ -23,10 +23,21 @@ return array(
     'SUBJECT_AFTER' => ' - by Mailer',
 
     // 件名にするname属性(該当なしの場合はNo Subject)
+    // TODO: 該当なしは出力しない
     'SUBJECT_ATTRIBUTE' => '件名',
 
     // ユーザーのEmailのname属性(メールアドレス形式チェックあり)
     'EMAIL_ATTRIBUTE' => 'Email',
+
+    // name属性とラベルの紐付け（日本語変換の場合）
+    // 省略された場合はname属性を出力に使用されます。
+    // TODO: 未実装
+    'NAME_FOR_LABELS' => [
+        'name' => 'お名前',
+        'nameKana' => 'フリガナ',
+        'emailAddress' => 'メールアドレス',
+        'phoneNumber' => '電話番号'
+    ],
 
     // 必須項目のname属性
     'REQUIRED_ATTRIBUTE' => [
