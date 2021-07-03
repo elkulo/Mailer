@@ -6,12 +6,12 @@
  */
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace App\Handlers;
 
 /**
  * WordPressHandler
  */
-class WordPressHandler implements HandlerInterface
+class WordPressHandler implements MailHandlerInterface
 {
 
     /**

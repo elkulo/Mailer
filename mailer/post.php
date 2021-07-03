@@ -26,12 +26,21 @@ require_once __DIR__ . '/app/vendor/autoload.php';
  * 例）WordPressのハンドラーに切り替える
  * PHPMailerHandler -> WordPressHandler
  */
-// use App\Handler\WordPressHandler as MailerHandler;
-use App\Handler\PHPMailerHandler as MailerHandler;
+// use App\Handlers\WordPressHandler as MailerHandler;
+use App\Handlers\PHPMailerHandler as MailerHandler;
+
+/**
+ * DBハンドラーを選択
+ *
+ * 例）MySQLのハンドラーに切り替える
+ * SQLiteMailerHandler -> MySQLMailerHandler
+ */
+// use App\Handlers\MySQLMailerHandler as DBHandler;
+use App\Handlers\SQLiteMailerHandler as DBHandler;
 
 /************************************************************/
 
-use App\Application\Mailer;
+use App\Actions\Mailer;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
