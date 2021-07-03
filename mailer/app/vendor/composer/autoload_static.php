@@ -208,10 +208,14 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
     );
 
     public static $classMap = array (
-        'App\\Application\\Mailer' => __DIR__ . '/../..' . '/src/Application/Mailer.php',
-        'App\\Handler\\HandlerInterface' => __DIR__ . '/../..' . '/src/Handler/HandlerInterface.php',
-        'App\\Handler\\PHPMailerHandler' => __DIR__ . '/../..' . '/src/Handler/PHPMailerHandler.php',
-        'App\\Handler\\WordPressHandler' => __DIR__ . '/../..' . '/src/Handler/WordPressHandler.php',
+        'App\\Actions\\Mailer' => __DIR__ . '/../..' . '/src/Actions/Mailer.php',
+        'App\\Handlers\\DBHandlerInterface' => __DIR__ . '/../..' . '/src/Handlers/DBHandlerInterface.php',
+        'App\\Handlers\\MailHandlerInterface' => __DIR__ . '/../..' . '/src/Handlers/MailHandlerInterface.php',
+        'App\\Handlers\\MySQLHandler' => __DIR__ . '/../..' . '/src/Handlers/MySQLHandler.php',
+        'App\\Handlers\\PHPMailerHandler' => __DIR__ . '/../..' . '/src/Handlers/PHPMailerHandler.php',
+        'App\\Handlers\\SQLiteHandler' => __DIR__ . '/../..' . '/src/Handlers/SQLiteHandler.php',
+        'App\\Handlers\\WordPressHandler' => __DIR__ . '/../..' . '/src/Handlers/WordPressHandler.php',
+        'App\\Middleware\\reCAPTCHA' => __DIR__ . '/../..' . '/src/Middleware/reCAPTCHA.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'ChromePhp' => __DIR__ . '/..' . '/ccampbell/chromephp/ChromePhp.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',

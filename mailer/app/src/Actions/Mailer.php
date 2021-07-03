@@ -6,9 +6,10 @@
  */
 declare(strict_types=1);
 
-namespace App\Application;
+namespace App\Actions;
 
-use App\Handler\HandlerInterface;
+//use App\Handlers\DBHandlerInterface;
+use App\Handlers\MailHandlerInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
@@ -87,15 +88,15 @@ class Mailer
     /**
      * コンストラクタ
      *
-     * @param  HandlerInterface $handler
+     * @param  MailHandlerInterface $mail_handler
      * @param  array $config
      * @return void
      */
-    public function __construct(HandlerInterface $handler, array $config)
+    public function __construct(MailHandlerInterface $mail_handler, array $config)
     {
         try {
             // ハンドラーをセット
-            $this->mail = $handler;
+            $this->mail = $mail_handler;
 
             // コンフィグをセット
             $this->setting = array_merge($this->setting, $config);

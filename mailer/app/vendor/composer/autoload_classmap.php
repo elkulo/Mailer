@@ -6,10 +6,14 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Application\\Mailer' => $baseDir . '/src/Application/Mailer.php',
-    'App\\Handler\\HandlerInterface' => $baseDir . '/src/Handler/HandlerInterface.php',
-    'App\\Handler\\PHPMailerHandler' => $baseDir . '/src/Handler/PHPMailerHandler.php',
-    'App\\Handler\\WordPressHandler' => $baseDir . '/src/Handler/WordPressHandler.php',
+    'App\\Actions\\Mailer' => $baseDir . '/src/Actions/Mailer.php',
+    'App\\Handlers\\DBHandlerInterface' => $baseDir . '/src/Handlers/DBHandlerInterface.php',
+    'App\\Handlers\\MailHandlerInterface' => $baseDir . '/src/Handlers/MailHandlerInterface.php',
+    'App\\Handlers\\MySQLHandler' => $baseDir . '/src/Handlers/MySQLHandler.php',
+    'App\\Handlers\\PHPMailerHandler' => $baseDir . '/src/Handlers/PHPMailerHandler.php',
+    'App\\Handlers\\SQLiteHandler' => $baseDir . '/src/Handlers/SQLiteHandler.php',
+    'App\\Handlers\\WordPressHandler' => $baseDir . '/src/Handlers/WordPressHandler.php',
+    'App\\Middleware\\reCAPTCHA' => $baseDir . '/src/Middleware/reCAPTCHA.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'ChromePhp' => $vendorDir . '/ccampbell/chromephp/ChromePhp.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
