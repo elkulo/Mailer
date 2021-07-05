@@ -8,11 +8,16 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-//use App\Handlers\DBHandlerInterface;
+use App\Handlers\DBHandlerInterface;
 use App\Handlers\MailHandlerInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\DNSCheckValidation;
+use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\RFCValidation;
+use Valitron;
 
 /**
  * Mailer
@@ -41,11 +46,11 @@ class Mailer
     private array $post_data;
 
     /**
-     * バリデートメッセージ
+     * バリデート
      *
-     * @var string
+     * @var object
      */
-    private string $validate_massage;
+    private object $validation;
 
     /**
      * フォームの設置ページの格納
@@ -101,6 +106,16 @@ class Mailer
             // コンフィグをセット
             $this->setting = array_merge($this->setting, $config);
 
+            // 管理者メールの形式チェック
+            $to = (array) $this->setting['ADMIN_MAIL'];
+            $cc = $this->setting['ADMIN_CC']? explode(',', $this->setting['ADMIN_CC']): [];
+            $bcc = $this->setting['ADMIN_BCC']? explode(',', $this->setting['ADMIN_BCC']): [];
+            foreach (array_merge($to, $cc, $bcc) as $email) {
+                if (! $this->isCheckMailFormat($email)) {
+                    throw new \Exception('Mailer Error: 管理者メールアドレスに不備があります。設定を見直してください。');
+                }
+            }
+
             // Twigの初期化
             $loader = new TwigFileLoader($this->view_tamplete_dir);
             $this->view = new TwigEnvironment(
@@ -109,26 +124,22 @@ class Mailer
             );
 
             // 連続投稿防止
-            if (empty($_SESSION)) {
-                // トークンチェック用のセッション
-                session_name('_mailer_token');
-                session_start();
-
-                // ワンタイムセッション
-                $session_tmp = $_SESSION; // 退避
-                session_destroy(); // 一度削除
-                session_id(md5(uniqid((string)rand(), true))); // セッションID変更
-                session_start(); // セッション再開
-                $_SESSION = $session_tmp; // セッション変数値を引継ぎ
-            }
+            $this->checkinSession();
 
             // NULLバイト除去して格納
             if (isset($_POST)) {
+                // POSTを格納
                 $this->setPost($_POST);
+
+                // バリデーション準備
+                Valitron\Validator::lang('ja');
+                $this->validation = new Valitron\Validator($this->post_data);
+                $this->validation->labels($this->setting['NAME_FOR_LABELS']);
             } else {
-                throw new \Exception('Mailer Error: Not Post.');
+                throw new \Exception('Mailer Error: 何も送信されていません。');
             }
         } catch (\Exception $e) {
+            logger($e->getMessage(), 'error');
             exit($e->getMessage());
         }
     }
@@ -150,25 +161,39 @@ class Mailer
         // NGワードチェック
         $this->checkinNGWord();
 
-        // 必須項目チェックで $validate_massage にエラー格納
-        $this->checkinRequire();
+        // バリデーションチェック
+        $this->checkinValidation();
 
-        // エラー判定
-        if ($this->isValidateMassage()) {
+        // 入力エラーの判定
+        if (! $this->validation->validate()) {
+            $validate_massage = '';
+            foreach ($this->validation->errors() as $error) {
+                $validate_massage .= '<p>' . $error[0] . '</p>';
+            }
             $this->view->display('/validate.twig', array(
-                'theValidateMassage' => $this->validate_massage,
+                'theValidateMassage' => $validate_massage,
             ));
             // エラーメッセージがある場合は処理を止める
             exit;
         }
 
+        // Twigテンプレート用に{{name属性}}で置換.
+        $posts = array();
+        foreach ($this->post_data as $key => $value) {
+            // アンダースコアは除外.
+            if (substr($key, 0, 1) !== '_') {
+                $posts[$key] = $value;
+            }
+        }
+
         // 確認画面の判定
-        if (!$this->isConfirmSubmit()) {
+        if (! $this->isConfirmSubmit()) {
             // 確認画面から送信されていない場合
-            $this->view->display('/confirm.twig', array(
+            $system = array(
                 'theActionURL' => $this->getActionURL(),
                 'theConfirmContent' => $this->getConfirm() . PHP_EOL . $this->getCreateNonce(),
-            ));
+            );
+            $this->view->display('/confirm.twig', array_merge($posts, $system));
         } else {
             // トークンチェック
             $this->checkinToken();
@@ -191,9 +216,10 @@ class Mailer
             }
 
             // 送信完了画面
-            $this->view->display('/complete.twig', array(
+            $system = array(
                 'theReturnURL' => $this->getReturnURL(),
-            ));
+            );
+            $this->view->display('/complete.twig', array_merge($posts, $system));
         }
     }
 
@@ -204,9 +230,9 @@ class Mailer
      */
     private function getMailSubject(): string
     {
-        $subject = 'No Subject';
-        $before = !empty($this->setting['SUBJECT_BEFORE']) ? $this->setting['SUBJECT_BEFORE'] : '';
-        $after = !empty($this->setting['SUBJECT_AFTER']) ? $this->setting['SUBJECT_AFTER'] : '';
+        $subject = '';
+        $before = isset($this->setting['SUBJECT_BEFORE']) ? $this->setting['SUBJECT_BEFORE'] : '';
+        $after = isset($this->setting['SUBJECT_AFTER']) ? $this->setting['SUBJECT_AFTER'] : '';
         foreach ($this->post_data as $key => $value) {
             if ($key === $this->setting['SUBJECT_ATTRIBUTE']) {
                 $subject = $value;
@@ -217,7 +243,7 @@ class Mailer
     }
 
     /**
-     * メールボディ.
+     * メールボディ（共通）
      *
      * @param  string $type
      * @return string
@@ -315,10 +341,10 @@ class Mailer
     private function getPost(): string
     {
         $response = '';
-        foreach ($this->post_data as $key => $val) {
+        foreach ($this->post_data as $name => $value) {
             $output = '';
-            if (is_array($val)) {
-                foreach ($val as $item) {
+            if (is_array($value)) {
+                foreach ($value as $item) {
                     // 連結項目の処理
                     if (is_array($item)) {
                         $output .= $this->changeJoin($item);
@@ -328,19 +354,19 @@ class Mailer
                 }
                 $output = rtrim($output, ', ');
             } else {
-                $output = $val;
+                $output = $value;
             }
 
             // 全角を半角へ変換.
-            $output = $this->changeHankaku($output, $key);
+            $output = $this->changeHankaku($output, $name);
 
             // アンダースコアで始まる文字は除外.
-            if (substr($key, 0, 1) !== '_') {
-                $response .= $key . ': ' . $output . PHP_EOL;
+            if (substr($name, 0, 1) !== '_') {
+                $response .= $this->nameToLabel($name) . ': ' . $output . PHP_EOL;
             }
 
             // フォームの設置ページを保存.
-            if ($key === '_http_referer') {
+            if ($name === '_http_referer') {
                 $this->page_referer = $this->kses($output);
             }
         }
@@ -356,34 +382,35 @@ class Mailer
     {
         $html = '';
 
-        foreach ($this->post_data as $key => $val) {
-            $output = '';
+        foreach ($this->post_data as $name => $value) {
+            $output_value = '';
 
             // チェックボックス（配列）の結合
-            if (is_array($val)) {
-                foreach ($val as $item) {
+            if (is_array($value)) {
+                foreach ($value as $item) {
                     if (is_array($item)) {
-                        $output .= $this->changeJoin($item);
+                        $output_value .= $this->changeJoin($item);
                     } else {
-                        $output .= $item . ', ';
+                        $output_value .= $item . ', ';
                     }
                 }
-                $output = rtrim($output, ', ');
+                $output_value = rtrim($output_value, ', ');
             } else {
-                $output = $val;
+                $output_value = $value;
             }
 
             // 全角を半角へ変換
-            $output = $this->changeHankaku($output, $key);
+            $output_value = $this->changeHankaku($output_value, $name);
 
             // 確認をセット
-            $key = $this->kses($key);
-            $output = $this->kses($output);
+            $name = $this->kses($name);
+            $output_value = $this->kses($output_value);
             $html .= sprintf(
-                '<tr><th>%1$s</th><td>%2$s<input type="hidden" name="%1$s" value="%3$s" /></td></tr>' . PHP_EOL,
-                $key,
-                nl2br($output),
-                $output
+                '<tr><th>%1$s</th><td>%2$s<input type="hidden" name="%3$s" value="%4$s" /></td></tr>' . PHP_EOL,
+                $this->nameToLabel($name),
+                nl2br($output_value),
+                $name,
+                $output_value
             );
         }
         return '<table>' . $html . '</table>';
@@ -428,92 +455,61 @@ class Mailer
     }
 
     /**
-     * 必須チェック
+     * バリデーションチェック
      *
      * @return void
      */
-    private function checkinRequire(): void
+    private function checkinValidation(): void
     {
-        $error = '';
-
         // 必須項目チェック
-        if (!empty($this->setting['REQUIRED_ATTRIBUTE'])) {
-            foreach ($this->setting['REQUIRED_ATTRIBUTE'] as $require) {
-                $exists_flag = '';
-                foreach ($this->post_data as $key => $value) {
-                    if ($key === $require) {
-                        // 連結指定の項目（配列）のための必須チェック
-                        if (is_array($value)) {
-                            $connect_empty = 0;
-                            foreach ($value as $value_depth_1) {
-                                if (is_array($value_depth_1)) {
-                                    foreach ($value_depth_1 as $value_depth_2) {
-                                        if ($value_depth_2 === '') {
-                                            $connect_empty++;
-                                        }
-                                    }
-                                }
-                            }
-                            if ($connect_empty > 0) {
-                                $error .= '<p>"' . $this->kses($key) . '"の記入は必須です</p>' . PHP_EOL;
-                            }
-                        } elseif ($value === '') {
-                            // デフォルト必須チェック
-                            $error .= '<p>"' . $this->kses($key) . '"の記入は必須です</p>' . PHP_EOL;
-                        }
-                        $exists_flag = 1;
-                        break;
-                    }
-                }
-                if ($exists_flag !== 1) {
-                    $error .= '<p>"' . $require . '"が選択されていません</p>' . PHP_EOL;
-                }
-            }
+        if (isset($this->setting['REQUIRED_ATTRIBUTE'])) {
+            $this->validation->rule(
+                'required',
+                $this->setting['REQUIRED_ATTRIBUTE']
+            );
         }
-
         // メール形式チェック
-        if (!$error) {
-            foreach ($this->post_data as $key => $value) {
-                if ($key === $this->setting['EMAIL_ATTRIBUTE']) {
-                    $this->setting['USER_MAIL'] = $this->kses($value);
-
-                    if (!$this->isCheckMailFormat($value)) {
-                        $error .= '<p>"' . $key . '"はメールアドレスの形式が正しくありません。</p>' . PHP_EOL;
-                    }
-                }
-            }
+        if (isset($this->setting['EMAIL_ATTRIBUTE'])) {
+            Valitron\Validator::addRule('EmailValidator', function ($field, $value) {
+                return $this->isCheckMailFormat($value);
+            });
+            $this->validation->rule(
+                'EmailValidator',
+                $this->setting['EMAIL_ATTRIBUTE']
+            )->message('メールアドレスの形式が正しくありません。');
         }
-        $this->validate_massage = $error;
+    }
+
+    /**
+     * nameとラベルの属性の置き換え
+     *
+     * @param  string $name
+     * @return string
+     */
+    private function nameToLabel(string $name): string
+    {
+        $label = $this->kses($name);
+        if (isset($this->setting['NAME_FOR_LABELS'][$label])) {
+            $label = $this->setting['NAME_FOR_LABELS'][$label];
+        }
+        return $label;
     }
 
     /**
      * メール文字判定
      *
-     * @param  string $post
+     * @param  string $value
      * @return bool
      */
-    private function isCheckMailFormat(string $post): bool
+    private function isCheckMailFormat(string $value): bool
     {
-        $post         = trim($post);
-        $mail_address = explode('@', $post);
-        $mail_match   = '/^[\.!#%&\-_0-9a-zA-Z\?\/\+]+\@[!#%&\-_0-9a-z]+(\.[!#%&\-_0-9a-z]+)+$/';
-
-        // メールアドレス形式チェック＆複数メール防止
-        if (preg_match($mail_match, $post) && count($mail_address) === 2) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * エラーメッセージの判定
-     *
-     * @return bool
-     */
-    private function isValidateMassage(): bool
-    {
-        return $this->validate_massage ? true : false;
+        $validator = new EmailValidator();
+        $multipleValidations = new MultipleValidationWithAnd([
+            new RFCValidation(),
+            new DNSCheckValidation()
+        ]);
+        //ietf.org has MX records signaling a server with email capabilites
+        return $validator->isValid(trim($value), $multipleValidations); //true
     }
 
     /**
@@ -583,6 +579,27 @@ class Mailer
         }
         if (empty($_SERVER['HTTP_REFERER']) || empty($_SERVER['SERVER_NAME'])) {
             $this->addExceptionExit('指定のページ以外から送信されています');
+        }
+    }
+
+    /**
+     * セッションチェック
+     *
+     * @return void
+     */
+    private function checkinSession(): void
+    {
+        if (empty($_SESSION)) {
+            // トークンチェック用のセッション
+            session_name('_mailer_token');
+            session_start();
+
+            // ワンタイムセッション
+            $session_tmp = $_SESSION; // 退避
+            session_destroy(); // 一度削除
+            session_id(md5(uniqid((string)rand(), true))); // セッションID変更
+            session_start(); // セッション再開
+            $_SESSION = $session_tmp; // セッション変数値を引継ぎ
         }
     }
 

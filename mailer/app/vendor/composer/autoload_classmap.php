@@ -13,7 +13,7 @@ return array(
     'App\\Handlers\\PHPMailerHandler' => $baseDir . '/src/Handlers/PHPMailerHandler.php',
     'App\\Handlers\\SQLiteHandler' => $baseDir . '/src/Handlers/SQLiteHandler.php',
     'App\\Handlers\\WordPressHandler' => $baseDir . '/src/Handlers/WordPressHandler.php',
-    'App\\Middleware\\reCAPTCHA' => $baseDir . '/src/Middleware/reCAPTCHA.php',
+    'App\\Middleware\\ReCAPTCHA' => $baseDir . '/src/Middleware/ReCAPTCHA.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'ChromePhp' => $vendorDir . '/ccampbell/chromephp/ChromePhp.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
