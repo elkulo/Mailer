@@ -78,18 +78,18 @@
                 <div class="mb-3">
                   <div class="label">件名<span class="validate">必須</span></div>
                   <div class="form-check form-check-inline">
-                    <input type="radio" id="CustomerSubject1" class="form-check-input" name="件名" value="お問い合わせ（一般のお客様）" checked>
+                    <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
                     <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input type="radio" id="CustomerSubject2" class="form-check-input" name="件名" value="工事のご依頼（事業関係者様）">
+                    <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
                     <label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
                   </div>
                 </div>
 
                 <div class="mb-3">
                   <label for="CustomerType" class="form-label">種別<span class="validate">必須</span></label>
-                  <select name="種別" id="CustomerType" class="form-select" required>
+                  <select name="customerType" id="CustomerType" class="form-select" required>
                     <option value="見積希望" selected>見積希望</option>
                     <option value="通信・弱電工事全般">通信・弱電工事全般</option>
                     <option value="音響・映像機器設置">音響・映像機器設置</option>
@@ -103,7 +103,7 @@
 
                 <div class="mb-3">
                   <label for="CustomerName" class="form-label">お名前<span class="validate">必須</span></label>
-                  <input type="tel" id="CustomerName" class="form-control" name="お名前" placeholder="お名前" required>
+                  <input type="tel" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
                   <div class="invalid-feedback">
                     お名前を記入してください。
                   </div>
@@ -111,7 +111,7 @@
 
                 <div class="mb-3">
                   <label for="CustomerPhonetic" class="form-label">フリガナ<span class="validate">必須</span></label>
-                  <input type="text" id="CustomerPhonetic" class="form-control" name="フリガナ" placeholder="フリガナ" required>
+                  <input type="text" id="CustomerPhonetic" class="form-control" name="customerNameKana" placeholder="フリガナ" required>
                   <div class="invalid-feedback">
                     フリガナを記入してください。
                   </div>
@@ -119,12 +119,12 @@
 
                 <div class="mb-3">
                   <label for="CustomerDomicile" class="form-label">ご住所<span class="novalidate">任意</span></label>
-                  <input type="text" id="CustomerDomicile" class="form-control" name="ご住所" placeholder="東京都千代田区">
+                  <input type="text" id="CustomerDomicile" class="form-control" name="address" placeholder="東京都千代田区">
                 </div>
 
                 <div class="mb-3">
                   <label for="CustomerEmail" class="form-label">メールアドレス<span class="validate">必須</span></label>
-                  <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="Email" placeholder="mail@example.com" required>
+                  <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="email" placeholder="mail@example.com" required>
                   <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
                   <div class="invalid-feedback">
                     メールアドレスを記入してください。
@@ -133,19 +133,19 @@
 
                 <div class="mb-3">
                   <label for="CustomerTell" class="form-label">電話番号<span class="novalidate">任意</span></label>
-                  <input type="tel" id="CustomerTell" class="form-control" name="電話番号" placeholder="03-1234-00XX">
+                  <input type="tel" id="CustomerTell" class="form-control" name="phoneNumber" placeholder="03-1234-00XX">
                 </div>
 
                 <div class="mb-3">
                   <label for="CustomerComment" class="form-label">ご要望<span class="validate">必須</span></label>
-                  <textarea id="CustomerComment" class="form-control" name="ご要望" placeholder="ご要望などお書きください..." rows="5" required></textarea>
+                  <textarea id="CustomerComment" class="form-control" name="requestContent" placeholder="ご要望などお書きください..." rows="5" required></textarea>
                   <div class="invalid-feedback">
                      ご要望を記入してください。
                   </div>
                 </div>
 
                 <div class="mb-3 form-check">
-                  <input type="checkbox" id="CustomerConsent" class="form-check-input" name="個人情報取扱" value="同意します" required>
+                  <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
                   <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
                   <div id="consentHelp" class="form-text">通信はSSLにより暗号化されています。当サイトの個人情報保護方針については<a href="privacy-policy.html" target="_blank" title="プライバシーポリシー">プライバシーポリシー</a>をご覧ください。</div>
                 </div>
@@ -234,6 +234,6 @@
 </div>
 <!-- #page --> 
 <script type="text/javascript" src="webpack/dest/app.min.js?ver=20210623"></script>
-<script>window.applyBootstrapVaridation('#mailform');</script>
+<script>// window.applyBootstrapVaridation('#mailform');</script>
 </body>
 </html>

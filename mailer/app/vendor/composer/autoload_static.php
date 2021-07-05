@@ -215,7 +215,7 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'App\\Handlers\\PHPMailerHandler' => __DIR__ . '/../..' . '/src/Handlers/PHPMailerHandler.php',
         'App\\Handlers\\SQLiteHandler' => __DIR__ . '/../..' . '/src/Handlers/SQLiteHandler.php',
         'App\\Handlers\\WordPressHandler' => __DIR__ . '/../..' . '/src/Handlers/WordPressHandler.php',
-        'App\\Middleware\\reCAPTCHA' => __DIR__ . '/../..' . '/src/Middleware/reCAPTCHA.php',
+        'App\\Middleware\\ReCAPTCHA' => __DIR__ . '/../..' . '/src/Middleware/ReCAPTCHA.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'ChromePhp' => __DIR__ . '/..' . '/ccampbell/chromephp/ChromePhp.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
