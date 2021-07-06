@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Handlers\DBHandlerInterface;
 use App\Handlers\MailHandlerInterface;
+use App\Handlers\DBHandlerInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
@@ -97,7 +97,10 @@ class Mailer
      * @param  array $config
      * @return void
      */
-    public function __construct(MailHandlerInterface $mail_handler, array $config)
+    public function __construct(
+        MailHandlerInterface $mail_handler,
+        DBHandlerInterface $db_handler,
+        array $config)
     {
         try {
             // ハンドラーをセット
@@ -106,22 +109,22 @@ class Mailer
             // コンフィグをセット
             $this->setting = array_merge($this->setting, $config);
 
-            // 管理者メールの形式チェック
-            $to = (array) $this->setting['ADMIN_MAIL'];
-            $cc = $this->setting['ADMIN_CC']? explode(',', $this->setting['ADMIN_CC']): [];
-            $bcc = $this->setting['ADMIN_BCC']? explode(',', $this->setting['ADMIN_BCC']): [];
-            foreach (array_merge($to, $cc, $bcc) as $email) {
-                if (! $this->isCheckMailFormat($email)) {
-                    throw new \Exception('Mailer Error: 管理者メールアドレスに不備があります。設定を見直してください。');
-                }
-            }
-
             // Twigの初期化
             $loader = new TwigFileLoader($this->view_tamplete_dir);
             $this->view = new TwigEnvironment(
                 $loader,
                 getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
             );
+
+            // 管理者メールの形式チェック
+            $to = (array) $this->setting['ADMIN_MAIL'];
+            $cc = $this->setting['ADMIN_CC']? explode(',', $this->setting['ADMIN_CC']): [];
+            $bcc = $this->setting['ADMIN_BCC']? explode(',', $this->setting['ADMIN_BCC']): [];
+            foreach (array_merge($to, $cc, $bcc) as $email) {
+                if (! $this->isCheckMailFormat($email)) {
+                    throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
+                }
+            }
 
             // 連続投稿防止
             $this->checkinSession();
@@ -136,11 +139,11 @@ class Mailer
                 $this->validation = new Valitron\Validator($this->post_data);
                 $this->validation->labels($this->setting['NAME_FOR_LABELS']);
             } else {
-                throw new \Exception('Mailer Error: 何も送信されていません。');
+                throw new \Exception('何も送信されていません。');
             }
         } catch (\Exception $e) {
             logger($e->getMessage(), 'error');
-            exit($e->getMessage());
+            $this->addExceptionExit( $e->getMessage() );
         }
     }
 
@@ -154,12 +157,6 @@ class Mailer
 
         // リファラチェック
         $this->checkinReferer();
-
-        // 日本語チェック
-        $this->checkinMBWord();
-
-        // NGワードチェック
-        $this->checkinNGWord();
 
         // バリデーションチェック
         $this->checkinValidation();
@@ -478,21 +475,37 @@ class Mailer
                 $this->setting['EMAIL_ATTRIBUTE']
             )->message('メールアドレスの形式が正しくありません。');
         }
-    }
 
-    /**
-     * nameとラベルの属性の置き換え
-     *
-     * @param  string $name
-     * @return string
-     */
-    private function nameToLabel(string $name): string
-    {
-        $label = $this->kses($name);
-        if (isset($this->setting['NAME_FOR_LABELS'][$label])) {
-            $label = $this->setting['NAME_FOR_LABELS'][$label];
+        // 日本語チェック
+        if ( isset($this->setting['MB_WORD']) ) {
+            Valitron\Validator::addRule('MBValidator', function ($field, $value) {
+                if (strlen($value) === mb_strlen($value, 'UTF-8')) {
+                    return false;
+                }
+                return true;
+            });
+            $this->validation->rule(
+                'MBValidator',
+                $this->setting['MB_WORD']
+            )->message('日本語を含まない文章は送信できません。');
         }
-        return $label;
+
+        // 禁止ワード
+        $ng_words = (array) explode(' ', $this->setting['NG_WORD']);
+        if ( isset($ng_words[0]) ) {
+            Valitron\Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
+                foreach ($ng_words as $word) {
+                    if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            $this->validation->rule(
+                'NGValidator',
+                '*'
+            )->message('禁止ワードが含まれているため送信できません');
+        }
     }
 
     /**
@@ -523,46 +536,6 @@ class Mailer
             return true;
         }
         return false;
-    }
-
-    /**
-     * 禁止ワード
-     *
-     * @return void
-     */
-    private function checkinNGWord(): void
-    {
-        $ng_words = (array) explode(' ', $this->setting['NG_WORD']);
-
-        if (isset($ng_words[0])) {
-            foreach ($this->post_data as $value) {
-                foreach ($ng_words as $word) {
-                    if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
-                        $this->addExceptionExit('"' . $word . '"を含む単語は送信できません');
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * 日本語チェック
-     *
-     * @return void
-     */
-    private function checkinMBWord(): void
-    {
-        $mb_word = (string) $this->setting['MB_WORD'];
-
-        if ($mb_word) {
-            foreach ($this->post_data as $key => $value) {
-                if ($key === $mb_word) {
-                    if (strlen($value) === mb_strlen($value, 'UTF-8')) {
-                        $this->addExceptionExit('日本語を含まない文章は送信できません');
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -661,6 +634,21 @@ class Mailer
             'theExceptionMassage' => $massage,
         ));
         exit;
+    }
+
+    /**
+     * nameとラベルの属性の置き換え
+     *
+     * @param  string $name
+     * @return string
+     */
+    private function nameToLabel(string $name): string
+    {
+        $label = $this->kses($name);
+        if (isset($this->setting['NAME_FOR_LABELS'][$label])) {
+            $label = $this->setting['NAME_FOR_LABELS'][$label];
+        }
+        return $label;
     }
 
     /**
