@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '2e6bcac460b01fc072decb74e3282c94a4555aa5',
+        'reference' => '2e094cbf3d42d6eb25def38bb6891065df817fde',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -52,7 +52,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '2e6bcac460b01fc072decb74e3282c94a4555aa5',
+            'reference' => '2e094cbf3d42d6eb25def38bb6891065df817fde',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -83,12 +83,12 @@
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(
-            'pretty_version' => '2.2.0',
-            'version' => '2.2.0.0',
+            'pretty_version' => '2.3.0',
+            'version' => '2.3.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../monolog/monolog',
             'aliases' => array(),
-            'reference' => '1cb1cde8e8dd0f70cc0fe51354a59acad9302084',
+            'reference' => 'df991fd88693ab703aa403413d83e15f688dae33',
             'dev_requirement' => false,
         ),
         'myclabs/deep-copy' => array(

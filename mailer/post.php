@@ -33,14 +33,15 @@ use App\Handlers\PHPMailerHandler as MailerHandler;
  * DBハンドラーを選択
  *
  * 例）MySQLのハンドラーに切り替える
- * SQLiteMailerHandler -> MySQLMailerHandler
+ * SQLiteHandler -> MySQLHandler
  */
-// use App\Handlers\MySQLMailerHandler as DBHandler;
-use App\Handlers\SQLiteMailerHandler as DBHandler;
+// use App\Handlers\MySQLHandler as DBHandler;
+use App\Handlers\SQLiteHandler as DBHandler;
 
 /************************************************************/
 
 use App\Actions\Mailer;
+use Pimple\Container;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
@@ -48,6 +49,7 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 (function () {
 
     try {
+
         // 設定ファイル(.env)までのパス.
         $env_path = __DIR__;
 
@@ -80,10 +82,25 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
         }
         $whoops->register();
 
+        // DIコンテナー.
+        $container = new Container();
+        $container['MailerHandler'] = function () {
+            return new MailerHandler;
+        };
+        $container['DBHandler'] = function () {
+            return new DBHandler;
+        };
+
         // Mailer.
-        if (isset($config)) {
-            $mailer = new Mailer(new MailerHandler, $config);
-            $mailer->run();
+        if ( isset($config) ) {
+            $container['Mailer'] = function ($call) use ($config) {
+                return new Mailer(
+                    $call['MailerHandler'],
+                    $call['DBHandler'],
+                    $config
+                );
+            };
+            $container['Mailer']->run();
         }
     } catch (\Exception $e) {
         exit($e->getMessage());
