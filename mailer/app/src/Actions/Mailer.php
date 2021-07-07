@@ -77,21 +77,23 @@ class Mailer
     /**
      * コンストラクタ
      *
-     * @param  MailHandlerInterface $mail_handler
-     * @param  DBHandlerInterface $db_handler
+     * @param  MailHandler $mail
+     * @param  Validate $validate
+     * @param  View $view
+     * @param  DBHandler $db
      * @param  array $config
      * @return void
      */
     public function __construct(
-        MailHandler $mail_handler,
+        MailHandler $mail,
         Validate $validate,
         View $view,
-        DBHandler $db_handler = null,
+        DBHandler $db = null,
         array $config
     ) {
         try {
             // メールハンドラーをセット
-            $this->mail = $mail_handler;
+            $this->mail = $mail;
 
             // バリデーションアクションをセット
             $this->validate = $validate;
@@ -100,8 +102,8 @@ class Mailer
             $this->view = $view;
 
             // データベースハンドラーをセット
-            if ($db_handler) {
-                $this->db = $db_handler;
+            if ($db) {
+                $this->db = $db;
             }
 
             // コンフィグをセット
