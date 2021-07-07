@@ -8,16 +8,10 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Handlers\MailHandlerInterface;
-use App\Handlers\DBHandlerInterface;
-use Twig\Loader\FilesystemLoader as TwigFileLoader;
-use Twig\Loader\ArrayLoader as TwigArrayLoader;
-use Twig\Environment as TwigEnvironment;
-use Egulias\EmailValidator\EmailValidator;
-use Egulias\EmailValidator\Validation\DNSCheckValidation;
-use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
-use Egulias\EmailValidator\Validation\RFCValidation;
-use Valitron;
+use App\Actions\ValidateActionInterface as Validate;
+use App\Actions\ViewActionInterface as View;
+use App\Handlers\Mail\MailHandlerInterface as MailHandler;
+use App\Handlers\DB\DBHandlerInterface as DBHandler;
 
 /**
  * Mailer
@@ -46,13 +40,6 @@ class Mailer
     private array $post_data;
 
     /**
-     * バリデート
-     *
-     * @var object
-     */
-    private object $validation;
-
-    /**
      * フォームの設置ページの格納
      *
      * @var string
@@ -60,68 +47,72 @@ class Mailer
     private string $page_referer;
 
     /**
+     * バリデート
+     *
+     * @var object
+     */
+    private object $validate;
+
+    /**
      * メールハンドラー
      *
      * @var object
      */
-    protected object $mail;
+    private object $mail;
+
+    /**
+     * DBハンドラー
+     *
+     * @var object
+     */
+    private object $db;
 
     /**
      * Twig ハンドラー
      *
      * @var object
      */
-    protected object $view;
-
-    /**
-     * Twig テンプレートディレクトリ
-     *
-     * @var array
-     */
-    protected array $view_tamplete_dir = array(
-        __DIR__ . '/../../../templates',
-        __DIR__ . '/../View',
-    );
-
-    /**
-     * Twig キャッシュディレクトリ
-     *
-     * @var string
-     */
-    protected string $view_cache_dir = __DIR__ . '/../../cache';
+    private object $view;
 
     /**
      * コンストラクタ
      *
      * @param  MailHandlerInterface $mail_handler
+     * @param  DBHandlerInterface $db_handler
      * @param  array $config
      * @return void
      */
     public function __construct(
-        MailHandlerInterface $mail_handler,
-        DBHandlerInterface $db_handler,
-        array $config)
-    {
+        MailHandler $mail_handler,
+        Validate $validate,
+        View $view,
+        DBHandler $db_handler = null,
+        array $config
+    ) {
         try {
-            // ハンドラーをセット
+            // メールハンドラーをセット
             $this->mail = $mail_handler;
+
+            // バリデーションアクションをセット
+            $this->validate = $validate;
+
+            // ビューアクションをセット
+            $this->view = $view;
+
+            // データベースハンドラーをセット
+            if ($db_handler) {
+                $this->db = $db_handler;
+            }
 
             // コンフィグをセット
             $this->setting = array_merge($this->setting, $config);
-
-            // Twigの初期化
-            $loader = new TwigFileLoader($this->view_tamplete_dir);
-            $this->view = new TwigEnvironment(
-                $loader,
-                getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
-            );
 
             // 管理者メールの形式チェック
             $to = (array) $this->setting['ADMIN_MAIL'];
             $cc = $this->setting['ADMIN_CC']? explode(',', $this->setting['ADMIN_CC']): [];
             $bcc = $this->setting['ADMIN_BCC']? explode(',', $this->setting['ADMIN_BCC']): [];
             foreach (array_merge($to, $cc, $bcc) as $email) {
-                if (! $this->isCheckMailFormat($email)) {
+                if (! $this->validate->isCheckMailFormat($email)) {
                     throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
                 }
             }
@@ -135,15 +126,13 @@ class Mailer
                 $this->setPost($_POST);
 
                 // バリデーション準備
-                Valitron\Validator::lang('ja');
-                $this->validation = new Valitron\Validator($this->post_data);
-                $this->validation->labels($this->setting['NAME_FOR_LABELS']);
+                $this->validate->set($this->post_data);
             } else {
                 throw new \Exception('何も送信されていません。');
             }
         } catch (\Exception $e) {
             logger($e->getMessage(), 'error');
-            $this->addExceptionExit( $e->getMessage() );
+            $this->view->displayExceptionExit($e->getMessage());
         }
     }
 
@@ -159,17 +148,15 @@ class Mailer
         $this->checkinReferer();
 
         // バリデーションチェック
-        $this->checkinValidation();
+        $this->validate->checkinValidateAll();
 
         // 入力エラーの判定
-        if (! $this->validation->validate()) {
+        if (! $this->validate->validate()) {
             $validate_massage = '';
-            foreach ($this->validation->errors() as $error) {
+            foreach ($this->validate->errors() as $error) {
                 $validate_massage .= '<p>' . $error[0] . '</p>';
             }
-            $this->view->display('/validate.twig', array(
-                'theValidateMassage' => $validate_massage,
-            ));
+            $this->view->displayValidate(array('theValidateMassage' => $validate_massage));
             // エラーメッセージがある場合は処理を止める
             exit;
         }
@@ -190,7 +177,7 @@ class Mailer
                 'theActionURL' => $this->getActionURL(),
                 'theConfirmContent' => $this->getConfirm() . PHP_EOL . $this->getCreateNonce(),
             );
-            $this->view->display('/confirm.twig', array_merge($posts, $system));
+            $this->view->displayConfirm(array_merge($posts, $system));
         } else {
             // トークンチェック
             $this->checkinToken();
@@ -216,7 +203,7 @@ class Mailer
             $system = array(
                 'theReturnURL' => $this->getReturnURL(),
             );
-            $this->view->display('/complete.twig', array_merge($posts, $system));
+            $this->view->displayComplete(array_merge($posts, $system));
         }
     }
 
@@ -267,27 +254,9 @@ class Mailer
         );
 
         if ($type === 'admin') {
-            // 管理者宛送信メール.
-            if (!empty($this->setting['TEMPLATE_MAIL_ADMIN'])) {
-                return (new TwigEnvironment(
-                    new TwigArrayLoader(array(
-                        'admin.mail.tpl' => $this->setting['TEMPLATE_MAIL_ADMIN']
-                    ))
-                ))->render('admin.mail.tpl', array_merge($posts, $value));
-            }
-
-            return $this->view->render('/mail/admin.mail.twig', array_merge($posts, $value));
+            return $this->view->renderAdminMail(array_merge($posts, $value));
         } else {
-            // ユーザ宛送信メール.
-            if (!empty($this->setting['TEMPLATE_MAIL_USER'])) {
-                return (new TwigEnvironment(
-                    new TwigArrayLoader(array(
-                        'user.mail.tpl' => $this->setting['TEMPLATE_MAIL_USER']
-                    ))
-                ))->render('user.mail.tpl', array_merge($posts, $value));
-            }
-
-            return $this->view->render('/mail/user.mail.twig', array_merge($posts, $value));
+            return $this->view->renderUserMail(array_merge($posts, $value));
         }
     }
 
@@ -452,80 +421,6 @@ class Mailer
     }
 
     /**
-     * バリデーションチェック
-     *
-     * @return void
-     */
-    private function checkinValidation(): void
-    {
-        // 必須項目チェック
-        if (isset($this->setting['REQUIRED_ATTRIBUTE'])) {
-            $this->validation->rule(
-                'required',
-                $this->setting['REQUIRED_ATTRIBUTE']
-            );
-        }
-        // メール形式チェック
-        if (isset($this->setting['EMAIL_ATTRIBUTE'])) {
-            Valitron\Validator::addRule('EmailValidator', function ($field, $value) {
-                return $this->isCheckMailFormat($value);
-            });
-            $this->validation->rule(
-                'EmailValidator',
-                $this->setting['EMAIL_ATTRIBUTE']
-            )->message('メールアドレスの形式が正しくありません。');
-        }
-
-        // 日本語チェック
-        if ( isset($this->setting['MB_WORD']) ) {
-            Valitron\Validator::addRule('MBValidator', function ($field, $value) {
-                if (strlen($value) === mb_strlen($value, 'UTF-8')) {
-                    return false;
-                }
-                return true;
-            });
-            $this->validation->rule(
-                'MBValidator',
-                $this->setting['MB_WORD']
-            )->message('日本語を含まない文章は送信できません。');
-        }
-
-        // 禁止ワード
-        $ng_words = (array) explode(' ', $this->setting['NG_WORD']);
-        if ( isset($ng_words[0]) ) {
-            Valitron\Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
-                foreach ($ng_words as $word) {
-                    if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
-                        return false;
-                    }
-                }
-                return true;
-            });
-            $this->validation->rule(
-                'NGValidator',
-                '*'
-            )->message('禁止ワードが含まれているため送信できません');
-        }
-    }
-
-    /**
-     * メール文字判定
-     *
-     * @param  string $value
-     * @return bool
-     */
-    private function isCheckMailFormat(string $value): bool
-    {
-        $validator = new EmailValidator();
-        $multipleValidations = new MultipleValidationWithAnd([
-            new RFCValidation(),
-            new DNSCheckValidation()
-        ]);
-        //ietf.org has MX records signaling a server with email capabilites
-        return $validator->isValid(trim($value), $multipleValidations); //true
-    }
-
-    /**
      * 送信画面判定
      *
      * @return bool
@@ -545,13 +440,17 @@ class Mailer
      */
     private function checkinReferer(): void
     {
-        if (isset($_SERVER['HTTP_REFERER']) && isset($_SERVER['SERVER_NAME'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) === false) {
-                $this->addExceptionExit('指定のページ以外から送信されています');
+        try {
+            if (isset($_SERVER['HTTP_REFERER']) && isset($_SERVER['SERVER_NAME'])) {
+                if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) === false) {
+                    throw new \Exception('指定のページ以外から送信されています');
+                }
             }
-        }
-        if (empty($_SERVER['HTTP_REFERER']) || empty($_SERVER['SERVER_NAME'])) {
-            $this->addExceptionExit('指定のページ以外から送信されています');
+            if (empty($_SERVER['HTTP_REFERER']) || empty($_SERVER['SERVER_NAME'])) {
+                throw new \Exception('指定のページ以外から送信されています');
+            }
+        } catch (\Exception $e) {
+            $this->view->displayExceptionExit($e->getMessage());
         }
     }
 
@@ -600,7 +499,7 @@ class Mailer
             if (isset($_SESSION['_mailer_nonce'])) {
                 session_destroy();
             }
-            $this->addExceptionExit('連続した投稿の可能性があるため送信できません');
+            $this->view->displayExceptionExit('連続した投稿の可能性があるため送信できません');
         } else {
             // 多重投稿を防ぐ
             // セッションを破壊してクッキーを削除
@@ -620,20 +519,6 @@ class Mailer
                 session_destroy();
             }
         }
-    }
-
-    /**
-     * 例外発生時の停止
-     *
-     * @param  string $massage
-     * @return void
-     */
-    private function addExceptionExit(string $massage): void
-    {
-        $this->view->display('/exception.twig', array(
-            'theExceptionMassage' => $massage,
-        ));
-        exit;
     }
 
     /**

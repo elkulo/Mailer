@@ -5,53 +5,24 @@
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 declare(strict_types=1);
+
 require_once __DIR__ . '/app/vendor/autoload.php';
 
-/************************************************************/
-
-/**
- * WordPressの連携
- *
- * !! WordPress と連携する場合のみ書き換える !!
- *
- * wp-load.php を読み込むことでWordPressの関数が使用可能。
- * WordPressHandler に切り替えでメール送信を wp_mail() にする。
- * そのため、WordPressのSMTP等のプラグインとも連携が可能。
- */
-// require_once __DIR__ . '/../../../../../../../wp-load.php';
-
-/**
- * メーラーハンドラーを選択
- *
- * 例）WordPressのハンドラーに切り替える
- * PHPMailerHandler -> WordPressHandler
- */
-// use App\Handlers\WordPressHandler as MailerHandler;
-use App\Handlers\PHPMailerHandler as MailerHandler;
-
-/**
- * DBハンドラーを選択
- *
- * 例）MySQLのハンドラーに切り替える
- * SQLiteHandler -> MySQLHandler
- */
-// use App\Handlers\MySQLHandler as DBHandler;
-use App\Handlers\SQLiteHandler as DBHandler;
-
-/************************************************************/
-
 use App\Actions\Mailer;
-use Pimple\Container;
+use App\Actions\ValidateAction;
+use App\Actions\ViewAction;
+use App\Handlers\Mail\WordPressHandler;
+use App\Handlers\Mail\PHPMailerHandler;
+use App\Handlers\DB\MySQLHandler;
+use App\Handlers\DB\SQLiteHandler;
+use DI\Container;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
-(function () {
+(function (string $env_path): void {
 
     try {
-
-        // 設定ファイル(.env)までのパス.
-        $env_path = __DIR__;
 
         // config ディレクトリまでのパス.
         $config_path = __DIR__ . '/config';
@@ -84,25 +55,39 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
         // DIコンテナー.
         $container = new Container();
-        $container['MailerHandler'] = function () {
-            return new MailerHandler;
-        };
-        $container['DBHandler'] = function () {
-            return new DBHandler;
-        };
+
+        // ハンドラーの選択.
+        switch (getenv('MAILER_TYPE')) {
+            case 'WordPress':
+                $container->set('MailHandler', new WordPressHandler());
+                break;
+            default:
+                $container->set('MailHandler', new PHPMailerHandler());
+        }
+        switch (getenv('DB_CONNECTION')) {
+            case 'MySQL':
+                $container->set('DBHandler', new MySQLHandler());
+                break;
+            case 'SQLite':
+                $container->set('DBHandler', new SQLiteHandler());
+                break;
+        }
 
         // Mailer.
-        if ( isset($config) ) {
-            $container['Mailer'] = function ($call) use ($config) {
-                return new Mailer(
-                    $call['MailerHandler'],
-                    $call['DBHandler'],
-                    $config
-                );
-            };
-            $container['Mailer']->run();
+        if (isset($config)) {
+            $container->set('Validate', new ValidateAction($config));
+            $container->set('View', new ViewAction($config));
+            $mailer = new Mailer(
+                $container->get('MailHandler'),
+                $container->get('Validate'),
+                $container->get('View'),
+                $container->has('DBHandler')? $container->get('DBHandler'): null,
+                $config
+            );
+            $mailer->run();
         }
     } catch (\Exception $e) {
         exit($e->getMessage());
     }
-})();
+
+})( isset( $ENV_PATH )? $ENV_PATH : __DIR__ ); // .envまでのパス.

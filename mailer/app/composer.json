@@ -16,8 +16,8 @@
     "google/recaptcha": "^1.2",
     "j4mie/idiorm": "^1.5",
     "monolog/monolog": "^2.0",
+    "php-di/php-di": "^6.3",
     "phpmailer/phpmailer": "^6.0",
-    "pimple/pimple": "^3.4",
     "twig/twig": "^3.2",
     "vlucas/phpdotenv": "^3.6",
     "vlucas/valitron": "^1.4"
