@@ -11,6 +11,7 @@ namespace App\Actions;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
+use App\Interfaces\ViewActionInterface;
 
 class ViewAction implements ViewActionInterface
 {

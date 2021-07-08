@@ -13,6 +13,7 @@ use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Valitron;
+use App\Interfaces\ValidateActionInterface;
 
 class ValidateAction implements ValidateActionInterface
 {
