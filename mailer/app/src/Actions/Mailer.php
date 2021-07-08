@@ -30,8 +30,21 @@ class Mailer
         'ADMIN_MAIL' => ADMIN_MAIL, // 管理者メールアドレス
         'ADMIN_CC' => ADMIN_CC, // 管理者CC
         'ADMIN_BCC' => ADMIN_BCC, // 管理者BCC
-        'USER_MAIL' => '', // ユーザーメール格納先
     );
+
+    /**
+     * ユーザーメール格納先
+     *
+     * @var string
+     */
+    private string $user_mail = '';
+
+    /**
+     * フォームの設置ページの格納
+     *
+     * @var string
+     */
+    private string $page_referer = '';
 
     /**
      * $_POST
@@ -39,13 +52,6 @@ class Mailer
      * @var array
      */
     private array $post_data;
-
-    /**
-     * フォームの設置ページの格納
-     *
-     * @var string
-     */
-    private string $page_referer;
 
     /**
      * バリデート
@@ -136,7 +142,7 @@ class Mailer
                 if (isset($this->post_data[ $email_attr ])
                     && $this->validate->isCheckMailFormat($this->post_data[ $email_attr ])
                 ) {
-                    $this->setting['USER_MAIL'] = $this->post_data[ $email_attr ];
+                    $this->user_mail = $this->post_data[ $email_attr ];
                 }
             } else {
                 throw new \Exception('何も送信されていません。');
@@ -206,13 +212,29 @@ class Mailer
             // ユーザーに届くメールをセット
             if (!empty($this->setting['IS_REPLY_USERMAIL'])) {
                 $success['user'] = $this->mail->send(
-                    $this->setting['USER_MAIL'],
+                    $this->user_mail,
                     $this->getMailSubject(),
                     $this->getMailBody('user')
                 );
             }
 
             try {
+                // DBに保存
+                if ($this->db) {
+                    $this->db->save(
+                        (bool) $success['user'],
+                        $this->user_mail,
+                        $this->getMailSubject(),
+                        $this->getMailBody('user'),
+                        array(
+                        '_date' => date('Y/m/d (D) H:i:s', time()),
+                        '_ip' => $_SERVER['REMOTE_ADDR'],
+                        '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+                        '_url' => $this->page_referer,
+                        )
+                    );
+                }
+
                 if (! array_search(false, $success)) {
                     // 送信完了画面
                     $system = array(
@@ -300,7 +322,7 @@ class Mailer
             $header[] = 'Bcc: ' . $this->setting['ADMIN_BCC'];
         }
         if (!empty($this->setting['IS_FROM_USERMAIL'])) {
-            $header[] = 'Reply-To: ' . $this->setting['USER_MAIL'];
+            $header[] = 'Reply-To: ' . $this->user_mail;
         }
 
         return $header;
@@ -315,8 +337,13 @@ class Mailer
     private function setPost($posts): void
     {
         $sanitized = array();
-        foreach ($posts as $key => $value) {
-            $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
+        foreach ($posts as $name => $value) {
+            $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
+
+            // フォームの設置ページを保存.
+            if ($name === '_http_referer') {
+                $this->page_referer = $this->kses($value);
+            }
         }
         $this->post_data = $sanitized;
     }
@@ -351,11 +378,6 @@ class Mailer
             // アンダースコアで始まる文字は除外.
             if (substr($name, 0, 1) !== '_') {
                 $response .= $this->nameToLabel($name) . ': ' . $output . PHP_EOL;
-            }
-
-            // フォームの設置ページを保存.
-            if ($name === '_http_referer') {
-                $this->page_referer = $this->kses($output);
             }
         }
         return $this->kses($response);

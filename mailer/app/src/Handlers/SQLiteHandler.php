@@ -17,30 +17,44 @@ use App\Interfaces\DBHandlerInterface;
 class SQLiteHandler implements DBHandlerInterface
 {
 
-    public $db;
+    /**
+     * データベース
+     *
+     * @var object
+     */
+    public object $db;
 
+    /**
+     * データベース > テーブル
+     *
+     * @var string
+     */
+    public string $table_name;
+
+    /**
+     * DBを作成
+     *
+     * @return void
+     */
     public function __construct()
     {
-        //\ORM::configure('sqlite:' . __DIR__ . '/database/example.db');
-        //\ORM::configure('id_column', getenv('DB_PREFIX'));
-        //$db = \ORM::get_db();
-        //dump($db);
+        $prefix = getenv('DB_PREFIX') ? strtolower(getenv('DB_PREFIX')) : '';
 
-        /*
+        $this->table_name = $prefix . 'mailer';
+
+        // DB作成
+        $sqlite_file = $this->make(__DIR__ . '/../../../database/', getenv('DB_DATABASE'));
+
         // DB設定
         $this->db = new Manager();
 
         // 接続情報
         $config = [
-            'driver'    => strtolower( getenv('DB_CONNECTION') ),   // mysql, pgsql, sqlite, sqlsrv から選択可
-            'host'      => getenv('DB_HOST'),         // ホスト名
-            'database'  => getenv('DB_DATABASE'),     // データベース名
-            'username'  => getenv('DB_USERNAME'),     // ユーザー名
-            'password'  => getenv('DB_PASSWORD'),     // パスワード
-            'prefix'    => getenv('DB_PREFIX'),
-            'charset'   => 'utf8mb4',                 // 文字セット
-            'collation' => 'utf8mb4_general_ci',      // コレーション
+            'driver'    => 'sqlite',
+            'database'  => $sqlite_file,
+            'prefix' => $prefix,
         ];
+
         // コネクションを追加
         $this->db->addConnection($config);
 
@@ -49,18 +63,81 @@ class SQLiteHandler implements DBHandlerInterface
 
         // Eloquentを有効にする
         $this->db->bootEloquent();
-        */
     }
 
     /**
      * DBに保存
      *
-     * @param  array $content
+     * @param  bool   $success
+     * @param  string $email
+     * @param  string $subject
+     * @param  string $body
+     * @param  array  $status
      * @return bool
      */
-    final public function save(array $content): bool
+    final public function save(bool $success, string $email, string $subject, string $body, array $status): bool
     {
-        //$this->db::table('users')->insert($content);
+        $values = [
+            'email' => $email,
+            'subject' => $subject,
+            'body' => $body,
+            '_success' => $success? 'Succeeded': 'Failed',
+            '_date' => $status['_date'],
+            '_ip' => $status['_ip'],
+            '_host' => $status['_host'],
+            '_url' => $status['_url'],
+        ];
+        $this->db->table('mailer')->insert($values);
         return true;
+    }
+
+    /**
+     * DBを作成
+     *
+     * @param  string $dir_path
+     * @param  string $file
+     * @return string
+     */
+    public function make(string $dir_path, string $file):string
+    {
+        try {
+            // DBディレクトリの確認
+            if (! file_exists($dir_path)) {
+                mkdir($dir_path, 0777);
+            }
+
+            // DBファイルの確認
+            $sqlite_file = $dir_path . $file;
+            if (! file_exists($sqlite_file)) {
+                $pdo = new \PDO('sqlite:' . $sqlite_file);
+        
+                // SQL実行時にもエラーの代わりに例外を投げるように設定
+                // (毎回if文を書く必要がなくなる)
+                $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        
+                // デフォルトのフェッチモードを連想配列形式に設定
+                // (毎回PDO::FETCH_ASSOCを指定する必要が無くなる)
+                $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+        
+                // テーブル作成
+                $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->table_name} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email VARCHAR(50),
+                    subject VARCHAR(50),
+                    body VARCHAR(50),
+                    _success VARCHAR(50),
+                    _date VARCHAR(50),
+                    _ip VARCHAR(50),
+                    _host VARCHAR(50),
+                    _url VARCHAR(50)
+                )");
+
+                // 一度閉じる.
+                $pdo = null;
+            }
+        } catch (\Exception $e) {
+            exit;
+        }
+        return $sqlite_file;
     }
 }

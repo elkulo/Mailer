@@ -15,7 +15,6 @@
     "filp/whoops": "^2.9",
     "google/recaptcha": "^1.2",
     "illuminate/database": "^8.49",
-    "j4mie/idiorm": "^1.5",
     "monolog/monolog": "^2.0",
     "php-di/php-di": "^6.3",
     "phpmailer/phpmailer": "^6.0",
