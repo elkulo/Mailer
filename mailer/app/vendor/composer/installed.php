@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '39756a8209f37445c7ea8aea430ff6af796f53a9',
+        'reference' => 'c0fef77839e0702d08d98af01600b15843648d65',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -61,7 +61,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '39756a8209f37445c7ea8aea430ff6af796f53a9',
+            'reference' => 'c0fef77839e0702d08d98af01600b15843648d65',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -134,15 +134,6 @@
             'install_path' => __DIR__ . '/../illuminate/support',
             'aliases' => array(),
             'reference' => '0ecdbb8e61919e972c120c0956fb1c0a3b085967',
-            'dev_requirement' => false,
-        ),
-        'j4mie/idiorm' => array(
-            'pretty_version' => 'v1.5.7',
-            'version' => '1.5.7.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../j4mie/idiorm',
-            'aliases' => array(),
-            'reference' => 'd23f97053ef5d0b988a02c6a71eb5c6118b2f5b4',
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(
