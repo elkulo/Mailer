@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Actions\ValidateActionInterface as Validate;
-use App\Actions\ViewActionInterface as View;
-use App\Handlers\Mail\MailHandlerInterface as MailHandler;
-use App\Handlers\DB\DBHandlerInterface as DBHandler;
+use App\Interfaces\ValidateActionInterface;
+use App\Interfaces\ViewActionInterface;
+use App\Interfaces\MailHandlerInterface;
+use App\Interfaces\DBHandlerInterface;
 
 /**
  * Mailer
@@ -30,6 +30,7 @@ class Mailer
         'ADMIN_MAIL' => ADMIN_MAIL, // 管理者メールアドレス
         'ADMIN_CC' => ADMIN_CC, // 管理者CC
         'ADMIN_BCC' => ADMIN_BCC, // 管理者BCC
+        'USER_MAIL' => '', // ユーザーメール格納先
     );
 
     /**
@@ -77,18 +78,18 @@ class Mailer
     /**
      * コンストラクタ
      *
-     * @param  MailHandler $mail
-     * @param  Validate $validate
-     * @param  View $view
-     * @param  DBHandler $db
+     * @param  MailHandlerInterface $mail
+     * @param  ValidateActionInterface $validate
+     * @param  ViewActionInterface $view
+     * @param  DBHandlerInterface|null $db
      * @param  array $config
      * @return void
      */
     public function __construct(
-        MailHandler $mail,
-        Validate $validate,
-        View $view,
-        DBHandler $db = null,
+        MailHandlerInterface $mail,
+        ValidateActionInterface $validate,
+        ViewActionInterface $view,
+        ?DBHandlerInterface $db = null,
         array $config
     ) {
         try {
@@ -129,6 +130,14 @@ class Mailer
 
                 // バリデーション準備
                 $this->validate->set($this->post_data);
+
+                // ユーザーメールを形式チェックして格納
+                $email_attr = isset($this->setting['EMAIL_ATTRIBUTE'])? $this->setting['EMAIL_ATTRIBUTE']: null;
+                if (isset($this->post_data[ $email_attr ])
+                    && $this->validate->isCheckMailFormat($this->post_data[ $email_attr ])
+                ) {
+                    $this->setting['USER_MAIL'] = $this->post_data[ $email_attr ];
+                }
             } else {
                 throw new \Exception('何も送信されていません。');
             }
@@ -181,11 +190,13 @@ class Mailer
             );
             $this->view->displayConfirm(array_merge($posts, $system));
         } else {
+            $success = array();
+
             // トークンチェック
             $this->checkinToken();
 
             // 管理者宛に届くメールをセット
-            $this->mail->send(
+            $success['admin'] = $this->mail->send(
                 $this->setting['ADMIN_MAIL'],
                 $this->getMailSubject(),
                 $this->getMailBody('admin'),
@@ -194,18 +205,27 @@ class Mailer
 
             // ユーザーに届くメールをセット
             if (!empty($this->setting['IS_REPLY_USERMAIL'])) {
-                $this->mail->send(
+                $success['user'] = $this->mail->send(
                     $this->setting['USER_MAIL'],
                     $this->getMailSubject(),
                     $this->getMailBody('user')
                 );
             }
 
-            // 送信完了画面
-            $system = array(
-                'theReturnURL' => $this->getReturnURL(),
-            );
-            $this->view->displayComplete(array_merge($posts, $system));
+            try {
+                if (! array_search(false, $success)) {
+                    // 送信完了画面
+                    $system = array(
+                        'theReturnURL' => $this->getReturnURL(),
+                    );
+                    $this->view->displayComplete(array_merge($posts, $system));
+                } else {
+                    throw new \Exception('メールプログラムの送信時にエラーが起きました。内容は送信されておりません。');
+                }
+            } catch (\Exception $e) {
+                logger($e->getMessage(), 'error');
+                $this->view->displayExceptionExit($e->getMessage());
+            }
         }
     }
 
