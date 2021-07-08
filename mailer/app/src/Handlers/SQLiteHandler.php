@@ -25,7 +25,7 @@ class SQLiteHandler implements DBHandlerInterface
     public object $db;
 
     /**
-     * データベース > テーブル
+     * テーブル名
      *
      * @var string
      */

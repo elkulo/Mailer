@@ -81,16 +81,16 @@ class PHPMailerHandler implements MailHandlerInterface
          * (2)1に加えて、サーバーから受信した応答
          * (3)2に加えて、初期接続についての詳細情報 - このレベルはSTARTTLSエラーの診断
          */
-        /** $mailer->SMTPDebug = 0; */
+        // $mailer->SMTPDebug = 1;
 
         // メール送信の実行.
         try {
             if ($mailer->send()) {
                 return true;
             } else {
-                throw new \Exception('PHPMailer Error');
+                throw new Exception('PHPMailer Error');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -167,7 +167,7 @@ class PHPMailerHandler implements MailHandlerInterface
                             $phpmailer->addReplyTo($address, $recipient_name);
                             break;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     continue;
                 }
             }
