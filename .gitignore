@@ -95,7 +95,9 @@ jspm_packages/
 package-lock.json
 
 # Composer
+**/logs/
 *.log
 
 # SQLite
-# *.sqlite
+**/database/
+*.sqlite
