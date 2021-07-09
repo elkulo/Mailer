@@ -13,6 +13,7 @@ use App\Application\Interfaces\ValidateHandlerInterface;
 use App\Application\Interfaces\ViewHandlerInterface;
 use App\Application\Interfaces\MailHandlerInterface;
 use App\Application\Interfaces\DBHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * MailerAction
@@ -85,6 +86,7 @@ class MailerAction extends Action
     /**
      * コンストラクタ
      *
+     * @param  LoggerInterface $logger
      * @param  MailHandlerInterface $mail
      * @param  ValidateHandlerInterface $validate
      * @param  ViewHandlerInterface $view
@@ -93,12 +95,15 @@ class MailerAction extends Action
      * @return void
      */
     public function __construct(
+        LoggerInterface $logger,
         MailHandlerInterface $mail,
         ValidateHandlerInterface $validate,
         ViewHandlerInterface $view,
         ?DBHandlerInterface $db = null,
         array $config
     ) {
+        parent::__construct($logger);
+
         try {
             // メールハンドラーをセット
             $this->mail = $mail;
@@ -149,7 +154,7 @@ class MailerAction extends Action
                 throw new \Exception('何も送信されていません。');
             }
         } catch (\Exception $e) {
-            logger($e->getMessage(), 'error');
+            $this->logger->error($e->getMessage());
             $this->view->displayExceptionExit($e->getMessage());
         }
     }
@@ -246,7 +251,7 @@ class MailerAction extends Action
                     throw new \Exception('メールプログラムの送信時にエラーが起きました。内容は送信されておりません。');
                 }
             } catch (\Exception $e) {
-                logger($e->getMessage(), 'error');
+                $this->logger->error($e->getMessage());
                 $this->view->displayExceptionExit($e->getMessage());
                 return false;
             }

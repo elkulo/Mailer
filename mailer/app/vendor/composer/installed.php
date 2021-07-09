@@ -5,20 +5,11 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'cb11923bb2fa3644ffbe10c76444d4ca8f6cf0c8',
+        'reference' => '9aebc8185cdecae9b59205d59dfcb141f8694030',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
     'versions' => array(
-        'ccampbell/chromephp' => array(
-            'pretty_version' => '4.1.0',
-            'version' => '4.1.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../ccampbell/chromephp',
-            'aliases' => array(),
-            'reference' => 'c3c297615d48ae5b2a86a82311152d1ed095fcef',
-            'dev_requirement' => true,
-        ),
         'doctrine/inflector' => array(
             'pretty_version' => '2.0.3',
             'version' => '2.0.3.0',
@@ -61,7 +52,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'cb11923bb2fa3644ffbe10c76444d4ca8f6cf0c8',
+            'reference' => '9aebc8185cdecae9b59205d59dfcb141f8694030',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -352,6 +343,15 @@
                 0 => '1.0',
                 1 => '^1.0',
             ),
+        ),
+        'psr/http-message' => array(
+            'pretty_version' => '1.0.1',
+            'version' => '1.0.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/http-message',
+            'aliases' => array(),
+            'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
+            'dev_requirement' => false,
         ),
         'psr/log' => array(
             'pretty_version' => '1.1.4',

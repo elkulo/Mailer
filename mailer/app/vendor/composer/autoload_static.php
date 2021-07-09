@@ -24,8 +24,6 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
-        'ef363ff452e99382eaa244b2adaac167' => __DIR__ . '/../..' . '/helpers/console.php',
-        '808681bf4d9d3703859cb5972e56ab0a' => __DIR__ . '/../..' . '/helpers/logger.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -76,6 +74,7 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
             'PhpOption\\' => 10,
@@ -220,6 +219,10 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
@@ -305,16 +308,6 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'C' => 
-        array (
-            'ChromePhp' => 
-            array (
-                0 => __DIR__ . '/..' . '/ccampbell/chromephp',
-            ),
         ),
     );
 
@@ -407,7 +400,6 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'Carbon\\Traits\\Units' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Units.php',
         'Carbon\\Traits\\Week' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Week.php',
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
-        'ChromePhp' => __DIR__ . '/..' . '/ccampbell/chromephp/ChromePhp.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DI\\Annotation\\Inject' => __DIR__ . '/..' . '/php-di/php-di/src/Annotation/Inject.php',
         'DI\\Annotation\\Injectable' => __DIR__ . '/..' . '/php-di/php-di/src/Annotation/Injectable.php',
@@ -1726,6 +1718,13 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
+        'Psr\\Http\\Message\\MessageInterface' => __DIR__ . '/..' . '/psr/http-message/src/MessageInterface.php',
+        'Psr\\Http\\Message\\RequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/RequestInterface.php',
+        'Psr\\Http\\Message\\ResponseInterface' => __DIR__ . '/..' . '/psr/http-message/src/ResponseInterface.php',
+        'Psr\\Http\\Message\\ServerRequestInterface' => __DIR__ . '/..' . '/psr/http-message/src/ServerRequestInterface.php',
+        'Psr\\Http\\Message\\StreamInterface' => __DIR__ . '/..' . '/psr/http-message/src/StreamInterface.php',
+        'Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/..' . '/psr/http-message/src/UploadedFileInterface.php',
+        'Psr\\Http\\Message\\UriInterface' => __DIR__ . '/..' . '/psr/http-message/src/UriInterface.php',
         'Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
         'Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
         'Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
@@ -2438,7 +2437,6 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit576d21b6035bf086a58745938ce09372::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit576d21b6035bf086a58745938ce09372::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit576d21b6035bf086a58745938ce09372::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit576d21b6035bf086a58745938ce09372::$classMap;
 
         }, null, ClassLoader::class);
