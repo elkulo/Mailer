@@ -6,14 +6,14 @@
  */
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Application\Handlers;
 
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
-use App\Interfaces\ViewActionInterface;
+use App\Application\Interfaces\ViewHandlerInterface;
 
-class ViewAction implements ViewActionInterface
+class ViewHandler implements ViewHandlerInterface
 {
 
     /**
@@ -33,11 +33,14 @@ class ViewAction implements ViewActionInterface
     /**
      * Twig テンプレートディレクトリ
      *
+     * 配列の若い順に優先されるオーバーライド
+     *
      * @var array
      */
     private array $view_tamplete_dir = array(
-        __DIR__ . '/../../../templates',
-        __DIR__ . '/../View',
+        __DIR__ . '/../../../../templates',
+        __DIR__ . '/../../Infrastructure/templates',
+        __DIR__ . '/../Response',
     );
 
     /**

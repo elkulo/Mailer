@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Handlers;
+namespace App\Application\Handlers;
 
-use App\Interfaces\MailHandlerInterface;
+use App\Application\Interfaces\MailHandlerInterface;
 
 /**
  * WordPressHandler

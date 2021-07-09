@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'b2cdb109f2135e2e03bcab952c0b24f109091c4e',
+        'reference' => 'cb11923bb2fa3644ffbe10c76444d4ca8f6cf0c8',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -61,7 +61,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'b2cdb109f2135e2e03bcab952c0b24f109091c4e',
+            'reference' => 'cb11923bb2fa3644ffbe10c76444d4ca8f6cf0c8',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -664,12 +664,12 @@
             'dev_requirement' => false,
         ),
         'vlucas/valitron' => array(
-            'pretty_version' => 'v1.4.9',
-            'version' => '1.4.9.0',
+            'pretty_version' => 'v1.4.10',
+            'version' => '1.4.10.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../vlucas/valitron',
             'aliases' => array(),
-            'reference' => '81515dcc951e1f636a1a18ece2f4154dfa123438',
+            'reference' => '5ebd5d7af82cc0a9d798e816a2ecad63f1b59ceb',
             'dev_requirement' => false,
         ),
         'voku/portable-ascii' => array(

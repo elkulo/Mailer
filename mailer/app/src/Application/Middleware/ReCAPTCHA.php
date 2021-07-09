@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace App\Middleware;
+namespace App\Application\Middleware;
 
 /**
  * ReCAPTCHA
