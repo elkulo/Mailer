@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace App\Application\Actions;
 
-//use Psr\Http\Message\ResponseInterface as Response;
-//use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 
 abstract class Action
@@ -30,11 +30,6 @@ abstract class Action
     protected $response;
 
     /**
-     * @var array
-     */
-    protected $args;
-
-    /**
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
@@ -46,6 +41,29 @@ abstract class Action
      * @return bool
      */
     abstract protected function action(): bool;
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return bool
+     * @throws Exception
+     * @throws Exception
+     */
+    public function __invoke(Request $request, Response $response, array $args): bool
+    {
+        $this->request = $request;
+        $this->response = $response;
+        $this->args = $args;
+
+        try {
+            $this->action();
+            return true;
+        } catch (\Exception $e) {
+            throw new \Exception($this->request, $e->getMessage());
+            return false;
+        }
+    }
 
     /**
      * エスケープ

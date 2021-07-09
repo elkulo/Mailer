@@ -1,56 +1,6 @@
 {
     "packages": [
         {
-            "name": "ccampbell/chromephp",
-            "version": "4.1.0",
-            "version_normalized": "4.1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ccampbell/chromephp.git",
-                "reference": "c3c297615d48ae5b2a86a82311152d1ed095fcef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ccampbell/chromephp/zipball/c3c297615d48ae5b2a86a82311152d1ed095fcef",
-                "reference": "c3c297615d48ae5b2a86a82311152d1ed095fcef",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.0.0"
-            },
-            "time": "2013-06-26T03:44:33+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-0": {
-                    "ChromePhp": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Craig Campbell",
-                    "email": "iamcraigcampbell@gmail.com",
-                    "homepage": "http://craig.is",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Log variables to the Chrome console (via Chrome Logger Google Chrome extension).",
-            "homepage": "http://github.com/ccampbell/chromephp",
-            "keywords": [
-                "log",
-                "logging"
-            ],
-            "support": {
-                "issues": "https://github.com/ccampbell/chromephp/issues",
-                "source": "https://github.com/ccampbell/chromephp/tree/4.1.0"
-            },
-            "install-path": "../ccampbell/chromephp"
-        },
-        {
             "name": "doctrine/inflector",
             "version": "2.0.3",
             "version_normalized": "2.0.3.0",
@@ -2394,6 +2344,62 @@
                 "source": "https://github.com/php-fig/container/tree/1.1.1"
             },
             "install-path": "../psr/container"
+        },
+        {
+            "name": "psr/http-message",
+            "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-message.git",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "2016-08-06T14:39:51+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
+            "keywords": [
+                "http",
+                "http-message",
+                "psr",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/http-message/tree/master"
+            },
+            "install-path": "../psr/http-message"
         },
         {
             "name": "psr/log",
@@ -5023,7 +5029,6 @@
     ],
     "dev": true,
     "dev-package-names": [
-        "ccampbell/chromephp",
         "doctrine/instantiator",
         "myclabs/deep-copy",
         "phar-io/manifest",

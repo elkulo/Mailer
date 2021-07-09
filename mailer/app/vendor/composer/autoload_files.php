@@ -23,6 +23,4 @@ return array(
     '538ca81a9a966a6716601ecf48f4eaef' => $vendorDir . '/opis/closure/functions.php',
     'f598d06aa772fa33d905e87be6398fb1' => $vendorDir . '/symfony/polyfill-intl-idn/bootstrap.php',
     'b33e3d135e5d9e47d845c576147bda89' => $vendorDir . '/php-di/php-di/src/functions.php',
-    'ef363ff452e99382eaa244b2adaac167' => $baseDir . '/helpers/console.php',
-    '808681bf4d9d3703859cb5972e56ab0a' => $baseDir . '/helpers/logger.php',
 );
