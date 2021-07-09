@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/app/vendor/autoload.php';
 
-use App\Actions\Mailer;
-use App\Actions\ValidateAction;
-use App\Actions\ViewAction;
-use App\Handlers\WordPressHandler;
-use App\Handlers\PHPMailerHandler;
-use App\Handlers\MySQLHandler;
-use App\Handlers\SQLiteHandler;
+use App\Application\Actions\MailerAction;
+use App\Application\Handlers\ValidateHandler;
+use App\Application\Handlers\ViewHandler;
+use App\Application\Handlers\WordPressHandler;
+use App\Application\Handlers\PHPMailerHandler;
+use App\Application\Handlers\MySQLHandler;
+use App\Application\Handlers\SQLiteHandler;
 use DI\Container;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
@@ -75,16 +75,18 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
         // Mailer.
         if (isset($config)) {
-            $container->set('Validate', new ValidateAction($config));
-            $container->set('View', new ViewAction($config));
-            $mailer = new Mailer(
+            $container->set('ValidateHandler', new ValidateHandler($config));
+            $container->set('ViewHandler', new ViewHandler($config));
+            $mailer = new MailerAction(
                 $container->get('MailHandler'),
-                $container->get('Validate'),
-                $container->get('View'),
+                $container->get('ValidateHandler'),
+                $container->get('ViewHandler'),
                 $container->has('DBHandler')? $container->get('DBHandler'): null,
                 $config
             );
-            $mailer->run();
+            if ( ! $mailer->action() ) {
+                throw new \Exception('MailerAction Error.');
+            }
         }
     } catch (\Exception $e) {
         exit($e->getMessage());

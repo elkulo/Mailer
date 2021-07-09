@@ -6,10 +6,10 @@
  */
 declare(strict_types=1);
 
-namespace App\Handlers;
+namespace App\Application\Handlers;
 
 use Illuminate\Database\Capsule\Manager;
-use App\Interfaces\DBHandlerInterface;
+use App\Application\Interfaces\DBHandlerInterface;
 
 /**
  * SQLiteHandler
@@ -43,7 +43,7 @@ class SQLiteHandler implements DBHandlerInterface
         $this->table_name = $prefix . 'mailer';
 
         // DB作成
-        $sqlite_file = $this->make(__DIR__ . '/../../../database/', getenv('DB_DATABASE'));
+        $sqlite_file = $this->make(__DIR__ . '/../../../../database/', getenv('DB_DATABASE'));
 
         // DB設定
         $this->db = new Manager();

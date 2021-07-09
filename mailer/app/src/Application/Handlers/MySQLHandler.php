@@ -6,10 +6,10 @@
  */
 declare(strict_types=1);
 
-namespace App\Handlers;
+namespace App\Application\Handlers;
 
 use Illuminate\Database\Capsule\Manager;
-use App\Interfaces\DBHandlerInterface;
+use App\Application\Interfaces\DBHandlerInterface;
 
 /**
  * MySQLHandler
@@ -17,13 +17,17 @@ use App\Interfaces\DBHandlerInterface;
 class MySQLHandler implements DBHandlerInterface
 {
 
-    /**
+   /**
      * DBに保存
      *
-     * @param  array $content
+     * @param  bool   $success
+     * @param  string $email
+     * @param  string $subject
+     * @param  string $body
+     * @param  array  $status
      * @return bool
      */
-    final public function save(array $content): bool
+    public function save(bool $success, string $email, string $subject, string $body, array $status): bool
     {
         return true;
     }

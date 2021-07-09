@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Interfaces;
+namespace App\Application\Interfaces;
 
-interface ViewActionInterface
+interface ViewHandlerInterface
 {
 
   /**

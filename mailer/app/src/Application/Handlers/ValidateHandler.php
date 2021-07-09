@@ -6,16 +6,16 @@
  */
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Application\Handlers;
 
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Valitron;
-use App\Interfaces\ValidateActionInterface;
+use App\Application\Interfaces\ValidateHandlerInterface;
 
-class ValidateAction implements ValidateActionInterface
+class ValidateHandler implements ValidateHandlerInterface
 {
 
     /**

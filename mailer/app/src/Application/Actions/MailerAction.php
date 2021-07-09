@@ -6,17 +6,18 @@
  */
 declare(strict_types=1);
 
-namespace App\Actions;
+namespace App\Application\Actions;
 
-use App\Interfaces\ValidateActionInterface;
-use App\Interfaces\ViewActionInterface;
-use App\Interfaces\MailHandlerInterface;
-use App\Interfaces\DBHandlerInterface;
+use App\Application\Actions\Action;
+use App\Application\Interfaces\ValidateHandlerInterface;
+use App\Application\Interfaces\ViewHandlerInterface;
+use App\Application\Interfaces\MailHandlerInterface;
+use App\Application\Interfaces\DBHandlerInterface;
 
 /**
- * Mailer
+ * MailerAction
  */
-class Mailer
+class MailerAction extends Action
 {
 
     /**
@@ -85,16 +86,16 @@ class Mailer
      * コンストラクタ
      *
      * @param  MailHandlerInterface $mail
-     * @param  ValidateActionInterface $validate
-     * @param  ViewActionInterface $view
+     * @param  ValidateHandlerInterface $validate
+     * @param  ViewHandlerInterface $view
      * @param  DBHandlerInterface|null $db
      * @param  array $config
      * @return void
      */
     public function __construct(
         MailHandlerInterface $mail,
-        ValidateActionInterface $validate,
-        ViewActionInterface $view,
+        ValidateHandlerInterface $validate,
+        ViewHandlerInterface $view,
         ?DBHandlerInterface $db = null,
         array $config
     ) {
@@ -156,9 +157,9 @@ class Mailer
     /**
      * 実行
      *
-     * @return void
+     * @return bool
      */
-    public function run(): void
+    public function action(): bool
     {
 
         // リファラチェック
@@ -247,8 +248,10 @@ class Mailer
             } catch (\Exception $e) {
                 logger($e->getMessage(), 'error');
                 $this->view->displayExceptionExit($e->getMessage());
+                return false;
             }
         }
+        return true;
     }
 
     /**
@@ -624,25 +627,5 @@ class Mailer
             $output .= $val . $key;
         }
         return $output;
-    }
-
-    /**
-     * エスケープ
-     *
-     * @param  mixed $content
-     * @param  string $encode
-     * @return mixed
-     */
-    private function kses($content, string $encode = 'UTF-8')
-    {
-        $sanitized = array();
-        if (is_array($content)) {
-            foreach ($content as $key => $value) {
-                $sanitized[$key] = trim(htmlspecialchars($value, ENT_QUOTES, $encode));
-            }
-        } else {
-            return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
-        }
-        return $sanitized;
     }
 }
