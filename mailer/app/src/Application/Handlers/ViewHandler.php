@@ -40,7 +40,6 @@ class ViewHandler implements ViewHandlerInterface
     private array $view_tamplete_dir = array(
         __DIR__ . '/../../../../templates',
         __DIR__ . '/../../Infrastructure/templates',
-        __DIR__ . '/../Response',
     );
 
     /**
@@ -48,7 +47,7 @@ class ViewHandler implements ViewHandlerInterface
      *
      * @var string
      */
-    private string $view_cache_dir = __DIR__ . '/../../cache';
+    private string $view_cache_dir = __DIR__ . '/../../../var/cache/twig';
 
     /**
      * コンストラクタ
