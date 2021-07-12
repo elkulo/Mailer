@@ -9,11 +9,7 @@ declare(strict_types=1);
 namespace App\Application\Actions;
 
 use App\Application\Actions\Action;
-use App\Application\Interfaces\ValidateHandlerInterface;
-use App\Application\Interfaces\ViewHandlerInterface;
-use App\Application\Interfaces\MailHandlerInterface;
-use App\Application\Interfaces\DBHandlerInterface;
-use Psr\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * MailerAction
@@ -56,69 +52,19 @@ class MailerAction extends Action
     private array $post_data;
 
     /**
-     * バリデート
-     *
-     * @var object
-     */
-    private object $validate;
-
-    /**
-     * メールハンドラー
-     *
-     * @var object
-     */
-    private object $mail;
-
-    /**
-     * DBハンドラー
-     *
-     * @var object
-     */
-    private object $db;
-
-    /**
-     * Twig ハンドラー
-     *
-     * @var object
-     */
-    private object $view;
-
-    /**
      * コンストラクタ
      *
-     * @param  LoggerInterface $logger
-     * @param  MailHandlerInterface $mail
-     * @param  ValidateHandlerInterface $validate
-     * @param  ViewHandlerInterface $view
-     * @param  DBHandlerInterface|null $db
+     * @param  ContainerInterface $container
      * @param  array $config
      * @return void
      */
     public function __construct(
-        LoggerInterface $logger,
-        MailHandlerInterface $mail,
-        ValidateHandlerInterface $validate,
-        ViewHandlerInterface $view,
-        ?DBHandlerInterface $db = null,
+        ContainerInterface $container,
         array $config
     ) {
-        parent::__construct($logger);
+        parent::__construct($container);
 
         try {
-            // メールハンドラーをセット
-            $this->mail = $mail;
-
-            // バリデーションアクションをセット
-            $this->validate = $validate;
-
-            // ビューアクションをセット
-            $this->view = $view;
-
-            // データベースハンドラーをセット
-            if ($db) {
-                $this->db = $db;
-            }
-
             // コンフィグをセット
             $this->setting = array_merge($this->setting, $config);
 
@@ -162,9 +108,9 @@ class MailerAction extends Action
     /**
      * 実行
      *
-     * @return bool
+     * @return void
      */
-    public function action(): bool
+    public function action(): void
     {
 
         // リファラチェック
@@ -202,29 +148,30 @@ class MailerAction extends Action
             );
             $this->view->displayConfirm(array_merge($posts, $system));
         } else {
-            $success = array();
-
             // トークンチェック
             $this->checkinToken();
 
-            // 管理者宛に届くメールをセット
-            $success['admin'] = $this->mail->send(
-                $this->setting['ADMIN_MAIL'],
-                $this->getMailSubject(),
-                $this->getMailBody('admin'),
-                $this->getMailAdminHeader()
-            );
-
-            // ユーザーに届くメールをセット
-            if (!empty($this->setting['IS_REPLY_USERMAIL'])) {
-                $success['user'] = $this->mail->send(
-                    $this->user_mail,
-                    $this->getMailSubject(),
-                    $this->getMailBody('user')
-                );
-            }
-
             try {
+                $success = array();
+
+                // 管理者宛に届くメールをセット
+                $success['admin'] = $this->mail->send(
+                    $this->setting['ADMIN_MAIL'],
+                    $this->getMailSubject(),
+                    $this->getMailBody('admin'),
+                    $this->getMailAdminHeader()
+                );
+
+                // ユーザーに届くメールをセット
+                if (!empty($this->setting['IS_REPLY_USERMAIL'])) {
+                    $success['user'] = $this->mail->send(
+                        $this->user_mail,
+                        $this->getMailSubject(),
+                        $this->getMailBody('user'),
+                        array()
+                    );
+                }
+
                 // DBに保存
                 if ($this->db) {
                     $this->db->save(
@@ -253,10 +200,8 @@ class MailerAction extends Action
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
                 $this->view->displayExceptionExit($e->getMessage());
-                return false;
             }
         }
-        return true;
     }
 
     /**
@@ -632,5 +577,25 @@ class MailerAction extends Action
             $output .= $val . $key;
         }
         return $output;
+    }
+
+    /**
+     * エスケープ
+     *
+     * @param  mixed $content
+     * @param  string $encode
+     * @return mixed
+     */
+    protected function kses($content, string $encode = 'UTF-8')
+    {
+        $sanitized = array();
+        if (is_array($content)) {
+            foreach ($content as $key => $value) {
+                $sanitized[$key] = trim(htmlspecialchars($value, ENT_QUOTES, $encode));
+            }
+        } else {
+            return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
+        }
+        return $sanitized;
     }
 }

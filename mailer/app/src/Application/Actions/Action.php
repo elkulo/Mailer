@@ -8,80 +8,91 @@ declare(strict_types=1);
 
 namespace App\Application\Actions;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use App\Application\Interfaces\ValidateHandlerInterface;
+use App\Application\Interfaces\ViewHandlerInterface;
+use App\Application\Interfaces\MailHandlerInterface;
+use App\Application\Interfaces\DBHandlerInterface;
 
 abstract class Action
 {
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
-     * @var Request
+     * バリデート
+     *
+     * @var object
      */
-    protected $request;
+    protected ValidateHandlerInterface $validate;
 
     /**
-     * @var Response
+     * Twig ハンドラー
+     *
+     * @var object
      */
-    protected $response;
+    protected ViewHandlerInterface $view;
 
     /**
-     * @param LoggerInterface $logger
+     * メールハンドラー
+     *
+     * @var object
      */
-    public function __construct(LoggerInterface $logger)
+    protected MailHandlerInterface $mail;
+
+    /**
+     * DBハンドラー
+     *
+     * @var object
+     */
+    protected DBHandlerInterface $db;
+
+    /**
+     * コンストラクタ
+     *
+     * @param  ContainerInterface $container
+     * @return void
+     */
+    public function __construct(ContainerInterface $container)
     {
-        $this->logger = $logger;
+
+        // ロガーをセット
+        $this->logger = $container->get('logger');
+
+        // バリデーションアクションをセット
+        $this->validate = $container->get('ValidateHandler');
+
+        // ビューアクションをセット
+        $this->view = $container->get('ViewHandler');
+
+        // メールハンドラーをセット
+        $this->mail = $container->get('MailHandler');
+
+        // データベースハンドラーをセット
+        $this->db = $container->has('DBHandler')? $container->get('DBHandler'): null;
     }
 
     /**
-     * @return bool
+     * @return void
      */
-    abstract protected function action(): bool;
+    abstract protected function action(): void;
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
      * @return bool
      * @throws Exception
      * @throws Exception
      */
-    public function __invoke(Request $request, Response $response, array $args): bool
+    public function __invoke(): bool
     {
-        $this->request = $request;
-        $this->response = $response;
-        $this->args = $args;
-
         try {
             $this->action();
             return true;
         } catch (\Exception $e) {
-            throw new \Exception($this->request, $e->getMessage());
+            throw new \Exception($e->getMessage());
             return false;
         }
-    }
-
-    /**
-     * エスケープ
-     *
-     * @param  mixed $content
-     * @param  string $encode
-     * @return mixed
-     */
-    protected function kses($content, string $encode = 'UTF-8')
-    {
-        $sanitized = array();
-        if (is_array($content)) {
-            foreach ($content as $key => $value) {
-                $sanitized[$key] = trim(htmlspecialchars($value, ENT_QUOTES, $encode));
-            }
-        } else {
-            return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
-        }
-        return $sanitized;
     }
 }

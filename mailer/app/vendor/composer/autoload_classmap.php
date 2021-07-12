@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Application\\Actions\\Action' => $baseDir . '/src/Application/Actions/Action.php',
-    'App\\Application\\Actions\\ActionError' => $baseDir . '/src/Application/Actions/ActionError.php',
     'App\\Application\\Actions\\MailerAction' => $baseDir . '/src/Application/Actions/MailerAction.php',
     'App\\Application\\Handlers\\MySQLHandler' => $baseDir . '/src/Application/Handlers/MySQLHandler.php',
     'App\\Application\\Handlers\\PHPMailerHandler' => $baseDir . '/src/Application/Handlers/PHPMailerHandler.php',
@@ -20,6 +19,9 @@ return array(
     'App\\Application\\Interfaces\\ValidateHandlerInterface' => $baseDir . '/src/Application/Interfaces/ValidateHandlerInterface.php',
     'App\\Application\\Interfaces\\ViewHandlerInterface' => $baseDir . '/src/Application/Interfaces/ViewHandlerInterface.php',
     'App\\Application\\Middleware\\ReCAPTCHA' => $baseDir . '/src/Application/Middleware/ReCAPTCHA.php',
+    'App\\Application\\ResponseEmitter\\ResponseEmitter' => $baseDir . '/src/Application/ResponseEmitter/ResponseEmitter.php',
+    'App\\Domain\\Mailer' => $baseDir . '/src/Domain/Mailer.php',
+    'App\\Domain\\MailerRepository' => $baseDir . '/src/Domain/MailerRepository.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',
     'Carbon\\CarbonConverterInterface' => $vendorDir . '/nesbot/carbon/src/Carbon/CarbonConverterInterface.php',
