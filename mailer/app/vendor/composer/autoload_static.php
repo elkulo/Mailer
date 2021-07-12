@@ -313,7 +313,6 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
 
     public static $classMap = array (
         'App\\Application\\Actions\\Action' => __DIR__ . '/../..' . '/src/Application/Actions/Action.php',
-        'App\\Application\\Actions\\ActionError' => __DIR__ . '/../..' . '/src/Application/Actions/ActionError.php',
         'App\\Application\\Actions\\MailerAction' => __DIR__ . '/../..' . '/src/Application/Actions/MailerAction.php',
         'App\\Application\\Handlers\\MySQLHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/MySQLHandler.php',
         'App\\Application\\Handlers\\PHPMailerHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/PHPMailerHandler.php',
@@ -326,6 +325,9 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'App\\Application\\Interfaces\\ValidateHandlerInterface' => __DIR__ . '/../..' . '/src/Application/Interfaces/ValidateHandlerInterface.php',
         'App\\Application\\Interfaces\\ViewHandlerInterface' => __DIR__ . '/../..' . '/src/Application/Interfaces/ViewHandlerInterface.php',
         'App\\Application\\Middleware\\ReCAPTCHA' => __DIR__ . '/../..' . '/src/Application/Middleware/ReCAPTCHA.php',
+        'App\\Application\\ResponseEmitter\\ResponseEmitter' => __DIR__ . '/../..' . '/src/Application/ResponseEmitter/ResponseEmitter.php',
+        'App\\Domain\\Mailer' => __DIR__ . '/../..' . '/src/Domain/Mailer.php',
+        'App\\Domain\\MailerRepository' => __DIR__ . '/../..' . '/src/Domain/MailerRepository.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonConverterInterface' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonConverterInterface.php',

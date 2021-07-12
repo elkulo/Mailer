@@ -5,7 +5,8 @@ namespace App\Application\ResponseEmitter;
 
 use Psr\Http\Message\ResponseInterface;
 
-class ResponseEmitter {
+class ResponseEmitter
+{
     /**
      * {@inheritdoc}
      */
@@ -17,7 +18,10 @@ class ResponseEmitter {
         $response = $response
             ->withHeader('Access-Control-Allow-Credentials', 'true')
             ->withHeader('Access-Control-Allow-Origin', $origin)
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader(
+                'Access-Control-Allow-Headers',
+                'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+            )
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
             ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
             ->withAddedHeader('Cache-Control', 'post-check=0, pre-check=0')

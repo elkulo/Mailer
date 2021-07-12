@@ -109,17 +109,8 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
         if (isset($config)) {
             $container->set('ValidateHandler', new ValidateHandler($config));
             $container->set('ViewHandler', new ViewHandler($config));
-            $mailer = new MailerAction(
-                $container->get('logger'),
-                $container->get('MailHandler'),
-                $container->get('ValidateHandler'),
-                $container->get('ViewHandler'),
-                $container->has('DBHandler')? $container->get('DBHandler'): null,
-                $config
-            );
-            if ( ! $mailer->action() ) {
-                throw new \Exception('MailerAction Error.');
-            }
+            $mailer = new MailerAction($container, $config);
+            $mailer();
         }
     } catch (\Exception $e) {
         $container->get('logger')->error($e->getMessage());
