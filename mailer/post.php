@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/app/vendor/autoload.php';
 
+use App\Domain\Mailer;
 use App\Application\Actions\MailerAction;
 use App\Application\Handlers\ValidateHandler;
 use App\Application\Handlers\ViewHandler;
@@ -88,29 +89,40 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
         });
         $container->get('whoops')->register();
 
-        // Handlerの選択.
-        switch (getenv('MAILER_TYPE')) {
-            case 'WordPress':
-                $container->set('MailHandler', new WordPressHandler());
-                break;
-            default:
-                $container->set('MailHandler', new PHPMailerHandler());
-        }
-        switch (getenv('DB_CONNECTION')) {
-            case 'MySQL':
-                $container->set('DBHandler', new MySQLHandler());
-                break;
-            case 'SQLite':
-                $container->set('DBHandler', new SQLiteHandler());
-                break;
-        }
+        // MailHandlerの選択.
+        $container->set('MailHandler', function () {
+            switch (getenv('MAILER_TYPE')) {
+                case 'WordPress':
+                    return new WordPressHandler();
+                    break;
+                default:
+                    return new PHPMailerHandler();
+            }
+        });
+
+        // DBHandlerの選択.
+        $container->set('DBHandler', function () {
+            switch (getenv('DB_CONNECTION')) {
+                case 'MySQL':
+                    return new MySQLHandler();
+                    break;
+                case 'SQLite':
+                    return new SQLiteHandler();
+                    break;
+                default:
+                    return new stdClass();
+            }
+        });
 
         // Actionの開始.
         if (isset($config)) {
-            $container->set('ValidateHandler', new ValidateHandler($config));
-            $container->set('ViewHandler', new ViewHandler($config));
-            $mailer = new MailerAction($container, $config);
-            $mailer();
+            $container->set('MailerAction', function ($container) use ($config) {
+                $container->set('ValidateHandler', new ValidateHandler($config));
+                $container->set('ViewHandler', new ViewHandler($config));
+                $container->set('Mailer', new Mailer($config));
+                return new MailerAction($container);
+            });
+            $container->get('MailerAction')();
         }
     } catch (\Exception $e) {
         $container->get('logger')->error($e->getMessage());

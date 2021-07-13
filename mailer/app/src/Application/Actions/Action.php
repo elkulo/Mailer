@@ -10,6 +10,7 @@ namespace App\Application\Actions;
 
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use App\Domain\MailerRepository;
 use App\Application\Interfaces\ValidateHandlerInterface;
 use App\Application\Interfaces\ViewHandlerInterface;
 use App\Application\Interfaces\MailHandlerInterface;
@@ -51,6 +52,13 @@ abstract class Action
     protected DBHandlerInterface $db;
 
     /**
+     * Domain
+     *
+     * @var object
+     */
+    protected MailerRepository $repository;
+
+    /**
      * コンストラクタ
      *
      * @param  ContainerInterface $container
@@ -61,6 +69,9 @@ abstract class Action
 
         // ロガーをセット
         $this->logger = $container->get('logger');
+
+        // Domainをセット
+        $this->repository = $container->get('Mailer');
 
         // バリデーションアクションをセット
         $this->validate = $container->get('ValidateHandler');
