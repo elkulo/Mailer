@@ -16,14 +16,6 @@ use Monolog\Processor\WebProcessor;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
-use App\Application\Handlers\Validate\ValidateHandler;
-use App\Application\Handlers\View\ViewHandler;
-use App\Application\Handlers\Mail\WordPressHandler;
-use App\Application\Handlers\Mail\PHPMailerHandler;
-use App\Application\Handlers\DB\MySQLHandler;
-use App\Application\Handlers\DB\SQLiteHandler;
-use App\Domain\Mailer;
-use App\Application\Actions\MailerAction;
 
 return [
     'logger' => Factory(function () {
@@ -63,38 +55,5 @@ return [
             );
         }
         return $whoops;
-    }),
-    'MailHandler' => Factory(function () {
-        switch (getenv('MAILER_TYPE')) {
-            case 'WordPress':
-                return new WordPressHandler();
-                break;
-            default:
-                return new PHPMailerHandler();
-        }
-    }),
-    'DBHandler' => Factory(function () {
-        switch (getenv('DB_CONNECTION')) {
-            case 'MySQL':
-                return new MySQLHandler();
-                break;
-            case 'SQLite':
-                return new SQLiteHandler();
-                break;
-            default:
-                return new stdClass();
-        }
-    }),
-    'ValidateHandler' => Factory(function (ContainerInterface $container) {
-        return new ValidateHandler($container->get('config'));
-    }),
-    'ViewHandler' => Factory(function (ContainerInterface $container) {
-        return new ViewHandler($container->get('config'));
-    }),
-    'Mailer' => Factory(function (ContainerInterface $container) {
-        return new Mailer($container->get('config'));
-    }),
-    'MailerAction' => Factory(function (ContainerInterface $container) {
-        return new MailerAction($container);
     }),
 ];

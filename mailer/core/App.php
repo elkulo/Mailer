@@ -32,6 +32,7 @@ require_once __DIR__ . '/vendor/autoload.php';
         // DIコンテナー.
         $builder = new \DI\ContainerBuilder();
         $builder->addDefinitions(__DIR__ . '/app/dependencies.php');
+        $builder->addDefinitions(__DIR__ . '/app/application.php');
         $container = $builder->build();
 
         // Configのセット.
