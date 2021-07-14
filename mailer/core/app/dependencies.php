@@ -62,7 +62,6 @@ return [
                 }
             );
         }
-        $whoops->register();
         return $whoops;
     }),
     'MailHandler' => Factory(function () {

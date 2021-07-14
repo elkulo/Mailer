@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     // (1)送信完了後に戻るページURL
     'RETURN_PAGE' => '/',
@@ -79,4 +79,4 @@ return array(
     // PHPで生成したTwigテンプレートを使用する場合
     // user.mail.twig を上書きします。
     'TEMPLATE_MAIL_USER' => '',
-);
+];
