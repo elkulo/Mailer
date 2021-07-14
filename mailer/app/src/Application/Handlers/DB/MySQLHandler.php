@@ -6,10 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\DB;
 
 use Illuminate\Database\Capsule\Manager;
-use App\Application\Interfaces\DBHandlerInterface;
 
 /**
  * MySQLHandler
@@ -17,7 +16,7 @@ use App\Application\Interfaces\DBHandlerInterface;
 class MySQLHandler implements DBHandlerInterface
 {
 
-   /**
+    /**
      * DBに保存
      *
      * @param  bool   $success

@@ -4,7 +4,6 @@
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
-
 declare(strict_types=1);
 
 namespace App\Application\Actions;
@@ -17,13 +16,6 @@ use Psr\Container\ContainerInterface;
  */
 class MailerAction extends Action
 {
-
-    /**
-     * ユーザーメール格納先
-     *
-     * @var string
-     */
-    private string $user_mail = '';
 
     /**
      * コンストラクタ
@@ -55,7 +47,7 @@ class MailerAction extends Action
             if (isset($_POST)) {
                 // POSTを格納
                 $this->repository->setPost($_POST);
-                $post_data = $this->repository->getPostData();
+                $post_data = $this->repository->getPost();
 
                 // バリデーション準備
                 $this->validate->set($post_data);
@@ -65,7 +57,7 @@ class MailerAction extends Action
                 if (isset($post_data[$email_attr])
                     && $this->validate->isCheckMailFormat($post_data[$email_attr])
                 ) {
-                    $this->user_mail = $post_data[$email_attr];
+                    $this->repository->setUserMail($post_data[$email_attr]);
                 }
             } else {
                 throw new \Exception('何も送信されていません。');
@@ -105,7 +97,7 @@ class MailerAction extends Action
             }
 
             // Twigテンプレート用に{{name属性}}で置換.
-            $post_data = $this->repository->getPostData();
+            $post_data = $this->repository->getPost();
             $posts = array();
             foreach ($post_data as $key => $value) {
                 // アンダースコアは除外.
@@ -141,21 +133,23 @@ class MailerAction extends Action
 
                 // ユーザーに届くメールをセット
                 if (!empty($setting['IS_REPLY_USERMAIL'])) {
-                    $success['user'] = $this->mail->send(
-                        $this->user_mail,
-                        $this->repository->getMailSubject(),
-                        $this->view->renderUserMail($mail_body),
-                        array()
-                    );
+                    if ($this->repository->getUserMail()) {
+                        $success['user'] = $this->mail->send(
+                            $this->repository->getUserMail(),
+                            $this->repository->getMailSubject(),
+                            $this->view->renderUserMail($mail_body),
+                            array()
+                        );
+                    }
                 }
 
                 // DBに保存
                 if ($this->db) {
                     $this->db->save(
-                        (bool) $success['user'],
-                        $this->user_mail,
+                        $success,
+                        $this->repository->getUserMail(),
                         $this->repository->getMailSubject(),
-                        $this->view->renderUserMail($mail_body),
+                        $this->repository->getPostToString(),
                         array(
                             '_date' => date('Y/m/d (D) H:i:s', time()),
                             '_ip' => $_SERVER['REMOTE_ADDR'],

@@ -24,16 +24,44 @@ class Mailer implements MailerRepository
         'ADMIN_BCC' => ADMIN_BCC, // 管理者BCC
     );
 
-    private $page_referer;
-
+    /**
+     * POSTデータ
+     *
+     * @var array
+     */
     private $post_data;
 
+    /**
+     * ユーザーメール格納先
+     *
+     * @var string
+     */
+    private string $user_mail = '';
+
+    /**
+     * ページリファラー
+     *
+     * @var string
+     */
+    private $page_referer;
+
+    /**
+     * コンストラクタ
+     *
+     * @param  array $config
+     * @return void
+     */
     public function __construct(array $config)
     {
         // コンフィグをセット
         $this->setting = array_merge($this->setting, $config);
     }
 
+    /**
+     * 設定情報の取得
+     *
+     * @return array
+     */
     public function getSetting(): array
     {
         return $this->setting;
@@ -59,7 +87,12 @@ class Mailer implements MailerRepository
         $this->post_data = $sanitized;
     }
 
-    public function getPostData(): array
+    /**
+     * POSTデータを取得
+     *
+     * @return array
+     */
+    public function getPost(): array
     {
         return $this->post_data;
     }
@@ -69,7 +102,7 @@ class Mailer implements MailerRepository
      *
      * @return string
      */
-    public function getPost(): string
+    public function getPostToString(): string
     {
         $response = '';
         foreach ($this->post_data as $name => $value) {
@@ -99,6 +132,26 @@ class Mailer implements MailerRepository
         return $this->kses($response);
     }
 
+    /**
+     * ユーザーメールをセット
+     *
+     * @param  string $user_mail
+     * @return void
+     */
+    public function setUserMail(string $user_mail): void
+    {
+        $this->user_mail = $user_mail;
+    }
+
+    /**
+     * ユーザーメールを取得
+     *
+     * @return string
+     */
+    public function getUserMail(): string
+    {
+        return $this->user_mail;
+    }
 
     /**
      * メール件名（共通）
@@ -138,7 +191,7 @@ class Mailer implements MailerRepository
         // クライアント情報の置換.
         $value = array(
             '__FROM_SITE_NAME' => $this->setting['FROM_NAME'],
-            '__POST_ALL' => $this->getPost(),
+            '__POST_ALL' => $this->getPostToString(),
             '__DATE' => date('Y/m/d (D) H:i:s', time()),
             '__IP' => $_SERVER['REMOTE_ADDR'],
             '__HOST' => getHostByAddr($_SERVER['REMOTE_ADDR']),
@@ -172,6 +225,11 @@ class Mailer implements MailerRepository
         return $header;
     }
 
+    /**
+     * ページリファラーを取得
+     *
+     * @return string
+     */
     public function getPageReferer(): string
     {
         return $this->page_referer;

@@ -6,11 +6,10 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\Mail;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use App\Application\Interfaces\MailHandlerInterface;
 
 /**
  * PHPMailerHandler

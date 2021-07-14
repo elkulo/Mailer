@@ -11,6 +11,11 @@ namespace App\Domain;
 interface MailerRepository
 {
 
+    /**
+     * 設定情報の取得
+     *
+     * @return array
+     */
     public function getSetting(): array;
 
     /**
@@ -21,15 +26,34 @@ interface MailerRepository
      */
     public function setPost($posts): void;
 
-    public function getPostData(): array;
+    /**
+     * POSTデータを取得
+     *
+     * @return array
+     */
+    public function getPost(): array;
 
     /**
      * POSTデータを文字連結して取得
      *
      * @return string
      */
-    public function getPost(): string;
+    public function getPostToString(): string;
 
+    /**
+     * ユーザーメールをセット
+     *
+     * @param  string $user_mail
+     * @return void
+     */
+    public function setUserMail(string $user_mail): void;
+
+    /**
+     * ユーザーメールを取得
+     *
+     * @return string
+     */
+    public function getUserMail(): string;
 
     /**
      * メール件名（共通）
@@ -53,6 +77,11 @@ interface MailerRepository
      */
     public function getMailAdminHeader(): array;
 
+    /**
+     * ページリファラーを取得
+     *
+     * @return string
+     */
     public function getPageReferer(): string;
 
     /**
