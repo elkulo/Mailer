@@ -10,12 +10,12 @@ require_once __DIR__ . '/app/vendor/autoload.php';
 
 use App\Domain\Mailer;
 use App\Application\Actions\MailerAction;
-use App\Application\Handlers\ValidateHandler;
-use App\Application\Handlers\ViewHandler;
-use App\Application\Handlers\WordPressHandler;
-use App\Application\Handlers\PHPMailerHandler;
-use App\Application\Handlers\MySQLHandler;
-use App\Application\Handlers\SQLiteHandler;
+use App\Application\Handlers\Validate\ValidateHandler;
+use App\Application\Handlers\View\ViewHandler;
+use App\Application\Handlers\Mail\WordPressHandler;
+use App\Application\Handlers\Mail\PHPMailerHandler;
+use App\Application\Handlers\DB\MySQLHandler;
+use App\Application\Handlers\DB\SQLiteHandler;
 use DI\Container;
 use Monolog\Logger as Monolog;
 use Monolog\Handler\RotatingFileHandler;
@@ -26,7 +26,7 @@ use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
-(function (string $env_path):void {
+(function (string $env_path): void {
 
     try {
 
@@ -35,6 +35,9 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
         // config ディレクトリまでのパス.
         $config_path = __DIR__ . '/config';
+
+        // ルートパス.
+        define('APP_PATH', __DIR__);
 
         // Config.
         Dotenv\Dotenv::create($env_path)->load();
@@ -70,7 +73,7 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
 
             return $monolog;
         });
-        
+
         // Whoops.
         $container->set('whoops', function ($container) {
             $debug_mode = getenv('MAILER_DEBUG') ? getenv('MAILER_DEBUG') : false;
@@ -128,5 +131,4 @@ use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
         $container->get('logger')->error($e->getMessage());
         exit($e->getMessage());
     }
-
-})( isset( $ENV_PATH )? $ENV_PATH : __DIR__ ); // .envまでのパス.
+})(isset($ENV_PATH) ? $ENV_PATH : __DIR__); // .envまでのパス.

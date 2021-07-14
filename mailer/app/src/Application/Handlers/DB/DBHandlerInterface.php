@@ -6,20 +6,20 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Interfaces;
+namespace App\Application\Handlers\DB;
 
 interface DBHandlerInterface
 {
 
-   /**
+    /**
      * DBに保存
      *
-     * @param  bool   $success
+     * @param  array   $success
      * @param  string $email
      * @param  string $subject
      * @param  string $body
      * @param  array  $status
      * @return bool
      */
-    public function save(bool $success, string $email, string $subject, string $body, array $status): bool;
+    public function save(array $success, string $email, string $subject, string $body, array $status): bool;
 }

@@ -6,10 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\DB;
 
 use Illuminate\Database\Capsule\Manager;
-use App\Application\Interfaces\DBHandlerInterface;
 
 /**
  * SQLiteHandler
@@ -32,6 +31,13 @@ class SQLiteHandler implements DBHandlerInterface
     public string $table_name;
 
     /**
+     * Database ディレクトリ
+     *
+     * @var string
+     */
+    private string $database_dir = APP_PATH . '/database';
+
+    /**
      * DBを作成
      *
      * @return void
@@ -43,7 +49,7 @@ class SQLiteHandler implements DBHandlerInterface
         $this->table_name = $prefix . 'mailer';
 
         // DB作成
-        $sqlite_file = $this->make(__DIR__ . '/../../../../database/', getenv('DB_DATABASE'));
+        $sqlite_file = $this->make($this->database_dir . '/', getenv('DB_DATABASE'));
 
         // DB設定
         $this->db = new Manager();
@@ -75,13 +81,13 @@ class SQLiteHandler implements DBHandlerInterface
      * @param  array  $status
      * @return bool
      */
-    final public function save(bool $success, string $email, string $subject, string $body, array $status): bool
+    final public function save(array $success, string $email, string $subject, string $body, array $status): bool
     {
         $values = [
             'email' => $email,
             'subject' => $subject,
             'body' => $body,
-            '_success' => $success? 'Succeeded': 'Failed',
+            '_success' => json_encode($success),
             '_date' => $status['_date'],
             '_ip' => $status['_ip'],
             '_host' => $status['_host'],
@@ -98,27 +104,27 @@ class SQLiteHandler implements DBHandlerInterface
      * @param  string $file
      * @return string
      */
-    public function make(string $dir_path, string $file):string
+    public function make(string $dir_path, string $file): string
     {
         try {
             // DBディレクトリの確認
-            if (! file_exists($dir_path)) {
+            if (!file_exists($dir_path)) {
                 mkdir($dir_path, 0777);
             }
 
             // DBファイルの確認
             $sqlite_file = $dir_path . $file;
-            if (! file_exists($sqlite_file)) {
+            if (!file_exists($sqlite_file)) {
                 $pdo = new \PDO('sqlite:' . $sqlite_file);
-        
+
                 // SQL実行時にもエラーの代わりに例外を投げるように設定
                 // (毎回if文を書く必要がなくなる)
                 $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        
+
                 // デフォルトのフェッチモードを連想配列形式に設定
                 // (毎回PDO::FETCH_ASSOCを指定する必要が無くなる)
                 $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-        
+
                 // テーブル作成
                 $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->table_name} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,

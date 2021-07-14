@@ -6,45 +6,45 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Interfaces;
+namespace App\Application\Handlers\Validate;
 
 interface ValidateHandlerInterface
 {
 
-  /**
-   * POSTデータをセット
-   *
-   * @param  array $post_data
-   * @return void
-   */
+    /**
+     * POSTデータをセット
+     *
+     * @param  array $post_data
+     * @return void
+     */
     public function set(array $post_data): void;
 
-  /**
-   * バリデーションBoolType
-   *
-   * @return bool
-   */
+    /**
+     * バリデーションBoolType
+     *
+     * @return bool
+     */
     public function validate(): bool;
 
-  /**
-   * エラー内容
-   *
-   * @return array
-   */
+    /**
+     * エラー内容
+     *
+     * @return array
+     */
     public function errors(): array;
 
-  /**
-   * バリデーションチェック
-   *
-   * @return void
-   */
+    /**
+     * バリデーションチェック
+     *
+     * @return void
+     */
     public function checkinValidateAll(): void;
 
-  /**
-   * メール文字判定
-   *
-   * @param  string $value
-   * @return bool
-   */
+    /**
+     * メール文字判定
+     *
+     * @param  string $value
+     * @return bool
+     */
     public function isCheckMailFormat(string $value): bool;
 }

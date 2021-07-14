@@ -6,12 +6,11 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Handlers\View;
 
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
-use App\Application\Interfaces\ViewHandlerInterface;
 
 class ViewHandler implements ViewHandlerInterface
 {
@@ -38,8 +37,8 @@ class ViewHandler implements ViewHandlerInterface
      * @var array
      */
     private array $view_tamplete_dir = array(
-        __DIR__ . '/../../../../templates',
-        __DIR__ . '/../../Infrastructure/templates',
+        APP_PATH . '/templates',
+        APP_PATH . '/app/src/Infrastructure/templates',
     );
 
     /**
@@ -47,7 +46,7 @@ class ViewHandler implements ViewHandlerInterface
      *
      * @var string
      */
-    private string $view_cache_dir = __DIR__ . '/../../../var/cache/twig';
+    private string $view_cache_dir = APP_PATH . '/app/var/cache/twig';
 
     /**
      * コンストラクタ

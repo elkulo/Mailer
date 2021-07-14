@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Interfaces;
+namespace App\Application\Handlers\Mail;
 
 interface MailHandlerInterface
 {
