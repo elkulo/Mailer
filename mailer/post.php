@@ -6,43 +6,16 @@
  */
 declare(strict_types=1);
 
-require_once __DIR__ . '/core/vendor/autoload.php';
+/**
+ * envまでのパスを変更することができます。
+ * デフォルトはMailerプログラム直下になります。
+ * 変更がない場合はコメントアウトを解除する必要はありません。
+ */
+//$ENV_PATH = __DIR__;
 
-(function (string $env_path): void {
-
-    try {
-
-        // config ディレクトリまでのパス.
-        $config_path = __DIR__ . '/config';
-
-        // ルートパス.
-        define('APP_PATH', __DIR__);
-
-        // 設定定数を取得.
-        Dotenv\Dotenv::create($env_path)->load();
-        if (file_exists($config_path . '/server.php') && file_exists($config_path . '/setting.php')) {
-            require_once $config_path . '/server.php';
-            $config = include $config_path . '/setting.php';
-        } else {
-            throw new \Exception('Mailer Error: Not Config.');
-        }
-        date_default_timezone_set(TIME_ZONE);
-
-        // DIコンテナー.
-        $builder = new DI\ContainerBuilder();
-        $builder->addDefinitions( APP_PATH . '/core/app/dependencies.php' );
-        $container = $builder->build();
-
-        // Configのセット.
-        $container->set('config', $config);
-
-        // Whoopsの開始.
-        $container->get('whoops')->register();
-
-        // Actionの開始.
-        $container->get('MailerAction')();
-    } catch (\Exception $e) {
-        $container->get('logger')->error($e->getMessage());
-        exit($e->getMessage());
-    }
-})(isset($ENV_PATH) ? $ENV_PATH : __DIR__); // .envまでのパス.
+/**
+ * Mailerプログラムを公開ディレクトリ以外（httpでアクセスできない場所）に設置、
+ * core/App.php を require_once で読み込めば、任意のディレクトリやファイル名で実行できます。
+ * <form action="..."> のactionに読み込みさせたファイルを指定する。
+ */
+require_once __DIR__ . '/core/App.php';
