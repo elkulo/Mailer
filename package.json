@@ -1,6 +1,6 @@
 {
   "name": "elkulo_mailer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Built locally with Webpack",
   "private": true,
   "scripts": {
@@ -10,9 +10,9 @@
     "format": "eslint --fix './public/webpack/src/**/*.js'",
     "build": "webpack --mode production",
     "serve": "php -S localhost:8000 -t ./public",
-    "composer:update": "cd mailer/app/ && composer update",
-    "composer:phpcs": "cd mailer/app/ && composer phpcs",
-    "composer:phpcbf": "cd mailer/app/ && composer phpcbf",
+    "composer:update": "cd mailer/core/ && composer update",
+    "composer:phpcs": "cd mailer/core/ && composer phpcs",
+    "composer:phpcbf": "cd mailer/core/ && composer phpcbf",
     "deploy": "sh deploy.sh"
   },
   "devDependencies": {
@@ -20,7 +20,7 @@
     "@babel/preset-env": "^7.14.7",
     "babel-loader": "^8.2.2",
     "core-js": "^3.15.2",
-    "css-loader": "^5.2.6",
+    "css-loader": "^5.2.7",
     "css-minimizer-webpack-plugin": "^3.0.2",
     "eslint": "^7.30.0",
     "eslint-webpack-plugin": "^2.5.4",
