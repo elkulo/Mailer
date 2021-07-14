@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-require_once __DIR__ . '/app/vendor/autoload.php';
+require_once __DIR__ . '/core/vendor/autoload.php';
 
 (function (string $env_path): void {
 
@@ -30,7 +30,7 @@ require_once __DIR__ . '/app/vendor/autoload.php';
 
         // DIコンテナー.
         $builder = new DI\ContainerBuilder();
-        $builder->addDefinitions( APP_PATH . '/app/app/di-config.php' );
+        $builder->addDefinitions( APP_PATH . '/core/app/dependencies.php' );
         $container = $builder->build();
 
         // Configのセット.
