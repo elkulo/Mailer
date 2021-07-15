@@ -25,23 +25,14 @@ class MailerAction extends Action
      */
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct($container);
+
         try {
-            parent::__construct($container);
-
-            $setting = $this->repository->getSetting();
-
-            // 管理者メールの形式チェック
-            $to = (array) $setting['ADMIN_MAIL'];
-            $cc = $setting['ADMIN_CC'] ? explode(',', $setting['ADMIN_CC']) : [];
-            $bcc = $setting['ADMIN_BCC'] ? explode(',', $setting['ADMIN_BCC']) : [];
-            foreach (array_merge($to, $cc, $bcc) as $email) {
-                if (!$this->validate->isCheckMailFormat($email)) {
-                    throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
-                }
-            }
-
             // 連続投稿防止
             $this->repository->checkinSession();
+
+            // 設定値の取得
+            $setting = $this->repository->getSetting();
 
             // NULLバイト除去して格納
             if (isset($_POST)) {
@@ -52,12 +43,22 @@ class MailerAction extends Action
                 // バリデーション準備
                 $this->validate->set($post_data);
 
+                // 管理者メールの形式チェック
+                $to = (array) $setting['ADMIN_MAIL'];
+                $cc = $setting['ADMIN_CC'] ? explode(',', $setting['ADMIN_CC']) : [];
+                $bcc = $setting['ADMIN_BCC'] ? explode(',', $setting['ADMIN_BCC']) : [];
+                foreach (array_merge($to, $cc, $bcc) as $email) {
+                    if (! $this->validate->isCheckMailFormat($email)) {
+                        throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
+                    }
+                }
+
                 // ユーザーメールを形式チェックして格納
                 $email_attr = isset($setting['EMAIL_ATTRIBUTE']) ? $setting['EMAIL_ATTRIBUTE'] : null;
-                if (isset($post_data[$email_attr])
-                    && $this->validate->isCheckMailFormat($post_data[$email_attr])
-                ) {
-                    $this->repository->setUserMail($post_data[$email_attr]);
+                if (isset($post_data[$email_attr])) {
+                    if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
+                        $this->repository->setUserMail($post_data[$email_attr]);
+                    }
                 }
             } else {
                 throw new \Exception('何も送信されていません。');

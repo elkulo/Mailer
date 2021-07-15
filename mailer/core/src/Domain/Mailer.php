@@ -305,13 +305,14 @@ class Mailer implements MailerRepository
      */
     public function getCreateNonce(): string
     {
-        $token                     = sha1(uniqid((string)mt_rand(), true));
-        $_SESSION['_mailer_nonce'] = $token;
+        $nonce                     = sha1(uniqid((string)mt_rand(), true));
+        // セッションにNonceを保存
+        $_SESSION['_mailer_token'] = $nonce;
         return sprintf(
             '<input type="hidden" name="_mailer_nonce" value="%1$s" />
             <input type="hidden" name="_http_referer" value="%2$s" />
             <input type="hidden" name="_confirm_submit" value="1" />' . PHP_EOL,
-            $token,
+            $nonce,
             $this->kses($_SERVER['HTTP_REFERER'])
         );
     }
@@ -374,7 +375,8 @@ class Mailer implements MailerRepository
      */
     public function checkinToken(): void
     {
-        if (empty($_SESSION['_mailer_nonce']) || ($_SESSION['_mailer_nonce'] !== $_POST['_mailer_nonce'])) {
+        // TokenとNonceを照合
+        if (empty($_SESSION['_mailer_token']) || ($_SESSION['_mailer_token'] !== $_POST['_mailer_nonce'])) {
             // 再読み込みで発行されたセッションを破壊
             if (ini_get('session.use_cookies')) {
                 $params = session_get_cookie_params();
@@ -388,14 +390,14 @@ class Mailer implements MailerRepository
                     $params['httponly']
                 );
             }
-            if (isset($_SESSION['_mailer_nonce'])) {
+            if (isset($_SESSION['_mailer_token'])) {
                 session_destroy();
             }
             throw new \Exception('連続した投稿の可能性があるため送信できません');
         } else {
             // 多重投稿を防ぐ
             // セッションを破壊してクッキーを削除
-            if (isset($_SESSION['_mailer_nonce'])) {
+            if (isset($_SESSION['_mailer_token'])) {
                 if (ini_get('session.use_cookies')) {
                     $params = session_get_cookie_params();
                     setcookie(
