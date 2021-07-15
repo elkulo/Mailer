@@ -22,7 +22,14 @@ return [
         return new Mailer($container->get('config'));
     }),
     'MailerAction' => Factory(function (ContainerInterface $container) {
-        return new MailerAction($container);
+        return new MailerAction(
+            $container->get('logger'),
+            $container->get('Mailer'),
+            $container->get('ValidateHandler'),
+            $container->get('ViewHandler'),
+            $container->get('MailHandler'),
+            $container->has('DBHandler') ? $container->get('DBHandler') : null
+        );
     }),
     'ValidateHandler' => Factory(function (ContainerInterface $container) {
         return new ValidateHandler($container->get('config'));

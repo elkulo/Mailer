@@ -9,7 +9,12 @@ declare(strict_types=1);
 namespace App\Application\Actions;
 
 use App\Application\Actions\Action;
-use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use App\Domain\MailerRepository;
+use App\Application\Handlers\Validate\ValidateHandlerInterface;
+use App\Application\Handlers\View\ViewHandlerInterface;
+use App\Application\Handlers\Mail\MailHandlerInterface;
+use App\Application\Handlers\DB\DBHandlerInterface;
 
 /**
  * MailerAction
@@ -18,16 +23,83 @@ class MailerAction extends Action
 {
 
     /**
+     * @var LoggerInterface
+     */
+    protected LoggerInterface $logger;
+
+    /**
+     * ロジック
+     *
+     * @var MailerRepository
+     */
+    protected MailerRepository $repository;
+
+    /**
+     * バリデート
+     *
+     * @var ValidateHandlerInterface
+     */
+    protected ValidateHandlerInterface $validate;
+
+    /**
+     * Twig ハンドラー
+     *
+     * @var ViewHandlerInterface
+     */
+    protected ViewHandlerInterface $view;
+
+    /**
+     * メールハンドラー
+     *
+     * @var MailHandlerInterface
+     */
+    protected MailHandlerInterface $mail;
+
+    /**
+     * DBハンドラー
+     *
+     * @var DBHandlerInterface
+     */
+    protected DBHandlerInterface $db;
+
+    /**
      * コンストラクタ
      *
-     * @param  ContainerInterface $container
+     * @param  LoggerInterface
+     * @param  MailerRepository
+     * @param  ValidateHandlerInterface
+     * @param  ViewHandlerInterface
+     * @param  MailHandlerInterface
+     * @param  DBHandlerInterface
      * @return void
      */
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct($container);
-
+    public function __construct(
+        LoggerInterface $logger,
+        MailerRepository $repository,
+        ValidateHandlerInterface $validate,
+        ViewHandlerInterface $view,
+        MailHandlerInterface $mail,
+        ?DBHandlerInterface $db = null,
+    ) {
         try {
+            // ロガーをセット
+            $this->logger = $logger;
+
+            // ロジックをセット
+            $this->repository = $repository;
+
+            // バリデーションアクションをセット
+            $this->validate = $validate;
+
+            // ビューアクションをセット
+            $this->view = $view;
+
+            // メールハンドラーをセット
+            $this->mail = $mail;
+
+            // データベースハンドラーをセット
+            $this->db = $db;
+
             // 連続投稿防止
             $this->repository->checkinSession();
 

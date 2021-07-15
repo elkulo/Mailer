@@ -33,18 +33,18 @@ require_once __DIR__ . '/vendor/autoload.php';
         $builder = new \DI\ContainerBuilder();
         $builder->addDefinitions(__DIR__ . '/app/dependencies.php');
         $builder->addDefinitions(__DIR__ . '/app/application.php');
-        $container = $builder->build();
+        $app = $builder->build();
 
         // Configのセット.
-        $container->set('config', $config);
+        $app->set('config', $config);
 
         // Whoopsの開始.
-        $container->get('whoops')->register();
+        $app->get('whoops')->register();
 
         // Actionの開始.
-        $container->get('MailerAction')();
+        $app->call('MailerAction');
     } catch (\Exception $e) {
-        $container->get('logger')->error($e->getMessage());
+        $app->get('logger')->error($e->getMessage());
         exit($e->getMessage());
     }
 })(isset($ENV_PATH) ? $ENV_PATH : __DIR__ . '/../'); // .envまでのパス.
