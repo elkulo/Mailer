@@ -16,20 +16,21 @@ class Mailer implements MailerRepository
      *
      * @var array
      */
-    private array $setting = array(
-        'FROM_NAME' => FROM_NAME, // 送信元の宛名
-        'FROM_MAIL' => FROM_MAIL, // 送信元のメールアドレス
-        'ADMIN_MAIL' => ADMIN_MAIL, // 管理者メールアドレス
-        'ADMIN_CC' => ADMIN_CC, // 管理者CC
-        'ADMIN_BCC' => ADMIN_BCC, // 管理者BCC
-    );
+    private array $server;
+
+    /**
+     * 設定
+     *
+     * @var array
+     */
+    private array $setting;
 
     /**
      * POSTデータ
      *
      * @var array
      */
-    private $post_data;
+    private array $post_data;
 
     /**
      * ユーザーメール格納先
@@ -43,7 +44,7 @@ class Mailer implements MailerRepository
      *
      * @var string
      */
-    private $page_referer;
+    private string $page_referer;
 
     /**
      * コンストラクタ
@@ -53,12 +54,22 @@ class Mailer implements MailerRepository
      */
     public function __construct(array $config)
     {
-        // コンフィグをセット
-        $this->setting = array_merge($this->setting, $config);
+        $this->server = $config['server'];
+        $this->setting = $config['setting'];
     }
 
     /**
-     * 設定情報の取得
+     * サーバー設定情報の取得
+     *
+     * @return array
+     */
+    public function getServer(): array
+    {
+        return $this->server;
+    }
+
+    /**
+     * アプリ設定情報の取得
      *
      * @return array
      */
@@ -190,7 +201,7 @@ class Mailer implements MailerRepository
 
         // クライアント情報の置換.
         $value = array(
-            '__FROM_SITE_NAME' => $this->setting['FROM_NAME'],
+            '__FROM_SITE_NAME' => $this->server['FROM_NAME'],
             '__POST_ALL' => $this->getPostToString(),
             '__DATE' => date('Y/m/d (D) H:i:s', time()),
             '__IP' => $_SERVER['REMOTE_ADDR'],
@@ -212,15 +223,15 @@ class Mailer implements MailerRepository
         $header = array();
 
         // 管理者宛送信メール.
-        if (!empty($this->setting['ADMIN_CC'])) {
-            $header[] = 'Cc: ' . $this->setting['ADMIN_CC'];
+        if (!empty($this->server['ADMIN_CC'])) {
+            $header[] = 'Cc: ' . $this->server['ADMIN_CC'];
         }
-        if (!empty($this->setting['ADMIN_BCC'])) {
-            $header[] = 'Bcc: ' . $this->setting['ADMIN_BCC'];
+        if (!empty($this->server['ADMIN_BCC'])) {
+            $header[] = 'Bcc: ' . $this->server['ADMIN_BCC'];
         }
-        //if (!empty($this->setting['IS_FROM_USERMAIL'])) {
-        //  $header[] = 'Reply-To: ' . $this->user_mail;
-        //}
+        if (!empty($this->setting['IS_FROM_USERMAIL'])) {
+            $header[] = 'Reply-To: ' . $this->user_mail;
+        }
 
         return $header;
     }

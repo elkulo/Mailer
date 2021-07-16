@@ -26,7 +26,7 @@ class WordPressHandler implements MailHandlerInterface
     final public function send(string $to, string $subject, string $body, array $header = array()): bool
     {
         try {
-            if (defined('ABSPATH') && function_exists('wp_mail')) {
+            if (function_exists('wp_mail')) {
                 // WordPress関数で送信
                 if (wp_mail($to, $subject, $body, $header)) {
                     return true;
@@ -34,7 +34,7 @@ class WordPressHandler implements MailHandlerInterface
                     throw new \Exception('Error wp_mail.');
                 }
             } else {
-                throw new \Exception('Error ABSPATH.');
+                throw new \Exception('Error wp_mail.');
             }
         } catch (\Exception $e) {
             return false;

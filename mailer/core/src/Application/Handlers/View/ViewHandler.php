@@ -20,7 +20,7 @@ class ViewHandler implements ViewHandlerInterface
      *
      * @var array
      */
-    private array $setting = array();
+    private array $setting;
 
     /**
      * Twig ハンドラー
@@ -36,17 +36,14 @@ class ViewHandler implements ViewHandlerInterface
      *
      * @var array
      */
-    private array $view_tamplete_dir = array(
-        APP_PATH . '/templates',
-        __DIR__ . '/../../../Infrastructure/templates',
-    );
+    private array $view_tamplete_dir;
 
     /**
      * Twig キャッシュディレクトリ
      *
      * @var string
      */
-    private string $view_cache_dir = APP_PATH . '/../../../../var/cache/twig';
+    private string $view_cache_dir;
 
     /**
      * コンストラクタ
@@ -56,7 +53,14 @@ class ViewHandler implements ViewHandlerInterface
      */
     public function __construct(array $config)
     {
-        $this->setting = $config;
+        $this->setting = $config['setting'];
+
+        $this->view_tamplete_dir = array(
+            $config['app.path'] . '/../templates',
+            $config['app.path'] . '/src/Infrastructure/templates',
+        );
+
+        $this->view_cache_dir = $config['app.path'] . '/var/cache/twig';
 
         // Twigの初期化
         $this->view = new TwigEnvironment(

@@ -12,7 +12,14 @@ interface MailerRepository
 {
 
     /**
-     * 設定情報の取得
+     * サーバー設定情報の取得
+     *
+     * @return array
+     */
+    public function getServer(): array;
+
+    /**
+     * アプリ設定情報の取得
      *
      * @return array
      */
