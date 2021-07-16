@@ -79,7 +79,7 @@ class MailerAction extends Action
         ValidateHandlerInterface $validate,
         ViewHandlerInterface $view,
         MailHandlerInterface $mail,
-        ?DBHandlerInterface $db = null,
+        ?DBHandlerInterface $db = null
     ) {
         try {
             // ロガーをセット
