@@ -1,48 +1,57 @@
 <?php
-/**
- * WordPressの連携
- *
- * !! WordPress と連携する場合のみ書き換える !!
- *
- * wp-load.php を読み込むことでWordPressの関数が使用可能。
- * envで MAILER_TYPE='WordPress' に切り替えでメール送信を wp_mail() にする。
- * そのため、WordPressのSMTP等のプラグインとも連携ができます。
- * WordPressの設定を使用する場合はwp-load.phpをインクルードさせるとWP関数も使用可能。
- */
-// require_once __DIR__ . '/../../../../../../../wp-load.php';
 
-// SMTPサーバー
-define('SMTP_HOST', getenv('SMTP_HOST'));
+return [
 
-// メールユーザー名・アカウント名
-define('SMTP_USERNAME', getenv('SMTP_USERNAME'));
+    // バリデーションの言語設定
+    'VALIDATION_LANG' => getenv('VALIDATION_LANG'),
 
-// メールパスワード
-define('SMTP_PASSWORD', getenv('SMTP_PASSWORD'));
+    // SMTPサーバー
+    'SMTP_HOST' => getenv('SMTP_HOST'),
 
-// SMTPプロトコル(sslまたはtls)
-define('SMTP_ENCRYPTION', getenv('SMTP_ENCRYPTION'));
+    // メールユーザー名・アカウント名
+    'SMTP_USERNAME' => getenv('SMTP_USERNAME'),
 
-// 送信ポート(ssl:465, tls:587)
-define('SMTP_PORT', getenv('SMTP_PORT'));
+    // メールパスワード
+    'SMTP_PASSWORD' => getenv('SMTP_PASSWORD'),
 
-// 配信元の表示名
-define('FROM_NAME', getenv('FROM_SITE_NAME'));
+    // SMTPプロトコル(sslまたはtls)
+    'SMTP_ENCRYPTION' => getenv('SMTP_ENCRYPTION'),
 
-// 配信元のメールアドレス
-define('FROM_MAIL', getenv('SMTP_MAIL'));
+    // 送信ポート(ssl:465 => tls:587)
+    'SMTP_PORT' => getenv('SMTP_PORT'),
 
-// 管理者メールアドレス
-define('ADMIN_MAIL', getenv('ADMIN_MAIL'));
+    // 配信元の表示名
+    'FROM_NAME' => getenv('FROM_SITE_NAME'),
 
-// 管理者メールCC
-define('ADMIN_CC', getenv('ADMIN_CC'));
+    // 配信元のメールアドレス
+    'FROM_MAIL' => getenv('SMTP_MAIL'),
 
-// 管理者メールBCC
-define('ADMIN_BCC', getenv('ADMIN_BCC'));
+    // 管理者メールアドレス
+    'ADMIN_MAIL' => getenv('ADMIN_MAIL'),
 
-// バリデーションの言語設定
-define('VALIDATION_LANG', getenv('VALIDATION_LANG'));
+    // 管理者メールCC
+    'ADMIN_CC' => getenv('ADMIN_CC'),
 
-// タイムゾーン
-define('TIME_ZONE', getenv('TIME_ZONE'));
+    // 管理者メールBCC
+    'ADMIN_BCC' => getenv('ADMIN_BCC'),
+
+    // DBサーバーの情報
+    'DB' => [
+
+        'CONNECTION' => getenv('DB_CONNECTION'),
+
+        'URL' => getenv('DB_URL'),
+
+        'HOST' => getenv('DB_HOST'),
+
+        'PORT' => getenv('DB_PORT'),
+
+        'DATABASE' => getenv('DB_DATABASE'),
+
+        'USERNAME' => getenv('DB_USERNAME'),
+
+        'PASSWORD' => getenv('DB_PASSWORD'),
+
+        'PREFIX' => getenv('DB_PREFIX'),
+    ],
+];

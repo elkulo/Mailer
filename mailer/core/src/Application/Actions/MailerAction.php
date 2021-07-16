@@ -104,6 +104,7 @@ class MailerAction extends Action
             $this->repository->checkinSession();
 
             // 設定値の取得
+            $server = $this->repository->getServer();
             $setting = $this->repository->getSetting();
 
             // NULLバイト除去して格納
@@ -116,9 +117,9 @@ class MailerAction extends Action
                 $this->validate->set($post_data);
 
                 // 管理者メールの形式チェック
-                $to = (array) $setting['ADMIN_MAIL'];
-                $cc = $setting['ADMIN_CC'] ? explode(',', $setting['ADMIN_CC']) : [];
-                $bcc = $setting['ADMIN_BCC'] ? explode(',', $setting['ADMIN_BCC']) : [];
+                $to = (array) $server['ADMIN_MAIL'];
+                $cc = $server['ADMIN_CC'] ? explode(',', $server['ADMIN_CC']) : [];
+                $bcc = $server['ADMIN_BCC'] ? explode(',', $server['ADMIN_BCC']) : [];
                 foreach (array_merge($to, $cc, $bcc) as $email) {
                     if (! $this->validate->isCheckMailFormat($email)) {
                         throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
@@ -150,6 +151,7 @@ class MailerAction extends Action
     {
 
         try {
+            $server = $this->repository->getServer();
             $setting = $this->repository->getSetting();
 
             // リファラチェック
@@ -198,7 +200,7 @@ class MailerAction extends Action
 
                 // 管理者宛に届くメールをセット
                 $success['admin'] = $this->mail->send(
-                    $setting['ADMIN_MAIL'],
+                    $server['ADMIN_MAIL'],
                     $this->repository->getMailSubject(),
                     $this->view->renderAdminMail($mail_body),
                     $this->repository->getMailAdminHeader()

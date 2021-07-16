@@ -18,6 +18,24 @@ class PHPMailerHandler implements MailHandlerInterface
 {
 
     /**
+     * サーバー設定
+     *
+     * @var array
+     */
+    private array $server;
+
+    /**
+     * DBを作成
+     *
+     * @param  array $config
+     * @return void
+     */
+    public function __construct(array $config)
+    {
+        $this->server = $config['server'];
+    }
+
+    /**
      * メール送信
      *
      * @param  string $to
@@ -28,25 +46,27 @@ class PHPMailerHandler implements MailHandlerInterface
      */
     final public function send(string $to, string $subject, string $body, array $header = array()): bool
     {
+        $server = $this->server;
+
         // SMTP認証.
         $mailer = new PHPMailer;
         $mailer->isSMTP();
-        $mailer->Host = SMTP_HOST;
-        $mailer->Port = SMTP_PORT;
+        $mailer->Host = $server['SMTP_HOST'];
+        $mailer->Port = $server['SMTP_PORT'];
 
         // メーラー名を変更.
         $mailer->XMailer = 'PHPMailer';
 
-        if (defined('SMTP_USERNAME') && defined('SMTP_PASSWORD')) {
+        if (isset($server['SMTP_USERNAME'], $server['SMTP_PASSWORD'])) {
             $mailer->SMTPAuth = true;
-            $mailer->Username = SMTP_USERNAME;
-            $mailer->Password = SMTP_PASSWORD;
+            $mailer->Username = $server['SMTP_USERNAME'];
+            $mailer->Password = $server['SMTP_PASSWORD'];
         } else {
             $mailer->SMTPAuth = false;
         }
 
         if (defined('SMTP_ENCRYPTION')) {
-            $mailer->SMTPSecure = SMTP_ENCRYPTION;
+            $mailer->SMTPSecure = $server['SMTP_ENCRYPTION'];
             $mailer->SMTPAutoTLS = true;
         }
 
@@ -54,11 +74,11 @@ class PHPMailerHandler implements MailHandlerInterface
         $mailer->CharSet = 'ISO-2022-JP';
         $mailer->Encoding = 'base64';
         $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
-        $from_name = mb_encode_mimeheader(FROM_NAME, 'ISO-2022-JP', 'UTF-8');
+        $from_name = mb_encode_mimeheader($server['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         // 配信元.
-        $mailer->setFrom(FROM_MAIL, $from_name);
+        $mailer->setFrom($server['FROM_MAIL'], $from_name);
 
         // 送信メール.
         $mailer->isHTML(false);

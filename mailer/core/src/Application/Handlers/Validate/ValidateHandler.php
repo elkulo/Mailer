@@ -22,6 +22,13 @@ class ValidateHandler implements ValidateHandlerInterface
      *
      * @var array
      */
+    private array $server = array();
+
+    /**
+     * 設定
+     *
+     * @var array
+     */
     private array $setting = array();
 
     /**
@@ -39,7 +46,8 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function __construct(array $config)
     {
-        $this->setting = $config;
+        $this->server = $config['server'];
+        $this->setting = $config['setting'];
     }
 
     /**
@@ -50,7 +58,7 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function set(array $post_data): void
     {
-        Valitron\Validator::lang(VALIDATION_LANG);
+        Valitron\Validator::lang($this->server['VALIDATION_LANG']);
         $this->validate = new Valitron\Validator($post_data);
         $this->validate->labels($this->setting['NAME_FOR_LABELS']);
     }

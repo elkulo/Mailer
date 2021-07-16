@@ -11,23 +11,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 (function (string $env_path): void {
 
     try {
-        // config ディレクトリまでのパス.
-        $config_path = __DIR__ . '/../config';
-
-        // ルートパス.
-        // phpcs:disable
-        define('APP_PATH', __DIR__ . '/../');
-        // phpcs:enable
-
-        // 設定定数を取得.
+        // 環境変数を取得.
         \Dotenv\Dotenv::create($env_path)->load();
-        if (file_exists($config_path . '/server.php') && file_exists($config_path . '/setting.php')) {
-            require_once $config_path . '/server.php';
-            $config = include $config_path . '/setting.php';
-        } else {
-            throw new \Exception('Mailer Error: Not Config.');
+
+        // タイムゾーン.
+        if (getenv('TIME_ZONE')) {
+            date_default_timezone_set(getenv('TIME_ZONE'));
         }
-        date_default_timezone_set(TIME_ZONE);
 
         // DIコンテナー.
         $builder = new \DI\ContainerBuilder();
@@ -35,14 +25,26 @@ require_once __DIR__ . '/vendor/autoload.php';
         $builder->addDefinitions(__DIR__ . '/app/application.php');
         $app = $builder->build();
 
-        // Configのセット.
-        $app->set('config', $config);
-
         // Whoopsの開始.
         $app->get('whoops')->register();
 
-        // Actionの開始.
-        $app->call('MailerAction');
+        // config ディレクトリまでのパス.
+        $config_path = __DIR__ . '/../config';
+
+        if (file_exists($config_path . '/server.php') && file_exists($config_path . '/setting.php')) {
+            // 定数.
+            $config = [
+                'server' => include $config_path . '/server.php',
+                'setting' => include $config_path . '/setting.php',
+                'app.path' => __DIR__, // ルートパス
+            ];
+            $app->set('config', $config);
+
+            // Action の開始.
+            $app->call('MailerAction');
+        } else {
+            throw new \Exception('Mailer Error: Not Config.');
+        }
     } catch (\Exception $e) {
         $app->get('logger')->error($e->getMessage());
         exit($e->getMessage());

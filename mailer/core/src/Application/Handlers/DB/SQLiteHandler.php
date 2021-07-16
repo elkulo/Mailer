@@ -17,6 +17,13 @@ class SQLiteHandler implements DBHandlerInterface
 {
 
     /**
+     * サーバー設定
+     *
+     * @var array
+     */
+    private array $server;
+
+    /**
      * データベース
      *
      * @var object
@@ -31,25 +38,22 @@ class SQLiteHandler implements DBHandlerInterface
     public string $table_name;
 
     /**
-     * Database ディレクトリ
-     *
-     * @var string
-     */
-    private string $database_dir = APP_PATH . '/database';
-
-    /**
      * DBを作成
      *
+     * @param  array $config
      * @return void
      */
-    public function __construct()
+    public function __construct(array $config)
     {
-        $prefix = getenv('DB_PREFIX') ? strtolower(getenv('DB_PREFIX')) : '';
+        $this->server = $config['server'];
 
+        // DBテーブル名
+        $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
         $this->table_name = $prefix . 'mailer';
 
         // DB作成
-        $sqlite_file = $this->make($this->database_dir . '/', getenv('DB_DATABASE'));
+        $db_dir = $config['app.path'] . '/../database/';
+        $sqlite_file = $this->make($db_dir, $this->server['DB']['DATABASE']);
 
         // DB設定
         $this->db = new Manager();
@@ -93,6 +97,7 @@ class SQLiteHandler implements DBHandlerInterface
             '_host' => $status['_host'],
             '_url' => $status['_url'],
         ];
+        // prefixは省略
         $this->db->table('mailer')->insert($values);
         return true;
     }

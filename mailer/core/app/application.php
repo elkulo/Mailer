@@ -37,25 +37,25 @@ return [
     'ViewHandler' => Factory(function (ContainerInterface $container) {
         return new ViewHandler($container->get('config'));
     }),
-    'MailHandler' => Factory(function () {
+    'MailHandler' => Factory(function (ContainerInterface $container) {
         switch (getenv('MAILER_TYPE')) {
             case 'WordPress':
                 return new WordPressHandler();
                 break;
             default:
-                return new PHPMailerHandler();
+                return new PHPMailerHandler($container->get('config'));
         }
     }),
-    'DBHandler' => Factory(function () {
+    'DBHandler' => Factory(function (ContainerInterface $container) {
         switch (getenv('DB_CONNECTION')) {
             case 'MySQL':
-                return new MySQLHandler();
+                return new MySQLHandler($container->get('config'));
                 break;
             case 'SQLite':
-                return new SQLiteHandler();
+                return new SQLiteHandler($container->get('config'));
                 break;
             default:
-                return new stdClass();
+                return null;
         }
     }),
 ];
