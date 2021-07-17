@@ -220,7 +220,7 @@ class MailerAction extends Action
 
                 // DBに保存
                 if ($this->db) {
-                    $this->db->save(
+                    $db_insert_success = $this->db->save(
                         $success,
                         $this->repository->getUserMail(),
                         $this->repository->getMailSubject(),
@@ -232,6 +232,9 @@ class MailerAction extends Action
                             '_url' => $this->repository->getPageReferer(),
                         )
                     );
+                    if (!$db_insert_success) {
+                        $this->logger->error('データベース接続エラー');
+                    }
                 }
 
                 if (!array_search(false, $success)) {

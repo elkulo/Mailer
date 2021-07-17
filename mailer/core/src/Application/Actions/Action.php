@@ -18,7 +18,6 @@ abstract class Action
     /**
      * @return bool
      * @throws Exception
-     * @throws Exception
      */
     public function __invoke(): bool
     {
