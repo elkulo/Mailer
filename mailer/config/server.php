@@ -40,11 +40,7 @@ return [
 
         'CONNECTION' => getenv('DB_CONNECTION'),
 
-        'URL' => getenv('DB_URL'),
-
         'HOST' => getenv('DB_HOST'),
-
-        'PORT' => getenv('DB_PORT'),
 
         'DATABASE' => getenv('DB_DATABASE'),
 

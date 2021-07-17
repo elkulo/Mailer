@@ -45,34 +45,39 @@ class SQLiteHandler implements DBHandlerInterface
      */
     public function __construct(array $config)
     {
-        $this->server = $config['server'];
+        try {
+            $this->server = $config['server'];
 
-        // DBテーブル名
-        $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
-        $this->table_name = $prefix . 'mailer';
+            // DBテーブル名
+            $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
+            $this->table_name = $prefix . 'mailer';
 
-        // DB作成
-        $db_dir = $config['app.path'] . '/../database/';
-        $sqlite_file = $this->make($db_dir, $this->server['DB']['DATABASE']);
+            // DB作成
+            $db_dir = $config['app.path'] . '/../database/';
+            $sqlite_file = $this->make($db_dir, $this->server['DB']['DATABASE']);
 
-        // DB設定
-        $this->db = new Manager();
+            // DB設定
+            $this->db = new Manager();
 
-        // 接続情報
-        $config = [
-            'driver'    => 'sqlite',
-            'database'  => $sqlite_file,
-            'prefix' => $prefix,
-        ];
+            // 接続情報
+            $config = [
+                'driver'    => 'sqlite',
+                'database'  => $sqlite_file,
+                'prefix' => $prefix,
+            ];
 
-        // コネクションを追加
-        $this->db->addConnection($config);
+            // コネクションを追加
+            $this->db->addConnection($config);
 
-        // グローバルで(staticで)利用できるようにする宣言
-        $this->db->setAsGlobal();
+            // グローバルで(staticで)利用できるようにする宣言
+            $this->db->setAsGlobal();
 
-        // Eloquentを有効にする
-        $this->db->bootEloquent();
+            // Eloquentを有効にする
+            $this->db->bootEloquent();
+        } catch (\Exception $e) {
+            // DBに接続が失敗した場合
+            $this->db = new \stdClass();
+        }
     }
 
     /**
@@ -97,9 +102,13 @@ class SQLiteHandler implements DBHandlerInterface
             '_host' => $status['_host'],
             '_url' => $status['_url'],
         ];
-        // prefixは省略
-        $this->db->table('mailer')->insert($values);
-        return true;
+
+        if (!$this->db instanceof \stdClass) {
+            // prefixは省略
+            $this->db->table('mailer')->insert($values);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -108,6 +117,7 @@ class SQLiteHandler implements DBHandlerInterface
      * @param  string $dir_path
      * @param  string $file
      * @return string
+     * @throws Exception
      */
     public function make(string $dir_path, string $file): string
     {
@@ -135,7 +145,7 @@ class SQLiteHandler implements DBHandlerInterface
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     email VARCHAR(50),
                     subject VARCHAR(50),
-                    body VARCHAR(50),
+                    body VARCHAR(255),
                     _success VARCHAR(50),
                     _date VARCHAR(50),
                     _ip VARCHAR(50),
@@ -146,8 +156,8 @@ class SQLiteHandler implements DBHandlerInterface
                 // 一度閉じる.
                 $pdo = null;
             }
-        } catch (\Exception $e) {
-            exit;
+        } catch (\PDOException $e) {
+            throw new \Exception($e->getMessage());
         }
         return $sqlite_file;
     }
