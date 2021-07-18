@@ -49,5 +49,9 @@ return [
         'PASSWORD' => getenv('DB_PASSWORD'),
 
         'PREFIX' => getenv('DB_PREFIX'),
+
+        'CHARSET' => getenv('DB_CHARSET'),
+
+        'COLLATION' => getenv('DB_COLLATION'),
     ],
 ];
