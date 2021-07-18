@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Application\Handlers\DB;
 
 use Illuminate\Database\Capsule\Manager;
-use stdClass;
 
 /**
  * MySQLHandler
