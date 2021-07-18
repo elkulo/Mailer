@@ -93,14 +93,15 @@ class SQLiteHandler implements DBHandlerInterface
     final public function save(array $success, string $email, string $subject, string $body, array $status): bool
     {
         $values = [
+            'success' => json_encode($success),
             'email' => $email,
             'subject' => $subject,
             'body' => $body,
-            '_success' => json_encode($success),
-            '_date' => $status['_date'],
-            '_ip' => $status['_ip'],
-            '_host' => $status['_host'],
-            '_url' => $status['_url'],
+            'date' => $status['_date'],
+            'ip' => $status['_ip'],
+            'host' => $status['_host'],
+            'referer' => $status['_url'],
+            'registry_datetime' => date("Y-m-d H:i:s")
         ];
 
         if (!$this->db instanceof \stdClass) {
@@ -143,14 +144,15 @@ class SQLiteHandler implements DBHandlerInterface
                 // テーブル作成
                 $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->table_name} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    email VARCHAR(50),
-                    subject VARCHAR(50),
-                    body VARCHAR(255),
-                    _success VARCHAR(50),
-                    _date VARCHAR(50),
-                    _ip VARCHAR(50),
-                    _host VARCHAR(50),
-                    _url VARCHAR(50)
+                    success VARCHAR(50),
+                    email VARCHAR(255),
+                    subject VARCHAR(255),
+                    body VARCHAR(1000),
+                    date VARCHAR(1000),
+                    ip VARCHAR(50),
+                    host VARCHAR(50),
+                    referer VARCHAR(50),
+                    registry_datetime TEXT
                 )");
 
                 // 一度閉じる.
