@@ -58,9 +58,9 @@ class MailerAction extends Action
     /**
      * DBハンドラー
      *
-     * @var DBHandlerInterface
+     * @var mixin
      */
-    protected DBHandlerInterface $db;
+    protected $db;
 
     /**
      * コンストラクタ

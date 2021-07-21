@@ -41,7 +41,7 @@ require_once __DIR__ . '/vendor/autoload.php';
             $app->set('config', $config);
 
             // Action の開始.
-            $app->call('MailerAction');
+            $app->call(App\Application\Actions\MailerAction::class);
         } else {
             throw new \Exception('Mailer Error: Not Config.');
         }
