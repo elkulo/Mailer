@@ -18,26 +18,26 @@ use App\Application\Handlers\DB\MySQLHandler;
 use App\Application\Handlers\DB\SQLiteHandler;
 
 return [
-    'Mailer' => Factory(function (ContainerInterface $container) {
+    Mailer::class => Factory(function (ContainerInterface $container) {
         return new Mailer($container->get('config'));
     }),
-    'MailerAction' => Factory(function (ContainerInterface $container) {
+    MailerAction::class => Factory(function (ContainerInterface $container) {
         return new MailerAction(
             $container->get('logger'),
-            $container->get('Mailer'),
-            $container->get('ValidateHandler'),
-            $container->get('ViewHandler'),
-            $container->get('MailHandler'),
-            $container->has('DBHandler') ? $container->get('DBHandler') : null
+            $container->get(Mailer::class),
+            $container->get(ValidateHandler::class),
+            $container->get(ViewHandler::class),
+            $container->get(MailHandler::class),
+            $container->get(DBHandler::class)
         );
     }),
-    'ValidateHandler' => Factory(function (ContainerInterface $container) {
+    ValidateHandler::class => Factory(function (ContainerInterface $container) {
         return new ValidateHandler($container->get('config'));
     }),
-    'ViewHandler' => Factory(function (ContainerInterface $container) {
+    ViewHandler::class => Factory(function (ContainerInterface $container) {
         return new ViewHandler($container->get('config'));
     }),
-    'MailHandler' => Factory(function (ContainerInterface $container) {
+    MailHandler::class => Factory(function (ContainerInterface $container) {
         switch (getenv('MAILER_TYPE')) {
             case 'WordPress':
                 return new WordPressHandler();
@@ -46,7 +46,7 @@ return [
                 return new PHPMailerHandler($container->get('config'));
         }
     }),
-    'DBHandler' => Factory(function (ContainerInterface $container) {
+    DBHandler::class => Factory(function (ContainerInterface $container) {
         switch (getenv('DB_CONNECTION')) {
             case 'MySQL':
                 return new MySQLHandler($container->get('config'));
