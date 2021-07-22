@@ -65,9 +65,12 @@ class PHPMailerHandler implements MailHandlerInterface
             $mailer->SMTPAuth = false;
         }
 
-        if (defined('SMTP_ENCRYPTION')) {
+        if (isset($server['SMTP_ENCRYPTION'])) {
             $mailer->SMTPSecure = $server['SMTP_ENCRYPTION'];
             $mailer->SMTPAutoTLS = true;
+        } else {
+            $mailer->SMTPSecure  = false;
+            $mailer->SMTPAutoTLS = false;
         }
 
         // エンコード.
@@ -78,7 +81,7 @@ class PHPMailerHandler implements MailHandlerInterface
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         // 配信元.
-        $mailer->setFrom($server['FROM_MAIL'], $from_name);
+        $mailer->setFrom($server['SMTP_MAIL'], $from_name);
 
         // 送信メール.
         $mailer->isHTML(false);
