@@ -35,6 +35,9 @@ return [
     // 管理者メールBCC
     'ADMIN_BCC' => getenv('ADMIN_BCC'),
 
+    // 予備の通知先
+    'RESERVE_MAIL' => getenv('RESERVE_MAIL'),
+
     // DBサーバーの情報
     'DB' => [
 

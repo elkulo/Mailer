@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
+
 declare(strict_types=1);
 
 namespace App\Application\Actions;
@@ -14,6 +16,7 @@ use App\Domain\MailerRepository;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
 use App\Application\Handlers\View\ViewHandlerInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
+use App\Application\Handlers\Mail\MailReserveInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
 
 /**
@@ -63,6 +66,13 @@ class MailerAction extends Action
     protected $db;
 
     /**
+     * 予備のメールハンドラー
+     *
+     * @var MailReserveInterface
+     */
+    protected MailReserveInterface $reserve;
+
+    /**
      * コンストラクタ
      *
      * @param  LoggerInterface
@@ -71,6 +81,7 @@ class MailerAction extends Action
      * @param  ViewHandlerInterface
      * @param  MailHandlerInterface
      * @param  DBHandlerInterface
+     * @param  MailReserveInterface
      * @return void
      */
     public function __construct(
@@ -79,7 +90,8 @@ class MailerAction extends Action
         ValidateHandlerInterface $validate,
         ViewHandlerInterface $view,
         MailHandlerInterface $mail,
-        ?DBHandlerInterface $db = null
+        ?DBHandlerInterface $db = null,
+        ?MailReserveInterface $reserve = null
     ) {
         try {
             // ロガーをセット
@@ -99,6 +111,9 @@ class MailerAction extends Action
 
             // データベースハンドラーをセット
             $this->db = $db;
+
+            // 予備のメールハンドラーをセット
+            $this->reserve = $reserve;
 
             // 連続投稿防止
             $this->repository->checkinSession();
@@ -121,7 +136,7 @@ class MailerAction extends Action
                 $cc = $server['ADMIN_CC'] ? explode(',', $server['ADMIN_CC']) : [];
                 $bcc = $server['ADMIN_BCC'] ? explode(',', $server['ADMIN_BCC']) : [];
                 foreach (array_merge($to, $cc, $bcc) as $email) {
-                    if (! $this->validate->isCheckMailFormat($email)) {
+                    if (!$this->validate->isCheckMailFormat($email)) {
                         throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
                     }
                 }
@@ -244,7 +259,14 @@ class MailerAction extends Action
                     );
                     $this->view->displayComplete(array_merge($posts, $system));
                 } else {
-                    throw new \Exception('メールプログラムの送信時にエラーが起きました。内容は送信されておりません。');
+                    // 予備の通知を試みる
+                    $this->reserve->send(
+                        $server['RESERVE_MAIL'],
+                        $this->repository->getMailSubject(),
+                        $this->view->renderAdminMail($mail_body),
+                        array()
+                    );
+                    throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
                 }
             }
         } catch (\Exception $e) {

@@ -14,8 +14,15 @@ use App\Application\Handlers\Validate\ValidateHandler;
 use App\Application\Handlers\View\ViewHandler;
 use App\Application\Handlers\Mail\WordPressHandler;
 use App\Application\Handlers\Mail\PHPMailerHandler;
+use App\Application\Handlers\Mail\SendMailHandler;
 use App\Application\Handlers\DB\MySQLHandler;
 use App\Application\Handlers\DB\SQLiteHandler;
+
+use App\Application\Handlers\Validate\ValidateHandlerInterface;
+use App\Application\Handlers\View\ViewHandlerInterface;
+use App\Application\Handlers\Mail\MailHandlerInterface;
+use App\Application\Handlers\Mail\MailReserveInterface;
+use App\Application\Handlers\DB\DBHandlerInterface;
 
 return [
     Mailer::class => Factory(function (ContainerInterface $container) {
@@ -25,19 +32,20 @@ return [
         return new MailerAction(
             $container->get('logger'),
             $container->get(Mailer::class),
-            $container->get(ValidateHandler::class),
-            $container->get(ViewHandler::class),
-            $container->get(MailHandler::class),
-            $container->get(DBHandler::class)
+            $container->get(ValidateHandlerInterface::class),
+            $container->get(ViewHandlerInterface::class),
+            $container->get(MailHandlerInterface::class),
+            $container->get(DBHandlerInterface::class),
+            $container->get(MailReserveInterface::class)
         );
     }),
-    ValidateHandler::class => Factory(function (ContainerInterface $container) {
+    ValidateHandlerInterface::class => Factory(function (ContainerInterface $container) {
         return new ValidateHandler($container->get('config'));
     }),
-    ViewHandler::class => Factory(function (ContainerInterface $container) {
+    ViewHandlerInterface::class => Factory(function (ContainerInterface $container) {
         return new ViewHandler($container->get('config'));
     }),
-    MailHandler::class => Factory(function (ContainerInterface $container) {
+    MailHandlerInterface::class => Factory(function (ContainerInterface $container) {
         switch (getenv('MAILER_TYPE')) {
             case 'WordPress':
                 return new WordPressHandler();
@@ -46,7 +54,7 @@ return [
                 return new PHPMailerHandler($container->get('config'));
         }
     }),
-    DBHandler::class => Factory(function (ContainerInterface $container) {
+    DBHandlerInterface::class => Factory(function (ContainerInterface $container) {
         switch (getenv('DB_CONNECTION')) {
             case 'MySQL':
                 return new MySQLHandler($container->get('config'));
@@ -57,5 +65,8 @@ return [
             default:
                 return null;
         }
+    }),
+    MailReserveInterface::class => Factory(function (ContainerInterface $container) {
+        return new SendMailHandler($container->get('config'));
     }),
 ];
