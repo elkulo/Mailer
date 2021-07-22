@@ -8,7 +8,10 @@ return [
     // SMTPサーバー
     'SMTP_HOST' => getenv('SMTP_HOST'),
 
-    // メールユーザー名・アカウント名
+    // SMTPメールアドレス(配信元)
+    'SMTP_MAIL' => getenv('SMTP_MAIL'),
+
+    // メールユーザー名(アカウント名)
     'SMTP_USERNAME' => getenv('SMTP_USERNAME'),
 
     // メールパスワード
@@ -17,14 +20,11 @@ return [
     // SMTPプロトコル(sslまたはtls)
     'SMTP_ENCRYPTION' => getenv('SMTP_ENCRYPTION'),
 
-    // 送信ポート(ssl:465 => tls:587)
+    // 送信ポート(465 or 587)
     'SMTP_PORT' => getenv('SMTP_PORT'),
 
     // 配信元の表示名
     'FROM_NAME' => getenv('FROM_SITE_NAME'),
-
-    // 配信元のメールアドレス
-    'FROM_MAIL' => getenv('SMTP_MAIL'),
 
     // 管理者メールアドレス
     'ADMIN_MAIL' => getenv('ADMIN_MAIL'),
