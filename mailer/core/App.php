@@ -21,30 +21,31 @@ require_once __DIR__ . '/vendor/autoload.php';
 
         // DIコンテナー.
         $builder = new \DI\ContainerBuilder();
+
+        // config ディレクトリまでのパス.
+        $config_path = __DIR__ . '/../config';
+        if (file_exists($config_path . '/server.php') && file_exists($config_path . '/setting.php')) {
+            // 定数.
+            $config = [
+                'config' => [
+                    'server' => include $config_path . '/server.php',
+                    'setting' => include $config_path . '/setting.php',
+                    'app.path' => __DIR__, // ルートパス
+                ]
+            ];
+        } else {
+            throw new \Exception('Mailer Error: Not Config.');
+        }
+        $builder->addDefinitions($config);
         $builder->addDefinitions(__DIR__ . '/app/dependencies.php');
         $builder->addDefinitions(__DIR__ . '/app/application.php');
         $app = $builder->build();
 
         // Whoopsの開始.
-        $app->get('whoops')->register();
+        $app->get(Whoops\Run::class)->register();
 
-        // config ディレクトリまでのパス.
-        $config_path = __DIR__ . '/../config';
-
-        if (file_exists($config_path . '/server.php') && file_exists($config_path . '/setting.php')) {
-            // 定数.
-            $config = [
-                'server' => include $config_path . '/server.php',
-                'setting' => include $config_path . '/setting.php',
-                'app.path' => __DIR__, // ルートパス
-            ];
-            $app->set('config', $config);
-
-            // Action の開始.
-            $app->call(App\Application\Actions\MailerAction::class);
-        } else {
-            throw new \Exception('Mailer Error: Not Config.');
-        }
+        // Action の開始.
+        $app->call(App\Application\Actions\MailerAction::class);
     } catch (\Exception $e) {
         $app->get('logger')->error($e->getMessage());
         exit($e->getMessage());

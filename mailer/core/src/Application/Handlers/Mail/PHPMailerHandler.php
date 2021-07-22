@@ -96,6 +96,9 @@ class PHPMailerHandler implements MailHandlerInterface
             $this->addMailHeader($mailer, $header);
         }
 
+        // 受信失敗時のリターン先.
+        $mailer->Sender = $server['SMTP_MAIL'];
+
         /**
          * デバックレベル 0 ~ 2
          * (0)デバッグを無効にします（これを完全に省略することもできます、0がデフォルト）
