@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\Validate;
 
+use Psr\Container\ContainerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -41,13 +42,13 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * コンストラクタ
      *
-     * @param  array $config
+     * @param  ContainerInterface $container
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(ContainerInterface $container)
     {
-        $this->server = $config['server'];
-        $this->setting = $config['setting'];
+        $this->server = $container->get('config')['server'];
+        $this->setting = $container->get('config')['setting'];
     }
 
     /**

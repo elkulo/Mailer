@@ -13,6 +13,7 @@ return array(
     'App\\Application\\Handlers\\DB\\SQLiteHandler' => $baseDir . '/src/Application/Handlers/DB/SQLiteHandler.php',
     'App\\Application\\Handlers\\Mail\\MailHandlerInterface' => $baseDir . '/src/Application/Handlers/Mail/MailHandlerInterface.php',
     'App\\Application\\Handlers\\Mail\\PHPMailerHandler' => $baseDir . '/src/Application/Handlers/Mail/PHPMailerHandler.php',
+    'App\\Application\\Handlers\\Mail\\SendMailHandler' => $baseDir . '/src/Application/Handlers/Mail/SendMailHandler.php',
     'App\\Application\\Handlers\\Mail\\WordPressHandler' => $baseDir . '/src/Application/Handlers/Mail/WordPressHandler.php',
     'App\\Application\\Handlers\\Validate\\ValidateHandler' => $baseDir . '/src/Application/Handlers/Validate/ValidateHandler.php',
     'App\\Application\\Handlers\\Validate\\ValidateHandlerInterface' => $baseDir . '/src/Application/Handlers/Validate/ValidateHandlerInterface.php',
