@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
+use Psr\Container\ContainerInterface;
+
 class Mailer implements MailerRepository
 {
 
@@ -49,13 +51,13 @@ class Mailer implements MailerRepository
     /**
      * コンストラクタ
      *
-     * @param  array $config
+     * @param  ContainerInterface $container
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(ContainerInterface $container)
     {
-        $this->server = $config['server'];
-        $this->setting = $config['setting'];
+        $this->server = $container->get('config')['server'];
+        $this->setting = $container->get('config')['setting'];
     }
 
     /**

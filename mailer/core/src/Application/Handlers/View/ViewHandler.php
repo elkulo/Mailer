@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\View;
 
+use Psr\Container\ContainerInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
@@ -48,11 +49,13 @@ class ViewHandler implements ViewHandlerInterface
     /**
      * コンストラクタ
      *
-     * @param  array $config
+     * @param  ContainerInterface $container
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(ContainerInterface $container)
     {
+        $config = $container->get('config');
+
         $this->setting = $config['setting'];
 
         $this->view_tamplete_dir = array(

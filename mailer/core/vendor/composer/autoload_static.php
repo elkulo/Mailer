@@ -319,6 +319,7 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'App\\Application\\Handlers\\DB\\SQLiteHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/DB/SQLiteHandler.php',
         'App\\Application\\Handlers\\Mail\\MailHandlerInterface' => __DIR__ . '/../..' . '/src/Application/Handlers/Mail/MailHandlerInterface.php',
         'App\\Application\\Handlers\\Mail\\PHPMailerHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/Mail/PHPMailerHandler.php',
+        'App\\Application\\Handlers\\Mail\\SendMailHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/Mail/SendMailHandler.php',
         'App\\Application\\Handlers\\Mail\\WordPressHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/Mail/WordPressHandler.php',
         'App\\Application\\Handlers\\Validate\\ValidateHandler' => __DIR__ . '/../..' . '/src/Application/Handlers/Validate/ValidateHandler.php',
         'App\\Application\\Handlers\\Validate\\ValidateHandlerInterface' => __DIR__ . '/../..' . '/src/Application/Handlers/Validate/ValidateHandlerInterface.php',

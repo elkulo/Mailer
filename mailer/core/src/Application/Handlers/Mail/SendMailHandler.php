@@ -11,7 +11,7 @@ namespace App\Application\Handlers\Mail;
 /**
  * SendMailHandler
  */
-class SendMailHandler implements MailReserveInterface
+class SendMailHandler implements MailHandlerInterface
 {
 
     /**
@@ -50,11 +50,7 @@ class SendMailHandler implements MailReserveInterface
         $from_email = $server['SMTP_MAIL'];
         $from_name = mb_encode_mimeheader($server['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
         $subject = mb_encode_mimeheader('[致命的な送信エラー]'.$subject, 'ISO-2022-JP', 'UTF-8');
-        $body = mb_convert_encoding(
-            '****** 主要メールへの送信に失敗しています。メール設定をご確認ください ******'. PHP_EOL .$body,
-            'ISO-2022-JP',
-            'UTF-8'
-        );
+        $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         $headers  = 'MIME-Version: 1.0 \n';
         $headers .= 'From: ' .

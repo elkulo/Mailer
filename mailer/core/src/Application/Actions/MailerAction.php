@@ -1,23 +1,20 @@
 <?php
-
 /**
  * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
-
 declare(strict_types=1);
 
 namespace App\Application\Actions;
 
 use App\Application\Actions\Action;
-use Psr\Log\LoggerInterface;
-use App\Domain\MailerRepository;
-use App\Application\Handlers\Validate\ValidateHandlerInterface;
-use App\Application\Handlers\View\ViewHandlerInterface;
-use App\Application\Handlers\Mail\MailHandlerInterface;
-use App\Application\Handlers\Mail\MailReserveInterface;
-use App\Application\Handlers\DB\DBHandlerInterface;
+use Psr\Container\ContainerInterface;
+use App\Domain\Mailer;
+use App\Application\Handlers\Validate\ValidateHandler;
+use App\Application\Handlers\View\ViewHandler;
+use App\Application\Handlers\Mail\MailHandlerInterface as MailHandler;
+use App\Application\Handlers\DB\DBHandlerInterface as DBHandler;
 
 /**
  * MailerAction
@@ -26,94 +23,71 @@ class MailerAction extends Action
 {
 
     /**
-     * @var LoggerInterface
+     * @var object
      */
-    protected LoggerInterface $logger;
+    protected $logger;
 
     /**
      * ロジック
      *
-     * @var MailerRepository
+     * @var object
      */
-    protected MailerRepository $repository;
+    protected $repository;
 
     /**
      * バリデート
      *
-     * @var ValidateHandlerInterface
+     * @var object
      */
-    protected ValidateHandlerInterface $validate;
+    protected $validate;
 
     /**
      * Twig ハンドラー
      *
-     * @var ViewHandlerInterface
+     * @var object
      */
-    protected ViewHandlerInterface $view;
+    protected $view;
 
     /**
      * メールハンドラー
      *
-     * @var MailHandlerInterface
+     * @var object
      */
-    protected MailHandlerInterface $mail;
+    protected $mail;
 
     /**
      * DBハンドラー
      *
-     * @var mixin
+     * @var object|null
      */
     protected $db;
 
     /**
-     * 予備のメールハンドラー
-     *
-     * @var MailReserveInterface
-     */
-    protected MailReserveInterface $reserve;
-
-    /**
      * コンストラクタ
      *
-     * @param  LoggerInterface
-     * @param  MailerRepository
-     * @param  ValidateHandlerInterface
-     * @param  ViewHandlerInterface
-     * @param  MailHandlerInterface
-     * @param  DBHandlerInterface
-     * @param  MailReserveInterface
+     * @param  ContainerInterface
      * @return void
      */
-    public function __construct(
-        LoggerInterface $logger,
-        MailerRepository $repository,
-        ValidateHandlerInterface $validate,
-        ViewHandlerInterface $view,
-        MailHandlerInterface $mail,
-        ?DBHandlerInterface $db = null,
-        ?MailReserveInterface $reserve = null
-    ) {
+    public function __construct(ContainerInterface $container)
+    {
         try {
             // ロガーをセット
-            $this->logger = $logger;
+            $this->logger = $container->get('logger');
 
             // ロジックをセット
-            $this->repository = $repository;
+            $this->repository = $container->get(Mailer::class);
 
             // バリデーションアクションをセット
-            $this->validate = $validate;
+            $this->validate = $container->get(ValidateHandler::class);
 
             // ビューアクションをセット
-            $this->view = $view;
+            $this->view = $container->get(ViewHandler::class);
 
             // メールハンドラーをセット
-            $this->mail = $mail;
+            $this->mail = $container->get(MailHandler::class);
 
             // データベースハンドラーをセット
-            $this->db = $db;
-
-            // 予備のメールハンドラーをセット
-            $this->reserve = $reserve;
+            $this->db = $container->get(DBHandler::class);
 
             // 連続投稿防止
             $this->repository->checkinSession();
@@ -259,13 +233,6 @@ class MailerAction extends Action
                     );
                     $this->view->displayComplete(array_merge($posts, $system));
                 } else {
-                    // 予備の通知を試みる
-                    $this->reserve->send(
-                        $server['RESERVE_MAIL'],
-                        $this->repository->getMailSubject(),
-                        $this->view->renderAdminMail($mail_body),
-                        array()
-                    );
                     throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
                 }
             }
