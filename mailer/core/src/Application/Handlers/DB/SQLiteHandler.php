@@ -101,7 +101,9 @@ class SQLiteHandler implements DBHandlerInterface
             'ip' => $status['_ip'],
             'host' => $status['_host'],
             'referer' => $status['_url'],
-            'registry_datetime' => date("Y-m-d H:i:s")
+            'registry_datetime' => date('Y-m-d H:i:s'),
+            'created_at' => time(),
+            'updated_at' => time()
         ];
 
         if (!$this->db instanceof \stdClass) {
@@ -145,14 +147,16 @@ class SQLiteHandler implements DBHandlerInterface
                 $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->table_name} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     success VARCHAR(50),
-                    email VARCHAR(255),
-                    subject VARCHAR(255),
-                    body VARCHAR(1000),
-                    date VARCHAR(1000),
+                    email VARCHAR(256),
+                    subject VARCHAR(78),
+                    body VARCHAR(998),
+                    date VARCHAR(50),
                     ip VARCHAR(50),
                     host VARCHAR(50),
                     referer VARCHAR(50),
-                    registry_datetime TEXT
+                    registry_datetime DATETIME,
+                    created_at INTEGER,
+                    updated_at INTEGER
                 )");
 
                 // 一度閉じる.

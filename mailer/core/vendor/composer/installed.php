@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'fe9ea19bb9326fca77e89e5994e96e3f87ae0ff3',
+        'reference' => 'cafe37a9749f50121ed2fab8f25ad5c6a63ee687',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -52,7 +52,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'fe9ea19bb9326fca77e89e5994e96e3f87ae0ff3',
+            'reference' => 'cafe37a9749f50121ed2fab8f25ad5c6a63ee687',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -365,8 +365,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '1.0.0',
+                0 => '1.0.0',
+                1 => '1.0',
             ),
         ),
         'psr/simple-cache' => array(

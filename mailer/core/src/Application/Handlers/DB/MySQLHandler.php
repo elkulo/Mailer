@@ -105,7 +105,9 @@ class MySQLHandler implements DBHandlerInterface
             'ip' => $status['_ip'],
             'host' => $status['_host'],
             'referer' => $status['_url'],
-            'registry_datetime' => date("Y-m-d H:i:s")
+            'registry_datetime' => date('Y-m-d H:i:s'),
+            'created_at' => time(),
+            'updated_at' => time()
         ];
 
         if (!$this->db instanceof \stdClass) {
@@ -145,14 +147,16 @@ class MySQLHandler implements DBHandlerInterface
             $sql = "CREATE TABLE IF NOT EXISTS {$this->table_name} (
                     id INT(11) AUTO_INCREMENT PRIMARY KEY,
                     success VARCHAR(50),
-                    email VARCHAR(255),
-                    subject VARCHAR(255),
-                    body VARCHAR(1000),
-                    date VARCHAR(1000),
+                    email VARCHAR(256),
+                    subject VARCHAR(78),
+                    body VARCHAR(998),
+                    date VARCHAR(50),
                     ip VARCHAR(50),
                     host VARCHAR(50),
                     referer VARCHAR(50),
-                    registry_datetime DATETIME
+                    registry_datetime DATETIME,
+                    created_at INT(11),
+                    updated_at INT(11)
                 ) engine=innodb default charset={$db['CHARSET']}";
 
             // テーブル作成
