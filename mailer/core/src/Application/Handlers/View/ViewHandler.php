@@ -60,7 +60,7 @@ class ViewHandler implements ViewHandlerInterface
 
         $this->view_tamplete_dir = array(
             $config['app.path'] . '/../templates',
-            $config['app.path'] . '/views/templates',
+            $config['app.path'] . '/src/Views/templates',
         );
 
         $this->view_cache_dir = $config['app.path'] . '/var/cache/twig';
@@ -68,7 +68,7 @@ class ViewHandler implements ViewHandlerInterface
         // Twigの初期化
         $this->view = new TwigEnvironment(
             new TwigFileLoader($this->view_tamplete_dir),
-            getenv('MAILER_DEBUG') ? array() : array('cache' => $this->view_cache_dir)
+            getenv('DEBUG') ? array() : array('cache' => $this->view_cache_dir)
         );
     }
 
