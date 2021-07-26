@@ -37,17 +37,20 @@ require_once __DIR__ . '/vendor/autoload.php';
             throw new \Exception('Mailer Error: Not Config.');
         }
         $builder->addDefinitions($config);
-        $builder->addDefinitions(__DIR__ . '/app/dependencies.php');
-        $builder->addDefinitions(__DIR__ . '/app/handlers.php');
+        $builder->addDefinitions(__DIR__ . '/app/settings.php');
         $builder->addDefinitions(__DIR__ . '/app/middleware.php');
+        $builder->addDefinitions(__DIR__ . '/app/dependencies.php');
         $builder->addDefinitions(__DIR__ . '/app/repositories.php');
+        $builder->addDefinitions(__DIR__ . '/app/routes.php');
         $app = $builder->build();
 
-        // Whoopsの開始.
-        $app->get(Whoops\Run::class)->register();
+        // Whoops.
+        $app->get('whoops')->register();
 
-        // Action の開始.
-        $app->call(App\Application\Actions\MailerAction::class);
+        // Response.
+        $response = $app->call('mailer');
+        $responseEmitter = new App\Application\ResponseEmitter\ResponseEmitter;
+        $responseEmitter->emit($response);
     } catch (\Exception $e) {
         $app->get('logger')->error($e->getMessage());
         exit($e->getMessage());

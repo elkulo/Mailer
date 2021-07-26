@@ -52,9 +52,14 @@ class SQLiteHandler implements DBHandlerInterface
             $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
             $this->table_name = $prefix . 'mailer';
 
-            // DB作成
+            // DBの場所
             $db_dir = $config['app.path'] . '/../database/';
-            $sqlite_file = $this->make($db_dir, $this->server['DB']['DATABASE']);
+            $sqlite_file = $db_dir . $this->server['DB']['DATABASE'];
+
+            // DBを作成
+            if (getenv('HEALTH_CHECK')) {
+                $this->make($db_dir, $this->server['DB']['DATABASE']);
+            }
 
             // DB設定
             $this->db = new Manager();
@@ -119,10 +124,10 @@ class SQLiteHandler implements DBHandlerInterface
      *
      * @param  string $dir_path
      * @param  string $file
-     * @return string
+     * @return void
      * @throws Exception
      */
-    public function make(string $dir_path, string $file): string
+    public function make(string $dir_path, string $file): void
     {
         try {
             // DBディレクトリの確認
@@ -165,6 +170,5 @@ class SQLiteHandler implements DBHandlerInterface
         } catch (\PDOException $e) {
             throw new \Exception($e->getMessage());
         }
-        return $sqlite_file;
     }
 }
