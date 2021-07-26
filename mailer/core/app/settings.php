@@ -6,14 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Domain;
-
-interface MailerRepository
-{
-    /**
-     * 実行
-     *
-     * @return void
-     */
-    public function submit(): void;
-}
+return [
+  'settings' => [
+    'debug' => getenv('DEBUG') ? getenv('DEBUG') : false,
+    'healhCheckMode' => getenv('HEALTH_CHECK')
+  ]
+];

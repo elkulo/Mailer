@@ -60,7 +60,7 @@ class ViewHandler implements ViewHandlerInterface
 
         $this->view_tamplete_dir = array(
             $config['app.path'] . '/../templates',
-            $config['app.path'] . '/src/Infrastructure/templates',
+            $config['app.path'] . '/src/Views/templates',
         );
 
         $this->view_cache_dir = $config['app.path'] . '/var/cache/twig';

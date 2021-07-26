@@ -7,8 +7,6 @@
 declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
-use App\Domain\Mailer;
-use App\Application\Actions\MailerAction;
 use App\Application\Handlers\Validate\ValidateHandler;
 use App\Application\Handlers\View\ViewHandler;
 
@@ -23,8 +21,6 @@ use App\Application\Handlers\DB\MySQLHandler;
 use App\Application\Handlers\DB\SQLiteHandler;
 
 return [
-    Mailer::class => DI\autowire(),
-    MailerAction::class => DI\autowire(),
     ValidateHandler::class => DI\autowire(),
     ViewHandler::class => DI\autowire(),
     MailHandlerInterface::class => DI\Factory(function (ContainerInterface $container) {

@@ -38,7 +38,9 @@ require_once __DIR__ . '/vendor/autoload.php';
         }
         $builder->addDefinitions($config);
         $builder->addDefinitions(__DIR__ . '/app/dependencies.php');
-        $builder->addDefinitions(__DIR__ . '/app/application.php');
+        $builder->addDefinitions(__DIR__ . '/app/handlers.php');
+        $builder->addDefinitions(__DIR__ . '/app/middleware.php');
+        $builder->addDefinitions(__DIR__ . '/app/repositories.php');
         $app = $builder->build();
 
         // Whoopsの開始.

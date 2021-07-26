@@ -8,9 +8,20 @@ declare(strict_types=1);
 
 namespace App\Application\ResponseEmitter;
 
+use Psr\Http\Message\ResponseInterface;
+
 class ResponseEmitter
 {
-    public function emit($response): void
+    /**
+     * Emit
+     * 
+     * @var ResponseInterface $response
+     * @return void
+     */
+    public function emit(ResponseInterface $response): void
     {
+        if (ob_get_contents()) {
+            ob_clean();
+        }
     }
 }
