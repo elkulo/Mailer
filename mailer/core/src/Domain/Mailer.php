@@ -10,7 +10,7 @@ namespace App\Domain;
 
 use Psr\Container\ContainerInterface;
 
-class Mailer implements MailerRepository
+class Mailer implements MailerInterface
 {
 
     /**

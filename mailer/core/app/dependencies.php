@@ -42,7 +42,7 @@ return [
         return $monolog;
     }),
     'whoops' => Factory(function (ContainerInterface $container) {
-        $debug_mode = getenv('MAILER_DEBUG') ? getenv('MAILER_DEBUG') : false;
+        $debug_mode = getenv('DEBUG') ? getenv('DEBUG') : false;
         $whoops     = new Whoops();
         if ($debug_mode) {
             $whoops->pushHandler(new WhoopsPageHandler());

@@ -31,7 +31,7 @@ declare(strict_types=1);
  * 任意なファイル名
  * 
  * Mailerプログラムを公開ディレクトリ以外（httpでアクセスできない場所）に設置、
- * core/App.php を require_once で読み込めば、任意のディレクトリやファイル名で実行できます。
+ * core/bootstrap.php を require_once で読み込めば、任意のディレクトリやファイル名で実行できます。
  * <form action="..."> のactionに読み込みさせたファイルを指定する。
  */
-require_once __DIR__ . '/core/App.php';
+require_once __DIR__ . '/core/bootstrap.php';
