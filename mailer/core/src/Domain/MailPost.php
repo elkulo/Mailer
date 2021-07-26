@@ -10,7 +10,7 @@ namespace App\Domain;
 
 use Psr\Container\ContainerInterface;
 
-class Mailer implements MailerInterface
+class MailPost implements MailPostInterface
 {
 
     /**
@@ -54,10 +54,22 @@ class Mailer implements MailerInterface
      * @param  ContainerInterface $container
      * @return void
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(array $posts, ContainerInterface $container)
     {
         $this->server = $container->get('config')['server'];
         $this->setting = $container->get('config')['setting'];
+
+        // POSTデータから取得したデータを整形
+        $sanitized = array();
+        foreach ($posts as $name => $value) {
+            $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
+
+            // フォームの設置ページを保存.
+            if ($name === '_http_referer') {
+                $this->page_referer = $this->kses($value);
+            }
+        }
+        $this->post_data = $sanitized;
     }
 
     /**
@@ -78,26 +90,6 @@ class Mailer implements MailerInterface
     public function getSetting(): array
     {
         return $this->setting;
-    }
-
-    /**
-     * POSTデータから取得したデータを整形
-     *
-     * @param  array $posts
-     * @return void
-     */
-    public function setPost($posts): void
-    {
-        $sanitized = array();
-        foreach ($posts as $name => $value) {
-            $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
-
-            // フォームの設置ページを保存.
-            if ($name === '_http_referer') {
-                $this->page_referer = $this->kses($value);
-            }
-        }
-        $this->post_data = $sanitized;
     }
 
     /**

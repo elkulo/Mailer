@@ -8,11 +8,7 @@ declare(strict_types=1);
 
 use App\Domain\MailerRepository;
 use App\Infrastructure\Persistence\InMemoryMailerRepository;
-use App\Application\Actions\MailerAction;
-use App\Domain\Mailer;
 
 return [
-    MailerAction::class => DI\autowire(), // Action
-    Mailer::class => DI\autowire(), // Domain
     MailerRepository::class => \DI\autowire(InMemoryMailerRepository::class), // Repository
 ];

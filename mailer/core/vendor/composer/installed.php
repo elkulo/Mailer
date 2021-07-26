@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'cafe37a9749f50121ed2fab8f25ad5c6a63ee687',
+        'reference' => 'd9a83aa00a6e4d3c940e9320de3d261b65888dfe',
         'name' => 'elkulo/mailer',
         'dev' => true,
     ),
@@ -52,7 +52,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'cafe37a9749f50121ed2fab8f25ad5c6a63ee687',
+            'reference' => 'd9a83aa00a6e4d3c940e9320de3d261b65888dfe',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
@@ -275,12 +275,12 @@
             'dev_requirement' => true,
         ),
         'phpunit/php-code-coverage' => array(
-            'pretty_version' => '7.0.14',
-            'version' => '7.0.14.0',
+            'pretty_version' => '7.0.15',
+            'version' => '7.0.15.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/php-code-coverage',
             'aliases' => array(),
-            'reference' => 'bb7c9a210c72e4709cdde67f8b7362f672f2225c',
+            'reference' => '819f92bba8b001d4363065928088de22f25a3a48',
             'dev_requirement' => true,
         ),
         'phpunit/php-file-iterator' => array(

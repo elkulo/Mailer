@@ -53,7 +53,9 @@ class MySQLHandler implements DBHandlerInterface
             $this->table_name = $prefix . 'mailer';
 
             // DBを作成
-            $this->make();
+            if (getenv('HEALTH_CHECK')) {
+                $this->make();
+            }
 
             // DB設定
             $this->db = new Manager();

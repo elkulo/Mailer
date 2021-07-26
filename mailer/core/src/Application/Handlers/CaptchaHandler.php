@@ -6,12 +6,12 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Middleware;
+namespace App\Application\Handlers;
 
 /**
- * ReCAPTCHA
+ * CaptchaHandler
  */
-class ReCAPTCHA
+class CaptchaHandler
 {
 
     /**

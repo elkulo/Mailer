@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-interface MailerInterface
+interface MailPostInterface
 {
 
     /**
@@ -24,14 +24,6 @@ interface MailerInterface
      * @return array
      */
     public function getSetting(): array;
-
-    /**
-     * POSTデータから取得したデータを整形
-     *
-     * @param  array $posts
-     * @return void
-     */
-    public function setPost($posts): void;
 
     /**
      * POSTデータを取得

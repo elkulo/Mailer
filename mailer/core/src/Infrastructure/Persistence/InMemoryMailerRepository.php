@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence;
 
+use App\Domain\MailPost;
 use App\Domain\MailerRepository;
-use App\Domain\Mailer;
 use App\Application\Handlers\Validate\ValidateHandler;
 use App\Application\Handlers\View\ViewHandler;
 use App\Application\Handlers\Mail\MailHandlerInterface as MailHandler;
@@ -20,16 +20,16 @@ class InMemoryMailerRepository implements MailerRepository
 {
 
     /**
+     * ロジック
+     *
+     * @var MailPost
+     */
+    private $domain;
+
+    /**
      * @var object
      */
     private $logger;
-
-    /**
-     * ロジック
-     *
-     * @var object
-     */
-    private $repository;
 
     /**
      * バリデート
@@ -68,12 +68,8 @@ class InMemoryMailerRepository implements MailerRepository
     {
 
         try {
-
             // ロガーをセット
             $this->logger = $container->get('logger');
-
-            // ロジックをセット
-            $this->domain = $container->get(Mailer::class);
 
             // バリデーションアクションをセット
             $this->validate = $container->get(ValidateHandler::class);
@@ -87,17 +83,18 @@ class InMemoryMailerRepository implements MailerRepository
             // データベースハンドラーをセット
             $this->db = $container->get(DBHandler::class);
 
-            // 連続投稿防止
-            $this->domain->checkinSession();
-
-            // 設定値の取得
-            $server = $this->domain->getServer();
-            $setting = $this->domain->getSetting();
-
             // NULLバイト除去して格納
             if (isset($_POST)) {
                 // POSTを格納
-                $this->domain->setPost($_POST);
+                $this->domain = new MailPost($_POST, $container);
+
+                // 連続投稿防止
+                $this->domain->checkinSession();
+
+                // 設定値の取得
+                $server = $this->domain->getServer();
+                $setting = $this->domain->getSetting();
+
                 $post_data = $this->domain->getPost();
 
                 // バリデーション準備

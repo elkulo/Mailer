@@ -6,9 +6,8 @@
  */
 declare(strict_types=1);
 
+use App\Application\Actions\MailerAction;
+
 return [
-  'settings' => [
-    'debug' => getenv('DEBUG') ? getenv('DEBUG') : false,
-    'healh.check' => getenv('HEALTH_CHECK')
-  ]
+    'mailer' => DI\autowire(MailerAction::class)
 ];
