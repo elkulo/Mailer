@@ -151,19 +151,11 @@ class InMemoryMailerRepository implements MailerRepository
                     $validate_massage .= '<p>' . $error[0] . '</p>';
                 }
                 $this->view->displayValidate(array('theValidateMassage' => $validate_massage));
-                // エラーメッセージがある場合は処理を止める
                 exit;
             }
 
             // Twigテンプレート用に{{name属性}}で置換.
-            $post_data = $this->domain->getPost();
-            $posts = array();
-            foreach ($post_data as $key => $value) {
-                // アンダースコアは除外.
-                if (substr($key, 0, 1) !== '_') {
-                    $posts[$key] = $value;
-                }
-            }
+            $posts = $this->domain->getPostToTwig();
 
             // 確認画面の判定
             if (!$this->domain->isConfirmSubmit()) {
@@ -174,12 +166,12 @@ class InMemoryMailerRepository implements MailerRepository
                     'theConfirmContent' => $confirm,
                 );
                 $this->view->displayConfirm(array_merge($posts, $system));
+                exit;
             } else {
                 // トークンチェック
                 $this->domain->checkinToken();
 
-                $success = array();
-
+                // メールボディを取得
                 $mail_body = $this->domain->getMailBody();
 
                 // 管理者宛に届くメールをセット
