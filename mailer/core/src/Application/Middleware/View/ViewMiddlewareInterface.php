@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers\View;
+namespace App\Application\Middleware\View;
 
-interface ViewHandlerInterface
+interface ViewMiddlewareInterface
 {
 
     /**

@@ -6,12 +6,12 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace App\Application\Middleware;
 
 /**
- * CaptchaHandler
+ * Captcha
  */
-class CaptchaHandler
+class CaptchaMiddleware
 {
 
     /**

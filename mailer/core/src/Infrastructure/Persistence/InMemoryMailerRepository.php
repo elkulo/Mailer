@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence;
 
+use Psr\Container\ContainerInterface;
 use App\Domain\MailPost;
 use App\Domain\MailerRepository;
-use App\Application\Handlers\Validate\ValidateHandler;
-use App\Application\Handlers\View\ViewHandler;
 use App\Application\Handlers\Mail\MailHandlerInterface as MailHandler;
 use App\Application\Handlers\DB\DBHandlerInterface as DBHandler;
-use Psr\Container\ContainerInterface;
+use App\Application\Middleware\Validate\ValidateMiddleware;
+use App\Application\Middleware\View\ViewMiddleware;
 
 class InMemoryMailerRepository implements MailerRepository
 {
@@ -72,10 +72,10 @@ class InMemoryMailerRepository implements MailerRepository
             $this->logger = $container->get('logger');
 
             // バリデーションアクションをセット
-            $this->validate = $container->get(ValidateHandler::class);
+            $this->validate = $container->get(ValidateMiddleware::class);
 
             // ビューアクションをセット
-            $this->view = $container->get(ViewHandler::class);
+            $this->view = $container->get(ViewMiddleware::class);
 
             // メールハンドラーをセット
             $this->mail = $container->get(MailHandler::class);
