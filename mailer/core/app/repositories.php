@@ -10,5 +10,5 @@ use App\Domain\MailerRepository;
 use App\Infrastructure\Persistence\InMemoryMailerRepository;
 
 return [
-    MailerRepository::class => \DI\autowire(InMemoryMailerRepository::class), // Repository
+    MailerRepository::class => DI\autowire(InMemoryMailerRepository::class), // Repository
 ];

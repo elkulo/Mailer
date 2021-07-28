@@ -6,7 +6,6 @@
  */
 declare(strict_types=1);
 
-use function DI\Factory;
 use Psr\Container\ContainerInterface;
 use Monolog\Logger as Monolog;
 use Monolog\Handler\RotatingFileHandler;
@@ -16,9 +15,12 @@ use Monolog\Processor\WebProcessor;
 use Whoops\Run as Whoops;
 use Whoops\Handler\Handler as WhoopsHandler;
 use Whoops\Handler\PrettyPageHandler as WhoopsPageHandler;
+use App\Application\Middleware\Validate\ValidateMiddleware;
+use App\Application\Middleware\View\ViewMiddleware;
+use App\Application\Middleware\CaptchaMiddleware;
 
 return [
-    'logger' => Factory(function () {
+    'logger' => DI\factory(function () {
         $monolog = new Monolog('mailer');
 
         // 書式.
@@ -41,7 +43,7 @@ return [
 
         return $monolog;
     }),
-    'whoops' => Factory(function (ContainerInterface $container) {
+    'whoops' => DI\factory(function (ContainerInterface $container) {
         $debug_mode = getenv('DEBUG') ? getenv('DEBUG') : false;
         $whoops     = new Whoops();
         if ($debug_mode) {
@@ -56,4 +58,7 @@ return [
         }
         return $whoops;
     }),
+    ValidateMiddleware::class => DI\autowire(),
+    ViewMiddleware::class => DI\autowire(),
+    CaptchaMiddleware::class => DI\autowire(),
 ];

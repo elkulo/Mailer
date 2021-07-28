@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers\Validate;
+namespace App\Application\Middleware\Validate;
 
-interface ValidateHandlerInterface
+interface ValidateMiddlewareInterface
 {
 
     /**

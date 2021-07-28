@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers\Validate;
+namespace App\Application\Middleware\Validate;
 
 use Psr\Container\ContainerInterface;
 use Egulias\EmailValidator\EmailValidator;
@@ -15,7 +15,7 @@ use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Valitron;
 
-class ValidateHandler implements ValidateHandlerInterface
+class ValidateMiddleware implements ValidateMiddlewareInterface
 {
 
     /**

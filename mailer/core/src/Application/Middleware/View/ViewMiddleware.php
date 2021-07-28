@@ -6,14 +6,14 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers\View;
+namespace App\Application\Middleware\View;
 
 use Psr\Container\ContainerInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
 
-class ViewHandler implements ViewHandlerInterface
+class ViewMiddleware implements ViewMiddlewareInterface
 {
 
     /**
