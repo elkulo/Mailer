@@ -138,6 +138,24 @@ class MailPost implements MailPostInterface
     }
 
     /**
+     * Twigテンプレート用に{{name属性}}で置換.
+     *
+     * @return array
+     */
+    public function getPostToTwig(): array
+    {
+        $post_data = $this->post_data;
+        $posts = array();
+        foreach ($post_data as $key => $value) {
+            // アンダースコアは除外.
+            if (substr($key, 0, 1) !== '_') {
+                $posts[$key] = $value;
+            }
+        }
+        return $posts;
+    }
+
+    /**
      * ユーザーメールをセット
      *
      * @param  string $user_mail

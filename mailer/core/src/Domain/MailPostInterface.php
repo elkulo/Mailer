@@ -40,6 +40,13 @@ interface MailPostInterface
     public function getPostToString(): string;
 
     /**
+     * Twigテンプレート用に{{name属性}}で置換.
+     *
+     * @return array
+     */
+    public function getPostToTwig(): array;
+
+    /**
      * ユーザーメールをセット
      *
      * @param  string $user_mail

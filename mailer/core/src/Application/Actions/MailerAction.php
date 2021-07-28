@@ -43,6 +43,6 @@ class MailerAction extends Action
     public function action(): void
     {
         $this->mailerRepository->submit();
-        $this->logger->info('Send Mail.');
+        //$this->logger->info('Send Mail.');
     }
 }
