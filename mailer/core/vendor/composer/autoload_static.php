@@ -325,6 +325,7 @@ class ComposerStaticInit576d21b6035bf086a58745938ce09372
         'App\\Application\\Middleware\\Validate\\ValidateMiddleware' => __DIR__ . '/../..' . '/src/Application/Middleware/Validate/ValidateMiddleware.php',
         'App\\Application\\Middleware\\Validate\\ValidateMiddlewareInterface' => __DIR__ . '/../..' . '/src/Application/Middleware/Validate/ValidateMiddlewareInterface.php',
         'App\\Application\\Middleware\\View\\ViewMiddleware' => __DIR__ . '/../..' . '/src/Application/Middleware/View/ViewMiddleware.php',
+        'App\\Application\\Middleware\\View\\ViewMiddlewareInterface' => __DIR__ . '/../..' . '/src/Application/Middleware/View/ViewMiddlewareInterface.php',
         'App\\Application\\ResponseEmitter\\ResponseEmitter' => __DIR__ . '/../..' . '/src/Application/ResponseEmitter/ResponseEmitter.php',
         'App\\Domain\\MailPost' => __DIR__ . '/../..' . '/src/Domain/MailPost.php',
         'App\\Domain\\MailPostInterface' => __DIR__ . '/../..' . '/src/Domain/MailPostInterface.php',
