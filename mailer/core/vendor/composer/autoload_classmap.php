@@ -19,6 +19,7 @@ return array(
     'App\\Application\\Middleware\\Validate\\ValidateMiddleware' => $baseDir . '/src/Application/Middleware/Validate/ValidateMiddleware.php',
     'App\\Application\\Middleware\\Validate\\ValidateMiddlewareInterface' => $baseDir . '/src/Application/Middleware/Validate/ValidateMiddlewareInterface.php',
     'App\\Application\\Middleware\\View\\ViewMiddleware' => $baseDir . '/src/Application/Middleware/View/ViewMiddleware.php',
+    'App\\Application\\Middleware\\View\\ViewMiddlewareInterface' => $baseDir . '/src/Application/Middleware/View/ViewMiddlewareInterface.php',
     'App\\Application\\ResponseEmitter\\ResponseEmitter' => $baseDir . '/src/Application/ResponseEmitter/ResponseEmitter.php',
     'App\\Domain\\MailPost' => $baseDir . '/src/Domain/MailPost.php',
     'App\\Domain\\MailPostInterface' => $baseDir . '/src/Domain/MailPostInterface.php',
