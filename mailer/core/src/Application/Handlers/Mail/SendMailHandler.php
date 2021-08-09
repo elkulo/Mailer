@@ -49,7 +49,7 @@ class SendMailHandler implements MailHandlerInterface
 
         $from_email = $server['SMTP_MAIL'];
         $from_name = mb_encode_mimeheader($server['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
-        $subject = mb_encode_mimeheader('[致命的な送信エラー]'.$subject, 'ISO-2022-JP', 'UTF-8');
+        $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         $headers  = 'MIME-Version: 1.0 \n';

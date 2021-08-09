@@ -70,12 +70,24 @@ return [
     // 半角スペースで1つの単語として区切られます。
     'NG_WORD' => 'bitch fuck',
 
-    // (13)管理者宛のメールテンプレート(オプション)
+    // (13)禁止メールアドレスからの送信をブロック
+    // 配列で複数指定してください。
+    // (7)で指定のname属性で判定します。
+    'BLACK_LIST' => [
+        '@ad-tube.biz',
+        '@rediffmail.com',
+        '@qq.com',
+        '@example.com',
+        'no-reply',
+        'noreply',
+    ],
+
+    // (14)管理者宛のメールテンプレート(オプション)
     // PHPで生成したTwigテンプレートを使用する場合
     // admin.mail.twig を上書きします。
     'TEMPLATE_MAIL_ADMIN' => '',
 
-    // (14)ユーザ宛のメールテンプレート(オプション)
+    // (15)ユーザ宛のメールテンプレート(オプション)
     // PHPで生成したTwigテンプレートを使用する場合
     // user.mail.twig を上書きします。
     'TEMPLATE_MAIL_USER' => '',
