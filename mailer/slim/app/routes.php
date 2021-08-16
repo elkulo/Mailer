@@ -14,13 +14,18 @@ return function (App $app) {
         return $response;
     });
 
-    $app->get('/', function (Request $request, Response $response) {
+    $app->post('/', function (Request $request, Response $response) {
         $response->getBody()->write('Hello world!');
         return $response;
     });
 
-    $app->group('/users', function (Group $group) {
+    $app->get('/health-check', function (Request $request, Response $response) {
+        $response->getBody()->write('Health Check!');
+        return $response;
+    });
+
+    $app->group('/report', function (Group $group) {
         $group->get('', ListUsersAction::class);
-        $group->get('/{id}', ViewUserAction::class);
+        $group->get('/cron', ViewUserAction::class);
     });
 };
