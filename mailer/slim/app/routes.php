@@ -19,9 +19,15 @@ return function (App $app) {
         return $response;
     });
 
-    $app->get('/health-check', function (Request $request, Response $response) {
-        $response->getBody()->write('Health Check!');
-        return $response;
+    $app->group('/test', function (Group $group) {
+        $group->get('', function (Request $request, Response $response) {
+            $response->getBody()->write('Test!');
+            return $response;
+        });
+        $group->post('/health-check', function (Request $request, Response $response) {
+            $response->getBody()->write('Health Check!');
+            return $response;
+        });
     });
 
     $app->group('/report', function (Group $group) {

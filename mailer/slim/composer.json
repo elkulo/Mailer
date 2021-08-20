@@ -1,5 +1,5 @@
 {
-    "name": "slim/slim-skeleton",
+    "name": "elkulo/mailer",
     "description": "A Slim Framework skeleton application for rapid development",
     "keywords": [
         "microframework",
@@ -7,42 +7,49 @@
         "router",
         "psr7"
     ],
-    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "homepage": "https://github.com/elkulo/Mailer",
+    "type": "library",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
-        },
-        {
-            "name": "Pierre Berube",
-            "email": "pierre@lgse.com",
-            "homepage": "http://www.lgse.com/"
-        }
-    ],
+    "minimum-stability": "stable",
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-json": "*",
+        "egulias/email-validator": "^3.1",
+        "google/recaptcha": "^1.2",
+        "illuminate/database": "^8.55",
         "monolog/monolog": "^2.2",
         "php-di/php-di": "^6.3",
+        "phpmailer/phpmailer": "^6.5",
         "slim/psr7": "^1.3",
-        "slim/slim": "^4.7"
+        "slim/slim": "^4.7",
+        "slim/twig-view": "^3.2",
+        "vlucas/phpdotenv": "^5.3",
+        "vlucas/valitron": "^1.4",
+        "zeuxisoo/slim-whoops": "^0.7.3"
     },
     "require-dev": {
+        "ccampbell/chromephp": "^4.1",
         "jangregor/phpstan-prophecy": "^0.8.1",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpmd/phpmd": "^2.10",
         "phpstan/extension-installer": "^1.1.0",
         "phpstan/phpstan": "^0.12.80",
-        "phpunit/phpunit": "^8.0 || ^9.0"
+        "phpunit/phpunit": "^8.0 || ^9.0",
+        "squizlabs/php_codesniffer": "^3.6",
+        "symfony/var-dumper": "^5.3"
     },
     "config": {
         "process-timeout": 0,
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "autoload": {
         "psr-4": {
             "App\\": "src/"
-        }
+        },
+        "files": [
+            "helpers/console.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -50,7 +57,17 @@
         }
     },
     "scripts": {
-        "start": "php -S localhost:8080 -t public",
-        "test": "phpunit"
+        "init-config": [
+            "@composer dump-autoload",
+            "phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility"
+        ],
+        "post-install-cmd": "@init-config",
+        "post-update-cmd": "@init-config",
+        "test": "phpunit",
+        "test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-",
+        "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
+        "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
+        "phpmd": "phpmd src text cleancode,codesize,design,unusedcode",
+        "phpstan": "phpstan analyse src/"
     }
 }
