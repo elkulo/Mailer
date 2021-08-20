@@ -36,7 +36,7 @@ declare(strict_types=1);
  */
 
 // 任意のディレクトリ名
-$BASE_PATH = '/mailer-alias';
+// $BASE_PATH = '/mailer-alias';
 
 // Mailerプログラムのbootstrap.phpを指定
-require_once __DIR__ . '/../../mailer/index.php';
+require_once __DIR__ . '/slim/bootstrap.php';

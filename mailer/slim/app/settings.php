@@ -5,8 +5,27 @@ use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Monolog\Logger;
+use Dotenv\Dotenv;
 
 return function (ContainerBuilder $containerBuilder) {
+
+    // Dotenv
+    $env = __DIR__ . '/../../.env';
+    try {
+        if (is_readable($env)) {
+            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+            $dotenv->load();
+        } else {
+            throw new Exception('環境設定ファイルがありません');
+        }
+    } catch (Exception $e) {
+        exit($e->getMessage());
+    }
+
+    // Timezone
+    if (isset($_ENV['TIME_ZONE'])) {
+        date_default_timezone_set($_ENV['TIME_ZONE']);
+    }
 
     // Global Settings Object
     $containerBuilder->addDefinitions([
@@ -20,6 +39,13 @@ return function (ContainerBuilder $containerBuilder) {
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
+                'twig' => [
+                    'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false,
+                    'strict_variables' => true,
+                    'cache' => __DIR__ . '/../var/cache/twig',
+                ],
+                'debug' => getenv('DEBUG') ? getenv('DEBUG') : false,
+                'healh.check' => getenv('HEALTH_CHECK')
             ]);
         }
     ]);
