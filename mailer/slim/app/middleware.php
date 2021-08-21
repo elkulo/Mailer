@@ -8,6 +8,11 @@ use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
+use App\Application\Middleware\Validate\ValidateMiddleware;
+use App\Application\Middleware\View\ViewMiddleware;
+
+//use App\Application\Middleware\CaptchaMiddleware;
+
 return function (App $app) {
     $app->add(SessionMiddleware::class);
 
@@ -25,4 +30,9 @@ return function (App $app) {
     // Twig.
     $app->add(SessionMiddleware::class);
     $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
+
+    //
+    $app->add(ValidateMiddleware::class);
+    $app->add(ViewMiddleware::class);
+    //$app->add(CaptchaMiddleware::class);
 };

@@ -8,16 +8,18 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
+//
+use App\Application\Actions\Mailer\MailerAction;
+
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
         // CORS Pre-Flight OPTIONS Request Handler
         return $response;
     });
 
-    $app->post('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world!');
-        return $response;
-    });
+    //
+    $app->get('/', MailerAction::class);
+    $app->post('/', MailerAction::class);
 
     $app->group('/test', function (Group $group) {
         $group->get('', function (Request $request, Response $response) {
