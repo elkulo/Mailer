@@ -9,7 +9,7 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 //
-use App\Application\Actions\Mailer\MailerAction;
+use App\Application\Actions\Mailer\SubmitMailerAction;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -18,8 +18,8 @@ return function (App $app) {
     });
 
     //
-    $app->get('/', MailerAction::class);
-    $app->post('/', MailerAction::class);
+    $app->get('/', SubmitMailerAction::class);
+    $app->post('/', SubmitMailerAction::class);
 
     $app->group('/test', function (Group $group) {
         $group->get('', function (Request $request, Response $response) {
