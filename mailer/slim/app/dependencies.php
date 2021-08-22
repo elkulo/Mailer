@@ -16,6 +16,10 @@ use App\Application\Handlers\Mail\PHPMailerHandler;
 use App\Application\Handlers\DB\DBHandlerInterface;
 use App\Application\Handlers\DB\MySQLHandler;
 use App\Application\Handlers\DB\SQLiteHandler;
+use App\Application\Middleware\Validate\ValidateMiddleware;
+use App\Application\Middleware\Validate\ValidateMiddlewareInterface;
+use App\Application\Middleware\View\ViewMiddleware;
+use App\Application\Middleware\View\ViewMiddlewareInterface;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -60,5 +64,7 @@ return function (ContainerBuilder $containerBuilder) {
                     return null;
             }
         },
+        ValidateMiddlewareInterface::class => \DI\create(ValidateMiddleware::class),
+        ViewMiddlewareInterface::class => \DI\create(ViewMiddleware::class),
     ]);
 };

@@ -11,21 +11,33 @@ return function (ContainerBuilder $containerBuilder) {
 
     // Dotenv
     $env = __DIR__ . '/../../.env';
-    try {
-        if (is_readable($env)) {
-            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-            $dotenv->load();
-        } else {
-            throw new Exception('環境設定ファイルがありません');
-        }
-    } catch (Exception $e) {
-        exit($e->getMessage());
+    if (is_readable($env)) {
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+        $dotenv->load();
+    } else {
+        throw new \Exception('環境設定ファイルがありません');
     }
 
     // Timezone
     if (isset($_ENV['TIME_ZONE'])) {
         date_default_timezone_set($_ENV['TIME_ZONE']);
     }
+
+    // Config
+    $config_path = __DIR__ . '/../../config';
+    if (file_exists($config_path . '/server.php') && file_exists($config_path . '/setting.php')) {
+        // 定数.
+        $config = [
+            'config' => [
+                'server' => include $config_path . '/server.php',
+                'setting' => include $config_path . '/setting.php',
+                'app.path' => __DIR__ . '/../', // ルートパス
+            ]
+        ];
+    } else {
+        throw new \Exception('Mailer Error: Not Config.');
+    }
+    $containerBuilder->addDefinitions($config);
 
     // Global Settings Object
     $containerBuilder->addDefinitions([
@@ -44,7 +56,7 @@ return function (ContainerBuilder $containerBuilder) {
                     'strict_variables' => true,
                     'cache' => __DIR__ . '/../var/cache/twig',
                 ],
-                'debug' => getenv('DEBUG') ? getenv('DEBUG') : false,
+                'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false,
                 'healh.check' => getenv('HEALTH_CHECK')
             ]);
         }
