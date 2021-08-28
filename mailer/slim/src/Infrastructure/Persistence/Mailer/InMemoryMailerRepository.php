@@ -8,13 +8,16 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Mailer;
 
-use Psr\Container\ContainerInterface;
 use App\Domain\Mailer\MailPost;
 use App\Domain\Mailer\MailerRepository;
 use App\Application\Handlers\Mail\MailHandlerInterface as MailHandler;
 use App\Application\Handlers\DB\DBHandlerInterface as DBHandler;
 use App\Application\Middleware\Validate\ValidateMiddleware;
 use App\Application\Middleware\View\ViewMiddleware;
+
+use Psr\Log\LoggerInterface;
+use App\Application\Settings\SettingsInterface;
+
 
 class InMemoryMailerRepository implements MailerRepository
 {
@@ -62,31 +65,43 @@ class InMemoryMailerRepository implements MailerRepository
     /**
      * InMemoryMailerRepository constructor.
      *
-     * @param ContainerInterface $container
+     * @param LoggerInterface $logger,
+     * @param SettingsInterface $settings
+     * @param ValidateMiddleware $validate,
+     * @param ViewMiddleware $view,
+     * @param MailHandler $mail,
+     * @param DBHandler $db
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        LoggerInterface $logger,
+        SettingsInterface $settings,
+        ValidateMiddleware $validate,
+        ViewMiddleware $view,
+        MailHandler $mail,
+        //DBHandler $db
+    )
     {
 
         try {
             // ロガーをセット
-            $this->logger = $container->get('logger');
+            $this->logger = $logger;
 
             // バリデーションアクションをセット
-            $this->validate = $container->get(ValidateMiddleware::class);
+            $this->validate = $validate;
 
             // ビューアクションをセット
-            $this->view = $container->get(ViewMiddleware::class);
+            $this->view = $view;
 
             // メールハンドラーをセット
-            $this->mail = $container->get(MailHandler::class);
+            $this->mail = $mail;
 
             // データベースハンドラーをセット
-            $this->db = $container->get(DBHandler::class);
+            //$this->db = $db;
 
             // NULLバイト除去して格納
             if (isset($_POST)) {
                 // POSTを格納
-                $this->domain = new MailPost($_POST, $container);
+                $this->domain = new MailPost($_POST, $settings);
 
                 // 連続投稿防止
                 $this->domain->checkinSession();
@@ -133,7 +148,6 @@ class InMemoryMailerRepository implements MailerRepository
      */
     public function submit(): void
     {
-
         try {
             $server = $this->domain->getServer();
             $setting = $this->domain->getSetting();
@@ -195,6 +209,7 @@ class InMemoryMailerRepository implements MailerRepository
                 }
 
                 // DBに保存
+                /*
                 if ($this->db) {
                     $db_insert_success = $this->db->save(
                         $success,
@@ -212,6 +227,7 @@ class InMemoryMailerRepository implements MailerRepository
                         $this->logger->error('データベース接続エラー');
                     }
                 }
+                */
 
                 if (!array_search(false, $success)) {
                     // 送信完了画面

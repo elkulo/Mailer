@@ -44,21 +44,23 @@ return function (ContainerBuilder $containerBuilder) {
 
         //
         MailHandlerInterface::class => function (ContainerInterface $c) {
+            $settings = $c->get(SettingsInterface::class);
             switch (getenv('MAILER_TYPE')) {
                 case 'WordPress':
                     return new WordPressHandler();
                     break;
                 default:
-                    return new PHPMailerHandler($c->get('config'));
+                    return new PHPMailerHandler($settings->get('config'));
             }
         },
         DBHandlerInterface::class => function (ContainerInterface $c) {
+            $settings = $c->get(SettingsInterface::class);
             switch (getenv('DB_CONNECTION')) {
                 case 'MySQL':
-                    return new MySQLHandler($c->get('config'));
+                    return new MySQLHandler($settings->get('config'));
                     break;
                 case 'SQLite':
-                    return new SQLiteHandler($c->get('config'));
+                    return new SQLiteHandler($settings->get('config'));
                     break;
                 default:
                     return null;

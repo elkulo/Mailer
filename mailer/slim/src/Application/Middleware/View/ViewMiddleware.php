@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware\View;
 
-use Psr\Container\ContainerInterface;
+use App\Application\Settings\SettingsInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
@@ -49,21 +49,20 @@ class ViewMiddleware implements ViewMiddlewareInterface
     /**
      * コンストラクタ
      *
-     * @param  ContainerInterface $container
+     * @param  SettingsInterface $settings
      * @return void
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SettingsInterface $settings)
     {
-        $config = $container->get('config');
-
-        $this->setting = $config['setting'];
+        $app_path = $settings->get('config')['app.path'];
+        $this->setting = $settings->get('config')['setting'];
 
         $this->view_tamplete_dir = array(
-            $config['app.path'] . '/../templates',
-            $config['app.path'] . '/src/Views/templates',
+            $app_path . '/../templates',
+            $app_path . '/src/Views/templates',
         );
 
-        $this->view_cache_dir = $config['app.path'] . '/var/cache/twig';
+        $this->view_cache_dir = $app_path . '/var/cache/twig';
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
