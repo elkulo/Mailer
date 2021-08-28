@@ -67,7 +67,7 @@ class ViewMiddleware implements ViewMiddlewareInterface
         // Twigの初期化
         $this->view = new TwigEnvironment(
             new TwigFileLoader($this->view_tamplete_dir),
-            getenv('DEBUG') ? array() : array('cache' => $this->view_cache_dir)
+            $settings->get('debug') ? array() : array('cache' => $this->view_cache_dir)
         );
     }
 

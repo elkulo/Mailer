@@ -2,6 +2,9 @@
 
 return [
 
+    // メーラータイプ
+    'MAILER_TYPE' => env('MAILER_TYPE'),
+
     // バリデーションの言語設定
     'VALIDATION_LANG' => env('VALIDATION_LANG'),
 

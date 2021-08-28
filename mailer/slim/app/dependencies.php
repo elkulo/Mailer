@@ -42,28 +42,25 @@ return function (ContainerBuilder $containerBuilder) {
             return Twig::create(__DIR__ . '/../src/Views', $settings->get('twig'));
         },
 
-        //
+        // ハンドラー
         MailHandlerInterface::class => function (ContainerInterface $c) {
-            $settings = $c->get(SettingsInterface::class);
-            switch (getenv('MAILER_TYPE')) {
+            $config = $c->get(SettingsInterface::class)->get('config');
+            switch ($config['server']['MAILER_TYPE']) {
                 case 'WordPress':
                     return new WordPressHandler();
                     break;
                 default:
-                    return new PHPMailerHandler($settings->get('config'));
+                    return new PHPMailerHandler($config);
             }
         },
         DBHandlerInterface::class => function (ContainerInterface $c) {
-            $settings = $c->get(SettingsInterface::class);
-            switch (getenv('DB_CONNECTION')) {
+            $config = $c->get(SettingsInterface::class)->get('config');
+            switch ($config['server']['DB']['CONNECTION']) {
                 case 'MySQL':
-                    return new MySQLHandler($settings->get('config'));
-                    break;
-                case 'SQLite':
-                    return new SQLiteHandler($settings->get('config'));
+                    return new MySQLHandler($config);
                     break;
                 default:
-                    return null;
+                    return new SQLiteHandler($config);
             }
         },
         ValidateMiddlewareInterface::class => \DI\create(ValidateMiddleware::class),
