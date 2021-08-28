@@ -3,58 +3,58 @@
 return [
 
     // バリデーションの言語設定
-    'VALIDATION_LANG' => getenv('VALIDATION_LANG'),
+    'VALIDATION_LANG' => env('VALIDATION_LANG'),
 
     // SMTPサーバー
-    'SMTP_HOST' => getenv('SMTP_HOST'),
+    'SMTP_HOST' => env('SMTP_HOST'),
 
     // SMTPメールアドレス(配信元)
-    'SMTP_MAIL' => getenv('SMTP_MAIL'),
+    'SMTP_MAIL' => env('SMTP_MAIL'),
 
     // メールユーザー名(アカウント名)
-    'SMTP_USERNAME' => getenv('SMTP_USERNAME'),
+    'SMTP_USERNAME' => env('SMTP_USERNAME'),
 
     // メールパスワード
-    'SMTP_PASSWORD' => getenv('SMTP_PASSWORD'),
+    'SMTP_PASSWORD' => env('SMTP_PASSWORD'),
 
     // SMTPプロトコル(sslまたはtls)
-    'SMTP_ENCRYPTION' => getenv('SMTP_ENCRYPTION'),
+    'SMTP_ENCRYPTION' => env('SMTP_ENCRYPTION'),
 
     // 送信ポート(465 or 587)
-    'SMTP_PORT' => getenv('SMTP_PORT'),
+    'SMTP_PORT' => env('SMTP_PORT'),
 
     // 配信元の表示名
-    'FROM_NAME' => getenv('FROM_SITE_NAME'),
+    'FROM_NAME' => env('FROM_SITE_NAME'),
 
     // 管理者メールアドレス
-    'ADMIN_MAIL' => getenv('ADMIN_MAIL'),
+    'ADMIN_MAIL' => env('ADMIN_MAIL'),
 
     // 管理者メールCC
-    'ADMIN_CC' => getenv('ADMIN_CC'),
+    'ADMIN_CC' => env('ADMIN_CC'),
 
     // 管理者メールBCC
-    'ADMIN_BCC' => getenv('ADMIN_BCC'),
+    'ADMIN_BCC' => env('ADMIN_BCC'),
 
     // 予備の通知先
-    'RESERVE_MAIL' => getenv('RESERVE_MAIL'),
+    'RESERVE_MAIL' => env('RESERVE_MAIL'),
 
     // DBサーバーの情報
     'DB' => [
 
-        'CONNECTION' => getenv('DB_CONNECTION'),
+        'CONNECTION' => env('DB_CONNECTION'),
 
-        'HOST' => getenv('DB_HOST'),
+        'HOST' => env('DB_HOST'),
 
-        'DATABASE' => getenv('DB_DATABASE'),
+        'DATABASE' => env('DB_DATABASE'),
 
-        'USERNAME' => getenv('DB_USERNAME'),
+        'USERNAME' => env('DB_USERNAME'),
 
-        'PASSWORD' => getenv('DB_PASSWORD'),
+        'PASSWORD' => env('DB_PASSWORD'),
 
-        'PREFIX' => getenv('DB_PREFIX'),
+        'PREFIX' => env('DB_PREFIX'),
 
-        'CHARSET' => getenv('DB_CHARSET'),
+        'CHARSET' => env('DB_CHARSET'),
 
-        'COLLATION' => getenv('DB_COLLATION'),
+        'COLLATION' => env('DB_COLLATION'),
     ],
 ];

@@ -14,8 +14,18 @@ require __DIR__ . '/vendor/autoload.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
+// Dotenv
+$env = __DIR__ . '/../.env';
+if (is_readable($env)) {
+  $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+  $dotenv->load();
+} else {
+  throw new \Exception('環境設定ファイルがありません');
+}
+
+// Should be set to true in production
 $debug = isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false;
-if ( ! $debug ) { // Should be set to true in production
+if ( ! $debug ) {
 	$containerBuilder->enableCompilation(__DIR__ . '/var/cache');
 }
 
@@ -43,7 +53,7 @@ $callableResolver = $app->getCallableResolver();
 $middleware = require __DIR__ . '/app/middleware.php';
 $middleware($app);
 
-//
+// ベースパス
 if ( isset($BASE_PATH) ) {
 	$app->setBasePath($BASE_PATH);
 }

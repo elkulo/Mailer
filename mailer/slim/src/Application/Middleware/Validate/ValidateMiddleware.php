@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware\Validate;
 
-use Psr\Container\ContainerInterface;
+use App\Application\Settings\SettingsInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -42,13 +42,13 @@ class ValidateMiddleware implements ValidateMiddlewareInterface
     /**
      * コンストラクタ
      *
-     * @param  ContainerInterface $container
+     * @param SettingsInterface $settings
      * @return void
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SettingsInterface $settings)
     {
-        $this->server = $container->get('config')['server'];
-        $this->setting = $container->get('config')['setting'];
+        $this->server = $settings->get('config')['server'];
+        $this->setting = $settings->get('config')['setting'];
     }
 
     /**

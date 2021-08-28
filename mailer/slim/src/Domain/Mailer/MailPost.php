@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Mailer;
 
-use Psr\Container\ContainerInterface;
+use App\Application\Settings\SettingsInterface;
 
-class MailPost implements MailPostInterface
+class MailPost
 {
 
     /**
@@ -51,13 +51,14 @@ class MailPost implements MailPostInterface
     /**
      * コンストラクタ
      *
-     * @param  ContainerInterface $container
+     * @param  array $posts
+     * @param  SettingsInterface $settings
      * @return void
      */
-    public function __construct(array $posts, ContainerInterface $container)
+    public function __construct(array $posts, SettingsInterface $settings)
     {
-        $this->server = $container->get('config')['server'];
-        $this->setting = $container->get('config')['setting'];
+        $this->server = $settings->get('config')['server'];
+        $this->setting = $settings->get('config')['setting'];
 
         // POSTデータから取得したデータを整形
         $sanitized = array();

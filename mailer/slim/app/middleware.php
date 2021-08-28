@@ -12,8 +12,7 @@ return function (App $app) {
     $app->add(SessionMiddleware::class);
 
     // Whoops.
-    $c = $app->getContainer();
-    $settings = $c->get(SettingsInterface::class);
+    $settings = $app->getContainer()->get(SettingsInterface::class);
     if ((bool)($settings->get('debug') ?? false)) {
         $app->add(new WhoopsMiddleware(['enable' => true]));
     } else {
