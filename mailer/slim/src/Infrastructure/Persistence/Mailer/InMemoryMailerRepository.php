@@ -18,7 +18,6 @@ use App\Application\Middleware\View\ViewMiddleware;
 use Psr\Log\LoggerInterface;
 use App\Application\Settings\SettingsInterface;
 
-
 class InMemoryMailerRepository implements MailerRepository
 {
 
@@ -79,8 +78,7 @@ class InMemoryMailerRepository implements MailerRepository
         ViewMiddleware $view,
         MailHandler $mail,
         //DBHandler $db
-    )
-    {
+    ) {
 
         try {
             // ロガーをセット
