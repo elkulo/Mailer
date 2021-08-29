@@ -25,13 +25,15 @@ return function (ContainerBuilder $containerBuilder) {
                 'app.path' => __DIR__ . '/../', // ルートパス
             ];
 
+            $log_file = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
+
             return new Settings([
                 'displayErrorDetails' => true, // Should be set to false in production
                 'logError'            => false,
                 'logErrorDetails'     => false,
                 'logger' => [
                     'name' => 'slim-app',
-                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
+                    'path' => $log_file,
                     'level' => Logger::DEBUG,
                 ],
                 'twig' => [

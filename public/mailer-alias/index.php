@@ -39,4 +39,4 @@ declare(strict_types=1);
 $BASE_PATH = '/mailer-alias';
 
 // Mailerプログラムのbootstrap.phpを指定
-require_once __DIR__ . '/../../mailer/index.php';
+require_once __DIR__ . '/../../mailer/slim/bootstrap.php';
