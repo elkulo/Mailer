@@ -14,7 +14,7 @@ require __DIR__ . '/vendor/autoload.php';
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
-// Dotenv
+// Set up Dotenv
 $env = __DIR__ . '/../.env';
 if (is_readable($env)) {
   $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
@@ -23,10 +23,14 @@ if (is_readable($env)) {
   throw new \Exception('環境設定ファイルがありません');
 }
 
+// Set up Timezone
+if (isset($_ENV['TIME_ZONE'])) {
+  date_default_timezone_set($_ENV['TIME_ZONE']);
+}
+
 // Should be set to true in production
-$debug = isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false;
-if ( ! $debug ) {
-	$containerBuilder->enableCompilation(__DIR__ . '/var/cache');
+if (isset($_ENV['DEBUG']) ? !$_ENV['DEBUG'] : false) {
+  //$containerBuilder->enableCompilation(__DIR__ . '/var/cache');
 }
 
 // Set up settings
@@ -54,8 +58,8 @@ $middleware = require __DIR__ . '/app/middleware.php';
 $middleware($app);
 
 // ベースパス
-if ( isset($BASE_PATH) ) {
-	$app->setBasePath($BASE_PATH);
+if (isset($BASE_PATH)) {
+  $app->setBasePath($BASE_PATH);
 }
 
 // Register routes
