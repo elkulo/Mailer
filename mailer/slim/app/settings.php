@@ -8,11 +8,6 @@ use Monolog\Logger;
 
 return function (ContainerBuilder $containerBuilder) {
 
-    // Timezone
-    if (isset($_ENV['TIME_ZONE'])) {
-        date_default_timezone_set($_ENV['TIME_ZONE']);
-    }
-
     // Global Settings Object
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
