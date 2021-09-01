@@ -39,7 +39,13 @@ return function (ContainerBuilder $containerBuilder) {
         },
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
-            return Twig::create(__DIR__ . '/../src/Views', $settings->get('twig'));
+            return Twig::create(
+                [
+                    __DIR__ . '/../../templates',
+                    __DIR__ . '/../src/Views',
+                ],
+                $settings->get('twig')
+            );
         },
 
         // ハンドラー
