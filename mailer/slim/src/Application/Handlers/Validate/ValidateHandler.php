@@ -6,7 +6,7 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Middleware\Validate;
+namespace App\Application\Handlers\Validate;
 
 use App\Application\Settings\SettingsInterface;
 use Egulias\EmailValidator\EmailValidator;
@@ -15,7 +15,7 @@ use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Valitron;
 
-class ValidateMiddleware implements ValidateMiddlewareInterface
+class ValidateHandler
 {
 
     /**

@@ -6,6 +6,7 @@ namespace App\Application\Actions\Mailer;
 use App\Application\Actions\Action;
 use App\Domain\Mailer\MailerRepository;
 use Psr\Log\LoggerInterface;
+use Slim\Views\Twig;
 
 abstract class MailerAction extends Action
 {
@@ -14,15 +15,22 @@ abstract class MailerAction extends Action
      */
     protected $mailerRepository;
 
+   /**
+     * @var Twig
+     */
+    protected $view;
+
     /**
      * @param LoggerInterface $logger
      * @param MailerRepository $userRepository
      */
     public function __construct(
         LoggerInterface $logger,
-        MailerRepository $mailerRepository
+        MailerRepository $mailerRepository,
+        Twig $twig
     ) {
         parent::__construct($logger);
         $this->mailerRepository = $mailerRepository;
+        $this->view = $twig;
     }
 }

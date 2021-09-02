@@ -8,12 +8,13 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\DB;
 
+use App\Application\Settings\SettingsInterface;
 use Illuminate\Database\Capsule\Manager;
 
 /**
  * SQLiteHandler
  */
-class SQLiteHandler implements DBHandlerInterface
+class SQLiteHandler implements DBHandler
 {
 
     /**
@@ -40,26 +41,25 @@ class SQLiteHandler implements DBHandlerInterface
     /**
      * DBを作成
      *
-     * @param  array $config
+     * @param  SettingsInterface $settings
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(SettingsInterface $settings)
     {
         try {
-            $this->server = $config['server'];
+            $app_path = $settings->get('config')['app.path'];
+            $this->server = $settings->get('config')['server'];
 
             // DBテーブル名
             $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
             $this->table_name = $prefix . 'mailer';
 
             // DBの場所
-            $db_dir = $config['app.path'] . '/../database/';
+            $db_dir = $app_path . '/../database/';
             $sqlite_file = $db_dir . $this->server['DB']['DATABASE'];
 
             // DBを作成
-            if (getenv('HEALTH_CHECK')) {
-                $this->make($db_dir, $this->server['DB']['DATABASE']);
-            }
+            $this->make($db_dir, $this->server['DB']['DATABASE']);
 
             // DB設定
             $this->db = new Manager();

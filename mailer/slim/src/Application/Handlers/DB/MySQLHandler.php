@@ -13,7 +13,7 @@ use Illuminate\Database\Capsule\Manager;
 /**
  * MySQLHandler
  */
-class MySQLHandler implements DBHandlerInterface
+class MySQLHandler implements DBHandler
 {
 
     /**
@@ -53,9 +53,7 @@ class MySQLHandler implements DBHandlerInterface
             $this->table_name = $prefix . 'mailer';
 
             // DBを作成
-            if (getenv('HEALTH_CHECK')) {
-                $this->make();
-            }
+            $this->make();
 
             // DB設定
             $this->db = new Manager();

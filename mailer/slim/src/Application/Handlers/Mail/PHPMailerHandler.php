@@ -8,13 +8,14 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\Mail;
 
+use App\Application\Settings\SettingsInterface;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 /**
  * PHPMailerHandler
  */
-class PHPMailerHandler implements MailHandlerInterface
+class PHPMailerHandler implements MailHandler
 {
 
     /**
@@ -27,12 +28,12 @@ class PHPMailerHandler implements MailHandlerInterface
     /**
      * DBを作成
      *
-     * @param  array $config
+     * @param  SettingsInterface $settings
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(SettingsInterface $settings)
     {
-        $this->server = $config['server'];
+        $this->server = $settings->get('config')['server'];
     }
 
     /**
