@@ -13,7 +13,7 @@ interface MailerRepository
     /**
      * 実行
      *
-     * @return void
+     * @return array
      */
-    public function submit(): void;
+    public function submit(): array;
 }

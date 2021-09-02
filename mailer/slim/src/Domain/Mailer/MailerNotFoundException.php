@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\User;
+namespace App\Domain\Mailer;
 
 use App\Domain\DomainException\DomainRecordNotFoundException;
 
-class UserNotFoundException extends DomainRecordNotFoundException
+class MailerNotFoundException extends DomainRecordNotFoundException
 {
     public $message = 'The user you requested does not exist.';
 }

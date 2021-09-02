@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Actions\Tester;
+namespace App\Application\Actions\HealthCheck;
 
 use App\Application\Settings\SettingsInterface;
 use App\Application\Actions\Action;
@@ -46,7 +46,7 @@ class HealthCheckAction extends Action
         $settings = $this->settings;
 
         // bodyを生成
-        $response = $view->render($this->response, 'pages/tester.twig', [
+        $response = $view->render($this->response, 'pages/health-check.twig', [
             //'title' => $settings->get('site.title'),
             //'description' => $settings->get('site.description'),
             //'robots' => $settings->get('site.robots')

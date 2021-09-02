@@ -20,9 +20,15 @@ class SubmitMailerAction extends MailerAction
      */
     protected function action(): Response
     {
+        $repository = $this->mailerRepository->submit();
 
-        $this->logger->info('Send Mail.');
+        // bodyを生成
+        $response = $this->view->render(
+            $this->response,
+            'templates/' . $repository['template'],
+            $repository['data']
+        );
 
-        return $this->mailerRepository->submit();
+        return $response;
     }
 }

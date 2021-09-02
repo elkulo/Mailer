@@ -9,6 +9,9 @@ declare(strict_types=1);
 namespace App\Domain\Mailer;
 
 use App\Application\Settings\SettingsInterface;
+use Twig\Loader\FilesystemLoader as TwigFileLoader;
+use Twig\Loader\ArrayLoader as TwigArrayLoader;
+use Twig\Environment as TwigEnvironment;
 
 class MailPost
 {
@@ -49,6 +52,13 @@ class MailPost
     private string $page_referer;
 
     /**
+     * Twig ハンドラー
+     *
+     * @var object
+     */
+    private object $view;
+
+    /**
      * コンストラクタ
      *
      * @param  array $posts
@@ -59,6 +69,7 @@ class MailPost
     {
         $this->server = $settings->get('config')['server'];
         $this->setting = $settings->get('config')['setting'];
+        $app_path = $settings->get('config')['app.path'];
 
         // POSTデータから取得したデータを整形
         $sanitized = array();
@@ -71,6 +82,14 @@ class MailPost
             }
         }
         $this->post_data = $sanitized;
+
+        // Twigの初期化
+        $this->view = new TwigEnvironment(
+            new TwigFileLoader(array(
+                $app_path . '/../templates/mail',
+                $app_path . '/src/Views/templates/mail',
+            ))
+        );
     }
 
     /**
@@ -249,6 +268,45 @@ class MailPost
         return $header;
     }
 
+
+    /**
+     * 管理者メールテンプレート
+     *
+     * @param  array $data
+     * @return string
+     */
+    public function renderAdminMail(array $data): string
+    {
+        // 管理者宛送信メール.
+        if (!empty($this->setting['TEMPLATE_MAIL_ADMIN'])) {
+            return (new TwigEnvironment(
+                new TwigArrayLoader(array(
+                    'admin.mail.tpl' => $this->setting['TEMPLATE_MAIL_ADMIN']
+                ))
+            ))->render('admin.mail.tpl', $data);
+        }
+        return $this->view->render('admin.mail.twig', $data);
+    }
+
+    /**
+     * ユーザーメールテンプレート
+     *
+     * @param  array $data
+     * @return string
+     */
+    public function renderUserMail(array $data): string
+    {
+        // ユーザ宛送信メール.
+        if (!empty($this->setting['TEMPLATE_MAIL_USER'])) {
+            return (new TwigEnvironment(
+                new TwigArrayLoader(array(
+                    'user.mail.tpl' => $this->setting['TEMPLATE_MAIL_USER']
+                ))
+            ))->render('user.mail.tpl', $data);
+        }
+        return $this->view->render('user.mail.twig', $data);
+    }
+
     /**
      * ページリファラーを取得
      *
@@ -309,7 +367,7 @@ class MailPost
      */
     public function getActionURL(): string
     {
-        return $this->kses($_SERVER['SCRIPT_NAME']);
+        return $this->kses('./complete');
     }
 
     /**

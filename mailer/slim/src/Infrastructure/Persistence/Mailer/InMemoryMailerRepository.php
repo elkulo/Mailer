@@ -10,10 +10,9 @@ namespace App\Infrastructure\Persistence\Mailer;
 
 use App\Domain\Mailer\MailPost;
 use App\Domain\Mailer\MailerRepository;
-use App\Application\Handlers\Mail\MailHandlerInterface as MailHandler;
-use App\Application\Handlers\DB\DBHandlerInterface as DBHandler;
-use App\Application\Middleware\Validate\ValidateMiddleware;
-use App\Application\Middleware\View\ViewMiddleware;
+use App\Application\Handlers\Mail\MailHandler;
+use App\Application\Handlers\DB\DBHandler;
+use App\Application\Handlers\Validate\ValidateHandler;
 
 use Psr\Log\LoggerInterface;
 use App\Application\Settings\SettingsInterface;
@@ -41,13 +40,6 @@ class InMemoryMailerRepository implements MailerRepository
     private $validate;
 
     /**
-     * Twig ハンドラー
-     *
-     * @var object
-     */
-    private $view;
-
-    /**
      * メールハンドラー
      *
      * @var object
@@ -66,85 +58,75 @@ class InMemoryMailerRepository implements MailerRepository
      *
      * @param LoggerInterface $logger,
      * @param SettingsInterface $settings
-     * @param ValidateMiddleware $validate,
-     * @param ViewMiddleware $view,
+     * @param ValidateHandler $validate,
      * @param MailHandler $mail,
      * @param DBHandler $db
      */
     public function __construct(
         LoggerInterface $logger,
         SettingsInterface $settings,
-        ValidateMiddleware $validate,
-        ViewMiddleware $view,
+        ValidateHandler $validate,
         MailHandler $mail,
-        //DBHandler $db
+        DBHandler $db
     ) {
 
-        try {
-            // ロガーをセット
-            $this->logger = $logger;
+        // ロガーをセット
+        $this->logger = $logger;
 
-            // バリデーションアクションをセット
-            $this->validate = $validate;
+        // バリデーションアクションをセット
+        $this->validate = $validate;
 
-            // ビューアクションをセット
-            $this->view = $view;
+        // メールハンドラーをセット
+        $this->mail = $mail;
 
-            // メールハンドラーをセット
-            $this->mail = $mail;
+        // データベースハンドラーをセット
+        $this->db = $db;
 
-            // データベースハンドラーをセット
-            //$this->db = $db;
+        // NULLバイト除去して格納
+        if (isset($_POST)) {
+            // POSTを格納
+            $this->domain = new MailPost($_POST, $settings);
 
-            // NULLバイト除去して格納
-            if (isset($_POST)) {
-                // POSTを格納
-                $this->domain = new MailPost($_POST, $settings);
+            // 連続投稿防止
+            $this->domain->checkinSession();
 
-                // 連続投稿防止
-                $this->domain->checkinSession();
+            // 設定値の取得
+            $server = $this->domain->getServer();
+            $setting = $this->domain->getSetting();
 
-                // 設定値の取得
-                $server = $this->domain->getServer();
-                $setting = $this->domain->getSetting();
+            $post_data = $this->domain->getPost();
 
-                $post_data = $this->domain->getPost();
+            // バリデーション準備
+            $this->validate->set($post_data);
 
-                // バリデーション準備
-                $this->validate->set($post_data);
-
-                // 管理者メールの形式チェック
-                $to = (array) $server['ADMIN_MAIL'];
-                $cc = $server['ADMIN_CC'] ? explode(',', $server['ADMIN_CC']) : [];
-                $bcc = $server['ADMIN_BCC'] ? explode(',', $server['ADMIN_BCC']) : [];
-                foreach (array_merge($to, $cc, $bcc) as $email) {
-                    if (!$this->validate->isCheckMailFormat($email)) {
-                        throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
-                    }
+            // 管理者メールの形式チェック
+            $to = (array) $server['ADMIN_MAIL'];
+            $cc = $server['ADMIN_CC'] ? explode(',', $server['ADMIN_CC']) : [];
+            $bcc = $server['ADMIN_BCC'] ? explode(',', $server['ADMIN_BCC']) : [];
+            foreach (array_merge($to, $cc, $bcc) as $email) {
+                if (!$this->validate->isCheckMailFormat($email)) {
+                    throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
                 }
-
-                // ユーザーメールを形式チェックして格納
-                $email_attr = isset($setting['EMAIL_ATTRIBUTE']) ? $setting['EMAIL_ATTRIBUTE'] : null;
-                if (isset($post_data[$email_attr])) {
-                    if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
-                        $this->domain->setUserMail($post_data[$email_attr]);
-                    }
-                }
-            } else {
-                throw new \Exception('何も送信されていません。');
             }
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            $this->view->displayExceptionExit($e->getMessage());
+
+            // ユーザーメールを形式チェックして格納
+            $email_attr = isset($setting['EMAIL_ATTRIBUTE']) ? $setting['EMAIL_ATTRIBUTE'] : null;
+            if (isset($post_data[$email_attr])) {
+                if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
+                    $this->domain->setUserMail($post_data[$email_attr]);
+                }
+            }
+        } else {
+            throw new \Exception('何も送信されていません。');
         }
     }
 
     /**
      * 実行
      *
-     * @return void
+     * @return array
      */
-    public function submit(): void
+    public function submit(): array
     {
         try {
             $server = $this->domain->getServer();
@@ -162,8 +144,10 @@ class InMemoryMailerRepository implements MailerRepository
                 foreach ($this->validate->errors() as $error) {
                     $validate_massage .= '<p>' . $error[0] . '</p>';
                 }
-                $this->view->displayValidate(array('theValidateMassage' => $validate_massage));
-                exit;
+                return [
+                    'template' => 'validate.twig',
+                    'data' => array('theValidateMassage' => $validate_massage)
+                ];
             }
 
             // Twigテンプレート用に{{name属性}}で置換.
@@ -177,8 +161,10 @@ class InMemoryMailerRepository implements MailerRepository
                     'theActionURL' => $this->domain->getActionURL(),
                     'theConfirmContent' => $confirm,
                 );
-                $this->view->displayConfirm(array_merge($posts, $system));
-                exit;
+                return [
+                    'template' => 'confirm.twig',
+                    'data' => array_merge($posts, $system)
+                ];
             } else {
                 // トークンチェック
                 $this->domain->checkinToken();
@@ -190,7 +176,7 @@ class InMemoryMailerRepository implements MailerRepository
                 $success['admin'] = $this->mail->send(
                     $server['ADMIN_MAIL'],
                     $this->domain->getMailSubject(),
-                    $this->view->renderAdminMail($mail_body),
+                    $this->domain->renderAdminMail($mail_body),
                     $this->domain->getMailAdminHeader()
                 );
 
@@ -200,14 +186,13 @@ class InMemoryMailerRepository implements MailerRepository
                         $success['user'] = $this->mail->send(
                             $this->domain->getUserMail(),
                             $this->domain->getMailSubject(),
-                            $this->view->renderUserMail($mail_body),
+                            $this->domain->renderUserMail($mail_body),
                             array()
                         );
                     }
                 }
 
                 // DBに保存
-                /*
                 if ($this->db) {
                     $db_insert_success = $this->db->save(
                         $success,
@@ -225,21 +210,26 @@ class InMemoryMailerRepository implements MailerRepository
                         $this->logger->error('データベース接続エラー');
                     }
                 }
-                */
 
                 if (!array_search(false, $success)) {
                     // 送信完了画面
                     $system = array(
                         'theReturnURL' => $this->domain->getReturnURL(),
                     );
-                    $this->view->displayComplete(array_merge($posts, $system));
+                    return [
+                        'template' => 'complete.twig',
+                        'data' => array_merge($posts, $system)
+                    ];
                 } else {
                     throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
                 }
             }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->view->displayExceptionExit($e->getMessage());
+            return [
+                'template' => 'exception.twig',
+                'data' => array('theExceptionMassage' => $e->getMessage())
+            ];
         }
     }
 }

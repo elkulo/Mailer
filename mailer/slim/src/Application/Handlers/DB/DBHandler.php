@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\DB;
 
-interface DBHandlerInterface
+interface DBHandler
 {
 
     /**
