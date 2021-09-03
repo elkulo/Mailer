@@ -125,12 +125,10 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function index(): array
     {
-        $this->db->make();
-
         return [
             'template' => 'index.twig',
             'data' => [
-                'theExceptionMassage' => 'ヘルスチェック'
+                'theExceptionMassage' => 'ヘルスチェック',
             ]
         ];
     }
@@ -142,6 +140,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function result(): array
     {
+        $this->db->make();
+
         return [
             'template' => 'result.twig',
             'data' => [

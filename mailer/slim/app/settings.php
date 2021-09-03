@@ -37,7 +37,6 @@ return function (ContainerBuilder $containerBuilder) {
                     'cache' => __DIR__ . '/../var/cache/twig',
                 ],
                 'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false,
-                'healh.check' => getenv('HEALTH_CHECK'),
                 'config' => $config
             ]);
         }
