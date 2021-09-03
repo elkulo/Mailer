@@ -322,7 +322,7 @@ class MailPost
      *
      * @return string
      */
-    public function getConfirm(): string
+    public function getConfirmContent(): string
     {
         $html = '';
 
@@ -397,19 +397,6 @@ class MailPost
             $nonce,
             $this->kses($_SERVER['HTTP_REFERER'])
         );
-    }
-
-    /**
-     * 送信画面判定
-     *
-     * @return bool
-     */
-    public function isConfirmSubmit(): bool
-    {
-        if (isset($this->post_data['_confirm_submit']) && $this->post_data['_confirm_submit'] === '1') {
-            return true;
-        }
-        return false;
     }
 
     /**

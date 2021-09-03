@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\DB;
 
+use App\Application\Settings\SettingsInterface;
+use Psr\Log\LoggerInterface;
 use Illuminate\Database\Capsule\Manager;
 
 /**
@@ -15,6 +17,11 @@ use Illuminate\Database\Capsule\Manager;
  */
 class MySQLHandler implements DBHandler
 {
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * サーバー設定
@@ -26,9 +33,9 @@ class MySQLHandler implements DBHandler
     /**
      * データベース
      *
-     * @var object
+     * @var Manager|null
      */
-    public object $db;
+    public $db;
 
     /**
      * テーブル名
@@ -40,20 +47,20 @@ class MySQLHandler implements DBHandler
     /**
      * DBを作成
      *
-     * @param  array $config
+     * @param  SettingsInterface $settings
+     * @param  LoggerInterface $logger
      * @return void
      */
-    public function __construct(array $config)
+    public function __construct(SettingsInterface $settings, LoggerInterface $logger)
     {
         try {
-            $this->server = $config['server'];
+            $this->logger = $logger;
+
+            $this->server = $settings->get('config')['server'];
 
             // DBテーブル名
             $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
             $this->table_name = $prefix . 'mailer';
-
-            // DBを作成
-            $this->make();
 
             // DB設定
             $this->db = new Manager();
@@ -80,7 +87,7 @@ class MySQLHandler implements DBHandler
             $this->db->bootEloquent();
         } catch (\Exception $e) {
             // DBに接続が失敗した場合
-            $this->db = new \stdClass();
+            $this->db = null;
         }
     }
 
@@ -110,12 +117,15 @@ class MySQLHandler implements DBHandler
             'updated_at' => time()
         ];
 
-        if (!$this->db instanceof \stdClass) {
-            // prefixは省略
-            $this->db->table('mailer')->insert($values);
-            return true;
+        try {
+            if ($this->db) {
+                $this->db->table('mailer')->insert($values); // prefixは省略
+            }
+        } catch (\Exception $e) {
+            $this->logger->error('データベース接続エラー');
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**

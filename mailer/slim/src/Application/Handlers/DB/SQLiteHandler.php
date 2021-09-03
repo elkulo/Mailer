@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Application\Handlers\DB;
 
 use App\Application\Settings\SettingsInterface;
+use Psr\Log\LoggerInterface;
 use Illuminate\Database\Capsule\Manager;
 
 /**
@@ -16,6 +17,11 @@ use Illuminate\Database\Capsule\Manager;
  */
 class SQLiteHandler implements DBHandler
 {
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * サーバー設定
@@ -27,9 +33,9 @@ class SQLiteHandler implements DBHandler
     /**
      * データベース
      *
-     * @var object
+     * @var Manager|null
      */
-    public object $db;
+    public $db;
 
     /**
      * テーブル名
@@ -39,14 +45,31 @@ class SQLiteHandler implements DBHandler
     public string $table_name;
 
     /**
+     * DBディレクトリ
+     *
+     * @var string
+     */
+    public string $db_dir;
+
+    /**
+     * DBファイル
+     *
+     * @var string
+     */
+    public string $sqlite_file;
+
+    /**
      * DBを作成
      *
      * @param  SettingsInterface $settings
+     * @param  LoggerInterface $logger
      * @return void
      */
-    public function __construct(SettingsInterface $settings)
+    public function __construct(SettingsInterface $settings, LoggerInterface $logger)
     {
         try {
+            $this->logger = $logger;
+
             $app_path = $settings->get('config')['app.path'];
             $this->server = $settings->get('config')['server'];
 
@@ -55,11 +78,8 @@ class SQLiteHandler implements DBHandler
             $this->table_name = $prefix . 'mailer';
 
             // DBの場所
-            $db_dir = $app_path . '/../database/';
-            $sqlite_file = $db_dir . $this->server['DB']['DATABASE'];
-
-            // DBを作成
-            $this->make($db_dir, $this->server['DB']['DATABASE']);
+            $this->db_dir = $app_path . '/../database/';
+            $this->sqlite_file = $this->db_dir . $this->server['DB']['DATABASE'];
 
             // DB設定
             $this->db = new Manager();
@@ -67,7 +87,7 @@ class SQLiteHandler implements DBHandler
             // 接続情報
             $config = [
                 'driver'    => 'sqlite',
-                'database'  => $sqlite_file,
+                'database'  => $this->sqlite_file,
                 'prefix' => $prefix,
             ];
 
@@ -81,7 +101,7 @@ class SQLiteHandler implements DBHandler
             $this->db->bootEloquent();
         } catch (\Exception $e) {
             // DBに接続が失敗した場合
-            $this->db = new \stdClass();
+            $this->db = null;
         }
     }
 
@@ -111,32 +131,33 @@ class SQLiteHandler implements DBHandler
             'updated_at' => time()
         ];
 
-        if (!$this->db instanceof \stdClass) {
-            // prefixは省略
-            $this->db->table('mailer')->insert($values);
-            return true;
+        try {
+            if ($this->db) {
+                $this->db->table('mailer')->insert($values); // prefixは省略
+            }
+        } catch (\Exception $e) {
+            $this->logger->error('データベース接続エラー');
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
      * DBを作成
      *
-     * @param  string $dir_path
-     * @param  string $file
      * @return void
      * @throws Exception
      */
-    public function make(string $dir_path, string $file): void
+    public function make(): void
     {
         try {
             // DBディレクトリの確認
-            if (!file_exists($dir_path)) {
-                mkdir($dir_path, 0777);
+            if (!file_exists($this->db_dir)) {
+                mkdir($this->db_dir, 0777);
             }
 
             // DBファイルの確認
-            $sqlite_file = $dir_path . $file;
+            $sqlite_file = $this->db_dir . $this->server['DB']['DATABASE'];
             if (!file_exists($sqlite_file)) {
                 $pdo = new \PDO('sqlite:' . $sqlite_file);
 
