@@ -25,7 +25,7 @@ return function (App $app) {
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {
         $group->get('', IndexHealthCheckAction::class);
-        $group->post('/result', ResultHealthCheckAction::class);
+        $group->post('', ResultHealthCheckAction::class);
     });
 
     // レポート
