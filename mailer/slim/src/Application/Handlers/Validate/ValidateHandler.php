@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -13,7 +13,7 @@ use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
-use Valitron;
+use Valitron\Validator;
 
 class ValidateHandler
 {
@@ -35,9 +35,9 @@ class ValidateHandler
     /**
      * バリデート
      *
-     * @var object
+     * @var Validator
      */
-    private object $validate;
+    private Validator $validate;
 
     /**
      * コンストラクタ
@@ -59,8 +59,8 @@ class ValidateHandler
      */
     public function set(array $post_data): void
     {
-        Valitron\Validator::lang($this->server['VALIDATION_LANG']);
-        $this->validate = new Valitron\Validator($post_data);
+        Validator::lang($this->server['VALIDATION_LANG']);
+        $this->validate = new Validator($post_data);
         $this->validate->labels($this->setting['NAME_FOR_LABELS']);
     }
 
@@ -120,7 +120,7 @@ class ValidateHandler
     public function checkinEmail(): void
     {
         if (isset($this->setting['EMAIL_ATTRIBUTE'])) {
-            Valitron\Validator::addRule('EmailValidator', function ($field, $value) {
+            Validator::addRule('EmailValidator', function ($field, $value) {
                 return $this->isCheckMailFormat($value);
             });
             $this->validate->rule(
@@ -138,7 +138,7 @@ class ValidateHandler
     public function checkinMBWord(): void
     {
         if (isset($this->setting['MB_WORD'])) {
-            Valitron\Validator::addRule('MBValidator', function ($field, $value) {
+            Validator::addRule('MBValidator', function ($field, $value) {
                 if (strlen($value) === mb_strlen($value, 'UTF-8')) {
                     return false;
                 }
@@ -160,7 +160,7 @@ class ValidateHandler
     {
         $ng_words = (array) explode(' ', $this->setting['NG_WORD']);
         if (isset($ng_words[0])) {
-            Valitron\Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
+            Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
                 foreach ($ng_words as $word) {
                     if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
                         return false;

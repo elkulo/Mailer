@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Actions\Mailer\SubmitMailerAction;
-use App\Application\Actions\HealthCheck\HealthCheckAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
+use App\Application\Actions\Mailer\ConfirmMailerAction;
+use App\Application\Actions\Mailer\CompleteMailerAction;
+use App\Application\Actions\HealthCheck\IndexHealthCheckAction;
+use App\Application\Actions\HealthCheck\ResultHealthCheckAction;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -14,22 +16,23 @@ return function (App $app) {
         return $response;
     });
 
-    // 送信
+    // メールフォーム
     $app->group('', function (Group $group) {
-        $group->post('/', SubmitMailerAction::class);
-        $group->post('/confirm', SubmitMailerAction::class);
-        $group->post('/complete', SubmitMailerAction::class);
+        $group->post('/', ConfirmMailerAction::class);
+        $group->post('/complete', CompleteMailerAction::class);
     });
 
-    // テスター
+    // ヘルスチェック
     $app->group('/health-check', function (Group $group) {
-        $group->get('', HealthCheckAction::class);
-        $group->post('/result', HealthCheckAction::class);
+        $group->get('', IndexHealthCheckAction::class);
+        $group->post('/result', ResultHealthCheckAction::class);
     });
 
     // レポート
+    /*
     $app->group('/report', function (Group $group) {
         $group->get('', HealthCheckAction::class);
         $group->get('/crone', HealthCheckAction::class);
     });
+    */
 };

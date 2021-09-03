@@ -1,57 +1,41 @@
 <?php
+/**
+ * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
+ * Copyright 2020-2021 A.Sudo
+ * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
+ */
 declare(strict_types=1);
 
 namespace App\Application\Actions\HealthCheck;
 
-use App\Application\Settings\SettingsInterface;
 use App\Application\Actions\Action;
+use App\Domain\HealthCheck\HealthCheckRepository;
 use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
 
-class HealthCheckAction extends Action
+abstract class HealthCheckAction extends Action
 {
-
     /**
-     * @var SettingsInterface
+     * @var HealthCheckRepository
      */
-    protected $settings;
+    protected $healthCheckRepository;
 
-    /**
+   /**
      * @var Twig
      */
     protected $view;
 
     /**
      * @param LoggerInterface $logger
-     * @param SettingsInterface $settings
-     * @param Twig $view
+     * @param HealthCheckRepository $healthCheckRepository
      */
-    public function __construct(LoggerInterface $logger, SettingsInterface $settings, Twig $view)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        HealthCheckRepository $healthCheckRepository,
+        Twig $twig
+    ) {
         parent::__construct($logger);
-        $this->settings = $settings;
-        $this->view = $view;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function action(): Response
-    {
-
-        $this->logger->info('Tester was viewed.');
-
-        $view = $this->view;
-        $settings = $this->settings;
-
-        // bodyを生成
-        $response = $view->render($this->response, 'pages/health-check.twig', [
-            //'title' => $settings->get('site.title'),
-            //'description' => $settings->get('site.description'),
-            //'robots' => $settings->get('site.robots')
-        ]);
-
-        return $response;
+        $this->healthCheckRepository = $healthCheckRepository;
+        $this->view = $twig;
     }
 }

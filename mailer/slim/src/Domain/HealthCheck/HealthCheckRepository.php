@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Domain\Mailer;
+namespace App\Domain\HealthCheck;
 
-interface MailerRepository
+interface HealthCheckRepository
 {
 
     /**
@@ -16,12 +16,12 @@ interface MailerRepository
      *
      * @return array
      */
-    public function confirm(): array;
+    public function index(): array;
 
     /**
      * 送信完了
      *
      * @return array
      */
-    public function complete(): array;
+    public function result(): array;
 }
