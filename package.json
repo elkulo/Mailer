@@ -10,9 +10,9 @@
     "format": "eslint --fix './public/webpack/src/**/*.js'",
     "build": "webpack --mode production",
     "serve": "php -S localhost:8000 -t ./public",
-    "composer:update": "cd mailer/slim/ && composer update",
-    "composer:phpcs": "cd mailer/slim/ && composer phpcs",
-    "composer:phpcbf": "cd mailer/slim/ && composer phpcbf",
+    "composer:update": "cd mailer/core/ && composer update",
+    "composer:phpcs": "cd mailer/core/ && composer phpcs",
+    "composer:phpcbf": "cd mailer/core/ && composer phpcbf",
     "deploy": "sh deploy.sh"
   },
   "devDependencies": {

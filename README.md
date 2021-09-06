@@ -6,10 +6,10 @@
 
 ### Step.1
 
-formタグのaction属性を post.php にする
+formタグのaction属性を mailer/index.php にする
 
 ~~~
-<form method="post" action="mailer/post.php">
+<form method="post" action="mailer/index.php">
  :
 </form>
 ~~~
@@ -25,13 +25,14 @@ config/setting.php で必須項目等の設定
 
 ### プログラムは公開ディレクトリの外に設置を推奨
 
-post.php をrequire_onceで別のPHPファイルで読み込めば、任意のディレクトリで実行できます。
-Publicの公開ディレクトリの外（httpでアクセスできない場所）に設置することができます。
+mailer/index.php をrequire_onceで別のPHPファイルで読み込めば、任意のディレクトリで実行できます。
+Publicの公開ディレクトリの外（HTTPでアクセスできない場所）に設置することができます。
 
 #### !!プログラムを公開ディレクトリ内に設置している場合!!
 
 公開ディレクトリにプログラムを設置している場合は、coreディレクトリにアクセス制限をかけましょう。
 coreの中のlogsディレクトリはメール送信失敗などのログファイルが残ります。
+また、SQLiteを使用している場合もDBの場所に気をつけてください。
 
 ## 開発環境のクローン
 

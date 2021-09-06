@@ -31,12 +31,12 @@ declare(strict_types=1);
  * 任意なファイル名
  * 
  * Mailerプログラムを公開ディレクトリ以外（httpでアクセスできない場所）に設置、
- * /slim/bootstrap/autoload.php を require_once で読み込めば、任意のディレクトリやファイル名で実行できます。
+ * /core/bootstrap/autoload.php を require_once で読み込めば、任意のディレクトリやファイル名で実行できます。
  * <form action="..."> のactionに読み込みさせたファイルを指定する。
  */
 
 // 任意のディレクトリ名
 // $BASE_PATH = '/mailer-alias';
 
-// Mailerプログラムの /slim/bootstrap/autoload.php を指定
-require_once __DIR__ . '/slim/bootstrap/autoload.php';
+// Mailerプログラムの /core/bootstrap/autoload.php を指定
+require_once __DIR__ . '/core/bootstrap/autoload.php';
