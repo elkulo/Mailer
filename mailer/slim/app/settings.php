@@ -12,14 +12,6 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
 
-            // Config
-            $config_path = __DIR__ . '/../../config';
-            $config = [
-                'server' => include $config_path . '/server.php',
-                'setting' => include $config_path . '/setting.php',
-                'app.path' => __DIR__ . '/../', // ルートパス
-            ];
-
             $log_file = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
 
             return new Settings([
@@ -37,7 +29,9 @@ return function (ContainerBuilder $containerBuilder) {
                     'cache' => __DIR__ . '/../var/cache/twig',
                 ],
                 'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false,
-                'config' => $config
+                'config.server' => include __DIR__ . '/../../settings/server.php',
+                'config.form' => include __DIR__ . '/../../settings/form.php',
+                'app.path' => __DIR__ . '/../', // ルートパス
             ]);
         }
     ]);

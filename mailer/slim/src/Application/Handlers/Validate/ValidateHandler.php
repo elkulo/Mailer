@@ -47,8 +47,8 @@ class ValidateHandler
      */
     public function __construct(SettingsInterface $settings)
     {
-        $this->server = $settings->get('config')['server'];
-        $this->setting = $settings->get('config')['setting'];
+        $this->server = $settings->get('config.server');
+        $this->setting = $settings->get('config.form');
     }
 
     /**

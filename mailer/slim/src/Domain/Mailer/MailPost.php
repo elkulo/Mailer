@@ -67,9 +67,9 @@ class MailPost
      */
     public function __construct(array $posts, SettingsInterface $settings)
     {
-        $this->server = $settings->get('config')['server'];
-        $this->setting = $settings->get('config')['setting'];
-        $app_path = $settings->get('config')['app.path'];
+        $this->server = $settings->get('config.server');
+        $this->setting = $settings->get('config.form');
+        $app_path = $settings->get('app.path');
 
         // POSTデータから取得したデータを整形
         $sanitized = array();
