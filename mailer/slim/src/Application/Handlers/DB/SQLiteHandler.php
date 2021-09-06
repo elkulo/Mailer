@@ -70,8 +70,8 @@ class SQLiteHandler implements DBHandler
         try {
             $this->logger = $logger;
 
-            $app_path = $settings->get('config')['app.path'];
-            $this->server = $settings->get('config')['server'];
+            $app_path = $settings->get('app.path');
+            $this->server = $settings->get('config.server');
 
             // DBテーブル名
             $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';

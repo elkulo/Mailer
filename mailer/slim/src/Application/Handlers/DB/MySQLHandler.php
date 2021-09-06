@@ -56,7 +56,7 @@ class MySQLHandler implements DBHandler
         try {
             $this->logger = $logger;
 
-            $this->server = $settings->get('config')['server'];
+            $this->server = $settings->get('config.server');
 
             // DBテーブル名
             $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';

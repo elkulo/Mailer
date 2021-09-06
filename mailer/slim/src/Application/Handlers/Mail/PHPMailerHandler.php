@@ -33,7 +33,7 @@ class PHPMailerHandler implements MailHandler
      */
     public function __construct(SettingsInterface $settings)
     {
-        $this->server = $settings->get('config')['server'];
+        $this->server = $settings->get('config.server');
     }
 
     /**
