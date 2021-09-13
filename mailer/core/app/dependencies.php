@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -9,7 +8,7 @@ use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
-
+use App\Application\Settings\SettingsInterface;
 use App\Application\Handlers\Mail\MailHandler;
 use App\Application\Handlers\Mail\WordPressHandler;
 use App\Application\Handlers\Mail\PHPMailerHandler;

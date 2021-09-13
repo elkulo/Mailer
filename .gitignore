@@ -98,11 +98,6 @@ package-lock.json
 **/logs/*
 !**/logs/.gitkeep
 
-# Cache
-**/var/*
-!**/var/tmp/
-!**/var/.gitkeep
-
 # SQLite
 **/database/
 *.sqlite

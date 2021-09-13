@@ -3,7 +3,7 @@
 return [
 
     // メーラータイプ
-    'MAILER_TYPE' => env('MAILER_TYPE'),
+    'MAILER_DRIVER' => env('MAILER_DRIVER'),
 
     // バリデーションの言語設定
     'VALIDATION_LANG' => env('VALIDATION_LANG'),
@@ -38,19 +38,16 @@ return [
     // 管理者メールBCC
     'ADMIN_BCC' => env('ADMIN_BCC'),
 
-    // 予備の通知先
-    'RESERVE_MAIL' => env('RESERVE_MAIL'),
-
     // DBサーバーの情報
     'DB' => [
 
-        'CONNECTION' => env('DB_CONNECTION'),
+        'DRIVER' => env('DB_DRIVER'),
 
         'HOST' => env('DB_HOST'),
 
-        'DATABASE' => env('DB_DATABASE'),
+        'NAME' => env('DB_NAME'),
 
-        'USERNAME' => env('DB_USERNAME'),
+        'USER' => env('DB_USER'),
 
         'PASSWORD' => env('DB_PASSWORD'),
 
@@ -58,6 +55,6 @@ return [
 
         'CHARSET' => env('DB_CHARSET'),
 
-        'COLLATION' => env('DB_COLLATION'),
+        'COLLATE' => env('DB_COLLATE'),
     ],
 ];

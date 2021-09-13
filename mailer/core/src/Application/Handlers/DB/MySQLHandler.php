@@ -69,11 +69,11 @@ class MySQLHandler implements DBHandler
             $config = [
                 'driver'    => 'mysql',
                 'host'      => $this->server['DB']['HOST'],
-                'database'  => $this->server['DB']['DATABASE'],
-                'username'  => $this->server['DB']['USERNAME'],
+                'database'  => $this->server['DB']['NAME'],
+                'username'  => $this->server['DB']['USER'],
                 'password'  => $this->server['DB']['PASSWORD'],
                 'charset'   => $this->server['DB']['CHARSET'],
-                'collation' => $this->server['DB']['COLLATION'],
+                'collation' => $this->server['DB']['COLLATE'],
                 'prefix' => $prefix,
             ];
 
@@ -140,8 +140,8 @@ class MySQLHandler implements DBHandler
             $db = $this->server['DB'];
 
             $pdo = new \PDO(
-                'mysql:host=' . $db['HOST'] . ';dbname=' . $db['DATABASE'] . ';charset=' . $db['CHARSET'],
-                $db['USERNAME'],
+                'mysql:host=' . $db['HOST'] . ';dbname=' . $db['NAME'] . ';charset=' . $db['CHARSET'],
+                $db['USER'],
                 $db['PASSWORD']
             );
 

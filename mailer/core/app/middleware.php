@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Settings\SettingsInterface;
-use App\Application\Middleware\SessionMiddleware;
 use Slim\App;
-use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
+use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
+use App\Application\Settings\SettingsInterface;
+use App\Application\Middleware\SessionMiddleware;
 
 return function (App $app) {
     $app->add(SessionMiddleware::class);
