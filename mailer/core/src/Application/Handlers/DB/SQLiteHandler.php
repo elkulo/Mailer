@@ -79,7 +79,7 @@ class SQLiteHandler implements DBHandler
 
             // DBの場所
             $this->db_dir = $app_path . '/../database/';
-            $this->sqlite_file = $this->db_dir . $this->server['DB']['DATABASE'];
+            $this->sqlite_file = $this->db_dir . $this->server['DB']['NAME'];
 
             // DB設定
             $this->db = new Manager();
@@ -157,7 +157,7 @@ class SQLiteHandler implements DBHandler
             }
 
             // DBファイルの確認
-            $sqlite_file = $this->db_dir . $this->server['DB']['DATABASE'];
+            $sqlite_file = $this->db_dir . $this->server['DB']['NAME'];
             if (!file_exists($sqlite_file)) {
                 $pdo = new \PDO('sqlite:' . $sqlite_file);
 
