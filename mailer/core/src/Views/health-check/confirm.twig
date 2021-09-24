@@ -4,7 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>ヘルスチェック{% if sectionTitle %} - {{ sectionTitle }}{% endif %}</title>
+    <title>
+      HEALTH CHECK - 2{% if sectionTitle %} - {{ sectionTitle }}{% endif %}
+    </title>
     {% include '/styles/bootstrap.min.twig' %}
   </head>
   <body class="bg-light">
@@ -38,6 +40,7 @@
                 start-0
                 translate-middle
                 btn btn-sm btn-primary
+                shadow-none
                 rounded-pill
                 fw-lighter
               "
@@ -53,6 +56,7 @@
                 start-50
                 translate-middle
                 btn btn-sm btn-primary
+                shadow-none
                 rounded-pill
                 fw-lighter
               "
@@ -68,6 +72,7 @@
                 start-100
                 translate-middle
                 btn btn-sm btn-secondary
+                shadow-none
                 rounded-pill
                 fw-lighter
               "
@@ -87,7 +92,11 @@
               <form action="result" method="POST">
                 <div class="row g-2 align-items-center">
                   <div class="col-auto">
-                    <label for="inputPasscode" class="col-form-label text-secondary">確認コード</label>
+                    <label
+                      for="inputPasscode"
+                      class="col-form-label text-secondary"
+                      >確認コード</label
+                    >
                   </div>
                   <div class="col-2 col-sm-1">
                     <input

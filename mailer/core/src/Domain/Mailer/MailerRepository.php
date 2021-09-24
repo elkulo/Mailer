@@ -12,6 +12,13 @@ interface MailerRepository
 {
 
     /**
+     * インデックス
+     *
+     * @return array
+     */
+    public function index(): array;
+
+    /**
      * 確認画面
      *
      * @return array
