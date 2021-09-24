@@ -119,22 +119,52 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     }
 
     /**
-     * 確認画面
+     * 受付画面
      *
      * @return array
      */
     public function index(): array
     {
+        $flasha = [
+            'level' => 'warning',
+            'title' => 'Failed...',
+            'message' => '設定されている管理者のメールアドレスではありません。入力内容を確認の上、再度お試しください。',
+        ];
+
+        $flasha = [
+            'level' => 'warning',
+            'title' => 'Failed...',
+            'message' => '送信された確認コードが一致しませんでした。入力内容を確認の上、再度お試しください。',
+        ];
+
         return [
             'template' => 'index.twig',
             'data' => [
-                'theExceptionMassage' => 'ヘルスチェック',
+                'sectionTitle' => '送信テスト',
+                'sectionDescription' => 'メールプログラムから問題なく送信ができるかテストを行います。ヘルスチェックを開始するには、管理者メールアドレスを入力して「検証」を押すと確認コードが送信されます。',
+                'flashMessage' => isset($flash)? $flash :null,
             ]
         ];
     }
 
     /**
-     * 送信完了
+     * 確認画面
+     *
+     * @return array
+     */
+    public function confirm(): array
+    {
+        return [
+            'template' => 'confirm.twig',
+            'data' => [
+                'sectionTitle' => '確認コード',
+                'sectionDescription' => '管理者のメールアドレス宛に確認コードを送信しました。受信された確認コードを入力してください。',
+            ]
+        ];
+    }
+
+    /**
+     * 結果画面
      *
      * @return array
      */
@@ -145,7 +175,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         return [
             'template' => 'result.twig',
             'data' => [
-                'theExceptionMassage' => 'ヘルスチェック - 結果'
+                'sectionTitle' => '結果',
+                'sectionDescription' => 'メールプログラムの送受信は正常に行えました。実行結果は次の通りです。',
             ]
         ];
     }
