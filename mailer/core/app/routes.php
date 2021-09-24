@@ -5,6 +5,7 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Application\Actions\Mailer\IndexMailerAction;
 use App\Application\Actions\Mailer\ConfirmMailerAction;
 use App\Application\Actions\Mailer\CompleteMailerAction;
 use App\Application\Actions\HealthCheck\IndexHealthCheckAction;
@@ -19,6 +20,8 @@ return function (App $app) {
 
     // メールフォーム
     $app->group('', function (Group $group) {
+        $group->get('', IndexMailerAction::class);
+        $group->get('/', IndexMailerAction::class);
         $group->post('/', ConfirmMailerAction::class);
         $group->post('/confirm', ConfirmMailerAction::class);
         $group->post('/complete', CompleteMailerAction::class);
@@ -27,6 +30,7 @@ return function (App $app) {
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {
         $group->get('', IndexHealthCheckAction::class);
+        $group->get('/', IndexHealthCheckAction::class);
         $group->post('/confirm', ConfirmHealthCheckAction::class);
         $group->post('/result', ResultHealthCheckAction::class);
     });

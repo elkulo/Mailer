@@ -30,28 +30,33 @@ class InMemoryMailerRepository implements MailerRepository
     private $domain;
 
     /**
-     * @var object
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * @var SettingsInterface
+     */
+    private $settings;
+
+    /**
      * バリデート
      *
-     * @var object
+     * @var ValidateHandler
      */
     private $validate;
 
     /**
      * メールハンドラー
      *
-     * @var object
+     * @var MailHandler
      */
     private $mail;
 
     /**
      * DBハンドラー
      *
-     * @var object|null
+     * @var DBHandler|null
      */
     private $db;
 
@@ -77,6 +82,9 @@ class InMemoryMailerRepository implements MailerRepository
 
         // バリデーションアクションをセット
         $this->validate = $validate;
+
+        // 設定値
+        $this->settings = $settings;
 
         // メールハンドラーをセット
         $this->mail = $mail;
@@ -116,6 +124,21 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->domain->setUserMail($post_data[$email_attr]);
             }
         }
+    }
+
+    /**
+     * インデックス
+     *
+     * @return array
+     */
+    public function index(): array
+    {
+        return [
+            'template' => 'index.twig',
+            'data' => [
+                'debug' => $this->settings->get('debug')
+            ]
+        ];
     }
 
     /**

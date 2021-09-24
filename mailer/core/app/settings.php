@@ -24,11 +24,11 @@ return function (ContainerBuilder $containerBuilder) {
                     'level' => Logger::DEBUG,
                 ],
                 'twig' => [
-                    'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false,
+                    'debug' => isset($_ENV['DEBUG']) ? env('DEBUG') : false,
                     'strict_variables' => true,
                     'cache' => __DIR__ . '/../var/cache/twig',
                 ],
-                'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] : false,
+                'debug' => isset($_ENV['DEBUG']) ? env('DEBUG') : false,
                 'config.server' => include __DIR__ . '/../../settings/server.php',
                 'config.form' => include __DIR__ . '/../../settings/form.php',
                 'app.path' => __DIR__ . '/../', // ルートパス

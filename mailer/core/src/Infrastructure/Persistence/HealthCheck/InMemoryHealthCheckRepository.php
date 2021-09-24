@@ -125,13 +125,14 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function index(): array
     {
-        $flasha = [
+
+        $flash = [
             'level' => 'warning',
             'title' => 'Failed...',
             'message' => '設定されている管理者のメールアドレスではありません。入力内容を確認の上、再度お試しください。',
         ];
 
-        $flasha = [
+        $flash = [
             'level' => 'warning',
             'title' => 'Failed...',
             'message' => '送信された確認コードが一致しませんでした。入力内容を確認の上、再度お試しください。',
@@ -141,7 +142,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'template' => 'index.twig',
             'data' => [
                 'sectionTitle' => '送信テスト',
-                'sectionDescription' => 'メールプログラムから問題なく送信ができるかテストを行います。ヘルスチェックを開始するには、管理者メールアドレスを入力して「検証」を押すと確認コードが送信されます。',
+                'sectionDescription' => 'メールプログラムから問題なく送信ができるかテストを行います。
+                ヘルスチェックを開始するには、管理者メールアドレスを入力して「検証」を押すと確認コードが送信されます。',
                 'flashMessage' => isset($flash)? $flash :null,
             ]
         ];
