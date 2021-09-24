@@ -8,8 +8,6 @@
     {% include '/styles/bootstrap.min.twig' %}
   </head>
   <body class="bg-light">
-    {% include '/utils/flash-message.twig' %}
-
     <div class="container-fluid mt-5 mb-3">
       <div class="row">
         <div class="col">
@@ -26,7 +24,7 @@
               <div
                 class="progress-bar"
                 role="progressbar"
-                style="width: calc(50% - 1.25rem)"
+                style="width: calc(100% - 1.25rem)"
                 aria-valuenow="25"
                 aria-valuemin="0"
                 aria-valuemax="100"
@@ -54,7 +52,7 @@
                 top-0
                 start-50
                 translate-middle
-                btn btn-sm btn-secondary
+                btn btn-sm btn-primary
                 rounded-pill
                 fw-lighter
               "
@@ -86,21 +84,62 @@
             <div class="card-header text-center">{{ sectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
               <p class="card-text">{{ sectionDescription }}</p>
-              <form action="health-check/confirm" method="POST">
+              <form action="result" method="POST">
                 <div class="row g-2 align-items-center">
                   <div class="col-auto">
-                    <label for="inputEmail" class="col-form-label text-secondary">管理者メールアドレス</label>
+                    <label for="inputPasscode" class="col-form-label text-secondary">確認コード</label>
                   </div>
-                  <div class="col-auto">
+                  <div class="col-2 col-sm-1">
                     <input
-                      type="email"
-                      id="inputEmail"
-                      class="form-control"
-                      placeholder="mail@example.com"
+                      type="text"
+                      id="inputPasscode"
+                      class="form-control text-center"
+                      placeholder=""
+                      maxlength="1"
+                    />
+                  </div>
+                  <div class="col-2 col-sm-1">
+                    <input
+                      type="text"
+                      class="form-control text-center"
+                      placeholder=""
+                      maxlength="1"
+                    />
+                  </div>
+                  <div class="col-2 col-sm-1">
+                    <input
+                      type="text"
+                      class="form-control text-center"
+                      placeholder=""
+                      maxlength="1"
+                    />
+                  </div>
+                  <div class="col-2 col-sm-1">
+                    <input
+                      type="text"
+                      class="form-control text-center"
+                      placeholder=""
+                      maxlength="1"
+                    />
+                  </div>
+                  <div class="col-2 col-sm-1">
+                    <input
+                      type="text"
+                      class="form-control text-center"
+                      placeholder=""
+                      maxlength="1"
+                    />
+                  </div>
+                  <div class="col-2 col-sm-1">
+                    <input
+                      type="text"
+                      class="form-control text-center"
+                      placeholder=""
+                      maxlength="1"
                     />
                   </div>
                   <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">検証</button>
+                    <button type="submit" class="btn btn-primary">確認</button>
                   </div>
                 </div>
               </form>

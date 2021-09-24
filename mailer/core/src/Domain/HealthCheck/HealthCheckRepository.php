@@ -12,11 +12,18 @@ interface HealthCheckRepository
 {
 
     /**
-     * 確認画面
+     * ヘルスチェック
      *
      * @return array
      */
     public function index(): array;
+
+    /**
+     * 確認画面
+     *
+     * @return array
+     */
+    public function confirm(): array;
 
     /**
      * 送信完了

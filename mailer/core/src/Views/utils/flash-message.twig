@@ -1,0 +1,8 @@
+{% if flashMessage is not null %}
+<div class="alert alert-{{ flashMessage.level }}" role="alert">
+  <div class="container" style="max-width: 720px">
+    <h4 class="alert-heading">{{ flashMessage.title }}</h4>
+    <p class="mb-0">{{ flashMessage.message }}</p>
+  </div>
+</div>
+{% endif %}
