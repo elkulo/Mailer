@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
     <title>{% if debug %}Hello World!{% else %}Hello... !{% endif %}</title>
-    {% include '/styles/bootstrap.min.twig' %}
+    {% include '/assets/bootstrap.min.css.twig' %}
+    {% include '/assets/bootstrap.min.js.twig' %}
   </head>
   <body class="bg-light">
     {% if debug %}

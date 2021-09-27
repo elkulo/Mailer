@@ -110,9 +110,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'sectionTitle' => '送信テスト',
-                'sectionDescription' => 'メールプログラムから問題なく送信ができるかテストを行います。
-                ヘルスチェックを開始するには、管理者メールアドレスを入力して「検証」を押すと確認コードが送信されます。'
+                'sectionTitle' => '送受信テスト',
+                'sectionDescription' => 'メールの送受信に問題がないかテストを行います。
+                ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。'
             ]
         ];
     }
@@ -147,15 +147,16 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
 
         // パスコードの送信
         if (!$redirect) {
-            $_SESSION['healthCheckPasscode'] = sprintf("%06d", mt_rand(1, 999999));
-            console($_SESSION['healthCheckPasscode']);
+            $passcode = sprintf("%06d", mt_rand(1, 999999));
+            $_SESSION['healthCheckPasscode'] = $passcode;
+            console($passcode);
 
-            /*
             // 管理者宛に届くメールをセット
+            /*
             $success = $this->mail->send(
                 $server['ADMIN_MAIL'],
                 $this->domain->getMailSubject(),
-                $this->domain->renderAdminMail(['passcode' => '000000'])
+                $this->domain->renderAdminMail(['passcode' => $passcode])
             );
             if (!$success) {
                 $this->flash->addMessage('warning', '環境設定のSMTPに不備があります。設定を見直してください。');
@@ -260,7 +261,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'template' => 'result.twig',
             'data' => [
                 'sectionTitle' => '結果',
-                'sectionDescription' => 'メールプログラムの送受信は正常に行えました。実行結果は次の通りです。',
+                'sectionDescription' => 'メールの送受信は正常に行えました。検証内容は次の通りです。',
                 'resultList' => $resultList,
                 'totalResult' => $totalResult
             ],

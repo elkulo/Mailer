@@ -21,16 +21,13 @@ return function (App $app) {
     // メールフォーム
     $app->group('', function (Group $group) {
         $group->get('', IndexMailerAction::class);
-        $group->get('/', IndexMailerAction::class);
-        $group->post('/', ConfirmMailerAction::class);
-        $group->post('/confirm', ConfirmMailerAction::class);
+        $group->post('', ConfirmMailerAction::class);
         $group->post('/complete', CompleteMailerAction::class);
     });
 
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {
         $group->get('', IndexHealthCheckAction::class);
-        $group->get('/', IndexHealthCheckAction::class);
         $group->post('/confirm', ConfirmHealthCheckAction::class);
         $group->post('/result', ResultHealthCheckAction::class);
     });

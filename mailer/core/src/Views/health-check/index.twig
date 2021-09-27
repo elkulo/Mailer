@@ -7,8 +7,8 @@
     <title>
       HEALTH CHECK - 1{% if sectionTitle %} - {{ sectionTitle }}{% endif %}
     </title>
-    {% include '/styles/bootstrap.min.twig' %}
-    {% include '/js/bootstrap.min.twig' %}
+    {% include '/assets/bootstrap.min.css.twig' %}
+    {% include '/assets/bootstrap.min.js.twig' %}
   </head>
   <body class="bg-light">
     {% include '/utils/flash-message.twig' %}
@@ -94,14 +94,15 @@
               <p class="card-text">{{ sectionDescription }}</p>
               <form action="health-check/confirm" method="POST">
                 <div class="row g-2 align-items-center">
-                  <div class="col-auto">
+                  <div class="col-4 col-md-auto">
                     <label
                       for="inputEmail"
-                      class="col-form-label text-secondary"
-                      >管理者メールアドレス</label
+                      class="col-form-label d-block text-end text-secondary"
+                      style="font-size:0.875rem"
+                      >メールアドレス</label
                     >
                   </div>
-                  <div class="col-auto">
+                  <div class="col-6">
                     <input
                       type="email"
                       name="email"
@@ -110,8 +111,8 @@
                       placeholder="mail@example.com"
                     />
                   </div>
-                  <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">検証</button>
+                  <div class="col-2 col-md-auto">
+                    <button type="submit" class="btn btn-primary">確認</button>
                   </div>
                 </div>
               </form>
