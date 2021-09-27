@@ -8,6 +8,7 @@
       HEALTH CHECK - 3{% if sectionTitle %} - {{ sectionTitle }}{% endif %}
     </title>
     {% include '/styles/bootstrap.min.twig' %}
+    {% include '/js/bootstrap.min.twig' %}
   </head>
   <body class="bg-light">
     <div class="container-fluid mt-5 mb-3">
@@ -88,6 +89,7 @@
           <div class="card">
             <div class="card-header text-center">{{ sectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
+              {% if 10 == totalResult%}
               <div
                 class="
                   row
@@ -119,12 +121,47 @@
                 </div>
                 <div class="col-auto">Good Job!</div>
               </div>
+              {% else %}
+              <div
+                class="
+                  row
+                  g-1
+                  justify-content-center
+                  align-items-center
+                  mb-3
+                  pe-3
+                  fw-bold
+                  text-center text-secondary
+                "
+              >
+                <div class="col-auto">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-cone-striped"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="m9.97 4.88.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"
+                    />
+                  </svg>
+                </div>
+                <div class="col-auto">Not good...</div>
+              </div>
+              {% endif %}
+
               <p class="card-text">{{ sectionDescription }}</p>
 
               <div class="table-responsive">
                 <table class="table my-0">
                   <caption>
-                    List of test items
+                    Score
+                    {{
+                      totalResult
+                    }}
+                    / 10
                   </caption>
                   <thead class="table-light">
                     <tr>
@@ -134,60 +171,43 @@
                     </tr>
                   </thead>
                   <tbody>
+                    {% for key, result in resultList %}
                     <tr>
-                      <th>1</th>
-                      <td>SMTPでのメール送信</td>
-                      <td>Succeed</td>
-                    </tr>
-                    <tr>
-                      <th>2</th>
-                      <td>PHPのバージョンがver7.4以上</td>
-                      <td>Succeed</td>
-                    </tr>
-                    <tr>
-                      <th>3</th>
-                      <td>HTTPSで暗号化されたサイト</td>
-                      <td>True</td>
-                    </tr>
-                    <tr>
-                      <th>4</th>
-                      <td>SSL/TLSで暗号化されたメール送信</td>
-                      <td>True</td>
-                    </tr>
-                    <tr>
-                      <th>5</th>
-                      <td>データベースにテーブルを新規作成</td>
-                      <td>Succeed</td>
-                    </tr>
-                    <tr>
-                      <th>6</th>
-                      <td>データベースに履歴を保存</td>
-                      <td>Succeed</td>
-                    </tr>
-                    <tr>
-                      <th>7</th>
-                      <td>
-                        デバッグモード<br /><small class="text-secondary"
-                          >製品ではFalseにしてください。</small
+                      <th>{{ key }}</th>
+                      <td>{{ result.description }}</td>
+                      {% if result.answer %}
+                      <td class="text-success">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-check-lg"
+                          viewBox="0 0 16 16"
                         >
+                          <path
+                            d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z"
+                          />
+                        </svg>
                       </td>
-                      <td>True</td>
+                      {% else %}
+                      <td class="text-secondary">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-dash"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"
+                          />
+                        </svg>
+                      </td>
+                      {% endif %}
                     </tr>
-                    <tr>
-                      <th>8</th>
-                      <td>ー</td>
-                      <td>ー</td>
-                    </tr>
-                    <tr>
-                      <th>9</th>
-                      <td>ー</td>
-                      <td>ー</td>
-                    </tr>
-                    <tr>
-                      <th>10</th>
-                      <td>ー</td>
-                      <td>ー</td>
-                    </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
               </div>

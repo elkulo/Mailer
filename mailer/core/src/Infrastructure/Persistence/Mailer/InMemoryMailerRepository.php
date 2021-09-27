@@ -95,9 +95,6 @@ class InMemoryMailerRepository implements MailerRepository
         // POSTを格納
         $this->domain = new MailPost($_POST, $settings);
 
-        // 連続投稿防止
-        $this->domain->checkinSession();
-
         // 設定値の取得
         $server = $this->domain->getServer();
         $setting = $this->domain->getSetting();
