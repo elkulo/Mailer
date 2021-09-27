@@ -22,6 +22,11 @@ class ConfirmHealthCheckAction extends HealthCheckAction
     {
         $repository = $this->healthCheckRepository->confirm();
 
+        // POSTエラー時のリダイレクト.
+        if (isset($repository['redirect']) && $repository['redirect']) {
+            return $this->response->withHeader('Location', $repository['redirect'])->withStatus(303);
+        }
+
         // bodyを生成
         $response = $this->view->render(
             $this->response,

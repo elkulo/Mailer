@@ -387,9 +387,9 @@ class MailPost
      */
     public function getCreateNonce(): string
     {
-        $nonce                     = sha1(uniqid((string)mt_rand(), true));
         // セッションにNonceを保存
-        $_SESSION['_mailer_token'] = $nonce;
+        $nonce                     = sha1(uniqid((string)mt_rand(), true));
+        $_SESSION['mailerToken'] = $nonce;
         return sprintf(
             '<input type="hidden" name="_mailer_nonce" value="%1$s" />
             <input type="hidden" name="_http_referer" value="%2$s" />
@@ -417,27 +417,6 @@ class MailPost
     }
 
     /**
-     * セッションチェック
-     *
-     * @return void
-     */
-    public function checkinSession(): void
-    {
-        if (empty($_SESSION)) {
-            // トークンチェック用のセッション
-            session_name('_mailer_token');
-            session_start();
-
-            // ワンタイムセッション
-            $session_tmp = $_SESSION; // 退避
-            session_destroy(); // 一度削除
-            session_id(md5(uniqid((string)rand(), true))); // セッションID変更
-            session_start(); // セッション再開
-            $_SESSION = $session_tmp; // セッション変数値を引継ぎ
-        }
-    }
-
-    /**
      * トークンチェック
      *
      * @return void
@@ -445,42 +424,12 @@ class MailPost
     public function checkinToken(): void
     {
         // TokenとNonceを照合
-        if (empty($_SESSION['_mailer_token']) || ($_SESSION['_mailer_token'] !== $_POST['_mailer_nonce'])) {
-            // 再読み込みで発行されたセッションを破壊
-            if (ini_get('session.use_cookies')) {
-                $params = session_get_cookie_params();
-                setcookie(
-                    session_name(),
-                    '',
-                    time() - 42000,
-                    $params['path'],
-                    $params['domain'],
-                    $params['secure'],
-                    $params['httponly']
-                );
-            }
-            if (isset($_SESSION['_mailer_token'])) {
-                session_destroy();
-            }
+        if (empty($_SESSION['mailerToken']) || ($_SESSION['mailerToken'] !== $_POST['_mailer_nonce'])) {
             throw new \Exception('連続した投稿の可能性があるため送信できません');
-        } else {
-            // 多重投稿を防ぐ
-            // セッションを破壊してクッキーを削除
-            if (isset($_SESSION['_mailer_token'])) {
-                if (ini_get('session.use_cookies')) {
-                    $params = session_get_cookie_params();
-                    setcookie(
-                        session_name(),
-                        '',
-                        time() - 42000,
-                        $params['path'],
-                        $params['domain'],
-                        $params['secure'],
-                        $params['httponly']
-                    );
-                }
-                session_destroy();
-            }
+        }
+        // 連続投稿防止のためトークン削除
+        if (isset($_SESSION['mailerToken'])) {
+            unset($_SESSION['mailerToken']);
         }
     }
 

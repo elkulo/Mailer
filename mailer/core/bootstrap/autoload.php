@@ -11,6 +11,9 @@ use App\Application\Settings\SettingsInterface;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// SESSION Name.
+session_name('MAILERID');
+
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 

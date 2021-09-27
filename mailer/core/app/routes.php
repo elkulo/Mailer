@@ -34,12 +34,4 @@ return function (App $app) {
         $group->post('/confirm', ConfirmHealthCheckAction::class);
         $group->post('/result', ResultHealthCheckAction::class);
     });
-
-    // レポート
-    /*
-    $app->group('/report', function (Group $group) {
-        $group->get('', HealthCheckAction::class);
-        $group->get('/crone', HealthCheckAction::class);
-    });
-    */
 };

@@ -28,6 +28,7 @@ abstract class HealthCheckAction extends Action
     /**
      * @param LoggerInterface $logger
      * @param HealthCheckRepository $healthCheckRepository
+     * @param Twig $twig
      */
     public function __construct(
         LoggerInterface $logger,

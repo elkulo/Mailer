@@ -8,6 +8,7 @@ use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
+use Slim\Flash\Messages;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Handlers\Mail\MailHandler;
 use App\Application\Handlers\Mail\WordPressHandler;
@@ -33,18 +34,23 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
+        Messages::class => function () {
+            $storage = [];
+            return new Messages($storage);
+        },
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
-            return Twig::create(
+            $twig = Twig::create(
                 [
                     __DIR__ . '/../../templates',
                     __DIR__ . '/../src/Views',
                 ],
                 $settings->get('twig')
             );
+            // Globalにフラッシュメッセージを設定.
+            $twig->getEnvironment()->addGlobal('flash', $c->get(Messages::class));
+            return $twig;
         },
-
-        // ハンドラー
         MailHandler::class => \DI\autowire(PHPMailerHandler::class),
         DBHandler::class => \DI\autowire(SQLiteHandler::class),
         ValidateHandler::class => \DI\autowire(ValidateHandler::class),
