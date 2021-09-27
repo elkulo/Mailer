@@ -1,38 +1,37 @@
 {% if flash.getMessage('success') is not null %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
+<div class="alert alert-success alert-dismissible fade show py-2 ps-0 px-sm-3" role="alert">
   <div class="container" style="max-width: 720px">
     <p class="mb-0">{{ flash.getMessage('success') | first }}</p>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="btn-close shadow-none pt-1 pe-0 pe-sm-2 opacity-75" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
 {% elseif flash.getMessage('warning') is not null %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<div class="alert alert-warning alert-dismissible fade show py-2 ps-0 px-sm-3" role="alert">
   <div class="container" style="max-width: 720px">
-    <p class="mb-0">{{ flash.getMessage('warning') | first }}</p>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <p class="m-0 text-sm-center">{{ flash.getMessage('warning') | first }}</p>
+    <button type="button" class="btn-close shadow-none pt-1 pe-0 pe-sm-2 opacity-75" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
 {% elseif flash.getMessage('danger') is not null %}
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
+<div class="alert alert-danger alert-dismissible fade show py-2 ps-0 px-sm-3" role="alert">
   <div class="container" style="max-width: 720px">
     <p class="mb-0">{{ flash.getMessage('danger') | first }}</p>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="btn-close shadow-none pt-1 pe-0 pe-sm-2 opacity-75" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
 {% elseif flash.getMessage('info') is not null %}
-<div class="alert alert-info alert-dismissible fade show" role="alert">
+<div class="alert alert-info alert-dismissible fade show py-2 ps-0 px-sm-3" role="alert">
   <div class="container" style="max-width: 720px">
     <p class="mb-0">{{ flash.getMessage('info') | first }}</p>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <button type="button" class="btn-close shadow-none pt-1 pe-0 pe-sm-2 opacity-75" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>
 {% endif %}
 
 <script>
-var alertList = document.querySelectorAll('.alert');
-if ( alertList[0] ) {
-  alertList.forEach(function (element) {
-    new bootstrap.Alert(element);
-  });
-}
+(function() {
+  'use strict';
+  const alertList = document.querySelectorAll('.alert');
+  if ( alertList[0] ) alertList.forEach((element) => new bootstrap.Alert(element));
+})();
 </script>

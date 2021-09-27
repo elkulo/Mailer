@@ -367,7 +367,7 @@ class MailPost
      */
     public function getActionURL(): string
     {
-        return $this->kses('./complete');
+        return $this->kses('http://localhost:8000/mailer-alias/complete');
     }
 
     /**

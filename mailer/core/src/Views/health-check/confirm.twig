@@ -7,8 +7,8 @@
     <title>
       HEALTH CHECK - 2{% if sectionTitle %} - {{ sectionTitle }}{% endif %}
     </title>
-    {% include '/styles/bootstrap.min.twig' %}
-    {% include '/js/bootstrap.min.twig' %}
+    {% include '/assets/bootstrap.min.css.twig' %}
+    {% include '/assets/bootstrap.min.js.twig' %}
   </head>
   <body class="bg-light">
     <div class="container-fluid mt-5 mb-3">
@@ -92,70 +92,71 @@
               <p class="card-text">{{ sectionDescription }}</p>
               <form action="result" method="POST">
                 <div class="row g-2 align-items-center">
-                  <div class="col-auto">
+                  <div class="col-3 col-md-auto">
                     <label
                       for="inputPasscode"
-                      class="col-form-label text-secondary"
-                      >確認コード</label
+                      class="col-form-label d-block text-end text-secondary"
+                      style="font-size:0.875rem"
+                      >6桁のコード</label
                     >
                   </div>
-                  <div class="col-2 col-sm-1">
+                  <div class="col-1">
                     <input
                       type="text"
                       name="passcode-1"
                       id="inputPasscode"
-                      class="form-control text-center"
+                      class="form-control text-center px-0"
                       placeholder=""
                       maxlength="1"
                     />
                   </div>
-                  <div class="col-2 col-sm-1">
+                  <div class="col-1">
                     <input
                       type="text"
                       name="passcode-2"
-                      class="form-control text-center"
+                      class="form-control text-center px-0"
                       placeholder=""
                       maxlength="1"
                     />
                   </div>
-                  <div class="col-2 col-sm-1">
+                  <div class="col-1">
                     <input
                       type="text"
                       name="passcode-3"
-                      class="form-control text-center"
+                      class="form-control text-center px-0"
                       placeholder=""
                       maxlength="1"
                     />
                   </div>
-                  <div class="col-2 col-sm-1">
+                  <div class="col-1">
                     <input
                       type="text"
                       name="passcode-4"
-                      class="form-control text-center"
+                      class="form-control text-center px-0"
                       placeholder=""
                       maxlength="1"
                     />
                   </div>
-                  <div class="col-2 col-sm-1">
+                  <div class="col-1">
                     <input
                       type="text"
                       name="passcode-5"
-                      class="form-control text-center"
+                      class="form-control text-center px-0"
                       placeholder=""
                       maxlength="1"
                     />
                   </div>
-                  <div class="col-2 col-sm-1">
+                  <div class="col-1">
                     <input
                       type="text"
                       name="passcode-6"
-                      class="form-control text-center"
+                      class="form-control text-center px-0"
                       placeholder=""
                       maxlength="1"
                     />
                   </div>
-                  <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">確認</button>
+                  <div class="col-3 col-md-auto">
+                    <button type="submit" class="btn btn-primary">検証</button>
                   </div>
                 </div>
               </form>
