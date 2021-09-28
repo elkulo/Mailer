@@ -33,7 +33,7 @@
       </div>
       <div class="row justify-content-center">
         <div class="col">
-          <div class="card">
+          <div class="card shadow-sm">
             <div class="card-header text-center">{{ sectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
               <p class="card-text">{{ sectionDescription }}</p>
@@ -75,6 +75,7 @@
 
 <script>
 (function() {
+  'use strict';
   const passcodes = document.querySelectorAll('.passcode');
   if (passcodes[0]) {
     passcodes[0].focus();

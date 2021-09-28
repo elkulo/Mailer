@@ -1,25 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name='robots' content='noindex,nofollow' />
-<title>入力内容の確認</title>
-{% include 'style.twig' %}
-</head>
-<body>
-  <div id="confirm" class="page">
-    <div class="wrap">
-      <h1>入力内容の確認</h1>
-      <p>以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
-      <form action="{{theActionURL}}" method="POST">
-        {{theConfirmContent|raw}}
-        <div class="btn-group">
-          <input type="submit" value="送信する" class="btn btn-lg btn-primary" />
-          <input type="button" value="キャンセル" class="btn btn-lg btn-default" onClick="history.back()" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>入力内容の確認</title>
+    {% include '/assets/bootstrap.min.css.twig' %}
+    {% include '/assets/bootstrap.min.js.twig' %}
+  </head>
+  <body class="bg-light py-5 px-3">
+    <div class="container shadow-sm bg-white border rounded px-4 px-md-5 py-4" style="max-width: 720px">
+      <div class="row">
+        <div class="col">
+          <h1 class="h4">入力内容の確認</h1>
+          <p class="text-muted" style="font-size:0.875rem">以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
+          <form action="complete" method="POST">
+          <div class="px-3 py-4 border-top border-bottom">
+            {{theConfirmContent|raw}}
+          </div>
+          <div class="row g-2 justify-content-center align-items-center mt-3">
+            <div class="d-grid gap-2 col-5 col-sm-4">
+              <input type="submit" value="送信する" class="btn btn-primary" />
+            </div>
+            <div class="d-grid gap-2 col-5 col-sm-4">
+              <button onClick="history.back()" class="btn btn-light">キャンセル</button>
+            </div>
+          </div>
+
+          {# CSRF セキュリティのためFormタグ直前に必須 #}
+          <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+          <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+        </form>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

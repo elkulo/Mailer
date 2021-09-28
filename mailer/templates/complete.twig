@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name='robots' content='noindex,nofollow' />
-<title>送信完了</title>
-{% include 'style.twig' %}
-</head>
-<body>
-  <div id="complete" class="page">
-    <div class="wrap">
-      <h1>送信完了</h1>
-      <p style="font-size: 100%; text-align: center;">メッセージを送信しました</p>
-      <div class="btn-group">
-        <a href="{{theReturnURL}}" class="btn btn-default">ページに戻る</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>メッセージの送信完了</title>
+    {% include '/assets/bootstrap.min.css.twig' %}
+    {% include '/assets/bootstrap.min.js.twig' %}
+  </head>
+  <body class="bg-light py-5 px-3">
+    <div class="container shadow-sm bg-white border rounded px-4 px-md-5 py-4" style="max-width: 720px">
+      <div class="row">
+        <div class="col">
+          <h1 class="h5 text-center">メッセージの送信完了</h1>
+          <p class="text-muted text-center" style="font-size:0.875rem">メッセージは正常に送信されました。</p>
+          <div class="d-grid gap-2 col-8 col-sm-4 mt-3 mx-auto">
+            <a href="{{theReturnURL}}" class="btn btn-success">
+              ページに戻る
+            </a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

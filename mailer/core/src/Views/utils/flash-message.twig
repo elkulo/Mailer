@@ -2,7 +2,7 @@
 
 {% for level, messages in flash.getMessages() %}
   <div class="alert alert-{{level}} alert-dismissible fade show py-2 ps-0 px-sm-3" role="alert">
-    <div class="container" style="max-width: 720px">
+    <div class="container text-sm-center" style="max-width: 720px">
       <p class="mb-0">{% for message in messages %}{{ message }}{% endfor %}</p>
       <button type="button" class="btn-close shadow-none pt-1 pe-0 pe-sm-2 opacity-75" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
