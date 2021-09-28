@@ -1,11 +1,9 @@
 <?php
-
 /**
- * Mailer | el.kulo v1.0.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
-
 declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Mailer;
@@ -96,26 +94,16 @@ class InMemoryMailerRepository implements MailerRepository
         $this->domain = new MailPost($_POST, $settings);
 
         // 設定値の取得
-        $server = $this->domain->getServer();
-        $setting = $this->domain->getSetting();
+        $server = $this->domain->getServerSettings();
+        $form = $this->domain->getFormSettings();
 
-        $post_data = $this->domain->getPost();
+        $post_data = $this->domain->getPosts();
 
         // バリデーション準備
         $this->validate->set($post_data);
 
-        // 管理者メールの形式チェック
-        $to = (array) $server['ADMIN_MAIL'];
-        $cc = $server['ADMIN_CC'] ? explode(',', $server['ADMIN_CC']) : [];
-        $bcc = $server['ADMIN_BCC'] ? explode(',', $server['ADMIN_BCC']) : [];
-        foreach (array_merge($to, $cc, $bcc) as $email) {
-            if (!$this->validate->isCheckMailFormat($email)) {
-                throw new \Exception('管理者メールアドレスに不備があります。設定を見直してください。');
-            }
-        }
-
         // ユーザーメールを形式チェックして格納
-        $email_attr = isset($setting['EMAIL_ATTRIBUTE']) ? $setting['EMAIL_ATTRIBUTE'] : null;
+        $email_attr = isset($form['EMAIL_ATTRIBUTE']) ? $form['EMAIL_ATTRIBUTE'] : null;
         if (isset($post_data[$email_attr])) {
             if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
                 $this->domain->setUserMail($post_data[$email_attr]);
@@ -194,8 +182,8 @@ class InMemoryMailerRepository implements MailerRepository
     public function complete(): array
     {
         try {
-            $server = $this->domain->getServer();
-            $setting = $this->domain->getSetting();
+            $server = $this->domain->getServerSettings();
+            $form = $this->domain->getFormSettings();
 
             // リファラチェック
             $this->domain->checkinReferer();
@@ -233,13 +221,12 @@ class InMemoryMailerRepository implements MailerRepository
             );
 
             // ユーザーに届くメールをセット
-            if (!empty($setting['IS_REPLY_USERMAIL'])) {
+            if (!empty($form['IS_REPLY_USERMAIL'])) {
                 if ($this->domain->getUserMail()) {
                     $success['user'] = $this->mail->send(
                         $this->domain->getUserMail(),
                         $this->domain->getMailSubject(),
-                        $this->domain->renderUserMail($mail_body),
-                        array()
+                        $this->domain->renderUserMail($mail_body)
                     );
                 }
             }

@@ -117,21 +117,21 @@ class SQLiteHandler implements DBHandler
      */
     final public function save(array $success, string $email, string $subject, string $body, array $status): bool
     {
-        $values = [
-            'success' => json_encode($success),
-            'email' => $email,
-            'subject' => $subject,
-            'body' => $body,
-            'date' => $status['_date'],
-            'ip' => $status['_ip'],
-            'host' => $status['_host'],
-            'referer' => $status['_url'],
-            'registry_datetime' => date('Y-m-d H:i:s'),
-            'created_at' => time(),
-            'updated_at' => time()
-        ];
-
         try {
+            $values = [
+                'success' => json_encode($success),
+                'email' => $email,
+                'subject' => $subject,
+                'body' => $body,
+                'date' => $status['_date'],
+                'ip' => $status['_ip'],
+                'host' => $status['_host'],
+                'referer' => $status['_url'],
+                'registry_datetime' => date('Y-m-d H:i:s'),
+                'created_at' => time(),
+                'updated_at' => time()
+            ];
+
             if ($this->db) {
                 $this->db->table('mailer')->insert($values); // prefixは省略
             }
@@ -145,10 +145,10 @@ class SQLiteHandler implements DBHandler
     /**
      * DBを作成
      *
-     * @return void
+     * @return bool
      * @throws Exception
      */
-    public function make(): void
+    final public function make(): bool
     {
         try {
             // DBディレクトリの確認
@@ -189,7 +189,20 @@ class SQLiteHandler implements DBHandler
                 $pdo = null;
             }
         } catch (\PDOException $e) {
-            throw new \Exception($e->getMessage());
+            $this->logger->error($e->getMessage());
+            return false;
         }
+        return true;
+    }
+
+    /**
+     * DBに保存をテスト
+     *
+     * @param  string $email
+     * @return bool
+     */
+    final public function test(string $email): bool
+    {
+        return false;//$this->seve();
     }
 }

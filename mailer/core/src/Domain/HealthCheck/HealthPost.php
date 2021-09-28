@@ -23,13 +23,6 @@ class HealthPost
     private array $server;
 
     /**
-     * 設定
-     *
-     * @var array
-     */
-    private array $setting;
-
-    /**
      * POSTデータ
      *
      * @var array
@@ -53,7 +46,6 @@ class HealthPost
     public function __construct(array $posts, SettingsInterface $settings)
     {
         $this->server = $settings->get('config.server');
-        $this->setting = $settings->get('config.form');
         $app_path = $settings->get('app.path');
 
         // POSTデータから取得したデータを整形
@@ -61,7 +53,7 @@ class HealthPost
         foreach ($posts as $name => $value) {
             $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
         }
-        $this->post_data = $sanitized;
+        $this->post_data = $this->kses($sanitized);
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
@@ -76,19 +68,9 @@ class HealthPost
      *
      * @return array
      */
-    public function getServer(): array
+    public function getServerSettings(): array
     {
         return $this->server;
-    }
-
-    /**
-     * アプリ設定情報の取得
-     *
-     * @return array
-     */
-    public function getSetting(): array
-    {
-        return $this->setting;
     }
 
     /**
@@ -96,7 +78,7 @@ class HealthPost
      *
      * @return array
      */
-    public function getPost(): array
+    public function getPosts(): array
     {
         return $this->post_data;
     }
@@ -108,11 +90,7 @@ class HealthPost
      */
     public function getMailSubject(): string
     {
-        $subject = 'HEALTH CHECKの確認コード';
-        $before = isset($this->setting['SUBJECT_BEFORE']) ? $this->setting['SUBJECT_BEFORE'] : '';
-        $after = isset($this->setting['SUBJECT_AFTER']) ? $this->setting['SUBJECT_AFTER'] : '';
-
-        return str_replace(PHP_EOL, '', $this->kses($before . $subject . $after));
+        return str_replace(PHP_EOL, '', $this->kses('HEALTH CHECKの確認コード'));
     }
 
     /**
