@@ -14,7 +14,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
 
-
 /**
  * DashboardAction
  */

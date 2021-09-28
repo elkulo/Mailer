@@ -24,17 +24,17 @@ return function (App $app) {
     $app->get('/', DashboardAction::class);
 
     // メールフォーム
-    $app->get('/api/v1/csrf', ApiMailerAction::class);
     $app->group('/post', function (Group $group) {
         $group->get('', IndexMailerAction::class);
         $group->post('/confirm', ConfirmMailerAction::class);
-        $group->post('/complete', CompleteMailerAction::class);
+        $group->post('/confirm/complete', CompleteMailerAction::class);
     });
+    $app->get('/api/v1/csrf', ApiMailerAction::class);
 
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {
         $group->get('', IndexHealthCheckAction::class);
         $group->post('/confirm', ConfirmHealthCheckAction::class);
-        $group->post('/result', ResultHealthCheckAction::class);
+        $group->post('/confirm/result', ResultHealthCheckAction::class);
     });
 };
