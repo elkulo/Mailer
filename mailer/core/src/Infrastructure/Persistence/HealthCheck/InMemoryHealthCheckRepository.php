@@ -247,7 +247,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             }
         } catch (\Exception $e) {
             $this->flash->addMessage('warning', $e->getMessage());
-            $redirect = '../health-check';
+            $redirect = '../../health-check';
         }
 
         // パスコード一致で検証
