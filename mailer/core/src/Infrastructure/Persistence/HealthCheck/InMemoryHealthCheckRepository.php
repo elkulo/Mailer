@@ -72,8 +72,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     private $db;
 
     /**
-     * InMemoryMailerRepository constructor.
+     * InMemoryHealthCheckRepository constructor.
      *
+     * @param Guard $csrf,
      * @param Messages $messages
      * @param LoggerInterface $logger
      * @param SettingsInterface $settings
@@ -91,7 +92,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         DBHandler $db
     ) {
 
-        // フラッシュメッセージ
+        // CSRF
         $this->csrf = $csrf;
 
         // フラッシュメッセージ

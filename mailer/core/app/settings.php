@@ -31,7 +31,9 @@ return function (ContainerBuilder $containerBuilder) {
                 'debug' => isset($_ENV['DEBUG']) ? env('DEBUG') : false,
                 'config.server' => include __DIR__ . '/../../settings/server.php',
                 'config.form' => include __DIR__ . '/../../settings/form.php',
-                'app.path' => __DIR__ . '/../', // ルートパス
+                'app.path' => __DIR__ . '/../',
+                'site.root' => (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'],
+                'site.base' => (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'],
             ]);
         }
     ]);

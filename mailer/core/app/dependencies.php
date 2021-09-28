@@ -37,7 +37,7 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
         Guard::class => function () {
-            $guard = new Guard(new ResponseFactory());
+            $guard = new Guard(new ResponseFactory(), '_csrf');
             $guard->setPersistentTokenMode(true);
             return $guard;
         },
