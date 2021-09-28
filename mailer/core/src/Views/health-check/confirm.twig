@@ -1,4 +1,4 @@
-{% apply spaceless %}
+{# apply spaceless #}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -61,6 +61,8 @@
                     <input type="text" name="passcode-6" id="inputPasscode" class="form-control text-center px-0" placeholder="-" maxlength="1" />
                   </div>
                   <div class="col-3 col-md-auto">
+                    <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                    <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                     <button type="submit" class="btn btn-primary">検証</button>
                   </div>
                 </div>
@@ -72,4 +74,4 @@
     </div>
   </body>
 </html>
-{% endapply %}
+{# endapply #}

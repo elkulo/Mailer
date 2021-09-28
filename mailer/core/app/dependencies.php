@@ -7,6 +7,8 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Slim\Csrf\Guard;
+use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
 use App\Application\Settings\SettingsInterface;
@@ -33,6 +35,11 @@ return function (ContainerBuilder $containerBuilder) {
             $logger->pushHandler($handler);
 
             return $logger;
+        },
+        Guard::class => function () {
+            $guard = new Guard(new ResponseFactory());
+            $guard->setPersistentTokenMode(true);
+            return $guard;
         },
         Messages::class => function () {
             $storage = [];
