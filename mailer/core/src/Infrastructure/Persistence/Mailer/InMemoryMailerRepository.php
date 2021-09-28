@@ -8,17 +8,22 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Mailer;
 
+use Slim\Csrf\Guard;
+use Psr\Log\LoggerInterface;
+use App\Application\Settings\SettingsInterface;
 use App\Domain\Mailer\MailPost;
 use App\Domain\Mailer\MailerRepository;
 use App\Application\Handlers\Mail\MailHandler;
 use App\Application\Handlers\DB\DBHandler;
 use App\Application\Handlers\Validate\ValidateHandler;
 
-use Psr\Log\LoggerInterface;
-use App\Application\Settings\SettingsInterface;
-
 class InMemoryMailerRepository implements MailerRepository
 {
+
+    /**
+     * @var Guard
+     */
+    protected $csrf;
 
     /**
      * ロジック
@@ -61,6 +66,7 @@ class InMemoryMailerRepository implements MailerRepository
     /**
      * InMemoryMailerRepository constructor.
      *
+     * @param Guard $csrf,
      * @param LoggerInterface $logger,
      * @param SettingsInterface $settings
      * @param ValidateHandler $validate,
@@ -68,12 +74,16 @@ class InMemoryMailerRepository implements MailerRepository
      * @param DBHandler $db
      */
     public function __construct(
+        Guard $csrf,
         LoggerInterface $logger,
         SettingsInterface $settings,
         ValidateHandler $validate,
         MailHandler $mail,
         DBHandler $db
     ) {
+
+        // CSRF
+        $this->csrf = $csrf;
 
         // ロガーをセット
         $this->logger = $logger;
@@ -121,7 +131,14 @@ class InMemoryMailerRepository implements MailerRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'debug' => $this->settings->get('debug')
+                'csrf'   => [
+                    'keys' => [
+                        'name'  => $this->csrf->getTokenNameKey(),
+                        'value' => $this->csrf->getTokenValueKey(),
+                    ],
+                    'name'  => $this->csrf->getTokenName(),
+                    'value' => $this->csrf->getTokenValue(),
+                ]
             ]
         ];
     }
@@ -160,6 +177,14 @@ class InMemoryMailerRepository implements MailerRepository
             $system = array(
                 'theActionURL' => $this->domain->getActionURL(),
                 'theConfirmContent' => $confirm,
+                'csrf'   => [
+                    'keys' => [
+                        'name'  => $this->csrf->getTokenNameKey(),
+                        'value' => $this->csrf->getTokenValueKey(),
+                    ],
+                    'name'  => $this->csrf->getTokenName(),
+                    'value' => $this->csrf->getTokenValue(),
+                ],
             );
             return [
                 'template' => 'confirm.twig',
@@ -264,5 +289,24 @@ class InMemoryMailerRepository implements MailerRepository
                 'data' => array('theExceptionMassage' => $e->getMessage())
             ];
         }
+    }
+
+    /**
+     * API
+     *
+     * @return array
+     */
+    public function api(): array
+    {
+        return [
+            'csrf'   => [
+                'keys' => [
+                    'name'  => $this->csrf->getTokenNameKey(),
+                    'value' => $this->csrf->getTokenValueKey(),
+                ],
+                'name'  => $this->csrf->getTokenName(),
+                'value' => $this->csrf->getTokenValue(),
+            ]
+        ];
     }
 }

@@ -5,6 +5,8 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Application\Actions\Dashboard\DashboardAction;
+use App\Application\Actions\Mailer\ApiMailerAction;
 use App\Application\Actions\Mailer\IndexMailerAction;
 use App\Application\Actions\Mailer\ConfirmMailerAction;
 use App\Application\Actions\Mailer\CompleteMailerAction;
@@ -18,10 +20,14 @@ return function (App $app) {
         return $response;
     });
 
+    // ダッシュボード
+    $app->get('/', DashboardAction::class);
+
     // メールフォーム
-    $app->group('', function (Group $group) {
+    $app->get('/api/v1/csrf', ApiMailerAction::class);
+    $app->group('/post', function (Group $group) {
         $group->get('', IndexMailerAction::class);
-        $group->post('', ConfirmMailerAction::class);
+        $group->post('/confirm', ConfirmMailerAction::class);
         $group->post('/complete', CompleteMailerAction::class);
     });
 
