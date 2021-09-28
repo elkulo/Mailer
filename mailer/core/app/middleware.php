@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Slim\App;
+use Slim\Csrf\Guard;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Slim\Flash\Messages;
@@ -22,6 +23,9 @@ return function (App $app) {
         $errorHandler    = $errorMiddleware->getDefaultErrorHandler();
         //$errorHandler->registerErrorRenderer('text/html', HtmlErrorRenderer::class);
     }
+
+    // Csrf.
+    $app->add(Guard::class);
 
     // Twig.
     $app->add(TwigMiddleware::createFromContainer($app, Twig::class));

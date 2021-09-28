@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\HealthCheck;
 
+use Slim\Csrf\Guard;
 use Slim\Flash\Messages;
 use Psr\Log\LoggerInterface;
 use App\Application\Settings\SettingsInterface;
@@ -19,6 +20,11 @@ use App\Application\Handlers\Validate\ValidateHandler;
 
 class InMemoryHealthCheckRepository implements HealthCheckRepository
 {
+
+    /**
+     * @var Guard
+     */
+    protected $csrf;
 
     /**
      * @var Messages
@@ -76,6 +82,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      * @param DBHandler $db
      */
     public function __construct(
+        Guard $csrf,
         Messages $messages,
         LoggerInterface $logger,
         SettingsInterface $settings,
@@ -83,6 +90,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         MailHandler $mail,
         DBHandler $db
     ) {
+
+        // フラッシュメッセージ
+        $this->csrf = $csrf;
 
         // フラッシュメッセージ
         $this->flash = $messages;
@@ -120,7 +130,15 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'template' => 'index.twig',
             'data' => [
                 'sectionTitle' => '送受信テスト',
-                'sectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。'
+                'sectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。',
+                'csrf'   => [
+                    'keys' => [
+                        'name'  => $this->csrf->getTokenNameKey(),
+                        'value' => $this->csrf->getTokenValueKey(),
+                    ],
+                    'name'  => $this->csrf->getTokenName(),
+                    'value' => $this->csrf->getTokenValue(),
+                ]
             ]
         ];
     }
@@ -183,6 +201,14 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'data' => [
                 'sectionTitle' => '確認コード',
                 'sectionDescription' => '管理者のメールアドレス宛に確認コードを送信しました。受信された確認コードを入力してください。',
+                'csrf'   => [
+                    'keys' => [
+                        'name'  => $this->csrf->getTokenNameKey(),
+                        'value' => $this->csrf->getTokenValueKey(),
+                    ],
+                    'name'  => $this->csrf->getTokenName(),
+                    'value' => $this->csrf->getTokenValue(),
+                ]
             ],
             'redirect' => $redirect,
         ];
@@ -204,7 +230,13 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         try {
             // パスコードの比較
             $passcode = isset($_SESSION['healthCheckPasscode']) ? $_SESSION['healthCheckPasscode'] : null;
-            if (implode('', $post_data) !== $passcode) {
+
+            for ($i = 1; $i <= 6; $i++) {
+                $var_passcode = 'passcode-' . $i;
+                $post_passcode[] = isset($post_data[$var_passcode])? $post_data[$var_passcode]: null;
+            }
+
+            if (implode('', $post_passcode) !== $passcode) {
                 throw new \Exception('確認コードが一致しませんでした。入力内容を確認の上、再度お試しください。');
             }
 
