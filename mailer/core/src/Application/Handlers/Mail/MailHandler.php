@@ -20,5 +20,5 @@ interface MailHandler
      * @param  array $header
      * @return bool
      */
-    public function send(string $to, string $subject, string $body, array $header): bool;
+    public function send(string $to, string $subject, string $body, array $header = array()): bool;
 }

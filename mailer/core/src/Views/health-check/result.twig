@@ -1,12 +1,11 @@
+{% apply spaceless %}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>
-      HEALTH CHECK - 3{% if sectionTitle %} - {{ sectionTitle }}{% endif %}
-    </title>
+    <title>HEALTH CHECK - 3{% if sectionTitle %} - {{ sectionTitle }}{% endif %}</title>
     {% include '/assets/bootstrap.min.css.twig' %}
     {% include '/assets/bootstrap.min.js.twig' %}
   </head>
@@ -24,63 +23,11 @@
         <div class="col-8">
           <div class="position-relative m-4">
             <div class="progress" style="height: 1px">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                style="width: 100%"
-                aria-valuenow="25"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              ></div>
+              <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-            <button
-              type="button"
-              class="
-                position-absolute
-                top-0
-                start-0
-                translate-middle
-                btn btn-sm btn-primary
-                shadow-none
-                rounded-pill
-                fw-lighter
-              "
-              style="width: 2rem; height: 2rem"
-            >
-              1
-            </button>
-            <button
-              type="button"
-              class="
-                position-absolute
-                top-0
-                start-50
-                translate-middle
-                btn btn-sm btn-primary
-                shadow-none
-                rounded-pill
-                fw-lighter
-              "
-              style="width: 2rem; height: 2rem"
-            >
-              2
-            </button>
-            <button
-              type="button"
-              class="
-                position-absolute
-                top-0
-                start-100
-                translate-middle
-                btn btn-sm btn-primary
-                shadow-none
-                rounded-pill
-                fw-lighter
-              "
-              style="width: 2rem; height: 2rem"
-            >
-              3
-            </button>
+            <button type="button" class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary shadow-none rounded-pill fw-lighter" style="width: 2rem; height: 2rem">1</button>
+            <button type="button" class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-primary shadow-none rounded-pill fw-lighter" style="width: 2rem; height: 2rem">2</button>
+            <button type="button" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-primary shadow-none rounded-pill fw-lighter" style="width: 2rem; height: 2rem">3</button>
           </div>
         </div>
       </div>
@@ -90,62 +37,20 @@
             <div class="card-header text-center">{{ sectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
               {% if 10 == totalResult%}
-              <div
-                class="
-                  row
-                  g-1
-                  justify-content-center
-                  align-items-center
-                  mb-3
-                  pe-4
-                  fw-bold
-                  text-center text-success
-                "
-              >
+              <div class="row g-1 justify-content-center align-items-center mb-3 pe-4 fw-bold text-center text-success">
                 <div class="col-auto">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="currentColor"
-                    class="bi bi-check2-circle"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"
-                    />
-                    <path
-                      d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"
-                    />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check2-circle" viewBox="0 0 16 16">
+                    <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z" />
+                    <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
                   </svg>
                 </div>
                 <div class="col-auto">Good Job!</div>
               </div>
               {% else %}
-              <div
-                class="
-                  row
-                  g-1
-                  justify-content-center
-                  align-items-center
-                  mb-3
-                  pe-3
-                  fw-bold
-                  text-center text-secondary
-                "
-              >
+              <div class="row g-1 justify-content-center align-items-center mb-3 pe-3 fw-bold text-center text-secondary">
                 <div class="col-auto">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="currentColor"
-                    class="bi bi-cone-striped"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="m9.97 4.88.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"
-                    />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cone-striped" viewBox="0 0 16 16">
+                    <path d="m9.97 4.88.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z" />
                   </svg>
                 </div>
                 <div class="col-auto">Not good...</div>
@@ -156,12 +61,7 @@
 
               <div class="table-responsive">
                 <table class="table my-0">
-                  <caption>
-                    Score
-                    {{
-                      totalResult
-                    }}
-                    / 10
+                  <caption>Score {{totalResult}} / {{resultList|length}}
                   </caption>
                   <thead class="table-light">
                     <tr>
@@ -177,32 +77,14 @@
                       <td>{{ result.description }}</td>
                       {% if result.answer %}
                       <td class="text-success">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-check-lg"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z"
-                          />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                          <path d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z" />
                         </svg>
                       </td>
                       {% else %}
                       <td class="text-secondary">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          class="bi bi-dash"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"
-                          />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                          <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
                         </svg>
                       </td>
                       {% endif %}
@@ -218,3 +100,4 @@
     </div>
   </body>
 </html>
+{% endapply %}

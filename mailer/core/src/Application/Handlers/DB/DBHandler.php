@@ -22,4 +22,19 @@ interface DBHandler
      * @return bool
      */
     public function save(array $success, string $email, string $subject, string $body, array $status): bool;
+
+    /**
+     * DBを作成
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function make(): bool;
+
+    /**
+     * DBに保存を検証
+     *
+     * @return bool
+     */
+    public function test(string $email): bool;
 }

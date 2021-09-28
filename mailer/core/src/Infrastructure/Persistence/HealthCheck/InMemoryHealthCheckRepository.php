@@ -33,48 +33,55 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     private $domain;
 
     /**
-     * @var object
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
+     * 設定
+     *
+     * @var SettingsInterface
+     */
+    private $settings;
+
+    /**
      * バリデート
      *
-     * @var object
+     * @var ValidateHandler
      */
     private $validate;
 
     /**
      * メールハンドラー
      *
-     * @var object
+     * @var MailHandler
      */
     private $mail;
 
     /**
      * DBハンドラー
      *
-     * @var object|null
+     * @var DBHandler|null
      */
     private $db;
 
     /**
      * InMemoryMailerRepository constructor.
      *
+     * @param Messages $messages
      * @param LoggerInterface $logger
      * @param SettingsInterface $settings
      * @param ValidateHandler $validate
      * @param MailHandler $mail
      * @param DBHandler $db
-     * @param Messages $messages
      */
     public function __construct(
+        Messages $messages,
         LoggerInterface $logger,
         SettingsInterface $settings,
         ValidateHandler $validate,
         MailHandler $mail,
-        DBHandler $db,
-        Messages $messages
+        DBHandler $db
     ) {
 
         // フラッシュメッセージ
@@ -82,6 +89,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
 
         // ロガーをセット
         $this->logger = $logger;
+
+        // 設定
+        $this->settings = $settings;
 
         // バリデーションアクションをセット
         $this->validate = $validate;
@@ -96,8 +106,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $this->domain = new HealthPost($_POST, $settings);
 
         // バリデーション準備
-        $post_data = $this->domain->getPost();
-        $this->validate->set($post_data);
+        $this->validate->set($this->domain->getPosts());
     }
 
     /**
@@ -111,8 +120,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'template' => 'index.twig',
             'data' => [
                 'sectionTitle' => '送受信テスト',
-                'sectionDescription' => 'メールの送受信に問題がないかテストを行います。
-                ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。'
+                'sectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。'
             ]
         ];
     }
@@ -125,20 +133,24 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     public function confirm(): array
     {
         $redirect = null;
-        $server = $this->domain->getServer();
-        $post_data = $this->domain->getPost();
+        $server = $this->domain->getServerSettings();
+        $post_data = $this->domain->getPosts();
 
         try {
             // 管理者メールの比較
-            if (!$this->validate->isCheckMailFormat($post_data['email'])
-                || $post_data['email'] !== $server['ADMIN_MAIL']
-            ) {
+            $post_email = isset($post_data['email'])? $post_data['email']: '';
+            if (!$this->validate->isCheckMailFormat($post_email) || $post_email !== $server['ADMIN_MAIL']) {
                 throw new \Exception('入力内容に誤りがあります。入力内容を確認の上、再度お試しください。');
             }
 
             // 管理者メールの形式チェック
-            if (!$this->validate->isCheckMailFormat($server['ADMIN_MAIL'])) {
-                throw new \Exception('環境設定のメールアドレスに不備があります。設定を見直してください。');
+            $to = (array) $server['ADMIN_MAIL'];
+            $cc = $server['ADMIN_CC'] ? explode(',', $server['ADMIN_CC']) : [];
+            $bcc = $server['ADMIN_BCC'] ? explode(',', $server['ADMIN_BCC']) : [];
+            foreach (array_merge($to, $cc, $bcc) as $admin_email) {
+                if (!$this->validate->isCheckMailFormat($admin_email)) {
+                    throw new \Exception('環境設定のメールアドレスに不備があります。設定を見直してください。');
+                }
             }
         } catch (\Exception $e) {
             $this->flash->addMessage('warning', $e->getMessage());
@@ -149,20 +161,21 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         if (!$redirect) {
             $passcode = sprintf("%06d", mt_rand(1, 999999));
             $_SESSION['healthCheckPasscode'] = $passcode;
-            console($passcode);
 
             // 管理者宛に届くメールをセット
-            /*
-            $success = $this->mail->send(
-                $server['ADMIN_MAIL'],
-                $this->domain->getMailSubject(),
-                $this->domain->renderAdminMail(['passcode' => $passcode])
-            );
-            if (!$success) {
-                $this->flash->addMessage('warning', '環境設定のSMTPに不備があります。設定を見直してください。');
-                $redirect = '../health-check';
+            if ($this->settings->get('debug')) {
+                console($passcode);
+            } else {
+                $success = $this->mail->send(
+                    $server['ADMIN_MAIL'],
+                    $this->domain->getMailSubject(),
+                    $this->domain->renderAdminMail(['passcode' => $passcode])
+                );
+                if (!$success) {
+                    $this->flash->addMessage('warning', '環境設定のSMTPに不備があります。設定を見直してください。');
+                    $redirect = '../health-check';
+                }
             }
-            */
         }
 
         return [
@@ -185,24 +198,23 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $resultList = [];
         $totalResult = 0;
         $redirect = null;
-        $server = $this->domain->getServer();
-        $post_data = $this->domain->getPost();
+        $server = $this->domain->getServerSettings();
+        $post_data = $this->domain->getPosts();
 
         try {
             // パスコードの比較
-            if (empty($_SESSION['healthCheckPasscode'])
-                || implode('', $post_data) !== $_SESSION['healthCheckPasscode']
-            ) {
+            $passcode = isset($_SESSION['healthCheckPasscode']) ? $_SESSION['healthCheckPasscode'] : null;
+            if (implode('', $post_data) !== $passcode) {
                 throw new \Exception('確認コードが一致しませんでした。入力内容を確認の上、再度お試しください。');
+            }
+
+            // セッションを削除
+            if (isset($_SESSION['healthCheckPasscode'])) {
+                unset($_SESSION['healthCheckPasscode']);
             }
         } catch (\Exception $e) {
             $this->flash->addMessage('warning', $e->getMessage());
             $redirect = '../health-check';
-        }
-
-        // セッションを削除
-        if (isset($_SESSION['healthCheckPasscode'])) {
-            unset($_SESSION['healthCheckPasscode']);
         }
 
         // パスコード一致で検証
@@ -225,28 +237,16 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     'answer' => (in_array($server['SMTP_ENCRYPTION'], ['ssl', 'tls'])) ? true : false
                 ],
                 5 => [
-                    'description' => 'データベースにテーブルを新規作成',
-                    'answer' => true
+                    'description' => 'データベースに接続',
+                    'answer' => $this->db->make()
                 ],
                 6 => [
                     'description' => 'データベースに履歴を保存',
-                    'answer' => true
+                    'answer' => $this->db->test($server['ADMIN_MAIL'])
                 ],
                 7 => [
-                    'description' => 'デバッグモード',
-                    'answer' => true
-                ],
-                8 => [
-                    'description' => 'デバッグモード',
-                    'answer' => true
-                ],
-                9 => [
-                    'description' => 'デバッグモード',
-                    'answer' => true
-                ],
-                10 => [
-                    'description' => 'デバッグモード',
-                    'answer' => true
+                    'description' => 'デバッグモードが無効',
+                    'answer' => $this->settings->get('debug')? false: true
                 ],
             ];
 

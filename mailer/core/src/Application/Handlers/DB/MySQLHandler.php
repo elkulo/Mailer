@@ -131,10 +131,10 @@ class MySQLHandler implements DBHandler
     /**
      * DBを作成
      *
-     * @return void
+     * @return bool
      * @throws Exception
      */
-    public function make(): void
+    final public function make(): bool
     {
         try {
             $db = $this->server['DB'];
@@ -175,7 +175,20 @@ class MySQLHandler implements DBHandler
             // 一度閉じる.
             $pdo = null;
         } catch (\PDOException $e) {
-            throw new \Exception($e->getMessage());
+            $this->logger->error($e->getMessage());
+            return false;
         }
+        return true;
+    }
+
+    /**
+     * DBに保存をテスト
+     *
+     * @param  string $email
+     * @return bool
+     */
+    final public function test(string $email): bool
+    {
+        return false;//$this->seve();
     }
 }
