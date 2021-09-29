@@ -1,22 +1,31 @@
 <?php
+
 /**
  * Mailer | el.kulo v3.0.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
+
 declare(strict_types=1);
 
 namespace App\Application\Handlers\Validate;
 
 use App\Application\Settings\SettingsInterface;
+use Psr\Log\LoggerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use Valitron\Validator;
+use ReCaptcha\ReCaptcha;
 
 class ValidateHandler
 {
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * サーバー設定
@@ -42,13 +51,15 @@ class ValidateHandler
     /**
      * コンストラクタ
      *
-     * @param SettingsInterface $settings
+     * @param  SettingsInterface $settings
+     * @param  LoggerInterface $logger
      * @return void
      */
-    public function __construct(SettingsInterface $settings)
+    public function __construct(SettingsInterface $settings, LoggerInterface $logger)
     {
         $this->server = $settings->get('config.server');
         $this->form = $settings->get('config.form');
+        $this->logger = $logger;
     }
 
     /**
@@ -190,5 +201,54 @@ class ValidateHandler
         ]);
         //ietf.org has MX records signaling a server with email capabilites
         return $validator->isValid(trim($value), $multipleValidations); //true
+    }
+
+    /**
+     * Google reCAPTCHA
+     *
+     * @param  string $token
+     * @param  string $action
+     * @return bool
+     */
+    public function checkHuman(string $token, string $action): bool
+    {
+        try {
+
+            if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
+
+                // reCAPTCHA シークレットキー
+                $secretKey = $this->server['CAPTCHA']['SECRETKEY'];
+
+                $recaptcha = new ReCaptcha($secretKey);
+
+                $response = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+                    ->setExpectedAction($action)
+                    ->setScoreThreshold(0.5)
+                    ->verify($token, $_SERVER['REMOTE_ADDR']);
+
+                if (!$response->isSuccess()) {
+                    throw new \Exception($response->getErrorCodes());
+                }
+            }
+        } catch (\Exception $e) {
+            $this->logger->error('reCAPTCHA NG!');
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Google reCAPTCHA
+     *
+     * @param  string $token
+     * @param  string $action
+     * @return bool
+     */
+    public function getCaptchaScript()
+    {
+        return sprintf(
+            '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
+            $this->server['CAPTCHA']['SITEKEY'] // reCAPTCHA サイトキー
+        );
     }
 }

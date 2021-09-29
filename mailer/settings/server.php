@@ -57,4 +57,12 @@ return [
 
         'COLLATE' => env('DB_COLLATE'),
     ],
+
+    // Google reCAPTCHA
+    'CAPTCHA' => [
+
+        'SECRETKEY' => env('CAPTCHA_SECRETKEY'),
+
+        'SITEKEY' => env('CAPTCHA_SITEKEY'),
+    ]
 ];
