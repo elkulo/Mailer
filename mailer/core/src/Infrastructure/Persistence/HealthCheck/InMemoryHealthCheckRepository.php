@@ -278,6 +278,10 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     'answer' => $this->db->test($server['ADMIN_MAIL'])
                 ],
                 7 => [
+                    'description' => 'reCAPTCHA でBot対策',
+                    'answer' => !empty($server['CAPTCHA']['SECRETKEY'])? true: false
+                ],
+                8 => [
                     'description' => 'デバッグモードが無効',
                     'answer' => $this->settings->get('debug')? false: true
                 ],
