@@ -6,37 +6,32 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Actions\HealthCheck;
+namespace App\Application\Actions\Dashboard;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 
 /**
- * ConfirmHealthCheckAction
+ * IndexDashboardAction
  */
-class ConfirmHealthCheckAction extends HealthCheckAction
+class IndexDashboardAction extends DashboardAction
 {
     /**
      * {@inheritdoc}
      */
     protected function action(): Response
     {
-        $repository = $this->healthCheckRepository->confirm();
-
-        // POSTエラー時のリダイレクト.
-        if (isset($repository['redirect']) && $repository['redirect']) {
-            return $this->response->withHeader('Location', $repository['redirect'])->withStatus(303);
-        }
+        $repository = $this->dashboardRepository->index();
 
         // 次のステップURL.
-        $router['next'] = RouteContext::fromRequest($this->request)
+        $router['health_check'] = RouteContext::fromRequest($this->request)
             ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'health-check.confirm.result');
+            ->fullUrlFor($this->request->getUri(), 'health-check');
 
         // bodyを生成
         $response = $this->view->render(
             $this->response,
-            'health-check/' . $repository['template'],
+            'dashboard/' . $repository['template'],
             array_merge($repository['data'], ['router' => $router])
         );
 

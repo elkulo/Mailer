@@ -37,7 +37,7 @@
             <div class="card-header text-center">{{ sectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
               <p class="card-text">{{ sectionDescription }}</p>
-              <form action="./confirm/result" method="POST">
+              <form action="{{router.next}}" method="POST">
                 <div class="row g-2 align-items-center">
                   <div class="col-3 col-md-auto">
                     <label for="inputPasscode" class="col-form-label d-block text-end text-secondary" style="font-size:0.875rem">6桁のコード</label>
@@ -73,31 +73,32 @@
       </div>
     </div>
 
-<script>
-(function() {
-  'use strict';
-  const passcodes = document.querySelectorAll('.passcode');
-  if (passcodes[0]) {
-    passcodes[0].focus();
-    passcodes.forEach((code, idx) => {
-      code.addEventListener('keydown', (e) => {
-        if ( 0 <= e.key && e.key <= 9 ) {
+  <script>
+  (function() {
+    'use strict';
+    const passcodes = document.querySelectorAll('.passcode');
+    if (passcodes[0]) {
+      passcodes[0].focus();
+      passcodes.forEach((code, idx) => {
+        code.addEventListener('keydown', (e) => {
+          if ( 0 <= e.key && e.key <= 9 ) {
             if ( idx < passcodes.length - 1 ) {
               setTimeout(() => passcodes[idx + 1].focus(), 10);
             } else {
               setTimeout(() => document.querySelector('#inputPasscodeSubmit').focus(), 10);
             }
-        } else if ( idx && e.key === 'Backspace' ) {
-            setTimeout(() => passcodes[idx - 1].focus(), 10);
-        } else {
-          passcodes[idx].value = '';
-        }
+          } else if ( idx && e.key === 'Backspace' ) {
+              setTimeout(() => passcodes[idx - 1].focus(), 10);
+          } else {
+            passcodes[idx].value = '';
+          }
+        });
       });
-    });
-  }
-})();
-</script>
+    }
+  })();
+  </script>
 
+  {% include '/assets/bootstrap.svg-icon.twig' %}
   </body>
 </html>
 {% endapply %}

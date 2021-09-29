@@ -10,14 +10,13 @@ namespace App\Application\Actions\Dashboard;
 
 use App\Application\Actions\Action;
 use App\Domain\Dashboard\DashboardRepository;
-use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
 
 /**
  * DashboardAction
  */
-class DashboardAction extends Action
+abstract class DashboardAction extends Action
 {
     /**
      * @var DashboardRepository
@@ -42,22 +41,5 @@ class DashboardAction extends Action
         parent::__construct($logger);
         $this->dashboardRepository = $dashboardRepository;
         $this->view = $twig;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function action(): Response
-    {
-        $repository = $this->dashboardRepository->index();
-
-        // bodyを生成
-        $response = $this->view->render(
-            $this->response,
-            'dashboard/' . $repository['template'],
-            $repository['data']
-        );
-
-        return $response;
     }
 }
