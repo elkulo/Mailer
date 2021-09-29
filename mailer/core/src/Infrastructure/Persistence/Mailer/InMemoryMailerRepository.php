@@ -170,13 +170,12 @@ class InMemoryMailerRepository implements MailerRepository
             }
 
             // Twigテンプレート用に{{name属性}}で置換.
-            $posts = $this->domain->getPostToTwig();
+            $posts = $this->domain->getPosts();
 
             // 確認画面から送信されていない場合
-            $confirm = $this->domain->getConfirmContent() . PHP_EOL . $this->domain->getCreateNonce();
             $system = array(
-                'theActionURL' => $this->domain->getActionURL(),
-                'theConfirmContent' => $confirm,
+                'posts' => $this->domain->getConfirmQuery(),
+                'nonce' => $this->domain->getCreateNonce(),
                 'csrf'   => [
                     'keys' => [
                         'name'  => $this->csrf->getTokenNameKey(),
@@ -229,7 +228,7 @@ class InMemoryMailerRepository implements MailerRepository
             }
 
             // Twigテンプレート用に{{name属性}}で置換.
-            $posts = $this->domain->getPostToTwig();
+            $posts = $this->domain->getPosts();
 
             // トークンチェック
             $this->domain->checkinToken();

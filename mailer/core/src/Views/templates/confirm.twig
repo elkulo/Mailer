@@ -15,22 +15,31 @@
           <h1 class="h4">入力内容の確認</h1>
           <p class="text-muted" style="font-size:0.875rem">以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
           <form action="./confirm/complete" method="POST">
-          <div class="px-3 py-4 border-top border-bottom">
-            {{theConfirmContent|raw}}
-          </div>
-          <div class="row g-2 justify-content-center align-items-center mt-3">
-            <div class="d-grid gap-2 col-5 col-sm-4">
-              <input type="submit" value="送信する" class="btn btn-primary" />
+            <div class="table-responsive" style="font-size:0.875rem">
+              <table class="table table-bordered">
+                {% for post in posts %}
+                  <tr>
+                    <th class="table-light text-nowrap">{{post.name|raw}}</th>
+                    <td>{{post.value|raw}}</td>
+                  </tr>
+                {% endfor %}
+              </table>
             </div>
-            <div class="d-grid gap-2 col-5 col-sm-4">
-              <button onClick="history.back()" class="btn btn-light">キャンセル</button>
+            <div class="row g-2 justify-content-center align-items-center">
+              <div class="d-grid gap-2 col-5 col-sm-4">
+                <input type="submit" value="送信する" class="btn btn-primary" />
+              </div>
+              <div class="d-grid gap-2 col-5 col-sm-4">
+                <button onClick="history.back()" class="btn btn-light">キャンセル</button>
+              </div>
             </div>
-          </div>
 
-          {# CSRF セキュリティのためFormタグ直前に必須 #}
-          <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-          <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
-        </form>
+            {{nonce|raw}}
+
+            {# CSRF セキュリティのためFormタグ直前に必須 #}
+            <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+            <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+          </form>
         </div>
       </div>
     </div>
