@@ -213,9 +213,7 @@ class ValidateHandler
     public function checkHuman(string $token, string $action): bool
     {
         try {
-
             if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
-
                 // reCAPTCHA シークレットキー
                 $secretKey = $this->server['CAPTCHA']['SECRETKEY'];
 
