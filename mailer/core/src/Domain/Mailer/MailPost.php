@@ -74,7 +74,10 @@ class MailPost
         // POSTデータから取得したデータを整形
         $sanitized = array();
         foreach ($posts as $name => $value) {
-            $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
+            // アンダースコアは除外.
+            if (substr($name, 0, 1) !== '_') {
+                $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
+            }
 
             // フォームの設置ページを保存.
             if ($name === '_http_referer') {
@@ -318,13 +321,13 @@ class MailPost
     }
 
     /**
-     * 確認画面の入力内容出力用関数
+     * 確認画面の入力内容の出力
      *
-     * @return string
+     * @return array
      */
-    public function getConfirmContent(): string
+    public function getConfirmQuery(): array
     {
-        $html = '';
+        $query = [];
 
         foreach ($this->post_data as $name => $value) {
             $output_value = '';
@@ -347,27 +350,16 @@ class MailPost
             $output_value = $this->changeHankaku($output_value, $name);
 
             // 確認をセット
-            $name = $this->kses($name);
-            $output_value = $this->kses($output_value);
-            $html .= sprintf(
-                '<tr><th>%1$s</th><td>%2$s<input type="hidden" name="%3$s" value="%4$s" /></td></tr>' . PHP_EOL,
-                $this->nameToLabel($name),
-                nl2br($output_value),
-                $name,
-                $output_value
-            );
+            $query[]= [
+                'name' => $this->nameToLabel($name) . sprintf(
+                    '<input type="hidden" name="%1$s" value="%2$s" />',
+                    $this->kses($name),
+                    $this->kses($output_value)
+                ),
+                'value' => nl2br($this->kses($output_value))
+            ];
         }
-        return '<table>' . $html . '</table>';
-    }
-
-    /**
-     * 確認画面のフォームにアクション先出力
-     *
-     * @return string
-     */
-    public function getActionURL(): string
-    {
-        return $this->kses('http://localhost:8000/mailer-alias/complete');
+        return $query;
     }
 
     /**
