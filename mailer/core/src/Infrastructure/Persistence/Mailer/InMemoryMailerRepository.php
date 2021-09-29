@@ -212,6 +212,16 @@ class InMemoryMailerRepository implements MailerRepository
             // リファラチェック
             $this->domain->checkinReferer();
 
+            //
+            /*
+            $post_data = $this->domain->getPosts();
+            if ( $this->validate->checkHuman($post_data['g-recaptcha-response'], $post_data['g-recaptcha-action']) ) {
+                console('reCAPTCHA OK');
+            } else {
+                console('reCAPTCHA NG');
+            }
+            */
+
             // バリデーションチェック
             $this->validate->checkinValidateAll();
 

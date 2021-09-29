@@ -95,5 +95,24 @@
           <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
         </form>
       </div>
+
+<script>
+/*
+(function(){
+  $('[type="submit"]').submit((event) => {
+    event.preventDefault();
+    const action_name = 'contact'; //アクション名 
+    grecaptcha.ready(() => {
+      grecaptcha.execute('<?php echo $siteKey; ?>', { action: action_name })
+      .then((token) => {
+        $('#rc_form').prepend('<input type="hidden" name="g-recaptcha-response" value="' + token + '">');
+        $('#rc_form').prepend('<input type="hidden" name="g-recaptcha-action" value="' + action_name + '">');
+        $('#rc_form').unbind('submit').submit();
+      });
+    });
+  });
+})($);
+*/
+</script>
   </body>
 </html>
