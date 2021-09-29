@@ -19,18 +19,18 @@ class ValidateHandler
 {
 
     /**
-     * 設定
+     * サーバー設定
      *
      * @var array
      */
     private array $server = array();
 
     /**
-     * 設定
+     * フォーム設定
      *
      * @var array
      */
-    private array $setting = array();
+    private array $form = array();
 
     /**
      * バリデート
@@ -48,7 +48,7 @@ class ValidateHandler
     public function __construct(SettingsInterface $settings)
     {
         $this->server = $settings->get('config.server');
-        $this->setting = $settings->get('config.form');
+        $this->form = $settings->get('config.form');
     }
 
     /**
@@ -61,7 +61,7 @@ class ValidateHandler
     {
         Validator::lang($this->server['VALIDATION_LANG']);
         $this->validate = new Validator($post_data);
-        $this->validate->labels($this->setting['NAME_FOR_LABELS']);
+        $this->validate->labels($this->form['NAME_FOR_LABELS']);
     }
 
     /**
@@ -104,10 +104,10 @@ class ValidateHandler
      */
     public function checkinRequired(): void
     {
-        if (isset($this->setting['REQUIRED_ATTRIBUTE'])) {
+        if (isset($this->form['REQUIRED_ATTRIBUTE'])) {
             $this->validate->rule(
                 'required',
-                $this->setting['REQUIRED_ATTRIBUTE']
+                $this->form['REQUIRED_ATTRIBUTE']
             );
         }
     }
@@ -119,13 +119,13 @@ class ValidateHandler
      */
     public function checkinEmail(): void
     {
-        if (isset($this->setting['EMAIL_ATTRIBUTE'])) {
+        if (isset($this->form['EMAIL_ATTRIBUTE'])) {
             Validator::addRule('EmailValidator', function ($field, $value) {
                 return $this->isCheckMailFormat($value);
             });
             $this->validate->rule(
                 'EmailValidator',
-                $this->setting['EMAIL_ATTRIBUTE']
+                $this->form['EMAIL_ATTRIBUTE']
             )->message('メールアドレスの形式が正しくありません。');
         }
     }
@@ -137,7 +137,7 @@ class ValidateHandler
      */
     public function checkinMBWord(): void
     {
-        if (isset($this->setting['MB_WORD'])) {
+        if (isset($this->form['MB_WORD'])) {
             Validator::addRule('MBValidator', function ($field, $value) {
                 if (strlen($value) === mb_strlen($value, 'UTF-8')) {
                     return false;
@@ -146,7 +146,7 @@ class ValidateHandler
             });
             $this->validate->rule(
                 'MBValidator',
-                $this->setting['MB_WORD']
+                $this->form['MB_WORD']
             )->message('日本語を含まない文章は送信できません。');
         }
     }
@@ -158,7 +158,7 @@ class ValidateHandler
      */
     public function checkNGWord(): void
     {
-        $ng_words = (array) explode(' ', $this->setting['NG_WORD']);
+        $ng_words = (array) explode(' ', $this->form['NG_WORD']);
         if (isset($ng_words[0])) {
             Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
                 foreach ($ng_words as $word) {

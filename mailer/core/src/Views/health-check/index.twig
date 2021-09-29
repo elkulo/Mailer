@@ -39,7 +39,7 @@
             <div class="card-header text-center">{{ sectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
               <p class="card-text">{{ sectionDescription }}</p>
-              <form action="health-check/confirm" method="POST">
+              <form action="{{router.next}}" method="POST">
                 <div class="row g-2 align-items-center">
                   <div class="col-4 col-md-auto">
                     <label for="inputEmail" class="col-form-label d-block text-end text-secondary" style="font-size:0.875rem">メールアドレス</label>
@@ -60,14 +60,15 @@
       </div>
     </div>
 
-<script>
-(function() {
-  'use strict';
-  const email = document.querySelector('#inputEmail');
-  if ( email ) email.focus();
-})();
-</script>
+  <script>
+  (function() {
+    'use strict';
+    const email = document.querySelector('#inputEmail');
+    if ( email ) email.focus();
+  })();
+  </script>
 
+  {% include '/assets/bootstrap.svg-icon.twig' %}
   </body>
 </html>
 {% endapply %}
