@@ -34,11 +34,8 @@
               </div>
             </div>
 
-            {{nonce|raw}}
-
             {# CSRF セキュリティのためFormタグ直前に必須 #}
-            <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-            <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+            {{csrf|raw}}
           </form>
         </div>
       </div>
