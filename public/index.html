@@ -236,37 +236,45 @@
 <script type="text/javascript" src="webpack/dest/app.min.js?ver=20210728"></script>
 <script>window.applyBootstrapVaridation('#mailform');</script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 (function() {
-  const applyCSRF = (formID, api) => {
+  const applyCSRF = (formID) => {
     const formElement = document.querySelector(formID);
+    const actionURL = formElement && formElement.getAttribute('action');
+    if ( !actionURL) {
+      return;
+    }
+
+    // APIのURLを取得
+    const api = actionURL.substr(0, actionURL.indexOf('/post')) + '/api/v1/csrf';
+
     const inputElement = {
       csrfName : document.createElement('input'),
       csrfValue : document.createElement('input')
     }
-    $.ajax({
-      type: 'GET',
-      url: api,
-      dataType: 'json',
-    })
-    .then(function (data) {
-      const csrf = data.data.csrf;
-      Object.keys(inputElement).forEach((key) => {
-        if ( key === 'csrfName' ) {
-          inputElement[key].setAttribute('name', csrf.keys.name);
-          inputElement[key].setAttribute('value', csrf.name);
-        } else if ( key === 'csrfValue' ) {
-          inputElement[key].setAttribute('name', csrf.keys.value);
-          inputElement[key].setAttribute('value', csrf.value);
-        }
-        inputElement[key].setAttribute('type', 'hidden');
-        formElement.appendChild(inputElement[key]);
+
+    // APIからCSRFを取得
+    axios.get( api )
+      .then(({data}) => {
+        const { csrf } = data.data;
+        Object.keys(inputElement).forEach((key) => {
+          if ( key === 'csrfName' ) {
+            inputElement[key].setAttribute('name', csrf.keys.name);
+            inputElement[key].setAttribute('value', csrf.name);
+          } else if ( key === 'csrfValue' ) {
+            inputElement[key].setAttribute('name', csrf.keys.value);
+            inputElement[key].setAttribute('value', csrf.value);
+          }
+          inputElement[key].setAttribute('type', 'hidden');
+          formElement.appendChild(inputElement[key]);
+        });
+      }).catch((error) => {
+        /* console.warn(error); */
       });
-    });
   };
-  applyCSRF('#mailform', 'http://localhost:8000/mailer-alias/api/v1/csrf');
-})($);
+  applyCSRF('#mailform');
+})();
 </script>
 
 </body>

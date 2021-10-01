@@ -39,6 +39,7 @@ return function (App $app) {
         $group->get('', IndexMailerAction::class)->setName('mailer');
         $group->post('', ConfirmMailerAction::class);
         $group->post('/confirm', ConfirmMailerAction::class)->setName('mailer.confirm');
+        $group->post('/complete', CompleteMailerAction::class);
         $group->post('/confirm/complete', CompleteMailerAction::class)->setName('mailer.confirm.complete');
 
         // 最後のスラッシュを排除.
