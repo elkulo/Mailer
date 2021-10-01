@@ -104,7 +104,6 @@ class InMemoryMailerRepository implements MailerRepository
         $this->domain = new MailPost($_POST, $settings);
 
         // 設定値の取得
-        $server = $this->domain->getServerSettings();
         $form = $this->domain->getFormSettings();
 
         $post_data = $this->domain->getPosts();
@@ -151,9 +150,6 @@ class InMemoryMailerRepository implements MailerRepository
     public function confirm(): array
     {
         try {
-            // リファラチェック
-            $this->domain->checkinReferer();
-
             // バリデーションチェック
             $this->validate->checkinValidateAll();
 
@@ -169,21 +165,25 @@ class InMemoryMailerRepository implements MailerRepository
                 ];
             }
 
-            // Twigテンプレート用に{{name属性}}で置換.
+            // 固有のメーラートークンを生成.
+            $this->domain->createMailerToken();
+
+            // 適正な$_POSTを取得.
             $posts = $this->domain->getPosts();
 
             // 確認画面から送信されていない場合
             $system = array(
                 'posts' => $this->domain->getConfirmQuery(),
-                'nonce' => $this->domain->getCreateNonce(),
-                'csrf'   => [
-                    'keys' => [
-                        'name'  => $this->csrf->getTokenNameKey(),
-                        'value' => $this->csrf->getTokenValueKey(),
-                    ],
-                    'name'  => $this->csrf->getTokenName(),
-                    'value' => $this->csrf->getTokenValue(),
-                ],
+                'csrf'   => sprintf(
+                    '<input type="hidden" name="%1$s" value="%2$s">
+                    <input type="hidden" name="%3$s" value="%4$s">
+                    <input type="hidden" name="_http_referer" value="%5$s" />',
+                    $this->csrf->getTokenNameKey(),
+                    $this->csrf->getTokenName(),
+                    $this->csrf->getTokenValueKey(),
+                    $this->csrf->getTokenValue(),
+                    $this->domain->getPageReferer()
+                ),
             );
             return [
                 'template' => 'confirm.twig',
@@ -209,8 +209,8 @@ class InMemoryMailerRepository implements MailerRepository
             $server = $this->domain->getServerSettings();
             $form = $this->domain->getFormSettings();
 
-            // リファラチェック
-            $this->domain->checkinReferer();
+            // 固有のメーラートークンを削除（重複チェック）
+            $this->domain->checkinMailerToken();
 
             //
             /*
@@ -239,9 +239,6 @@ class InMemoryMailerRepository implements MailerRepository
 
             // Twigテンプレート用に{{name属性}}で置換.
             $posts = $this->domain->getPosts();
-
-            // トークンチェック
-            $this->domain->checkinToken();
 
             // メールボディを取得
             $mail_body = $this->domain->getMailBody();

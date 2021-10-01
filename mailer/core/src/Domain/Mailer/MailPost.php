@@ -49,7 +49,7 @@ class MailPost
      *
      * @var string
      */
-    private string $page_referer;
+    private string $page_referer = '';
 
     /**
      * Twig ハンドラー
@@ -81,7 +81,7 @@ class MailPost
 
             // フォームの設置ページを保存.
             if ($name === '_http_referer') {
-                $this->page_referer = $this->kses($value);
+                $this->setPageReferer($value);
             }
         }
         $this->post_data = $sanitized;
@@ -241,7 +241,7 @@ class MailPost
             '__DATE' => date('Y/m/d (D) H:i:s', time()),
             '__IP' => $_SERVER['REMOTE_ADDR'],
             '__HOST' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-            '__URL' => $this->page_referer,
+            '__URL' => $this->getPageReferer(),
         );
 
         return array_merge($posts, $value);
@@ -311,16 +311,6 @@ class MailPost
     }
 
     /**
-     * ページリファラーを取得
-     *
-     * @return string
-     */
-    public function getPageReferer(): string
-    {
-        return $this->page_referer;
-    }
-
-    /**
      * 確認画面の入力内容の出力
      *
      * @return array
@@ -372,57 +362,55 @@ class MailPost
         return $this->kses($this->setting['RETURN_PAGE']);
     }
 
+
     /**
-     * トークン出力
+     * 固有のトークン生成
      *
-     * @return string
+     * @return void
      */
-    public function getCreateNonce(): string
+    public function createMailerToken(): void
     {
         // セッションにNonceを保存
-        $nonce                     = sha1(uniqid((string)mt_rand(), true));
-        $_SESSION['mailerToken'] = $nonce;
-        return sprintf(
-            '<input type="hidden" name="_mailer_nonce" value="%1$s" />
-            <input type="hidden" name="_http_referer" value="%2$s" />
-            <input type="hidden" name="_confirm_submit" value="1" />' . PHP_EOL,
-            $nonce,
-            $this->kses($_SERVER['HTTP_REFERER'])
-        );
+        $_SESSION['mailerToken'] = sha1(uniqid((string)mt_rand(), true));
     }
 
     /**
-     * リファラチェック
+     * 固有のメールトークンで重複チェック
      *
      * @return void
      */
-    public function checkinReferer(): void
+    public function checkinMailerToken(): void
     {
-        if (isset($_SERVER['HTTP_REFERER']) && isset($_SERVER['SERVER_NAME'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) === false) {
-                throw new \Exception('指定のページ以外から送信されています');
-            }
-        }
-        if (empty($_SERVER['HTTP_REFERER']) || empty($_SERVER['SERVER_NAME'])) {
-            throw new \Exception('指定のページ以外から送信されています');
-        }
-    }
-
-    /**
-     * トークンチェック
-     *
-     * @return void
-     */
-    public function checkinToken(): void
-    {
-        // TokenとNonceを照合
-        if (empty($_SESSION['mailerToken']) || ($_SESSION['mailerToken'] !== $_POST['_mailer_nonce'])) {
-            throw new \Exception('連続した投稿の可能性があるため送信できません');
-        }
         // 連続投稿防止のためトークン削除
         if (isset($_SESSION['mailerToken'])) {
             unset($_SESSION['mailerToken']);
+        } else {
+            throw new \Exception('連続した投稿の可能性があるため送信できません');
         }
+    }
+
+    /**
+     * ページリファラーをセット
+     *
+     * @return void
+     */
+    public function setPageReferer($value): void
+    {
+        $this->page_referer = $this->kses($value);
+    }
+
+    /**
+     * ページリファラーを取得
+     *
+     * @return string
+     */
+    public function getPageReferer(): string
+    {
+        if (! $this->page_referer && isset($_SERVER['HTTP_REFERER'])) {
+            return $this->kses($_SERVER['HTTP_REFERER']);
+            ;
+        }
+        return $this->page_referer;
     }
 
     /**
