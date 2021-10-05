@@ -6,7 +6,7 @@
 <title>Mailer &#124; el.kulo</title>
 <meta name="description" itemprop="description" content=""/>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&family=Noto+Serif+JP:wght@500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="webpack/dest/app.min.css?ver=20210728" type="text/css" media="all" />
+<link rel="stylesheet" href="webpack/dest/app.min.css?ver=20211005" type="text/css" media="all" />
 </head>
 <body id="home" class="home">
 <div id="page" class="site">
@@ -233,12 +233,19 @@
   <!-- #colophon --> 
 </div>
 <!-- #page --> 
-<script type="text/javascript" src="webpack/dest/app.min.js?ver=20210728"></script>
+<script type="text/javascript" src="webpack/dest/app.min.js?ver=20211005"></script>
 <script>window.applyBootstrapVaridation('#mailform');</script>
 
 <!-- CSRFを有効 -->
-<script type="text/javascript" src="webpack/dest/csrf.min.js?ver=20211001"></script>
+<script type="text/javascript" src="webpack/dest/csrf.min.js?ver=20211005"></script>
 <script>window.applyCSRF('#mailform');</script>
+
+<!-- reCAPTCHAを有効 -->
+{#
+<script src="https://www.google.com/recaptcha/api.js?render="></script>
+<script type="text/javascript" src="webpack/dest/captcha.min.js?ver=20211005"></script>
+<script>window.applyCaptcha('#mailform', '');</script>
+#}
 
 </body>
 </html>

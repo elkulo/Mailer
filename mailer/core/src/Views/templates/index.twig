@@ -95,23 +95,54 @@
         </form>
       </div>
 
+{# Google reCAPTCHAを使用する場合 #}
+{{reCAPTCHA.script|raw}}
 <script>
-/*
-(function(){
-  $('[type="submit"]').submit((event) => {
-    event.preventDefault();
-    const action_name = 'contact'; //アクション名 
-    grecaptcha.ready(() => {
-      grecaptcha.execute('<?php echo $siteKey; ?>', { action: action_name })
-      .then((token) => {
-        $('#rc_form').prepend('<input type="hidden" name="g-recaptcha-response" value="' + token + '">');
-        $('#rc_form').prepend('<input type="hidden" name="g-recaptcha-action" value="' + action_name + '">');
-        $('#rc_form').unbind('submit').submit();
-      });
-    });
-  });
-})($);
-*/
+(function() {
+  'use strict';
+
+  const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
+	  const formElement = document.querySelector( formID );
+	  if ( ! formElement || ! siteKey ) {
+		  return;
+	  }
+
+	  // reCAPTCHA用のDOM生成.
+	  const inputElement = {
+		  captchaResponse: document.createElement( 'input' ),
+		  captchaAction: document.createElement( 'input' ),
+	  };
+
+	  // reCAPTCHAの取得.
+	  if ( typeof window.grecaptcha === 'object' ) {
+	  	const { grecaptcha } = window;
+		  grecaptcha.ready( () => {
+			  grecaptcha.execute( siteKey, { action: actionName })
+				  .then( ( token ) => {
+					  Object.keys( inputElement ).forEach( ( key ) => {
+						  if ( key === 'captchaResponse' ) {
+							  inputElement[key].setAttribute( 'name', '_recaptcha-response' );
+							  inputElement[key].setAttribute( 'value', token );
+  						} else if ( key === 'captchaAction' ) {
+	  						inputElement[key].setAttribute( 'name', '_recaptcha-action' );
+		  					inputElement[key].setAttribute( 'value', actionName );
+			  			}
+				  		inputElement[key].setAttribute( 'type', 'hidden' );
+					  	formElement.appendChild( inputElement[key]);
+					  });
+			  	})
+				  .catch( ( error ) => {
+					  console.warn( error );
+				  });
+		  });
+	  }
+  };
+
+	document.addEventListener( 'DOMContentLoaded', () => {
+		setCaptcha( '#mailform', '{{reCAPTCHA.key}}' );
+	}, false );
+})();
 </script>
+
   </body>
 </html>

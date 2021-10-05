@@ -45,42 +45,48 @@
 {{reCAPTCHA.script|raw}}
 <script>
 (function() {
-  const setCaptcha = (formID, site_key, action_name = 'contact') => {
-    const formElement = document.querySelector( formID );
-    if ( ! formElement || ! site_key ) {
-      return;
-    }
+  'use strict';
 
-    // reCAPTCHA用のDOM生成.
-    const inputElement = {
-      captchaResponse: document.createElement( 'input' ),
-      captchaAction: document.createElement( 'input' ),
-    };
+  const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
+	  const formElement = document.querySelector( formID );
+	  if ( ! formElement || ! siteKey ) {
+		  return;
+	  }
 
-    // reCAPTCHAの取得.
-    grecaptcha.ready(() => {
-      grecaptcha.execute(site_key, { action: action_name })
-      .then((token) => {
-        Object.keys( inputElement ).forEach( ( key ) => {
-          if ( key === 'captchaResponse' ) {
-            inputElement[key].setAttribute( 'name', 'g-recaptcha-response' );
-            inputElement[key].setAttribute( 'value', token );
-          } else if ( key === 'captchaAction' ) {
-            inputElement[key].setAttribute( 'name', 'g-recaptcha-action' );
-            inputElement[key].setAttribute( 'value', action_name );
-          }
-          inputElement[key].setAttribute( 'type', 'hidden' );
-          formElement.appendChild( inputElement[key]);
-        });
-      })
-      .catch( ( error ) => {
-        console.warn( error );
-      });
-    });
+	  // reCAPTCHA用のDOM生成.
+	  const inputElement = {
+		  captchaResponse: document.createElement( 'input' ),
+		  captchaAction: document.createElement( 'input' ),
+	  };
+
+	  // reCAPTCHAの取得.
+	  if ( typeof window.grecaptcha === 'object' ) {
+	  	const { grecaptcha } = window;
+		  grecaptcha.ready( () => {
+			  grecaptcha.execute( siteKey, { action: actionName })
+				  .then( ( token ) => {
+					  Object.keys( inputElement ).forEach( ( key ) => {
+						  if ( key === 'captchaResponse' ) {
+							  inputElement[key].setAttribute( 'name', '_recaptcha-response' );
+							  inputElement[key].setAttribute( 'value', token );
+  						} else if ( key === 'captchaAction' ) {
+	  						inputElement[key].setAttribute( 'name', '_recaptcha-action' );
+		  					inputElement[key].setAttribute( 'value', actionName );
+			  			}
+				  		inputElement[key].setAttribute( 'type', 'hidden' );
+					  	formElement.appendChild( inputElement[key]);
+					  });
+			  	})
+				  .catch( ( error ) => {
+					  console.warn( error );
+				  });
+		  });
+	  }
   };
-  document.addEventListener( 'DOMContentLoaded', () => {
-    setCaptcha( '#confirm', '{{reCAPTCHA.key}}' );
-  }, false );
+
+	document.addEventListener( 'DOMContentLoaded', () => {
+		setCaptcha( '#confirm', '{{reCAPTCHA.key}}' );
+	}, false );
 })();
 </script>
 

@@ -109,7 +109,7 @@ class InMemoryMailerRepository implements MailerRepository
         $post_data = $this->domain->getPosts();
 
         // バリデーション準備
-        $this->validate->set($post_data);
+        $this->validate->set($_POST);
 
         // ユーザーメールを形式チェックして格納
         $email_attr = isset($form['EMAIL_ATTRIBUTE']) ? $form['EMAIL_ATTRIBUTE'] : null;
@@ -211,16 +211,6 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 固有のメーラートークンを削除（重複チェック）
             $this->domain->checkinMailerToken();
-
-            //
-            /*
-            $post_data = $this->domain->getPosts();
-            if ( $this->validate->isHuman($post_data['g-recaptcha-response'], $post_data['g-recaptcha-action']) ) {
-                console('reCAPTCHA OK');
-            } else {
-                console('reCAPTCHA NG');
-            }
-            */
 
             // バリデーションチェック
             $this->validate->checkinValidateAll();

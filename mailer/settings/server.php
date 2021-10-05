@@ -61,8 +61,8 @@ return [
     // Google reCAPTCHA
     'CAPTCHA' => [
 
-        'SECRETKEY' => env('CAPTCHA_SECRETKEY'),
-
         'SITEKEY' => env('CAPTCHA_SITEKEY'),
+
+        'SECRETKEY' => env('CAPTCHA_SECRETKEY'),
     ]
 ];

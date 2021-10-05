@@ -14,7 +14,7 @@
         <div class="col">
           <h1 class="h4">入力内容の確認</h1>
           <p class="text-muted" style="font-size:0.875rem">以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
-          <form action="{{action.url}}" method="POST">
+          <form id="confirm" action="{{action.url}}" method="POST">
             <div class="table-responsive" style="font-size:0.875rem">
               <table class="table table-bordered">
                 {% for post in posts %}
@@ -40,5 +40,55 @@
         </div>
       </div>
     </div>
+
+{# Google reCAPTCHAを使用する場合 #}
+{{reCAPTCHA.script|raw}}
+<script>
+(function() {
+  'use strict';
+
+  const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
+	  const formElement = document.querySelector( formID );
+	  if ( ! formElement || ! siteKey ) {
+		  return;
+	  }
+
+	  // reCAPTCHA用のDOM生成.
+	  const inputElement = {
+		  captchaResponse: document.createElement( 'input' ),
+		  captchaAction: document.createElement( 'input' ),
+	  };
+
+	  // reCAPTCHAの取得.
+	  if ( typeof window.grecaptcha === 'object' ) {
+	  	const { grecaptcha } = window;
+		  grecaptcha.ready( () => {
+			  grecaptcha.execute( siteKey, { action: actionName })
+				  .then( ( token ) => {
+					  Object.keys( inputElement ).forEach( ( key ) => {
+						  if ( key === 'captchaResponse' ) {
+							  inputElement[key].setAttribute( 'name', '_recaptcha-response' );
+							  inputElement[key].setAttribute( 'value', token );
+  						} else if ( key === 'captchaAction' ) {
+	  						inputElement[key].setAttribute( 'name', '_recaptcha-action' );
+		  					inputElement[key].setAttribute( 'value', actionName );
+			  			}
+				  		inputElement[key].setAttribute( 'type', 'hidden' );
+					  	formElement.appendChild( inputElement[key]);
+					  });
+			  	})
+				  .catch( ( error ) => {
+					  console.warn( error );
+				  });
+		  });
+	  }
+  };
+
+	document.addEventListener( 'DOMContentLoaded', () => {
+		setCaptcha( '#confirm', '{{reCAPTCHA.key}}' );
+	}, false );
+})();
+</script>
+
   </body>
 </html>

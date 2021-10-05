@@ -47,6 +47,13 @@ class ValidateHandler
     private Validator $validate;
 
     /**
+     * しきい値
+     *
+     * @var float
+     */
+    private float $threshold = 0.5;
+
+    /**
      * コンストラクタ
      *
      * @param  SettingsInterface $settings
@@ -104,6 +111,7 @@ class ValidateHandler
         $this->checkinEmail();
         $this->checkinMBWord();
         $this->checkinNGWord();
+        $this->checkinHuman();
     }
 
     /**
@@ -114,10 +122,7 @@ class ValidateHandler
     public function checkinRequired(): void
     {
         if (isset($this->form['REQUIRED_ATTRIBUTE'])) {
-            $this->validate->rule(
-                'required',
-                $this->form['REQUIRED_ATTRIBUTE']
-            );
+            $this->validate->rule('required', $this->form['REQUIRED_ATTRIBUTE']);
         }
     }
 
@@ -132,10 +137,7 @@ class ValidateHandler
             Validator::addRule('EmailValidator', function ($field, $value) {
                 return $this->isCheckMailFormat($value);
             });
-            $this->validate->rule(
-                'EmailValidator',
-                $this->form['EMAIL_ATTRIBUTE']
-            )->message('メールアドレスの形式が正しくありません。');
+            $this->validate->rule('EmailValidator', $this->form['EMAIL_ATTRIBUTE'])->message('メールアドレスの形式が正しくありません。');
         }
     }
 
@@ -153,10 +155,7 @@ class ValidateHandler
                 }
                 return true;
             });
-            $this->validate->rule(
-                'MBValidator',
-                $this->form['MB_WORD']
-            )->message('日本語を含まない文章は送信できません。');
+            $this->validate->rule('MBValidator', $this->form['MB_WORD'])->message('日本語を含まない文章は送信できません。');
         }
     }
 
@@ -177,10 +176,7 @@ class ValidateHandler
                 }
                 return true;
             });
-            $this->validate->rule(
-                'NGValidator',
-                '*'
-            )->message('禁止ワードが含まれているため送信できません');
+            $this->validate->rule('NGValidator', '*')->message('禁止ワードが含まれているため送信できません。');
         }
     }
 
@@ -206,31 +202,38 @@ class ValidateHandler
      *
      * @param  string $token
      * @param  string $action
-     * @return bool
+     * @return void
      */
-    public function isHuman(string $token, string $action): bool
+    public function checkinHuman(): void
     {
-        try {
-            if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
-                // reCAPTCHA シークレットキー
-                $secretKey = $this->server['CAPTCHA']['SECRETKEY'];
+        // reCAPTCHA シークレットキー
+        $secretKey = isset($this->server['CAPTCHA']['SECRETKEY'])? $this->server['CAPTCHA']['SECRETKEY']: null;
 
-                $recaptcha = new ReCaptcha($secretKey);
+        if ($secretKey) {
+            Validator::addRule('HumanValidator', function ($field, $value, $params, $fields) use ($secretKey) {
+                try {
+                    if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
+                        // 指定したアクション名を取得.
+                        $action = isset($fields['_recaptcha-action'])? $fields['_recaptcha-action']: '';
 
-                $response = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
-                    ->setExpectedAction($action)
-                    ->setScoreThreshold(0.5)
-                    ->verify($token, $_SERVER['REMOTE_ADDR']);
-
-                if (!$response->isSuccess()) {
-                    throw new \Exception($response->getErrorCodes());
+                        $recaptcha = new ReCaptcha($secretKey);
+                        $response = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+                            ->setExpectedAction($action)
+                            ->setScoreThreshold($this->threshold)
+                            ->verify($value, $_SERVER['REMOTE_ADDR']);
+        
+                        if (!$response->isSuccess()) {
+                            throw new \Exception($response->getErrorCodes()[0]);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    return false;
                 }
-            }
-        } catch (\Exception $e) {
-            $this->logger->error('reCAPTCHA NG!');
-            return false;
+                return true;
+            });
+            $this->validate->rule('HumanValidator', '_recaptcha-response')->message('ロボットによる投稿は受け付けていません。');
+            $this->validate->rule('required', ['_recaptcha-response', '_recaptcha-action'])->message('');
         }
-        return true;
     }
 
     /**
@@ -246,7 +249,7 @@ class ValidateHandler
             'key' => $this->server['CAPTCHA']['SITEKEY'], // reCAPTCHA サイトキー
             'script' => sprintf(
                 '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
-                $this->server['CAPTCHA']['SITEKEY'] // reCAPTCHA サイトキー
+                trim(htmlspecialchars($this->server['CAPTCHA']['SITEKEY'], ENT_QUOTES, 'UTF-8'))
             ),
         ];
     }
