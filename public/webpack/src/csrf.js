@@ -42,7 +42,7 @@ const setCSRF = ( formID, path = '' ) => {
 		});
 };
 window.applyCSRF = ( element, path = '' ) => {
-	window.addEventListener( 'load', () => {
+	document.addEventListener( 'DOMContentLoaded', () => {
 		setCSRF( element, path );
 	}, false );
 };

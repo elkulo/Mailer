@@ -26,14 +26,12 @@
 
           <h2 class="h6 text-secondary fw-light">How to use</h2>
           <ol class="list-group list-group-numbered">
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0 rounded-0">
               <div class="ms-2 me-auto w-100">
-                <div class="fw-bold">
-                  formタグのPOSTを指定
-                </div>
-                method属性に <code>method="post"</code> を、action属性に <code>action="mailer/post.php"</code> を設定します。
-                あとは自由にinput要素, textarea要素などを追加します。
-                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form method="post" action="mailer/post.php"&gt;
+                <div class="h4 fw-bold">formタグのPOSTを指定</div>
+                <p>action属性に <code>action="{{router.mailer}}"</code> を、method属性に <code>method="post"</code> を設定します。
+                あとは自由にinput要素, textarea要素などを追加しましょう。</p>
+                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form id="mailform" method="post" action="{{router.mailer}}"&gt;
   &lt;input type="text" name="firstname" value="" /&gt;
   &lt;input type="text" name="lastname" value="" /&gt;
   &lt;input type="email" name="email" value="" /&gt;
@@ -44,21 +42,43 @@
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
               <div class="ms-2 me-auto w-100">
-                <div class="fw-bold">フォーム情報</div>
-                バリデーションなどの項目を settings/form.php で設定します。
+                <div class="h4 fw-bold">CSRFトークンの導入</div>
+                <div class="mb-1 fw-bold">(A) 独自のHTMLページからPOSTする場合</div>
+                <p>JavascriptでAPI経由のCSRFトークンを挿入する必要があります。formタグのidまたはclassを <code>applyCSRF()</code> の第一引数に渡します。指定のformタグ内にCSRFタグが自動で挿入されます。</p>
+                <p>こちらのjavascriptファイルをダウンロードして任意の場所に設置してください。</p>
+                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script type="text/javascript" src="csrf.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;window.applyCSRF('#mailform');&lt;/script&gt;</code></pre>
+                <hr />
+                <div class="mb-1 fw-bold">(B) Templateディレクトリ内からPOSTする場合</div>
+                <p>templates内のTwigファイルでは、あらかじめ用意されたTwig変数でCSRFトークンを設置できます。formタグ内に <code>{{ '{{csrf|raw}}' }}</code> を記載するだけです。</p>
+                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form id="mailform" method="post" action="{{router.mailer}}"&gt;
+  :
+  {{ '{{csrf|raw}}' }}
+&lt;/form&gt;</code></pre>
+                <hr />
+                <div class="mt-3 mx-2 text-success" style="font-size:0.875rem">
+                  <div class="mb-1 fw-bold">CSRF対策</div>
+                  <p>外部から発生する悪意ある攻撃からWebアプリケーションを守るために、メールプログラムはCSRFトークンを持たないリクエストを一切受け付けません。</p>
+                </div>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
               <div class="ms-2 me-auto w-100">
-                <div class="fw-bold">環境設定</div>
-                env.sample.txt を .env にリネームして内容を編集します。または settings/server.php を直接編集することもできます。
+                <div class="h4 fw-bold">フォーム情報</div>
+                <p>バリデーションなどの項目を settings/form.php で設定します。</p>
               </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
               <div class="ms-2 me-auto w-100">
-                <div class="fw-bold">メールの雛形</div>
-                確認ページや送信されるメールのテンプレートは templates/ ディレクトリ内のTwigファイルを編集してカスタマイズします。
-                name属性を<code>{{ '{{email}}' }}</code>の波括弧で囲む記述で、入力されたvalueの値に置き換わります。
+                <div class="h4 fw-bold">環境設定</div>
+                <p>env.sample.txt を .env にリネームして内容を編集します。または settings/server.php を直接編集することもできます。</p>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <div class="ms-2 me-auto w-100">
+                <div class="h4 fw-bold">メールの雛形</div>
+                <p>確認ページや送信されるメールのテンプレートは templates ディレクトリ内のTwigファイルを編集してカスタマイズします。
+                name属性を<code>{{ '{{email}}' }}</code>の波括弧で囲む記述で、入力されたvalueの値に置き換わります。</p>
               </div>
             </li>
           </ol>

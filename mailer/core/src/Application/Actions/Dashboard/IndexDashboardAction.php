@@ -24,9 +24,14 @@ class IndexDashboardAction extends DashboardAction
         $repository = $this->dashboardRepository->index();
 
         // 次のステップURL.
-        $router['health_check'] = RouteContext::fromRequest($this->request)
-            ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'health-check');
+        $router = [
+            'mailer' => RouteContext::fromRequest($this->request)
+                ->getRouteParser()
+                ->fullUrlFor($this->request->getUri(), 'mailer'),
+            'health_check' => RouteContext::fromRequest($this->request)
+                ->getRouteParser()
+                ->fullUrlFor($this->request->getUri(), 'health-check')
+        ];
 
         // bodyを生成
         $response = $this->view->render(
