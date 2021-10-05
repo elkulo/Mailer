@@ -138,6 +138,7 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->csrf->getTokenValueKey(),
                     $this->csrf->getTokenValue()
                 ),
+                'reCAPTCHA' => $this->validate->getCaptchaScript(),
             ]
         ];
     }
@@ -169,7 +170,7 @@ class InMemoryMailerRepository implements MailerRepository
             // 適正な$_POSTを取得.
             $posts = $this->domain->getPosts();
 
-            // 確認画面から送信されていない場合
+            // 確認画面を生成.
             $system = array(
                 'posts' => $this->domain->getConfirmQuery(),
                 'csrf'   => sprintf(
@@ -182,6 +183,7 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->csrf->getTokenValue(),
                     $this->domain->getPageReferer()
                 ),
+                'reCAPTCHA' => $this->validate->getCaptchaScript(),
             );
             return [
                 'template' => 'confirm.twig',
@@ -213,7 +215,7 @@ class InMemoryMailerRepository implements MailerRepository
             //
             /*
             $post_data = $this->domain->getPosts();
-            if ( $this->validate->checkHuman($post_data['g-recaptcha-response'], $post_data['g-recaptcha-action']) ) {
+            if ( $this->validate->isHuman($post_data['g-recaptcha-response'], $post_data['g-recaptcha-action']) ) {
                 console('reCAPTCHA OK');
             } else {
                 console('reCAPTCHA NG');
@@ -227,7 +229,7 @@ class InMemoryMailerRepository implements MailerRepository
             if (!$this->validate->validate()) {
                 return [
                     'template' => 'validate.twig',
-                    'messages' => array_map(fn($n) => $n[0], $this->validate->errors())
+                    'messages' => array_map(fn($n) => $n[0], $this->validate->errors()),
                 ];
             }
 
@@ -271,7 +273,7 @@ class InMemoryMailerRepository implements MailerRepository
             );
 
             if (!array_search(false, $success)) {
-                // 送信完了画面
+                // 完了画面を生成.
                 $router['url'] = $this->domain->getReturnURL();
                 return [
                     'template' => 'complete.twig',

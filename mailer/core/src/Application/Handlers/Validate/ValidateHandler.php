@@ -103,7 +103,7 @@ class ValidateHandler
         $this->checkinRequired();
         $this->checkinEmail();
         $this->checkinMBWord();
-        $this->checkNGWord();
+        $this->checkinNGWord();
     }
 
     /**
@@ -165,7 +165,7 @@ class ValidateHandler
      *
      * @return void
      */
-    public function checkNGWord(): void
+    public function checkinNGWord(): void
     {
         $ng_words = (array) explode(' ', $this->form['NG_WORD']);
         if (isset($ng_words[0])) {
@@ -208,7 +208,7 @@ class ValidateHandler
      * @param  string $action
      * @return bool
      */
-    public function checkHuman(string $token, string $action): bool
+    public function isHuman(string $token, string $action): bool
     {
         try {
             if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
@@ -238,13 +238,16 @@ class ValidateHandler
      *
      * @param  string $token
      * @param  string $action
-     * @return bool
+     * @return array
      */
-    public function getCaptchaScript()
+    public function getCaptchaScript():array
     {
-        return sprintf(
-            '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
-            $this->server['CAPTCHA']['SITEKEY'] // reCAPTCHA サイトキー
-        );
+        return [
+            'key' => $this->server['CAPTCHA']['SITEKEY'], // reCAPTCHA サイトキー
+            'script' => sprintf(
+                '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
+                $this->server['CAPTCHA']['SITEKEY'] // reCAPTCHA サイトキー
+            ),
+        ];
     }
 }
