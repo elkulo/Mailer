@@ -24,7 +24,7 @@ class ConfirmMailerAction extends MailerAction
         $repository = $this->mailerRepository->confirm();
 
         // 次のステップURL.
-        $router['next'] = RouteContext::fromRequest($this->request)
+        $router['url'] = RouteContext::fromRequest($this->request)
             ->getRouteParser()
             ->fullUrlFor($this->request->getUri(), 'mailer.confirm.complete');
 
@@ -32,7 +32,7 @@ class ConfirmMailerAction extends MailerAction
         $response = $this->view->render(
             $this->response,
             'templates/' . $repository['template'],
-            array_merge($repository['data'], ['router' => $router])
+            array_merge($repository['data'], ['action' => $router])
         );
 
         return $response;

@@ -130,14 +130,14 @@ class InMemoryMailerRepository implements MailerRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'csrf'   => [
-                    'keys' => [
-                        'name'  => $this->csrf->getTokenNameKey(),
-                        'value' => $this->csrf->getTokenValueKey(),
-                    ],
-                    'name'  => $this->csrf->getTokenName(),
-                    'value' => $this->csrf->getTokenValue(),
-                ]
+                'csrf'   => sprintf(
+                    '<input type="hidden" name="%1$s" value="%2$s">
+                    <input type="hidden" name="%3$s" value="%4$s">',
+                    $this->csrf->getTokenNameKey(),
+                    $this->csrf->getTokenName(),
+                    $this->csrf->getTokenValueKey(),
+                    $this->csrf->getTokenValue()
+                ),
             ]
         ];
     }
@@ -155,13 +155,11 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 入力エラーの判定
             if (!$this->validate->validate()) {
-                $validate_massage = '';
-                foreach ($this->validate->errors() as $error) {
-                    $validate_massage .= '<p>' . $error[0] . '</p>';
-                }
                 return [
                     'template' => 'validate.twig',
-                    'data' => array('theValidateMassage' => $validate_massage)
+                    'data' => array(
+                        'messages' => array_map(fn($n) => $n[0], $this->validate->errors())
+                    )
                 ];
             }
 
@@ -193,7 +191,7 @@ class InMemoryMailerRepository implements MailerRepository
             $this->logger->error($e->getMessage());
             return [
                 'template' => 'exception.twig',
-                'data' => array('theExceptionMassage' => $e->getMessage())
+                'data' => array('message' => $e->getMessage())
             ];
         }
     }
@@ -227,13 +225,9 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 入力エラーの判定
             if (!$this->validate->validate()) {
-                $validate_massage = '';
-                foreach ($this->validate->errors() as $error) {
-                    $validate_massage .= '<p>' . $error[0] . '</p>';
-                }
                 return [
                     'template' => 'validate.twig',
-                    'data' => array('theValidateMassage' => $validate_massage)
+                    'messages' => array_map(fn($n) => $n[0], $this->validate->errors())
                 ];
             }
 
@@ -278,12 +272,10 @@ class InMemoryMailerRepository implements MailerRepository
 
             if (!array_search(false, $success)) {
                 // 送信完了画面
-                $system = array(
-                    'theReturnURL' => $this->domain->getReturnURL(),
-                );
+                $router['url'] = $this->domain->getReturnURL();
                 return [
                     'template' => 'complete.twig',
-                    'data' => array_merge($posts, $system)
+                    'data' => array_merge($posts, ['return' => $router])
                 ];
             } else {
                 throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
@@ -292,7 +284,7 @@ class InMemoryMailerRepository implements MailerRepository
             $this->logger->error($e->getMessage());
             return [
                 'template' => 'exception.twig',
-                'data' => array('theExceptionMassage' => $e->getMessage())
+                'data' => array('message' => $e->getMessage())
             ];
         }
     }
