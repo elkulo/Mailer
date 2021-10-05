@@ -17,6 +17,7 @@ module.exports = {
   entry: {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
     csrf: path.resolve(__dirname, dirscript, "./src/csrf.js"),
+    captcha: path.resolve(__dirname, dirscript, "./src/captcha.js"),
   },
   output: {
     path: path.resolve(__dirname, dirscript, "./dest"),
