@@ -24,7 +24,7 @@ class IndexHealthCheckAction extends HealthCheckAction
         $repository = $this->healthCheckRepository->index();
 
         // 次のステップURL.
-        $router['next'] = RouteContext::fromRequest($this->request)
+        $router['url'] = RouteContext::fromRequest($this->request)
             ->getRouteParser()
             ->fullUrlFor($this->request->getUri(), 'health-check.confirm');
 
@@ -32,7 +32,7 @@ class IndexHealthCheckAction extends HealthCheckAction
         $response = $this->view->render(
             $this->response,
             'health-check/' . $repository['template'],
-            array_merge($repository['data'], ['router' => $router])
+            array_merge($repository['data'], ['action' => $router])
         );
 
         return $response;

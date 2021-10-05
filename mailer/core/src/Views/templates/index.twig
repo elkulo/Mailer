@@ -10,7 +10,7 @@
   </head>
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 720px">
-      <form id="mailform" class="needs-validation" name="mailform" method="post" action="{{router.next}}" novalidate>
+      <form id="mailform" class="needs-validation" name="mailform" method="post" action="{{action.url}}" novalidate>
 
         <div class="mb-3">
           <div class="form-label">件名</div>
@@ -91,9 +91,27 @@
           </div>
 
           {# CSRF セキュリティのためFormタグ直前に必須 #}
-          <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-          <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
+          {{csrf|raw}}
         </form>
       </div>
+
+<script>
+/*
+(function(){
+  $('[type="submit"]').submit((event) => {
+    event.preventDefault();
+    const action_name = 'contact'; //アクション名 
+    grecaptcha.ready(() => {
+      grecaptcha.execute('<?php echo $siteKey; ?>', { action: action_name })
+      .then((token) => {
+        $('#rc_form').prepend('<input type="hidden" name="g-recaptcha-response" value="' + token + '">');
+        $('#rc_form').prepend('<input type="hidden" name="g-recaptcha-action" value="' + action_name + '">');
+        $('#rc_form').unbind('submit').submit();
+      });
+    });
+  });
+})($);
+*/
+</script>
   </body>
 </html>
