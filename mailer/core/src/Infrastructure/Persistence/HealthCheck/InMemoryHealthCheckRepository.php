@@ -11,12 +11,12 @@ namespace App\Infrastructure\Persistence\HealthCheck;
 use Slim\Csrf\Guard;
 use Slim\Flash\Messages;
 use Psr\Log\LoggerInterface;
-use App\Application\Settings\SettingsInterface;
-use App\Domain\HealthCheck\HealthPost;
 use App\Domain\HealthCheck\HealthCheckRepository;
-use App\Application\Handlers\Mail\MailHandler;
-use App\Application\Handlers\DB\DBHandler;
-use App\Application\Handlers\Validate\ValidateHandler;
+use App\Domain\HealthCheck\HealthPost;
+use App\Application\Settings\SettingsInterface;
+use App\Application\Handlers\Validate\ValidateHandlerInterface;
+use App\Application\Handlers\Mail\MailHandlerInterface;
+use App\Application\Handlers\DB\DBHandlerInterface;
 
 class InMemoryHealthCheckRepository implements HealthCheckRepository
 {
@@ -53,21 +53,21 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     /**
      * バリデート
      *
-     * @var ValidateHandler
+     * @var ValidateHandlerInterface
      */
     private $validate;
 
     /**
      * メールハンドラー
      *
-     * @var MailHandler
+     * @var MailHandlerInterface
      */
     private $mail;
 
     /**
      * DBハンドラー
      *
-     * @var DBHandler|null
+     * @var DBHandlerInterface|null
      */
     private $db;
 
@@ -78,18 +78,18 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      * @param Messages $messages
      * @param LoggerInterface $logger
      * @param SettingsInterface $settings
-     * @param ValidateHandler $validate
-     * @param MailHandler $mail
-     * @param DBHandler $db
+     * @param ValidateHandlerInterface $validate
+     * @param MailHandlerInterface $mail
+     * @param DBHandlerInterface $db
      */
     public function __construct(
         Guard $csrf,
         Messages $messages,
         LoggerInterface $logger,
         SettingsInterface $settings,
-        ValidateHandler $validate,
-        MailHandler $mail,
-        DBHandler $db
+        ValidateHandlerInterface $validate,
+        MailHandlerInterface $mail,
+        DBHandlerInterface $db
     ) {
 
         // CSRF

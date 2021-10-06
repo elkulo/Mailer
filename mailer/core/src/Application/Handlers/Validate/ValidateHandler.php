@@ -17,7 +17,7 @@ use Egulias\EmailValidator\Validation\RFCValidation;
 use Valitron\Validator;
 use ReCaptcha\ReCaptcha;
 
-class ValidateHandler
+class ValidateHandler implements ValidateHandlerInterface
 {
 
     /**

@@ -12,13 +12,14 @@ use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
 use App\Application\Settings\SettingsInterface;
-use App\Application\Handlers\Mail\MailHandler;
+use App\Application\Handlers\Validate\ValidateHandlerInterface;
+use App\Application\Handlers\Validate\ValidateHandler;
+use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\Mail\WordPressHandler;
 use App\Application\Handlers\Mail\PHPMailerHandler;
-use App\Application\Handlers\DB\DBHandler;
+use App\Application\Handlers\DB\DBHandlerInterface;
 use App\Application\Handlers\DB\MySQLHandler;
 use App\Application\Handlers\DB\SQLiteHandler;
-use App\Application\Handlers\Validate\ValidateHandler;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -58,8 +59,8 @@ return function (ContainerBuilder $containerBuilder) {
             $twig->getEnvironment()->addGlobal('flash', $c->get(Messages::class));
             return $twig;
         },
-        MailHandler::class => \DI\autowire(PHPMailerHandler::class),
-        DBHandler::class => \DI\autowire(SQLiteHandler::class),
-        ValidateHandler::class => \DI\autowire(ValidateHandler::class),
+        ValidateHandlerInterface::class => \DI\autowire(ValidateHandler::class),
+        MailHandlerInterface::class => \DI\autowire(PHPMailerHandler::class),
+        DBHandlerInterface::class => \DI\autowire(SQLiteHandler::class),
     ]);
 };
