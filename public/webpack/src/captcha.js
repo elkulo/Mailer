@@ -3,7 +3,7 @@
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
-const setCaptcha = ( formID, siteKey,  actionName = 'mailer' ) => {
+const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 
 	const formElement = document.querySelector( formID );
 
@@ -11,41 +11,44 @@ const setCaptcha = ( formID, siteKey,  actionName = 'mailer' ) => {
 		return;
 	}
 
-	// scriptタグを生成.
-	const scriptDOM = document.createElement( 'script' );
-	scriptDOM.src = 'https://www.google.com/recaptcha/api.js?render=' + siteKey;
-	scriptDOM.type = 'text/javascript';
-	document.head.appendChild( scriptDOM );
-
 	// reCAPTCHA用のDOM生成.
 	const inputElement = {
 		captchaResponse: document.createElement( 'input' ),
 		captchaAction: document.createElement( 'input' ),
 	};
+	Object.keys( inputElement ).forEach( ( key ) => {
+		if ( key === 'captchaResponse' ) {
+			inputElement[key].setAttribute( 'name', '_recaptcha-response' );
+			inputElement[key].setAttribute( 'value', '' );
+		} else if ( key === 'captchaAction' ) {
+			inputElement[key].setAttribute( 'name', '_recaptcha-action' );
+			inputElement[key].setAttribute( 'value', actionName );
+		}
+		inputElement[key].setAttribute( 'type', 'hidden' );
+		formElement.appendChild( inputElement[key]);
+	});
 
-	// reCAPTCHAの取得.
-	if ( typeof window.grecaptcha === 'object' ) {
+	// トークンの更新.
+	const changeToken = ( e ) => {
 		const { grecaptcha } = window;
+		if ( typeof grecaptcha !== 'object' ) {
+			return;
+		}
+		e.preventDefault();
+		e.stopPropagation();
 		grecaptcha.ready( () => {
 			grecaptcha.execute( siteKey, { action: actionName })
 				.then( ( token ) => {
-					Object.keys( inputElement ).forEach( ( key ) => {
-						if ( key === 'captchaResponse' ) {
-							inputElement[key].setAttribute( 'name', '_recaptcha-response' );
-							inputElement[key].setAttribute( 'value', token );
-						} else if ( key === 'captchaAction' ) {
-							inputElement[key].setAttribute( 'name', '_recaptcha-action' );
-							inputElement[key].setAttribute( 'value', actionName );
-						}
-						inputElement[key].setAttribute( 'type', 'hidden' );
-						formElement.appendChild( inputElement[key]);
-					});
+					inputElement.captchaResponse.setAttribute( 'value', token );
+				}).then( () => {
+					e.target.submit();
 				})
 				.catch( ( error ) => {
 					console.warn( error );
 				});
 		});
-	}
+	};
+	formElement.addEventListener( 'submit', ( e ) => changeToken( e ), false );
 };
 
 window.applyCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {

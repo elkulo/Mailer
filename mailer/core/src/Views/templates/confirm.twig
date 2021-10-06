@@ -42,53 +42,10 @@
     </div>
 
 {# Google reCAPTCHAを使用する場合 #}
-{{reCAPTCHA.script|raw}}
-<script>
-(function() {
-  'use strict';
-
-  const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
-	  const formElement = document.querySelector( formID );
-	  if ( ! formElement || ! siteKey ) {
-		  return;
-	  }
-
-	  // reCAPTCHA用のDOM生成.
-	  const inputElement = {
-		  captchaResponse: document.createElement( 'input' ),
-		  captchaAction: document.createElement( 'input' ),
-	  };
-
-	  // reCAPTCHAの取得.
-	  if ( typeof window.grecaptcha === 'object' ) {
-	  	const { grecaptcha } = window;
-		  grecaptcha.ready( () => {
-			  grecaptcha.execute( siteKey, { action: actionName })
-				  .then( ( token ) => {
-					  Object.keys( inputElement ).forEach( ( key ) => {
-						  if ( key === 'captchaResponse' ) {
-							  inputElement[key].setAttribute( 'name', '_recaptcha-response' );
-							  inputElement[key].setAttribute( 'value', token );
-  						} else if ( key === 'captchaAction' ) {
-	  						inputElement[key].setAttribute( 'name', '_recaptcha-action' );
-		  					inputElement[key].setAttribute( 'value', actionName );
-			  			}
-				  		inputElement[key].setAttribute( 'type', 'hidden' );
-					  	formElement.appendChild( inputElement[key]);
-					  });
-			  	})
-				  .catch( ( error ) => {
-					  console.warn( error );
-				  });
-		  });
-	  }
-  };
-
-	document.addEventListener( 'DOMContentLoaded', () => {
-		setCaptcha( '#confirm', '{{reCAPTCHA.key}}' );
-	}, false );
-})();
-</script>
+{% if reCAPTCHA.key %}
+{% include '/assets/captcha.min.js.twig' %}
+<script>applyCaptcha( '#confirm', '{{reCAPTCHA.key}}' );</script>
+{% endif %}
 
   </body>
 </html>

@@ -47,7 +47,7 @@ class ValidateHandler implements ValidateHandlerInterface
     private Validator $validate;
 
     /**
-     * しきい値
+     * reCAPTCHAの閾値
      *
      * @var float
      */
@@ -245,12 +245,21 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function getCaptchaScript():array
     {
-        return [
-            'key' => $this->server['CAPTCHA']['SITEKEY'], // reCAPTCHA サイトキー
-            'script' => sprintf(
-                '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
-                trim(htmlspecialchars($this->server['CAPTCHA']['SITEKEY'], ENT_QUOTES, 'UTF-8'))
-            ),
-        ];
+        // reCAPTCHA サイトキー
+        $siteKey = isset($this->server['CAPTCHA']['SITEKEY'])? $this->server['CAPTCHA']['SITEKEY']: '';
+        if ($siteKey) {
+            return [
+                'key' => trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8')),
+                'script' => sprintf(
+                    '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
+                    trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8'))
+                ),
+            ];
+        } else {
+            return [
+                'key' => '',
+                'script' => '',
+            ];
+        }
     }
 }
