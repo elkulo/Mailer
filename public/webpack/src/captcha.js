@@ -3,12 +3,19 @@
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
+const setCaptcha = ( formID, siteKey,  actionName = 'mailer' ) => {
 
-const setCaptcha = ( formID, siteKey, actionName ) => {
 	const formElement = document.querySelector( formID );
+
 	if ( ! formElement || ! siteKey ) {
 		return;
 	}
+
+	// scriptタグを生成.
+	const scriptDOM = document.createElement( 'script' );
+	scriptDOM.src = 'https://www.google.com/recaptcha/api.js?render=' + siteKey;
+	scriptDOM.type = 'text/javascript';
+	document.head.appendChild( scriptDOM );
 
 	// reCAPTCHA用のDOM生成.
 	const inputElement = {

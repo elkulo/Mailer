@@ -3,7 +3,7 @@
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
-const BootstrapVaridation = ( element = '.needs-validation' ) => {
+const BootstrapValidate = ( element = '.needs-validation' ) => {
 
 	// Fetch all the forms we want to apply custom Bootstrap validation styles to
 	const forms = document.querySelectorAll( element );
@@ -24,4 +24,4 @@ const BootstrapVaridation = ( element = '.needs-validation' ) => {
 		);
 	});
 };
-export default BootstrapVaridation;
+export default BootstrapValidate;
