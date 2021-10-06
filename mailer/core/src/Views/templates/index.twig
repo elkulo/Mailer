@@ -11,138 +11,94 @@
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 720px">
       <form id="mailform" class="needs-validation" name="mailform" method="post" action="{{action.url}}" novalidate>
-
         <div class="mb-3">
           <div class="form-label">件名</div>
-            <div class="form-check form-check-inline">
-              <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
-              <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
-              <label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
-            </div>
+          <div class="form-check form-check-inline">
+            <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
+            <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
           </div>
-
-          <div class="mb-3">
-            <label for="CustomerType" class="form-label">種別</label>
-            <select name="customerType" id="CustomerType" class="form-select" required>
-              <option value="見積希望" selected>見積希望</option>
-              <option value="通信・弱電工事全般">通信・弱電工事全般</option>
-              <option value="音響・映像機器設置">音響・映像機器設置</option>
-              <option value="LED照明取付工事">LED照明取付工事</option>
-              <option value="通信ケーブル各種配線">通信ケーブル各種配線</option>
-              <option value="各種家電商品販売">各種家電商品販売</option>
-              <option value="セキュリティ機器取付">セキュリティ機器取付</option>
-              <option value="その他">その他</option>
-            </select>
+          <div class="form-check form-check-inline">
+            <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
+            <label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label for="CustomerName" class="form-label">お名前</label>
-            <input type="tel" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
-            <div class="invalid-feedback">
-              お名前を記入してください。
-            </div>
+        <div class="mb-3">
+          <label for="CustomerType" class="form-label">種別</label>
+          <select name="customerType" id="CustomerType" class="form-select" required>
+            <option value="見積希望" selected>見積希望</option>
+            <option value="通信・弱電工事全般">通信・弱電工事全般</option>
+            <option value="音響・映像機器設置">音響・映像機器設置</option>
+            <option value="LED照明取付工事">LED照明取付工事</option>
+            <option value="通信ケーブル各種配線">通信ケーブル各種配線</option>
+            <option value="各種家電商品販売">各種家電商品販売</option>
+            <option value="セキュリティ機器取付">セキュリティ機器取付</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="CustomerName" class="form-label">お名前</label>
+          <input type="tel" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
+          <div class="invalid-feedback">
+            お名前を記入してください。
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label for="CustomerPhonetic" class="form-label">フリガナ</label>
-            <input type="text" id="CustomerPhonetic" class="form-control" name="customerNameKana" placeholder="フリガナ" required>
-            <div class="invalid-feedback">
-              フリガナを記入してください。
-            </div>
+        <div class="mb-3">
+          <label for="CustomerPhonetic" class="form-label">フリガナ</label>
+          <input type="text" id="CustomerPhonetic" class="form-control" name="customerNameKana" placeholder="フリガナ" required>
+          <div class="invalid-feedback">
+            フリガナを記入してください。
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label for="CustomerDomicile" class="form-label">ご住所<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
-            <input type="text" id="CustomerDomicile" class="form-control" name="address" placeholder="東京都千代田区">
+        <div class="mb-3">
+          <label for="CustomerDomicile" class="form-label">ご住所<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
+          <input type="text" id="CustomerDomicile" class="form-control" name="address" placeholder="東京都千代田区">
+        </div>
+
+        <div class="mb-3">
+          <label for="CustomerEmail" class="form-label">メールアドレス</label>
+          <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="email" placeholder="mail@example.com" required>
+          <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
+          <div class="invalid-feedback">
+            メールアドレスを記入してください。
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label for="CustomerEmail" class="form-label">メールアドレス</label>
-            <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="email" placeholder="mail@example.com" required>
-            <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
-            <div class="invalid-feedback">
-              メールアドレスを記入してください。
-            </div>
+        <div class="mb-3">
+          <label for="CustomerTell" class="form-label">電話番号<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
+          <input type="tel" id="CustomerTell" class="form-control" name="phoneNumber" placeholder="03-1234-00XX">
+        </div>
+
+        <div class="mb-3">
+          <label for="CustomerComment" class="form-label">ご要望</label>
+          <textarea id="CustomerComment" class="form-control" name="requestContent" placeholder="ご要望などお書きください..." rows="5" required></textarea>
+          <div class="invalid-feedback">
+            ご要望を記入してください。
           </div>
+        </div>
 
-          <div class="mb-3">
-            <label for="CustomerTell" class="form-label">電話番号<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
-            <input type="tel" id="CustomerTell" class="form-control" name="phoneNumber" placeholder="03-1234-00XX">
-          </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
+          <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
+        </div>
 
-          <div class="mb-3">
-            <label for="CustomerComment" class="form-label">ご要望</label>
-            <textarea id="CustomerComment" class="form-control" name="requestContent" placeholder="ご要望などお書きください..." rows="5" required></textarea>
-            <div class="invalid-feedback">
-               ご要望を記入してください。
-            </div>
-          </div>
+        <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">
+          <button type="submit" class="btn btn-primary">上記内容を送信する</button>
+        </div>
 
-          <div class="mb-3 form-check">
-            <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
-            <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
-          </div>
-
-          <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">
-            <button type="submit" class="btn btn-primary">上記内容を送信する</button>
-          </div>
-
-          {# CSRF セキュリティのためFormタグ直前に必須 #}
-          {{csrf|raw}}
-        </form>
-      </div>
+        {# CSRF セキュリティのためFormタグ直前に必須 #}
+        {{csrf|raw}}
+      </form>
+    </div>
 
 {# Google reCAPTCHAを使用する場合 #}
-{{reCAPTCHA.script|raw}}
-<script>
-(function() {
-  'use strict';
-
-  const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
-	  const formElement = document.querySelector( formID );
-	  if ( ! formElement || ! siteKey ) {
-		  return;
-	  }
-
-	  // reCAPTCHA用のDOM生成.
-	  const inputElement = {
-		  captchaResponse: document.createElement( 'input' ),
-		  captchaAction: document.createElement( 'input' ),
-	  };
-
-	  // reCAPTCHAの取得.
-	  if ( typeof window.grecaptcha === 'object' ) {
-	  	const { grecaptcha } = window;
-		  grecaptcha.ready( () => {
-			  grecaptcha.execute( siteKey, { action: actionName })
-				  .then( ( token ) => {
-					  Object.keys( inputElement ).forEach( ( key ) => {
-						  if ( key === 'captchaResponse' ) {
-							  inputElement[key].setAttribute( 'name', '_recaptcha-response' );
-							  inputElement[key].setAttribute( 'value', token );
-  						} else if ( key === 'captchaAction' ) {
-	  						inputElement[key].setAttribute( 'name', '_recaptcha-action' );
-		  					inputElement[key].setAttribute( 'value', actionName );
-			  			}
-				  		inputElement[key].setAttribute( 'type', 'hidden' );
-					  	formElement.appendChild( inputElement[key]);
-					  });
-			  	})
-				  .catch( ( error ) => {
-					  console.warn( error );
-				  });
-		  });
-	  }
-  };
-
-	document.addEventListener( 'DOMContentLoaded', () => {
-		setCaptcha( '#mailform', '{{reCAPTCHA.key}}' );
-	}, false );
-})();
-</script>
+{% if reCAPTCHA.key %}
+{% include '/assets/captcha.min.js.twig' %}
+<script>applyCaptcha( '#mailform', '{{reCAPTCHA.key}}' );</script>
+{% endif %}
 
   </body>
 </html>

@@ -51,7 +51,7 @@ return function (App $app) {
     });
 
     // API
-    $app->get('/api/v1/service', ApiMailerAction::class);
+    $app->get('/api/v1/csrf', ApiMailerAction::class);
 
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {

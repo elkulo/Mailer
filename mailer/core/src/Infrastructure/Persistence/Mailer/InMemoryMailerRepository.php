@@ -306,9 +306,6 @@ class InMemoryMailerRepository implements MailerRepository
                 ],
                 'name'  => $this->csrf->getTokenName(),
                 'value' => $this->csrf->getTokenValue(),
-            ],
-            'captcha' => [
-                'sitekey' => isset($this->server['CAPTCHA']['SITEKEY'])? $this->server['CAPTCHA']['SITEKEY']: '',
             ]
         ];
     }
