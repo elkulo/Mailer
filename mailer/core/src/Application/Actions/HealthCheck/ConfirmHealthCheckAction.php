@@ -31,7 +31,7 @@ class ConfirmHealthCheckAction extends HealthCheckAction
         // 次のステップURL.
         $router['url'] = RouteContext::fromRequest($this->request)
             ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'health-check.confirm.result');
+            ->fullUrlFor($this->request->getUri(), 'health-check.result');
 
         // bodyを生成
         $response = $this->view->render(

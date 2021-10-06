@@ -10,6 +10,8 @@
     {% include '/assets/bootstrap.min.js.twig' %}
   </head>
   <body class="bg-light">
+    {% include '/utils/flash-message.twig' %}
+
     <div class="container-fluid mt-5 mb-3">
       <div class="row">
         <div class="col">
@@ -61,10 +63,12 @@
                     <input type="text" name="passcode-6" id="inputPasscode6" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
                   <div class="col-3 col-md-auto">
-                    <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                    <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                     <button type="submit" id="inputPasscodeSubmit" class="btn btn-primary">検証</button>
                   </div>
+                </div>
+                <div style="display:none">
+                  <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                  <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 </div>
               </form>
             </div>

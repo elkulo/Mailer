@@ -26,7 +26,7 @@ class ConfirmMailerAction extends MailerAction
         // 次のステップURL.
         $router['url'] = RouteContext::fromRequest($this->request)
             ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'mailer.confirm.complete');
+            ->fullUrlFor($this->request->getUri(), 'mailer.complete');
 
         // bodyを生成
         $response = $this->view->render(
