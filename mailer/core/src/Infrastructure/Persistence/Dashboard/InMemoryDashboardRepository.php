@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Dashboard;
 
-use App\Application\Settings\SettingsInterface;
 use App\Domain\Dashboard\DashboardRepository;
+use App\Application\Settings\SettingsInterface;
 
 class InMemoryDashboardRepository implements DashboardRepository
 {

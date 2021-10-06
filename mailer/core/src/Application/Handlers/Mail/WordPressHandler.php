@@ -11,7 +11,7 @@ namespace App\Application\Handlers\Mail;
 /**
  * WordPressHandler
  */
-class WordPressHandler implements MailHandler
+class WordPressHandler implements MailHandlerInterface
 {
 
     /**

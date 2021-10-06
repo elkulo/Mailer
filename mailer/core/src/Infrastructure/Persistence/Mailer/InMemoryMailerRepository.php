@@ -10,12 +10,12 @@ namespace App\Infrastructure\Persistence\Mailer;
 
 use Slim\Csrf\Guard;
 use Psr\Log\LoggerInterface;
-use App\Application\Settings\SettingsInterface;
-use App\Domain\Mailer\MailPost;
 use App\Domain\Mailer\MailerRepository;
-use App\Application\Handlers\Mail\MailHandler;
-use App\Application\Handlers\DB\DBHandler;
-use App\Application\Handlers\Validate\ValidateHandler;
+use App\Domain\Mailer\MailPost;
+use App\Application\Settings\SettingsInterface;
+use App\Application\Handlers\Mail\MailHandlerInterface;
+use App\Application\Handlers\DB\DBHandlerInterface;
+use App\Application\Handlers\Validate\ValidateHandlerInterface;
 
 class InMemoryMailerRepository implements MailerRepository
 {
@@ -45,21 +45,21 @@ class InMemoryMailerRepository implements MailerRepository
     /**
      * バリデート
      *
-     * @var ValidateHandler
+     * @var ValidateHandlerInterface
      */
     private $validate;
 
     /**
      * メールハンドラー
      *
-     * @var MailHandler
+     * @var MailHandlerInterface
      */
     private $mail;
 
     /**
      * DBハンドラー
      *
-     * @var DBHandler|null
+     * @var DBHandlerInterface|null
      */
     private $db;
 
@@ -69,17 +69,17 @@ class InMemoryMailerRepository implements MailerRepository
      * @param Guard $csrf,
      * @param LoggerInterface $logger,
      * @param SettingsInterface $settings
-     * @param ValidateHandler $validate,
-     * @param MailHandler $mail,
-     * @param DBHandler $db
+     * @param ValidateHandlerInterface $validate,
+     * @param MailHandlerInterface $mail,
+     * @param DBHandlerInterface $db
      */
     public function __construct(
         Guard $csrf,
         LoggerInterface $logger,
         SettingsInterface $settings,
-        ValidateHandler $validate,
-        MailHandler $mail,
-        DBHandler $db
+        ValidateHandlerInterface $validate,
+        MailHandlerInterface $mail,
+        DBHandlerInterface $db
     ) {
 
         // CSRF

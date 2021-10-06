@@ -15,7 +15,7 @@ use Illuminate\Database\Capsule\Manager;
 /**
  * MySQLHandler
  */
-class MySQLHandler implements DBHandler
+class MySQLHandler implements DBHandlerInterface
 {
 
     /**

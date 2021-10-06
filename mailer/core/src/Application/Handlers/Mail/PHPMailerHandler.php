@@ -15,7 +15,7 @@ use PHPMailer\PHPMailer\Exception;
 /**
  * PHPMailerHandler
  */
-class PHPMailerHandler implements MailHandler
+class PHPMailerHandler implements MailHandlerInterface
 {
 
     /**

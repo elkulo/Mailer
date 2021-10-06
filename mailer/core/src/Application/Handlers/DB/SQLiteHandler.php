@@ -15,7 +15,7 @@ use Illuminate\Database\Capsule\Manager;
 /**
  * SQLiteHandler
  */
-class SQLiteHandler implements DBHandler
+class SQLiteHandler implements DBHandlerInterface
 {
 
     /**
