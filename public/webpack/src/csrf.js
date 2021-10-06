@@ -16,7 +16,7 @@ const setCSRF = ( formID, path = '' ) => {
 	}
 
 	// APIのURLを取得
-	const api = path || actionURL.substr( 0, actionURL.indexOf( '/post' ) ) + '/api/v1/csrf';
+	const api = path || actionURL.substr( 0, actionURL.indexOf( '/post' ) ) + '/api/v1/service';
 
 	const inputElement = {
 		csrfName: document.createElement( 'input' ),

@@ -48,10 +48,12 @@
                     <input type="email" name="email" id="inputEmail" class="form-control email" placeholder="mail@example.com" />
                   </div>
                   <div class="col-2 col-md-auto">
-                    <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
-                    <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                     <button type="submit" class="btn btn-primary">確認</button>
                   </div>
+                </div>
+                <div style="display:none">
+                  <input type="hidden" name="{{csrf.keys.name}}" value="{{csrf.name}}">
+                  <input type="hidden" name="{{csrf.keys.value}}" value="{{csrf.value}}">
                 </div>
               </form>
             </div>

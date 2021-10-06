@@ -39,7 +39,7 @@ return function (App $app) {
         $group->get('', IndexMailerAction::class)->setName('mailer');
         $group->post('', ConfirmMailerAction::class);
         $group->post('/confirm', ConfirmMailerAction::class)->setName('mailer.confirm');
-        $group->post('/complete', CompleteMailerAction::class)->setName('mailer.confirm.complete');
+        $group->post('/complete', CompleteMailerAction::class)->setName('mailer.complete');
 
         // 最後のスラッシュを排除.
         $group->get('/', function (Request $request, Response $response) {
@@ -51,13 +51,13 @@ return function (App $app) {
     });
 
     // API
-    $app->get('/api/v1/csrf', ApiMailerAction::class);
+    $app->get('/api/v1/service', ApiMailerAction::class);
 
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {
         $group->get('', IndexHealthCheckAction::class)->setName('health-check');
         $group->post('/confirm', ConfirmHealthCheckAction::class)->setName('health-check.confirm');
-        $group->post('/result', ResultHealthCheckAction::class)->setName('health-check.confirm.result');
+        $group->post('/result', ResultHealthCheckAction::class)->setName('health-check.result');
 
         // 最後のスラッシュを排除.
         $group->get('/', function (Request $request, Response $response) {
