@@ -6,8 +6,11 @@
 import axios from 'axios';
 
 const setCSRF = ( formID, path = '' ) => {
+
 	const formElement = document.querySelector( formID );
+
 	const actionURL = formElement && formElement.getAttribute( 'action' );
+
 	if ( ! actionURL ) {
 		return;
 	}
