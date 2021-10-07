@@ -26,11 +26,11 @@ class ValidateHandler implements ValidateHandlerInterface
     protected $logger;
 
     /**
-     * サーバー設定
+     * 設定情報
      *
      * @var array
      */
-    private array $server = array();
+    private array $validateSettings = array();
 
     /**
      * フォーム設定
@@ -62,8 +62,8 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function __construct(SettingsInterface $settings, LoggerInterface $logger)
     {
-        $this->server = $settings->get('config.server');
-        $this->form = $settings->get('config.form');
+        $this->validateSettings = $settings->get('validate');
+        $this->form = $settings->get('form');
         $this->logger = $logger;
     }
 
@@ -75,7 +75,7 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function set(array $post_data): void
     {
-        Validator::lang($this->server['VALIDATION_LANG']);
+        Validator::lang($this->validateSettings['validate.lang']);
         $this->validate = new Validator($post_data);
         $this->validate->labels($this->form['NAME_FOR_LABELS']);
     }
@@ -214,7 +214,10 @@ class ValidateHandler implements ValidateHandlerInterface
     public function checkinHuman(): void
     {
         // reCAPTCHA シークレットキー
-        $secretKey = isset($this->server['CAPTCHA']['SECRETKEY'])? $this->server['CAPTCHA']['SECRETKEY']: null;
+        $secretKey = null;
+        if (isset($this->validateSettings['captcha.secretkey'])) {
+            $secretKey = $this->validateSettings['captcha.secretkey'];
+        }
 
         if ($secretKey) {
             Validator::addRule('HumanValidator', function ($field, $value, $params, $fields) use ($secretKey) {
@@ -253,7 +256,7 @@ class ValidateHandler implements ValidateHandlerInterface
     public function getCaptchaScript():array
     {
         // reCAPTCHA サイトキー
-        $siteKey = isset($this->server['CAPTCHA']['SITEKEY'])? $this->server['CAPTCHA']['SITEKEY']: '';
+        $siteKey = isset($this->validateSettings['captcha.sitekey'])? $this->validateSettings['captcha.sitekey']: '';
         if ($siteKey) {
             return [
                 'key' => trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8')),

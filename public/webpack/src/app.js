@@ -5,13 +5,9 @@
  */
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import BootstrapValidate from './js/BootstrapValidate';
 import DrawerNavi from './js/DrawerNavi';
 import SmoothScroll from './js/SmoothScroll';
 import './scss/global.scss';
-
-// Bootstrap バリデーション.
-window.applyValidate = ( element ) => BootstrapValidate( element );
 
 // ナビゲーション.
 DrawerNavi();

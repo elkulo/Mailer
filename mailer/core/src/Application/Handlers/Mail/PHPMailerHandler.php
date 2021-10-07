@@ -19,11 +19,11 @@ class PHPMailerHandler implements MailHandlerInterface
 {
 
     /**
-     * サーバー設定
+     * メールサーバー設定
      *
      * @var array
      */
-    private array $server;
+    private array $mailSettings;
 
     /**
      * DBを作成
@@ -33,7 +33,7 @@ class PHPMailerHandler implements MailHandlerInterface
      */
     public function __construct(SettingsInterface $settings)
     {
-        $this->server = $settings->get('config.server');
+        $this->mailSettings = $settings->get('mail');
     }
 
     /**
@@ -47,27 +47,27 @@ class PHPMailerHandler implements MailHandlerInterface
      */
     final public function send(string $to, string $subject, string $body, array $header = array()): bool
     {
-        $server = $this->server;
+        $mailSettings = $this->mailSettings;
 
         // SMTP認証.
         $mailer = new PHPMailer;
         $mailer->isSMTP();
-        $mailer->Host = $server['SMTP_HOST'];
-        $mailer->Port = $server['SMTP_PORT'];
+        $mailer->Host = $mailSettings['smtp.host'];
+        $mailer->Port = $mailSettings['smtp.port'];
 
         // メーラー名を変更.
         $mailer->XMailer = 'PHPMailer';
 
-        if (isset($server['SMTP_USERNAME'], $server['SMTP_PASSWORD'])) {
+        if (isset($mailSettings['smtp.username'], $mailSettings['smtp.password'])) {
             $mailer->SMTPAuth = true;
-            $mailer->Username = $server['SMTP_USERNAME'];
-            $mailer->Password = $server['SMTP_PASSWORD'];
+            $mailer->Username = $mailSettings['smtp.username'];
+            $mailer->Password = $mailSettings['smtp.password'];
         } else {
             $mailer->SMTPAuth = false;
         }
 
-        if (isset($server['SMTP_ENCRYPTION'])) {
-            $mailer->SMTPSecure = $server['SMTP_ENCRYPTION'];
+        if (isset($mailSettings['smtp.encrypt'])) {
+            $mailer->SMTPSecure = $mailSettings['smtp.encrypt'];
             $mailer->SMTPAutoTLS = true;
         } else {
             $mailer->SMTPSecure  = false;
@@ -78,11 +78,11 @@ class PHPMailerHandler implements MailHandlerInterface
         $mailer->CharSet = 'ISO-2022-JP';
         $mailer->Encoding = 'base64';
         $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
-        $from_name = mb_encode_mimeheader($server['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
+        $from_name = mb_encode_mimeheader($mailSettings['from.name'], 'ISO-2022-JP', 'UTF-8');
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         // 配信元.
-        $mailer->setFrom($server['SMTP_MAIL'], $from_name);
+        $mailer->setFrom($mailSettings['smtp.mailaddress'], $from_name);
 
         // 送信メール.
         $mailer->isHTML(false);
@@ -98,7 +98,7 @@ class PHPMailerHandler implements MailHandlerInterface
         }
 
         // 受信失敗時のリターン先.
-        $mailer->Sender = $server['SMTP_MAIL'];
+        $mailer->Sender = $mailSettings['smtp.mailaddress'];
 
         /**
          * デバックレベル 0 ~ 2

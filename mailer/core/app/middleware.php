@@ -6,16 +6,19 @@ use Slim\Csrf\Guard;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Slim\Flash\Messages;
-use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
-use App\Application\Settings\SettingsInterface;
 use App\Application\Middleware\SessionMiddleware;
+use App\Application\Settings\SettingsInterface;
+use Middlewares\Whoops;
 
 return function (App $app) {
     $app->add(SessionMiddleware::class);
 
     // Whoops.
     $settings = $app->getContainer()->get(SettingsInterface::class);
-    $app->add(new WhoopsMiddleware(['enable' => $settings->get('debug')]));
+    if ($settings->get('debug')) {
+        ;
+        $app->add(Whoops::class);
+    }
 
     // CSRF.
     $app->add(Guard::class);

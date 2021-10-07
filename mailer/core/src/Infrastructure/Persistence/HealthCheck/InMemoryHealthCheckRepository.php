@@ -116,10 +116,10 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function index(): array
     {
-        $server = $this->healthPost->getServerSettings();
-        $to = (array) $server['ADMIN_MAIL'];
-        $cc = $server['ADMIN_CC']? explode(',', $server['ADMIN_CC']) : [];
-        $bcc = $server['ADMIN_BCC']? explode(',', $server['ADMIN_BCC']) : [];
+        $mailSettings = $this->settings->get('mail');
+        $to = (array) $mailSettings['admin.mail'];
+        $cc = $mailSettings['admin.cc']? explode(',', $mailSettings['admin.cc']) : [];
+        $bcc = $mailSettings['admin.bcc']? explode(',', $mailSettings['admin.bcc']) : [];
 
         try {
             // 環境設定のメールアドレスの形式に不備があれば警告.
@@ -157,14 +157,14 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function confirm(): array
     {
-        $server = $this->healthPost->getServerSettings();
+        $mailSettings = $this->settings->get('mail');
         $post_data = $this->healthPost->getPosts();
         $post_email = isset($post_data['email'])? $post_data['email']: '';
         $passcode = '';
         $success = false;
-        $to = (array) $server['ADMIN_MAIL'];
-        $cc = $server['ADMIN_CC']? explode(',', $server['ADMIN_CC']) : [];
-        $bcc = $server['ADMIN_BCC']? explode(',', $server['ADMIN_BCC']) : [];
+        $to = (array) $mailSettings['admin.mail'];
+        $cc = $mailSettings['admin.cc']? explode(',', $mailSettings['admin.cc']) : [];
+        $bcc = $mailSettings['admin.bcc']? explode(',', $mailSettings['admin.bcc']) : [];
 
         try {
             // 環境設定のメールアドレスの形式に不備がある場合は処理を中止.
@@ -177,7 +177,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             }
 
             // 管理者メールの比較
-            if ($this->validate->isCheckMailFormat($post_email) && $post_email === $server['ADMIN_MAIL']) {
+            if ($this->validate->isCheckMailFormat($post_email) && $post_email === $mailSettings['admin.mail']) {
                 // パスコードの送信
                 $passcode = sprintf("%06d", mt_rand(1, 999999));
                 $_SESSION['healthCheckPasscode'] = $passcode;
@@ -187,7 +187,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     console($passcode);
                 } else {
                     $success = $this->mail->send(
-                        $server['ADMIN_MAIL'],
+                        $mailSettings['ADMIN_MAIL'],
                         $this->healthPost->getMailSubject(),
                         $this->healthPost->renderAdminMail(['passcode' => $passcode])
                     );
@@ -229,7 +229,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function result(): array
     {
-        $server = $this->healthPost->getServerSettings();
+        $mailSettings = $this->settings->get('mail');
+        $validateSettings = $this->settings->get('validate');
         $post_data = $this->healthPost->getPosts();
         $resultList = [];
         $resultListCount = 0;
@@ -260,7 +261,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     4 => [
                         'description' => 'SSL/TLSで暗号化されたメール送信',
-                        'success' => (in_array($server['SMTP_ENCRYPTION'], ['ssl', 'tls'])) ? true : false
+                        'success' => (in_array($mailSettings['smtp.encrypt'], ['ssl', 'tls'])) ? true : false
                     ],
                     5 => [
                         'description' => 'データベースに接続',
@@ -268,11 +269,11 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     6 => [
                         'description' => 'データベースに履歴を保存',
-                        'success' => $this->db->test($server['ADMIN_MAIL'])
+                        'success' => $this->db->test($mailSettings['admin.mail'])
                     ],
                     7 => [
                         'description' => 'reCAPTCHA でBot対策',
-                        'success' => !empty($server['CAPTCHA']['SECRETKEY'])? true: false
+                        'success' => !empty($validateSettings['captcha.secretkey'])? true: false
                     ],
                     8 => [
                         'description' => 'デバッグモードが無効',

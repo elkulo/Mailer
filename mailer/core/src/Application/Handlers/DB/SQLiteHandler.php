@@ -24,11 +24,11 @@ class SQLiteHandler implements DBHandlerInterface
     protected $logger;
 
     /**
-     * サーバー設定
+     * データーベース設定
      *
      * @var array
      */
-    private array $server;
+    private array $databaseSettings;
 
     /**
      * データベース
@@ -71,15 +71,15 @@ class SQLiteHandler implements DBHandlerInterface
             $this->logger = $logger;
 
             $app_path = $settings->get('app.path');
-            $this->server = $settings->get('config.server');
+            $this->databaseSettings = $settings->get('database');
 
             // DBテーブル名
-            $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
+            $prefix = $this->databaseSettings['db.prefix'] ? strtolower($this->databaseSettings['db.prefix']) : '';
             $this->table_name = $prefix . 'mailer';
 
             // DBの場所
             $this->db_dir = $app_path . '/../database/';
-            $this->sqlite_file = $this->db_dir . $this->server['DB']['NAME'];
+            $this->sqlite_file = $this->db_dir . $this->databaseSettings['db.name'];
 
             // DB設定
             $this->db = new Manager();
@@ -157,7 +157,7 @@ class SQLiteHandler implements DBHandlerInterface
             }
 
             // DBファイルの確認
-            $sqlite_file = $this->db_dir . $this->server['DB']['NAME'];
+            $sqlite_file = $this->db_dir . $this->databaseSettings['db.name'];
             if (!file_exists($sqlite_file)) {
                 $pdo = new \PDO('sqlite:' . $sqlite_file);
 

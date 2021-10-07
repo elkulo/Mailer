@@ -6,7 +6,8 @@
 <title>Mailer &#124; el.kulo</title>
 <meta name="description" itemprop="description" content=""/>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&family=Noto+Serif+JP:wght@500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="webpack/dest/app.min.css?ver=20211005" type="text/css" media="all" />
+<link href="webpack/dest/app.min.css?ver=20211005" rel="stylesheet" type="text/css" media="all" />
+<script src="webpack/dest/app.min.js?ver=20211005" type="text/javascript" ></script>
 </head>
 <body id="home" class="home">
 <div id="page" class="site">
@@ -233,14 +234,16 @@
   <!-- #colophon --> 
 </div>
 <!-- #page --> 
-<script type="text/javascript" src="webpack/dest/app.min.js?ver=20211005"></script>
+
+<!-- Validateを有効 -->
+<script type="text/javascript" src="webpack/dest/validate.min.js?ver=20211005"></script>
 <script>applyValidate('#mailform');</script>
 
 <!-- CSRFを有効 -->
 <script type="text/javascript" src="webpack/dest/csrf.min.js?ver=20211005"></script>
 <script>applyCSRF('#mailform');</script>
 
-<!-- reCAPTCHAを有効 -->
+<!-- reCAPTCHAを有効: xxxxxxxxxxx にサイトキーを記載 -->
 <!--
 <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=xxxxxxxxxxx"></script>
 <script type="text/javascript" src="webpack/dest/captcha.min.js?ver=20211005"></script>
