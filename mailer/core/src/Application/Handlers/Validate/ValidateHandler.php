@@ -107,11 +107,18 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinValidateAll(): void
     {
-        $this->checkinRequired();
-        $this->checkinEmail();
-        $this->checkinMBWord();
-        $this->checkinNGWord();
-        $this->checkinHuman();
+        $validateList = [
+            fn() => $this->checkinRequired(),
+            fn() => $this->checkinEmail(),
+            fn() => $this->checkinMBWord(),
+            fn() => $this->checkinNGWord(),
+            fn() => $this->checkinHuman(),
+        ];
+        foreach ($validateList as $validate) {
+            if ($this->validate()) {
+                $validate();
+            }
+        }
     }
 
     /**
