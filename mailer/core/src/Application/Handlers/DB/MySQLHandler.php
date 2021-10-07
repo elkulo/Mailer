@@ -24,11 +24,11 @@ class MySQLHandler implements DBHandlerInterface
     protected $logger;
 
     /**
-     * サーバー設定
+     * データーベース設定
      *
      * @var array
      */
-    private array $server;
+    private array $databaseSettings;
 
     /**
      * データベース
@@ -56,10 +56,10 @@ class MySQLHandler implements DBHandlerInterface
         try {
             $this->logger = $logger;
 
-            $this->server = $settings->get('config.server');
+            $this->databaseSettings = $settings->get('database');
 
             // DBテーブル名
-            $prefix = $this->server['DB']['PREFIX'] ? strtolower($this->server['DB']['PREFIX']) : '';
+            $prefix = $this->databaseSettings['db.prefix'] ? strtolower($this->databaseSettings['db.prefix']) : '';
             $this->table_name = $prefix . 'mailer';
 
             // DB設定
@@ -68,12 +68,12 @@ class MySQLHandler implements DBHandlerInterface
             // 接続情報
             $config = [
                 'driver'    => 'mysql',
-                'host'      => $this->server['DB']['HOST'],
-                'database'  => $this->server['DB']['NAME'],
-                'username'  => $this->server['DB']['USER'],
-                'password'  => $this->server['DB']['PASSWORD'],
-                'charset'   => $this->server['DB']['CHARSET'],
-                'collation' => $this->server['DB']['COLLATE'],
+                'host'      => $this->databaseSettings['db.host'],
+                'database'  => $this->databaseSettings['db.name'],
+                'username'  => $this->databaseSettings['db.user'],
+                'password'  => $this->databaseSettings['db.password'],
+                'charset'   => $this->databaseSettings['db.charset'],
+                'collation' => $this->databaseSettings['db.collate'],
                 'prefix' => $prefix,
             ];
 
@@ -137,12 +137,12 @@ class MySQLHandler implements DBHandlerInterface
     final public function make(): bool
     {
         try {
-            $db = $this->server['DB'];
+            $db = $this->databaseSettings;
 
             $pdo = new \PDO(
-                'mysql:host=' . $db['HOST'] . ';dbname=' . $db['NAME'] . ';charset=' . $db['CHARSET'],
-                $db['USER'],
-                $db['PASSWORD']
+                'mysql:host=' . $db['db.host'] . ';dbname=' . $db['db.name'] . ';charset=' . $db['db.charset'],
+                $db['db.user'],
+                $db['db.password']
             );
 
             // SQL実行時にもエラーの代わりに例外を投げるように設定
@@ -167,7 +167,7 @@ class MySQLHandler implements DBHandlerInterface
                     registry_datetime DATETIME,
                     created_at INT(11),
                     updated_at INT(11)
-                ) engine=innodb default charset={$db['CHARSET']}";
+                ) engine=innodb default charset={$db['db.charset']}";
 
             // テーブル作成
             $pdo->query($sql);

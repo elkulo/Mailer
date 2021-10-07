@@ -21,14 +21,14 @@ class MailPost
      *
      * @var array
      */
-    private array $server;
+    private array $mailSettings;
 
     /**
      * 設定
      *
      * @var array
      */
-    private array $setting;
+    private array $formSettings;
 
     /**
      * POSTデータ
@@ -67,8 +67,8 @@ class MailPost
      */
     public function __construct(array $posts, SettingsInterface $settings)
     {
-        $this->server = $settings->get('config.server');
-        $this->setting = $settings->get('config.form');
+        $this->mailSettings = $settings->get('mail');
+        $this->formSettings = $settings->get('form');
         $app_path = $settings->get('app.path');
 
         // POSTデータから取得したデータを整形
@@ -100,9 +100,9 @@ class MailPost
      *
      * @return array
      */
-    public function getServerSettings(): array
+    public function getMailSettings(): array
     {
-        return $this->server;
+        return $this->mailSettings;
     }
 
     /**
@@ -112,7 +112,7 @@ class MailPost
      */
     public function getFormSettings(): array
     {
-        return $this->setting;
+        return $this->formSettings;
     }
 
     /**
@@ -207,10 +207,10 @@ class MailPost
     public function getMailSubject(): string
     {
         $subject = '';
-        $before = isset($this->setting['SUBJECT_BEFORE']) ? $this->setting['SUBJECT_BEFORE'] : '';
-        $after = isset($this->setting['SUBJECT_AFTER']) ? $this->setting['SUBJECT_AFTER'] : '';
+        $before = isset($this->formSettings['SUBJECT_BEFORE']) ? $this->formSettings['SUBJECT_BEFORE'] : '';
+        $after = isset($this->formSettings['SUBJECT_AFTER']) ? $this->formSettings['SUBJECT_AFTER'] : '';
         foreach ($this->post_data as $key => $value) {
-            if ($key === $this->setting['SUBJECT_ATTRIBUTE']) {
+            if ($key === $this->formSettings['SUBJECT_ATTRIBUTE']) {
                 $subject = $value;
             }
         }
@@ -236,7 +236,7 @@ class MailPost
 
         // クライアント情報の置換.
         $value = array(
-            '__FROM_SITE_NAME' => $this->server['FROM_NAME'],
+            '__FROM_SITE_NAME' => $this->mailSettings['from.name'],
             '__POST_ALL' => $this->getPostToString(),
             '__DATE' => date('Y/m/d (D) H:i:s', time()),
             '__IP' => $_SERVER['REMOTE_ADDR'],
@@ -258,13 +258,13 @@ class MailPost
         $header = array();
 
         // 管理者宛送信メール.
-        if (!empty($this->server['ADMIN_CC'])) {
-            $header[] = 'Cc: ' . $this->server['ADMIN_CC'];
+        if (!empty($this->mailSettings['admin.cc'])) {
+            $header[] = 'Cc: ' . $this->mailSettings['admin.cc'];
         }
-        if (!empty($this->server['ADMIN_BCC'])) {
-            $header[] = 'Bcc: ' . $this->server['ADMIN_BCC'];
+        if (!empty($this->mailSettings['admin.bcc'])) {
+            $header[] = 'Bcc: ' . $this->mailSettings['admin.bcc'];
         }
-        if (!empty($this->setting['IS_FROM_USERMAIL'])) {
+        if (!empty($this->formSettings['IS_FROM_USERMAIL'])) {
             $header[] = 'Reply-To: ' . $this->user_mail;
         }
 
@@ -281,10 +281,10 @@ class MailPost
     public function renderAdminMail(array $data): string
     {
         // 管理者宛送信メール.
-        if (!empty($this->setting['TEMPLATE_MAIL_ADMIN'])) {
+        if (!empty($this->formSettings['TEMPLATE_MAIL_ADMIN'])) {
             return (new TwigEnvironment(
                 new TwigArrayLoader(array(
-                    'admin.mail.tpl' => $this->setting['TEMPLATE_MAIL_ADMIN']
+                    'admin.mail.tpl' => $this->formSettings['TEMPLATE_MAIL_ADMIN']
                 ))
             ))->render('admin.mail.tpl', $data);
         }
@@ -300,10 +300,10 @@ class MailPost
     public function renderUserMail(array $data): string
     {
         // ユーザ宛送信メール.
-        if (!empty($this->setting['TEMPLATE_MAIL_USER'])) {
+        if (!empty($this->formSettings['TEMPLATE_MAIL_USER'])) {
             return (new TwigEnvironment(
                 new TwigArrayLoader(array(
-                    'user.mail.tpl' => $this->setting['TEMPLATE_MAIL_USER']
+                    'user.mail.tpl' => $this->formSettings['TEMPLATE_MAIL_USER']
                 ))
             ))->render('user.mail.tpl', $data);
         }
@@ -359,7 +359,7 @@ class MailPost
      */
     public function getReturnURL(): string
     {
-        return $this->kses($this->setting['RETURN_PAGE']);
+        return $this->kses($this->formSettings['RETURN_PAGE']);
     }
 
 
@@ -422,8 +422,8 @@ class MailPost
     public function nameToLabel(string $name): string
     {
         $label = $this->kses($name);
-        if (isset($this->setting['NAME_FOR_LABELS'][$label])) {
-            $label = $this->setting['NAME_FOR_LABELS'][$label];
+        if (isset($this->formSettings['NAME_FOR_LABELS'][$label])) {
+            $label = $this->formSettings['NAME_FOR_LABELS'][$label];
         }
         return $label;
     }
@@ -437,11 +437,11 @@ class MailPost
      */
     public function changeHankaku(string $output, string $key): string
     {
-        if (empty($this->setting['HANKAKU_ATTRIBUTE']) || !function_exists('mb_convert_kana')) {
+        if (empty($this->formSettings['HANKAKU_ATTRIBUTE']) || !function_exists('mb_convert_kana')) {
             return $output;
         }
-        if (is_array($this->setting['HANKAKU_ATTRIBUTE'])) {
-            foreach ($this->setting['HANKAKU_ATTRIBUTE'] as $val) {
+        if (is_array($this->formSettings['HANKAKU_ATTRIBUTE'])) {
+            foreach ($this->formSettings['HANKAKU_ATTRIBUTE'] as $val) {
                 if ($key === $val) {
                     $output = mb_convert_kana($output, 'a', 'UTF-8');
                 }

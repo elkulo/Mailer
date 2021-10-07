@@ -107,12 +107,12 @@ class InMemoryMailerRepository implements MailerRepository
         $this->validate->set($_POST);
 
         // 設定値の取得
-        $form = $this->mailPost->getFormSettings();
+        $formSettings = $this->mailPost->getFormSettings();
 
         $post_data = $this->mailPost->getPosts();
 
         // ユーザーメールを形式チェックして格納
-        $email_attr = isset($form['EMAIL_ATTRIBUTE']) ? $form['EMAIL_ATTRIBUTE'] : null;
+        $email_attr = isset($formSettings['EMAIL_ATTRIBUTE']) ? $formSettings['EMAIL_ATTRIBUTE'] : null;
         if (isset($post_data[$email_attr])) {
             if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
                 $this->mailPost->setUserMail($post_data[$email_attr]);
@@ -213,8 +213,8 @@ class InMemoryMailerRepository implements MailerRepository
      */
     public function complete(): array
     {
-        $server = $this->mailPost->getServerSettings();
-        $form = $this->mailPost->getFormSettings();
+        $mailSettings = $this->mailPost->getMailSettings();
+        $formSettings = $this->mailPost->getFormSettings();
         $router = [];
         $posts = [];
         $mail_body = [];
@@ -241,14 +241,14 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 管理者宛に届くメールをセット
             $success['admin'] = $this->mail->send(
-                $server['ADMIN_MAIL'],
+                $mailSettings['admin.mail'],
                 $this->mailPost->getMailSubject(),
                 $this->mailPost->renderAdminMail($mail_body),
                 $this->mailPost->getMailAdminHeader()
             );
 
             // ユーザーに届くメールをセット
-            if (!empty($form['IS_REPLY_USERMAIL'])) {
+            if (!empty($formSettings['IS_REPLY_USERMAIL'])) {
                 if ($this->mailPost->getUserMail()) {
                     $success['user'] = $this->mail->send(
                         $this->mailPost->getUserMail(),

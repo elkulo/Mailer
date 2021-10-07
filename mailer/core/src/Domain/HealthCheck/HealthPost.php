@@ -16,13 +16,6 @@ class HealthPost
 {
 
     /**
-     * 設定
-     *
-     * @var array
-     */
-    private array $server;
-
-    /**
      * POSTデータ
      *
      * @var array
@@ -45,7 +38,6 @@ class HealthPost
      */
     public function __construct(array $posts, SettingsInterface $settings)
     {
-        $this->server = $settings->get('config.server');
         $app_path = $settings->get('app.path');
 
         // POSTデータから取得したデータを整形
@@ -61,16 +53,6 @@ class HealthPost
                 $app_path . '/src/Views/health-check/mail',
             ))
         );
-    }
-
-    /**
-     * サーバー設定情報の取得
-     *
-     * @return array
-     */
-    public function getServerSettings(): array
-    {
-        return $this->server;
     }
 
     /**

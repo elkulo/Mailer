@@ -15,8 +15,10 @@
         "php": "^7.4 || ^8.0 || ^8.1",
         "ext-json": "*",
         "egulias/email-validator": "^3.1",
+        "filp/whoops": "^2.14",
         "google/recaptcha": "^1.2",
         "illuminate/database": "^8.55",
+        "middlewares/whoops": "^2.0",
         "monolog/monolog": "^2.2",
         "php-di/php-di": "^6.3",
         "phpmailer/phpmailer": "^6.5",
@@ -27,8 +29,7 @@
         "slim/slim": "^4.7",
         "slim/twig-view": "^3.2",
         "vlucas/phpdotenv": "^5.3",
-        "vlucas/valitron": "^1.4",
-        "zeuxisoo/slim-whoops": "^0.7.3"
+        "vlucas/valitron": "^1.4"
     },
     "require-dev": {
         "ccampbell/chromephp": "^4.1",
