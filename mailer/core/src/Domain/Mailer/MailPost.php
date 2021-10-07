@@ -281,10 +281,10 @@ class MailPost
     public function renderAdminMail(array $data): string
     {
         // 管理者宛送信メール.
-        if (!empty($this->formSettings['TEMPLATE_MAIL_ADMIN'])) {
+        if (!empty($this->formSettings['TEMPLATE_ADMIN_MAIL'])) {
             return (new TwigEnvironment(
                 new TwigArrayLoader(array(
-                    'admin.mail.tpl' => $this->formSettings['TEMPLATE_MAIL_ADMIN']
+                    'admin.mail.tpl' => $this->formSettings['TEMPLATE_ADMIN_MAIL']
                 ))
             ))->render('admin.mail.tpl', $data);
         }
@@ -300,10 +300,10 @@ class MailPost
     public function renderUserMail(array $data): string
     {
         // ユーザ宛送信メール.
-        if (!empty($this->formSettings['TEMPLATE_MAIL_USER'])) {
+        if (!empty($this->formSettings['TEMPLATE_USER_MAIL'])) {
             return (new TwigEnvironment(
                 new TwigArrayLoader(array(
-                    'user.mail.tpl' => $this->formSettings['TEMPLATE_MAIL_USER']
+                    'user.mail.tpl' => $this->formSettings['TEMPLATE_USER_MAIL']
                 ))
             ))->render('user.mail.tpl', $data);
         }
@@ -437,11 +437,11 @@ class MailPost
      */
     public function changeHankaku(string $output, string $key): string
     {
-        if (empty($this->formSettings['HANKAKU_ATTRIBUTE']) || !function_exists('mb_convert_kana')) {
+        if (empty($this->formSettings['HANKAKU_ATTRIBUTES']) || !function_exists('mb_convert_kana')) {
             return $output;
         }
-        if (is_array($this->formSettings['HANKAKU_ATTRIBUTE'])) {
-            foreach ($this->formSettings['HANKAKU_ATTRIBUTE'] as $val) {
+        if (is_array($this->formSettings['HANKAKU_ATTRIBUTES'])) {
+            foreach ($this->formSettings['HANKAKU_ATTRIBUTES'] as $val) {
                 if ($key === $val) {
                     $output = mb_convert_kana($output, 'a', 'UTF-8');
                 }

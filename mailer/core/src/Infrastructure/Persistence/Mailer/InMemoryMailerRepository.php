@@ -130,7 +130,7 @@ class InMemoryMailerRepository implements MailerRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'csrf'   => sprintf(
+                'CSRF'   => sprintf(
                     '<div style="display:none">
                         <input type="hidden" name="%1$s" value="%2$s">
                         <input type="hidden" name="%3$s" value="%4$s">
@@ -157,8 +157,7 @@ class InMemoryMailerRepository implements MailerRepository
 
         try {
             // バリデーションチェック
-            $this->validate->checkinValidateAll();
-            if (!$this->validate->validate()) {
+            if (!$this->validate->validateAll()) {
                 return [
                     'template' => 'validate.twig',
                     'data' => [
@@ -175,7 +174,7 @@ class InMemoryMailerRepository implements MailerRepository
 
             $system = [
                 'posts' => $this->mailPost->getConfirmQuery(),
-                'csrf'   => sprintf(
+                'CSRF'   => sprintf(
                     '<div style="display:none">
                         <input type="hidden" name="%1$s" value="%2$s">
                         <input type="hidden" name="%3$s" value="%4$s">
@@ -225,8 +224,7 @@ class InMemoryMailerRepository implements MailerRepository
             $this->mailPost->checkinMailerToken();
 
             // バリデーションチェック
-            $this->validate->checkinValidateAll();
-            if (!$this->validate->validate()) {
+            if (!$this->validate->validateAll()) {
                 return [
                     'template' => 'validate.twig',
                     'messages' => array_map(fn($n) => $n[0], $this->validate->errors()),

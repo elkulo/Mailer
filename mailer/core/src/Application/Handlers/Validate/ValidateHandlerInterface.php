@@ -20,11 +20,18 @@ interface ValidateHandlerInterface
     public function set(array $post_data): void;
 
     /**
-     * バリデーションBoolType
+     * バリデーションチェック
      *
      * @return bool
      */
     public function validate(): bool;
+
+    /**
+     * バリデーションALLチェック
+     *
+     * @return bool
+     */
+    public function validateAll(): bool;
 
     /**
      * エラー内容
@@ -32,12 +39,6 @@ interface ValidateHandlerInterface
      * @return array
      */
     public function errors(): array;
-    /**
-     * バリデーションチェック
-     *
-     * @return void
-     */
-    public function checkinValidateAll(): void;
 
     /**
      * 必須項目チェック
@@ -58,14 +59,21 @@ interface ValidateHandlerInterface
      *
      * @return void
      */
-    public function checkinMBWord(): void;
+    public function checkinMultibyteWord(): void;
 
     /**
      * 禁止ワード
      *
      * @return void
      */
-    public function checkinNGWord(): void;
+    public function checkinBlockNGWord(): void;
+
+    /**
+     * 禁止ドメイン
+     *
+     * @return void
+     */
+    public function checkinBlockDomain(): void;
 
     /**
      * メール文字判定

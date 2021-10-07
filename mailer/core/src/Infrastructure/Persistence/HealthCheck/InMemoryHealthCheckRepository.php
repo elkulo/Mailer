@@ -138,7 +138,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'data' => [
                 'sectionTitle' => '送受信テスト',
                 'sectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。',
-                'csrf'   => [
+                'CSRF'   => [
                     'keys' => [
                         'name'  => $this->csrf->getTokenNameKey(),
                         'value' => $this->csrf->getTokenValueKey(),
@@ -210,7 +210,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'data' => [
                 'sectionTitle' => '確認コード',
                 'sectionDescription' => '管理者のメールアドレス宛に確認コードを送信しました。受信された確認コードを入力してください。',
-                'csrf'   => [
+                'CSRF'   => [
                     'keys' => [
                         'name'  => $this->csrf->getTokenNameKey(),
                         'value' => $this->csrf->getTokenValueKey(),
