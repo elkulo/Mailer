@@ -15,15 +15,9 @@ return function (App $app) {
 
     // Whoops.
     $settings = $app->getContainer()->get(SettingsInterface::class);
-    if ($settings->get('debug')) {
-        $app->add(new WhoopsMiddleware(['enable' => true]));
-    } else {
-        $errorMiddleware = $app->addErrorMiddleware(false, true, true);
-        $errorHandler    = $errorMiddleware->getDefaultErrorHandler();
-        //$errorHandler->registerErrorRenderer('text/html', HtmlErrorRenderer::class);
-    }
+    $app->add(new WhoopsMiddleware(['enable' => $settings->get('debug')]));
 
-    // Csrf.
+    // CSRF.
     $app->add(Guard::class);
 
     // Twig.
@@ -31,11 +25,11 @@ return function (App $app) {
 
     // Flash Messages.
     $app->add(
-        function ($request, $next) {
+        function ($request, $next) use ($app) {
             if (session_status() !== PHP_SESSION_ACTIVE) {
                 session_start();
             }
-            $this->get(Messages::class)->__construct($_SESSION);
+            $app->getContainer()->get(Messages::class)->__construct($_SESSION);
             return $next->handle($request);
         }
     );

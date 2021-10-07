@@ -15,20 +15,23 @@ return function (ContainerBuilder $containerBuilder) {
             $log_file = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
 
             return new Settings([
-                'displayErrorDetails' => true, // Should be set to false in production
-                'logError'            => false,
-                'logErrorDetails'     => false,
+                // Should be set to false in production
+                'displayErrorDetails' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
+                'logError'            => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'false' : true,
+                'logErrorDetails'     => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'false' : true,
                 'logger' => [
                     'name' => 'slim-app',
                     'path' => $log_file,
                     'level' => Logger::DEBUG,
                 ],
                 'twig' => [
-                    'debug' => isset($_ENV['DEBUG']) ? env('DEBUG') : false,
+                    'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
                     'strict_variables' => true,
-                    'cache' => __DIR__ . '/../var/cache/twig',
+                    //'cache' => __DIR__ . '/../var/cache/twig',
+                    'cache' => false,
+                    'auto_reload' => true
                 ],
-                'debug' => isset($_ENV['DEBUG']) ? env('DEBUG') : false,
+                'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
                 'config.server' => include __DIR__ . '/../../settings/server.php',
                 'config.form' => include __DIR__ . '/../../settings/form.php',
                 'app.path' => __DIR__ . '/../',
