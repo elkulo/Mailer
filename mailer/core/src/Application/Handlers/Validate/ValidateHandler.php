@@ -23,21 +23,21 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * 設定情報
      *
      * @var array
      */
-    private array $validateSettings = array();
+    private array $validateSettings = [];
 
     /**
      * フォーム設定
      *
      * @var array
      */
-    private array $form = array();
+    private array $formSettings = [];
 
     /**
      * バリデート
@@ -63,7 +63,7 @@ class ValidateHandler implements ValidateHandlerInterface
     public function __construct(SettingsInterface $settings, LoggerInterface $logger)
     {
         $this->validateSettings = $settings->get('validate');
-        $this->form = $settings->get('form');
+        $this->formSettings = $settings->get('form');
         $this->logger = $logger;
     }
 
@@ -77,7 +77,7 @@ class ValidateHandler implements ValidateHandlerInterface
     {
         Validator::lang($this->validateSettings['validate.lang']);
         $this->validate = new Validator($post_data);
-        $this->validate->labels($this->form['NAME_FOR_LABELS']);
+        $this->validate->labels($this->formSettings['NAME_FOR_LABELS']);
     }
 
     /**
@@ -130,8 +130,8 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinRequired(): void
     {
-        if (isset($this->form['REQUIRED_ATTRIBUTES'])) {
-            $this->validate->rule('required', $this->form['REQUIRED_ATTRIBUTES']);
+        if (isset($this->formSettings['REQUIRED_ATTRIBUTES'])) {
+            $this->validate->rule('required', $this->formSettings['REQUIRED_ATTRIBUTES']);
         }
     }
 
@@ -142,11 +142,14 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinEmail(): void
     {
-        if (isset($this->form['EMAIL_ATTRIBUTE'])) {
+        if (isset($this->formSettings['EMAIL_ATTRIBUTE'])) {
             Validator::addRule('EmailValidator', function ($field, $value) {
                 return $this->isCheckMailFormat($value);
             });
-            $this->validate->rule('EmailValidator', $this->form['EMAIL_ATTRIBUTE'])->message('メールアドレスの形式が正しくありません。');
+            $this->validate->rule(
+                'EmailValidator',
+                $this->formSettings['EMAIL_ATTRIBUTE']
+            )->message('メールアドレスの形式が正しくありません。');
         }
     }
 
@@ -157,14 +160,17 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinMultibyteWord(): void
     {
-        if (isset($this->form['MULTIBYTE_ATTRIBUTE'])) {
+        if (isset($this->formSettings['MULTIBYTE_ATTRIBUTE'])) {
             Validator::addRule('MBValidator', function ($field, $value) {
                 if (strlen($value) === mb_strlen($value, 'UTF-8')) {
                     return false;
                 }
                 return true;
             });
-            $this->validate->rule('MBValidator', $this->form['MULTIBYTE_ATTRIBUTE'])->message('日本語を含まない文章は送信できません。');
+            $this->validate->rule(
+                'MBValidator',
+                $this->formSettings['MULTIBYTE_ATTRIBUTE']
+            )->message('日本語を含まない文章は送信できません。');
         }
     }
 
@@ -175,7 +181,7 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinBlockNGWord(): void
     {
-        $ng_words = (array) explode(' ', $this->form['BLOCK_NG_WORD']);
+        $ng_words = (array) explode(' ', $this->formSettings['BLOCK_NG_WORD']);
         if (isset($ng_words[0])) {
             Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
                 foreach ($ng_words as $word) {
@@ -196,7 +202,7 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinBlockDomain(): void
     {
-        $block_domains = $this->form['BLOCK_DOMAINS'];
+        $block_domains = $this->formSettings['BLOCK_DOMAINS'];
         if (isset($block_domains[0])) {
             Validator::addRule('BlockDomainValidator', function ($field, $value) use ($block_domains) {
                 foreach ($block_domains as $mail) {
@@ -208,7 +214,7 @@ class ValidateHandler implements ValidateHandlerInterface
             });
             $this->validate->rule(
                 'BlockDomainValidator',
-                $this->form['EMAIL_ATTRIBUTE']
+                $this->formSettings['EMAIL_ATTRIBUTE']
             )->message('指定のメールアドレスからの送信はお受けできません。');
         }
     }

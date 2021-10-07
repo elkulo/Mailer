@@ -17,28 +17,28 @@ class MailPost
 {
 
     /**
-     * 設定
+     * メール設定値
      *
      * @var array
      */
-    private array $mailSettings;
+    private array $mailSettings = [];
 
     /**
-     * 設定
+     * フォーム設定値
      *
      * @var array
      */
-    private array $formSettings;
+    private array $formSettings = [];
 
     /**
      * POSTデータ
      *
      * @var array
      */
-    private array $post_data;
+    private array $post_data = [];
 
     /**
-     * ユーザーメール格納先
+     * ユーザーメールの格納
      *
      * @var string
      */
@@ -93,26 +93,6 @@ class MailPost
                 $app_path . '/src/Views/templates/mail',
             ))
         );
-    }
-
-    /**
-     * サーバー設定情報の取得
-     *
-     * @return array
-     */
-    public function getMailSettings(): array
-    {
-        return $this->mailSettings;
-    }
-
-    /**
-     * アプリ設定情報の取得
-     *
-     * @return array
-     */
-    public function getFormSettings(): array
-    {
-        return $this->formSettings;
     }
 
     /**

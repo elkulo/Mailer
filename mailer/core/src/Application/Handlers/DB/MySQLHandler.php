@@ -21,14 +21,14 @@ class MySQLHandler implements DBHandlerInterface
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * データーベース設定
      *
      * @var array
      */
-    private array $databaseSettings;
+    private array $databaseSettings = [];
 
     /**
      * データベース

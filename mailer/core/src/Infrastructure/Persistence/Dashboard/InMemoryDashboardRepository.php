@@ -18,7 +18,7 @@ class InMemoryDashboardRepository implements DashboardRepository
      *
      * @var SettingsInterface
      */
-    private $settings;
+    private SettingsInterface $settings;
 
     /**
      * InMemoryDashboardRepository constructor.

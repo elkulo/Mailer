@@ -20,7 +20,7 @@ class HealthPost
      *
      * @var array
      */
-    private array $post_data;
+    private array $post_data = [];
 
     /**
      * Twig ハンドラー

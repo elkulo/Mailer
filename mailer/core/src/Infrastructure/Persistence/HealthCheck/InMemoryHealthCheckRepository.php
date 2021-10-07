@@ -21,42 +21,46 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
 {
 
     /**
+     * CSRF対策
+     *
      * @var Guard
      */
-    protected $csrf;
+    protected Guard $csrf;
 
     /**
+     * フラッシュメッセージ
+     *
      * @var Messages
      */
-    protected $flash;
+    protected Messages $flash;
 
     /**
      * ロジック
      *
      * @var HealthPost
      */
-    private $healthPost;
+    private HealthPost $healthPost;
 
     /**
-     * 設定
+     * 設定値
      *
      * @var SettingsInterface
      */
-    private $settings;
+    private SettingsInterface $settings;
 
     /**
-     * バリデート
+     * 検証ハンドラー
      *
      * @var ValidateHandlerInterface
      */
-    private $validate;
+    private ValidateHandlerInterface $validate;
 
     /**
      * メールハンドラー
      *
      * @var MailHandlerInterface
      */
-    private $mail;
+    private MailHandlerInterface $mail;
 
     /**
      * DBハンドラー

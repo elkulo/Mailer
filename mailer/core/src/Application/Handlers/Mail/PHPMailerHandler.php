@@ -23,7 +23,7 @@ class PHPMailerHandler implements MailHandlerInterface
      *
      * @var array
      */
-    private array $mailSettings;
+    private array $mailSettings = [];
 
     /**
      * DBを作成
