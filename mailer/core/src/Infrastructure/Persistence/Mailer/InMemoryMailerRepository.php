@@ -21,40 +21,46 @@ class InMemoryMailerRepository implements MailerRepository
 {
 
     /**
+     * CSRF対策
+     *
      * @var Guard
      */
-    protected $csrf;
+    protected Guard $csrf;
 
     /**
      * ロジック
      *
      * @var MailPost
      */
-    private $mailPost;
+    private MailPost $mailPost;
 
     /**
+     * ロガー
+     *
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
+     * 設定値
+     *
      * @var SettingsInterface
      */
-    private $settings;
+    private SettingsInterface $settings;
 
     /**
-     * バリデート
+     * 検証ハンドラー
      *
      * @var ValidateHandlerInterface
      */
-    private $validate;
+    private ValidateHandlerInterface $validate;
 
     /**
      * メールハンドラー
      *
      * @var MailHandlerInterface
      */
-    private $mail;
+    private MailHandlerInterface $mail;
 
     /**
      * DBハンドラー
@@ -107,8 +113,9 @@ class InMemoryMailerRepository implements MailerRepository
         $this->validate->set($_POST);
 
         // 設定値の取得
-        $formSettings = $this->mailPost->getFormSettings();
+        $formSettings = $this->settings->get('form');
 
+        // POSTデータ
         $post_data = $this->mailPost->getPosts();
 
         // ユーザーメールを形式チェックして格納
@@ -212,8 +219,8 @@ class InMemoryMailerRepository implements MailerRepository
      */
     public function complete(): array
     {
-        $mailSettings = $this->mailPost->getMailSettings();
-        $formSettings = $this->mailPost->getFormSettings();
+        $mailSettings = $this->settings->get('mail');
+        $formSettings = $this->settings->get('form');
         $router = [];
         $posts = [];
         $mail_body = [];

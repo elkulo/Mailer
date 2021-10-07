@@ -16,7 +16,6 @@ return function (App $app) {
     // Whoops.
     $settings = $app->getContainer()->get(SettingsInterface::class);
     if ($settings->get('debug')) {
-        ;
         $app->add(Whoops::class);
     }
 
