@@ -45,7 +45,7 @@ return [
     ],
 
     // (9)必須項目のname属性
-    'REQUIRED_ATTRIBUTE' => [
+    'REQUIRED_ATTRIBUTES' => [
         'customerTitle',
         'customerType',
         'customerName',
@@ -58,22 +58,22 @@ return [
     // (10)全角英数字を半角変換
     // 全角英数字→半角変換を行う項目のname属性の値（name="○○"の「○○」部分）
     // 配列の形「name="○○[]"」の場合には必ず後ろの[]を取ったものを指定して下さい。
-    'HANKAKU_ATTRIBUTE' => ['phoneNumber'],
+    'HANKAKU_ATTRIBUTES' => ['phoneNumber'],
 
     // (11)日本語を含まない文章の受付をブロック
     // 本文にあたるname属性を1つ指定してください。
-    'MB_WORD' => 'requestContent',
+    'MULTIBYTE_ATTRIBUTE' => 'requestContent',
 
     // (12)禁止ワードを含む文章をブロック
     // すべての入力フォームが対象のため、例えば @ を禁止にした場合メールアドレスそのものがNGになります。
     // 単語は半角全角を別々の単語と認識します。
     // 半角スペースで1つの単語として区切られます。
-    'NG_WORD' => 'bitch fuck',
+    'BLOCK_NG_WORD' => 'bitch fuck',
 
     // (13)禁止メールアドレスからの送信をブロック
     // 配列で複数指定してください。
     // (7)で指定のname属性で判定します。
-    'BLACK_LIST' => [
+    'BLOCK_DOMAINS' => [
         '@ad-tube.biz',
         '@rediffmail.com',
         '@qq.com',
@@ -85,10 +85,10 @@ return [
     // (14)管理者宛のメールテンプレート(オプション)
     // PHPで生成したTwigテンプレートを使用する場合
     // admin.mail.twig を上書きします。
-    'TEMPLATE_MAIL_ADMIN' => '',
+    'TEMPLATE_ADMIN_MAIL' => '',
 
     // (15)ユーザ宛のメールテンプレート(オプション)
     // PHPで生成したTwigテンプレートを使用する場合
     // user.mail.twig を上書きします。
-    'TEMPLATE_MAIL_USER' => '',
+    'TEMPLATE_USER_MAIL' => '',
 ];

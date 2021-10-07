@@ -81,13 +81,36 @@ class ValidateHandler implements ValidateHandlerInterface
     }
 
     /**
-     * バリデーションBoolType
+     * バリデーションチェック
      *
      * @return bool
      */
     public function validate(): bool
     {
         return $this->validate->validate();
+    }
+
+    /**
+     * バリデーションALLチェック
+     *
+     * @return bool
+     */
+    public function validateAll(): bool
+    {
+        $validateList = [
+            fn() => $this->checkinRequired(),
+            fn() => $this->checkinEmail(),
+            fn() => $this->checkinMultibyteWord(),
+            fn() => $this->checkinBlockNGWord(),
+            fn() => $this->checkinBlockDomain(),
+            fn() => $this->checkinHuman(),
+        ];
+        foreach ($validateList as $validateCheckFn) {
+            if ($this->validate()) {
+                $validateCheckFn();
+            }
+        }
+        return $this->validate();
     }
 
     /**
@@ -101,35 +124,14 @@ class ValidateHandler implements ValidateHandlerInterface
     }
 
     /**
-     * バリデーションチェック
-     *
-     * @return void
-     */
-    public function checkinValidateAll(): void
-    {
-        $validateList = [
-            fn() => $this->checkinRequired(),
-            fn() => $this->checkinEmail(),
-            fn() => $this->checkinMBWord(),
-            fn() => $this->checkinNGWord(),
-            fn() => $this->checkinHuman(),
-        ];
-        foreach ($validateList as $validate) {
-            if ($this->validate()) {
-                $validate();
-            }
-        }
-    }
-
-    /**
      * 必須項目チェック
      *
      * @return void
      */
     public function checkinRequired(): void
     {
-        if (isset($this->form['REQUIRED_ATTRIBUTE'])) {
-            $this->validate->rule('required', $this->form['REQUIRED_ATTRIBUTE']);
+        if (isset($this->form['REQUIRED_ATTRIBUTES'])) {
+            $this->validate->rule('required', $this->form['REQUIRED_ATTRIBUTES']);
         }
     }
 
@@ -153,16 +155,16 @@ class ValidateHandler implements ValidateHandlerInterface
      *
      * @return void
      */
-    public function checkinMBWord(): void
+    public function checkinMultibyteWord(): void
     {
-        if (isset($this->form['MB_WORD'])) {
+        if (isset($this->form['MULTIBYTE_ATTRIBUTE'])) {
             Validator::addRule('MBValidator', function ($field, $value) {
                 if (strlen($value) === mb_strlen($value, 'UTF-8')) {
                     return false;
                 }
                 return true;
             });
-            $this->validate->rule('MBValidator', $this->form['MB_WORD'])->message('日本語を含まない文章は送信できません。');
+            $this->validate->rule('MBValidator', $this->form['MULTIBYTE_ATTRIBUTE'])->message('日本語を含まない文章は送信できません。');
         }
     }
 
@@ -171,9 +173,9 @@ class ValidateHandler implements ValidateHandlerInterface
      *
      * @return void
      */
-    public function checkinNGWord(): void
+    public function checkinBlockNGWord(): void
     {
-        $ng_words = (array) explode(' ', $this->form['NG_WORD']);
+        $ng_words = (array) explode(' ', $this->form['BLOCK_NG_WORD']);
         if (isset($ng_words[0])) {
             Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
                 foreach ($ng_words as $word) {
@@ -184,6 +186,30 @@ class ValidateHandler implements ValidateHandlerInterface
                 return true;
             });
             $this->validate->rule('NGValidator', '*')->message('禁止ワードが含まれているため送信できません。');
+        }
+    }
+
+    /**
+     * 禁止ドメイン
+     *
+     * @return void
+     */
+    public function checkinBlockDomain(): void
+    {
+        $block_domains = $this->form['BLOCK_DOMAINS'];
+        if (isset($block_domains[0])) {
+            Validator::addRule('BlockDomainValidator', function ($field, $value) use ($block_domains) {
+                foreach ($block_domains as $mail) {
+                    if (strpos($value, $mail) !== false) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            $this->validate->rule(
+                'BlockDomainValidator',
+                $this->form['EMAIL_ATTRIBUTE']
+            )->message('指定のメールアドレスからの送信はお受けできません。');
         }
     }
 
