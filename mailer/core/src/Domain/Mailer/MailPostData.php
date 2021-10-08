@@ -194,7 +194,6 @@ class MailPostData
                 $subject = $value;
             }
         }
-
         return str_replace(PHP_EOL, '', $this->kses($before . $subject . $after));
     }
 
@@ -205,8 +204,7 @@ class MailPostData
      */
     public function getMailBody(): array
     {
-        // {name属性}で置換.
-        $posts = array();
+        $posts = [];
         foreach ($this->postData as $key => $value) {
             // アンダースコアは除外.
             if (substr($key, 0, 1) !== '_') {
@@ -235,7 +233,7 @@ class MailPostData
      */
     public function getMailAdminHeader(): array
     {
-        $header = array();
+        $header = [];
 
         // 管理者宛送信メール.
         if (!empty($this->mailSettings['ADMIN_CC'])) {
@@ -250,7 +248,6 @@ class MailPostData
 
         return $header;
     }
-
 
     /**
      * 管理者メールテンプレート
@@ -388,7 +385,6 @@ class MailPostData
     {
         if (! $this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
             return $this->kses($_SERVER['HTTP_REFERER']);
-            ;
         }
         return $this->pageReferer;
     }

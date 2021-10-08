@@ -26,6 +26,13 @@ class PHPMailerHandler implements MailHandlerInterface
     private $mailSettings = [];
 
     /**
+     * メールフォーム設定
+     *
+     * @var array
+     */
+    private $formSettings = [];
+
+    /**
      * DBを作成
      *
      * @param  SettingsInterface $settings
@@ -34,6 +41,7 @@ class PHPMailerHandler implements MailHandlerInterface
     public function __construct(SettingsInterface $settings)
     {
         $this->mailSettings = $settings->get('mail');
+        $this->formSettings = $settings->get('form');
     }
 
     /**
@@ -47,6 +55,7 @@ class PHPMailerHandler implements MailHandlerInterface
      */
     final public function send(string $to, string $subject, string $body, array $header = array()): bool
     {
+        $mailSettings = $this->mailSettings;
         $mailSettings = $this->mailSettings;
 
         // SMTP認証.
@@ -74,6 +83,9 @@ class PHPMailerHandler implements MailHandlerInterface
             $mailer->SMTPAutoTLS = false;
         }
 
+        // HTMLメール or Plainメール
+        $mailer->isHTML($this->formSettings['IS_HTMLMAIL_TEMPLATE'] ? true : false);
+
         // エンコード.
         $mailer->CharSet = 'ISO-2022-JP';
         $mailer->Encoding = 'base64';
@@ -85,7 +97,6 @@ class PHPMailerHandler implements MailHandlerInterface
         $mailer->setFrom($mailSettings['SMTP_MAILADDRESS'], $fromName);
 
         // 送信メール.
-        $mailer->isHTML(false);
         $mailer->Subject = $subject;
         $mailer->Body = $body;
 

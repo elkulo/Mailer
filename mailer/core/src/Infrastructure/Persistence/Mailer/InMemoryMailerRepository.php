@@ -173,7 +173,7 @@ class InMemoryMailerRepository implements MailerRepository
                 ];
             }
 
-            // 固有のメーラートークンを生成.
+            // 固有のメール送信のトークンを生成.
             $this->postData->createMailerToken();
 
             // 適正な$_POSTを取得.
@@ -227,8 +227,15 @@ class InMemoryMailerRepository implements MailerRepository
         $success = [];
 
         try {
-            // 固有のメーラートークンを削除（重複チェック）
-            $this->postData->checkinMailerToken();
+            // 重複投稿をチェック
+            if ($formSettings['IS_CONFIRM_SKIP']) {
+                // 確認画面スキップの場合はCSRFトークンを削除
+                $csrfName = $this->csrf->getTokenName();
+                $this->csrf->removeTokenFromStorage($csrfName);
+            } else {
+                // 確認画面経由の場合は固有のメールの送信トークンを削除
+                $this->postData->checkinMailerToken();
+            }
 
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
