@@ -67,7 +67,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      *
      * @var DBHandlerInterface|null
      */
-    private $db;
+    private $db = null;
 
     /**
      * InMemoryHealthCheckRepository constructor.
@@ -77,7 +77,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      * @param SettingsInterface $settings
      * @param ValidateHandlerInterface $validate
      * @param MailHandlerInterface $mail
-     * @param DBHandlerInterface $db
+     * @param DBHandlerInterface|null $db
      */
     public function __construct(
         Guard $csrf,
@@ -85,9 +85,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         SettingsInterface $settings,
         ValidateHandlerInterface $validate,
         MailHandlerInterface $mail,
-        DBHandlerInterface $db
+        ?DBHandlerInterface $db
     ) {
-
         // CSRF
         $this->csrf = $csrf;
 
@@ -270,11 +269,11 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     5 => [
                         'description' => 'データベースに接続',
-                        'success' => $this->db->make()
+                        'success' => ($this->db)? $this->db->make(): false
                     ],
                     6 => [
                         'description' => 'データベースに履歴を保存',
-                        'success' => $this->db->test($mailSettings['ADMIN_MAIL'])
+                        'success' => ($this->db)? $this->db->test($mailSettings['ADMIN_MAIL']): false
                     ],
                     7 => [
                         'description' => 'reCAPTCHA でBot対策',
