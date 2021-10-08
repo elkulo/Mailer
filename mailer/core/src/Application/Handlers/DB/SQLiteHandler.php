@@ -203,6 +203,20 @@ class SQLiteHandler implements DBHandlerInterface
      */
     final public function test(string $email): bool
     {
-        return false;//$this->seve();
+        return $this->save(
+            array(
+                'admin' => true,
+                'user' => false
+            ),
+            $email,
+            '[HEALTH CHECK] メールプログラムからの動作検証',
+            '//------------ ヘルスチェックによりメールの送信履歴が正常に保存されることを確認しました。 ------------//',
+            array(
+                '_date' => date('Y/m/d (D) H:i:s', time()),
+                '_ip' => $_SERVER['REMOTE_ADDR'],
+                '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+                '_url' => '',
+            )
+        );
     }
 }

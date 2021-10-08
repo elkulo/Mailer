@@ -224,7 +224,7 @@ class InMemoryMailerRepository implements MailerRepository
         $router = [];
         $posts = [];
         $mailBody = [];
-        $success = [];
+        $success = ['admin' => false, 'user' => false];
 
         try {
             // 重複投稿をチェック

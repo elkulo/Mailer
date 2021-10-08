@@ -75,10 +75,8 @@ return function (ContainerBuilder $containerBuilder) {
                 case ('WordPress'):
                     return $c->get(WordPressHandler::class);
                     break;
-                case ('PHPMailer'):
                 default:
                     return $c->get(PHPMailerHandler::class);
-                    break;
             }
         },
 
@@ -91,6 +89,7 @@ return function (ContainerBuilder $containerBuilder) {
             $dbSettings = $c->get(SettingsInterface::class)->get('database');
             $dbHandler = isset($dbSettings['DB_DRIVER'])? $dbSettings['DB_DRIVER']: null;
             switch ($dbHandler) {
+                case ('MariaDB'):
                 case ('MySQL'):
                     return $c->get(MySQLHandler::class);
                     break;
