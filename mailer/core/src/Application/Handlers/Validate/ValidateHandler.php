@@ -23,35 +23,35 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * @var LoggerInterface
      */
-    protected LoggerInterface $logger;
+    private $logger;
 
     /**
      * 設定情報
      *
      * @var array
      */
-    private array $validateSettings = [];
+    private $validateSettings = [];
 
     /**
      * フォーム設定
      *
      * @var array
      */
-    private array $formSettings = [];
+    private $formSettings = [];
 
     /**
      * バリデート
      *
      * @var Validator
      */
-    private Validator $validate;
+    private $validate;
 
     /**
      * reCAPTCHAの閾値
      *
      * @var float
      */
-    private float $threshold = 0.5;
+    private $threshold = 0.5;
 
     /**
      * コンストラクタ
@@ -70,13 +70,13 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * POSTデータをセット
      *
-     * @param  array $post_data
+     * @param  array $posts
      * @return void
      */
-    public function set(array $post_data): void
+    public function set(array $posts): void
     {
-        Validator::lang($this->validateSettings['validate.lang']);
-        $this->validate = new Validator($post_data);
+        Validator::lang($this->validateSettings['VALIDATE_LANG']);
+        $this->validate = new Validator($posts);
         $this->validate->labels($this->formSettings['NAME_FOR_LABELS']);
     }
 
@@ -161,14 +161,14 @@ class ValidateHandler implements ValidateHandlerInterface
     public function checkinMultibyteWord(): void
     {
         if (isset($this->formSettings['MULTIBYTE_ATTRIBUTE'])) {
-            Validator::addRule('MBValidator', function ($field, $value) {
+            Validator::addRule('MultibyteValidator', function ($field, $value) {
                 if (strlen($value) === mb_strlen($value, 'UTF-8')) {
                     return false;
                 }
                 return true;
             });
             $this->validate->rule(
-                'MBValidator',
+                'MultibyteValidator',
                 $this->formSettings['MULTIBYTE_ATTRIBUTE']
             )->message('日本語を含まない文章は送信できません。');
         }
@@ -183,7 +183,7 @@ class ValidateHandler implements ValidateHandlerInterface
     {
         $ng_words = (array) explode(' ', $this->formSettings['BLOCK_NG_WORD']);
         if (isset($ng_words[0])) {
-            Validator::addRule('NGValidator', function ($field, $value) use ($ng_words) {
+            Validator::addRule('BlockNGValidator', function ($field, $value) use ($ng_words) {
                 foreach ($ng_words as $word) {
                     if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
                         return false;
@@ -191,7 +191,7 @@ class ValidateHandler implements ValidateHandlerInterface
                 }
                 return true;
             });
-            $this->validate->rule('NGValidator', '*')->message('禁止ワードが含まれているため送信できません。');
+            $this->validate->rule('BlockNGValidator', '*')->message('禁止ワードが含まれているため送信できません。');
         }
     }
 
@@ -247,8 +247,8 @@ class ValidateHandler implements ValidateHandlerInterface
     {
         // reCAPTCHA シークレットキー
         $secretKey = null;
-        if (isset($this->validateSettings['captcha.secretkey'])) {
-            $secretKey = $this->validateSettings['captcha.secretkey'];
+        if (isset($this->validateSettings['CAPTCHA_SECRETKEY'])) {
+            $secretKey = $this->validateSettings['CAPTCHA_SECRETKEY'];
         }
 
         if ($secretKey) {
@@ -288,7 +288,7 @@ class ValidateHandler implements ValidateHandlerInterface
     public function getCaptchaScript():array
     {
         // reCAPTCHA サイトキー
-        $siteKey = isset($this->validateSettings['captcha.sitekey'])? $this->validateSettings['captcha.sitekey']: '';
+        $siteKey = isset($this->validateSettings['CAPTCHA_SITEKEY'])? $this->validateSettings['CAPTCHA_SITEKEY']: '';
         if ($siteKey) {
             return [
                 'key' => trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8')),

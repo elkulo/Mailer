@@ -11,7 +11,7 @@ namespace App\Infrastructure\Persistence\Mailer;
 use Slim\Csrf\Guard;
 use Psr\Log\LoggerInterface;
 use App\Domain\Mailer\MailerRepository;
-use App\Domain\Mailer\MailPost;
+use App\Domain\Mailer\MailPostData;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
@@ -25,42 +25,42 @@ class InMemoryMailerRepository implements MailerRepository
      *
      * @var Guard
      */
-    protected Guard $csrf;
+    private $csrf;
 
     /**
      * ロジック
      *
-     * @var MailPost
+     * @var MailPostData
      */
-    private MailPost $mailPost;
+    private $postData;
 
     /**
      * ロガー
      *
      * @var LoggerInterface
      */
-    private LoggerInterface $logger;
+    private $logger;
 
     /**
      * 設定値
      *
      * @var SettingsInterface
      */
-    private SettingsInterface $settings;
+    private $settings;
 
     /**
      * 検証ハンドラー
      *
      * @var ValidateHandlerInterface
      */
-    private ValidateHandlerInterface $validate;
+    private $validate;
 
     /**
      * メールハンドラー
      *
      * @var MailHandlerInterface
      */
-    private MailHandlerInterface $mail;
+    private $mail;
 
     /**
      * DBハンドラー
@@ -107,7 +107,7 @@ class InMemoryMailerRepository implements MailerRepository
         $this->db = $db;
 
         // POSTを格納
-        $this->mailPost = new MailPost($_POST, $settings);
+        $this->postData = new MailPostData($_POST, $settings);
 
         // バリデーション準備
         $this->validate->set($_POST);
@@ -116,13 +116,13 @@ class InMemoryMailerRepository implements MailerRepository
         $formSettings = $this->settings->get('form');
 
         // POSTデータ
-        $post_data = $this->mailPost->getPosts();
+        $post_data = $this->postData->getPosts();
 
         // ユーザーメールを形式チェックして格納
         $email_attr = isset($formSettings['EMAIL_ATTRIBUTE']) ? $formSettings['EMAIL_ATTRIBUTE'] : null;
         if (isset($post_data[$email_attr])) {
             if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
-                $this->mailPost->setUserMail($post_data[$email_attr]);
+                $this->postData->setUserMail($post_data[$email_attr]);
             }
         }
     }
@@ -168,19 +168,19 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'validate.twig',
                     'data' => [
-                        'messages' => array_map(fn($n) => $n[0], $this->validate->errors())
+                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors())
                     ]
                 ];
             }
 
             // 固有のメーラートークンを生成.
-            $this->mailPost->createMailerToken();
+            $this->postData->createMailerToken();
 
             // 適正な$_POSTを取得.
-            $posts = $this->mailPost->getPosts();
+            $posts = $this->postData->getPosts();
 
             $system = [
-                'posts' => $this->mailPost->getConfirmQuery(),
+                'Posts' => $this->postData->getConfirmQuery(),
                 'CSRF'   => sprintf(
                     '<div style="display:none">
                         <input type="hidden" name="%1$s" value="%2$s">
@@ -191,7 +191,7 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->csrf->getTokenName(),
                     $this->csrf->getTokenValueKey(),
                     $this->csrf->getTokenValue(),
-                    $this->mailPost->getPageReferer()
+                    $this->postData->getPageReferer()
                 ),
                 'reCAPTCHA' => $this->validate->getCaptchaScript(),
             ];
@@ -200,7 +200,7 @@ class InMemoryMailerRepository implements MailerRepository
             return [
                 'template' => 'exception.twig',
                 'data' => [
-                    'message' => $e->getMessage()
+                    'Message' => $e->getMessage()
                 ]
             ];
         }
@@ -223,42 +223,44 @@ class InMemoryMailerRepository implements MailerRepository
         $formSettings = $this->settings->get('form');
         $router = [];
         $posts = [];
-        $mail_body = [];
+        $mailBody = [];
         $success = [];
 
         try {
             // 固有のメーラートークンを削除（重複チェック）
-            $this->mailPost->checkinMailerToken();
+            $this->postData->checkinMailerToken();
 
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
                 return [
                     'template' => 'validate.twig',
-                    'messages' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                    'data' => [
+                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors())
+                    ]
                 ];
             }
 
             // Twigテンプレート用に{{name属性}}で置換.
-            $posts = $this->mailPost->getPosts();
+            $posts = $this->postData->getPosts();
 
             // メールボディを取得
-            $mail_body = $this->mailPost->getMailBody();
+            $mailBody = $this->postData->getMailBody();
 
             // 管理者宛に届くメールをセット
             $success['admin'] = $this->mail->send(
-                $mailSettings['admin.mail'],
-                $this->mailPost->getMailSubject(),
-                $this->mailPost->renderAdminMail($mail_body),
-                $this->mailPost->getMailAdminHeader()
+                $mailSettings['ADMIN_MAIL'],
+                $this->postData->getMailSubject(),
+                $this->postData->renderAdminMail($mailBody),
+                $this->postData->getMailAdminHeader()
             );
 
             // ユーザーに届くメールをセット
             if (!empty($formSettings['IS_REPLY_USERMAIL'])) {
-                if ($this->mailPost->getUserMail()) {
+                if ($this->postData->getUserMail()) {
                     $success['user'] = $this->mail->send(
-                        $this->mailPost->getUserMail(),
-                        $this->mailPost->getMailSubject(),
-                        $this->mailPost->renderUserMail($mail_body)
+                        $this->postData->getUserMail(),
+                        $this->postData->getMailSubject(),
+                        $this->postData->renderUserMail($mailBody)
                     );
                 }
             }
@@ -266,14 +268,14 @@ class InMemoryMailerRepository implements MailerRepository
             // DBに保存
             $this->db->save(
                 $success,
-                $this->mailPost->getUserMail(),
-                $this->mailPost->getMailSubject(),
-                $this->mailPost->getPostToString(),
+                $this->postData->getUserMail(),
+                $this->postData->getMailSubject(),
+                $this->postData->getPostToString(),
                 array(
                     '_date' => date('Y/m/d (D) H:i:s', time()),
                     '_ip' => $_SERVER['REMOTE_ADDR'],
                     '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-                    '_url' => $this->mailPost->getPageReferer(),
+                    '_url' => $this->postData->getPageReferer(),
                 )
             );
 
@@ -284,15 +286,17 @@ class InMemoryMailerRepository implements MailerRepository
             $this->logger->error($e->getMessage());
             return [
                 'template' => 'exception.twig',
-                'data' => array('message' => $e->getMessage())
+                'data' => [
+                    'Message' => $e->getMessage()
+                ]
             ];
         }
 
         // 完了画面を生成.
-        $router['url'] = $this->mailPost->getReturnURL();
+        $router['url'] = $this->postData->getReturnURL();
         return [
             'template' => 'complete.twig',
-            'data' => array_merge($posts, ['return' => $router])
+            'data' => array_merge($posts, ['Return' => $router])
         ];
     }
 

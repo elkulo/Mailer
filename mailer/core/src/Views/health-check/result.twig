@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>HEALTH CHECK - 3{% if sectionTitle %} - {{ sectionTitle }}{% endif %}</title>
+    <title>HEALTH CHECK - 3{% if SectionTitle %} - {{ SectionTitle }}{% endif %}</title>
     {% include '/assets/bootstrap.min.css.twig' %}
     {% include '/assets/bootstrap.min.js.twig' %}
   </head>
@@ -36,9 +36,9 @@
       <div class="row justify-content-center">
         <div class="col">
           <div class="card shadow-sm">
-            <div class="card-header text-center">{{ sectionTitle }}</div>
+            <div class="card-header text-center">{{ SectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
-              {% if resultListCount == resultList|length %}
+              {% if ResultListCount == ResultList|length %}
               <div class="row g-1 justify-content-center align-items-center mb-3 pe-4 fw-bold text-center text-success">
                 <div class="col-auto">
                   <svg class="icon icon-check-circle" style="width: 24px; height: 24px;" aria-hidden="true" role="img"><use href="#icon-check-circle" xlink:href="#icon-check-circle"></use></svg>
@@ -54,11 +54,11 @@
               </div>
               {% endif %}
 
-              <p class="card-text">{{ sectionDescription }}</p>
+              <p class="card-text">{{ SectionDescription }}</p>
 
               <div class="table-responsive">
                 <table class="table my-0">
-                  <caption>Score {{resultListCount}} / {{resultList|length}}
+                  <caption>Score {{ ResultListCount }} / {{ ResultList|length }}
                   </caption>
                   <thead class="table-light">
                     <tr>
@@ -68,7 +68,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for key, result in resultList %}
+                    {% for key, result in ResultList %}
                     <tr>
                       <th>{{ key }}</th>
                       <td>{{ result.description }}</td>

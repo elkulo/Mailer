@@ -21,14 +21,14 @@ class SQLiteHandler implements DBHandlerInterface
     /**
      * @var LoggerInterface
      */
-    protected LoggerInterface $logger;
+    private $logger;
 
     /**
      * データーベース設定
      *
      * @var array
      */
-    private array $databaseSettings = [];
+    private $databaseSettings = [];
 
     /**
      * データベース
@@ -42,21 +42,21 @@ class SQLiteHandler implements DBHandlerInterface
      *
      * @var string
      */
-    public string $table_name;
+    public $tableName;
 
     /**
      * DBディレクトリ
      *
      * @var string
      */
-    public string $db_dir;
+    public $dbDirectory;
 
     /**
      * DBファイル
      *
      * @var string
      */
-    public string $sqlite_file;
+    public $sqliteFile;
 
     /**
      * DBを作成
@@ -70,16 +70,16 @@ class SQLiteHandler implements DBHandlerInterface
         try {
             $this->logger = $logger;
 
-            $app_path = $settings->get('app.path');
+            $app_path = $settings->get('appPath');
             $this->databaseSettings = $settings->get('database');
 
             // DBテーブル名
-            $prefix = $this->databaseSettings['db.prefix'] ? strtolower($this->databaseSettings['db.prefix']) : '';
-            $this->table_name = $prefix . 'mailer';
+            $prefix = $this->databaseSettings['DB_PREFIX'] ? strtolower($this->databaseSettings['DB_PREFIX']) : '';
+            $this->tableName = $prefix . 'mailer';
 
             // DBの場所
-            $this->db_dir = $app_path . '/../database/';
-            $this->sqlite_file = $this->db_dir . $this->databaseSettings['db.name'];
+            $this->dbDirectory = $app_path . '/../database/';
+            $this->sqliteFile = $this->dbDirectory . $this->databaseSettings['DB_NAME'];
 
             // DB設定
             $this->db = new Manager();
@@ -87,7 +87,7 @@ class SQLiteHandler implements DBHandlerInterface
             // 接続情報
             $config = [
                 'driver'    => 'sqlite',
-                'database'  => $this->sqlite_file,
+                'database'  => $this->sqliteFile,
                 'prefix' => $prefix,
             ];
 
@@ -152,14 +152,14 @@ class SQLiteHandler implements DBHandlerInterface
     {
         try {
             // DBディレクトリの確認
-            if (!file_exists($this->db_dir)) {
-                mkdir($this->db_dir, 0777);
+            if (!file_exists($this->dbDirectory)) {
+                mkdir($this->dbDirectory, 0777);
             }
 
             // DBファイルの確認
-            $sqlite_file = $this->db_dir . $this->databaseSettings['db.name'];
-            if (!file_exists($sqlite_file)) {
-                $pdo = new \PDO('sqlite:' . $sqlite_file);
+            $sqliteFile = $this->dbDirectory . $this->databaseSettings['DB_NAME'];
+            if (!file_exists($sqliteFile)) {
+                $pdo = new \PDO('sqlite:' . $sqliteFile);
 
                 // SQL実行時にもエラーの代わりに例外を投げるように設定
                 // (毎回if文を書く必要がなくなる)
@@ -170,7 +170,7 @@ class SQLiteHandler implements DBHandlerInterface
                 $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
                 // テーブル作成
-                $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->table_name} (
+                $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->tableName} (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     success VARCHAR(50),
                     email VARCHAR(256),

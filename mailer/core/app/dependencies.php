@@ -56,7 +56,7 @@ return function (ContainerBuilder $containerBuilder) {
                 $settings->get('twig')
             );
             // Globalにフラッシュメッセージを設定.
-            $twig->getEnvironment()->addGlobal('flash', $c->get(Messages::class));
+            $twig->getEnvironment()->addGlobal('Flash', $c->get(Messages::class));
             return $twig;
         },
         ValidateHandlerInterface::class => \DI\autowire(ValidateHandler::class),

@@ -42,7 +42,7 @@ class InMemoryDashboardRepository implements DashboardRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'debug' => $this->settings->get('debug')
+                'Debug' => $this->settings->get('debug')
             ]
         ];
     }

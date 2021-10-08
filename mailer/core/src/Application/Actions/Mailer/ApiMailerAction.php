@@ -22,8 +22,6 @@ class ApiMailerAction extends MailerAction
     {
         $repository = $this->mailerRepository->api();
 
-        $this->logger->info('CSRF.');
-
         return $this->respondWithData($repository);
     }
 }

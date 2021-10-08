@@ -13,7 +13,7 @@ use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
 
-class MailPost
+class MailPostData
 {
 
     /**
@@ -35,21 +35,21 @@ class MailPost
      *
      * @var array
      */
-    private array $post_data = [];
+    private array $postData = [];
 
     /**
      * ユーザーメールの格納
      *
      * @var string
      */
-    private string $user_mail = '';
+    private string $userMailAddress = '';
 
     /**
      * ページリファラー
      *
      * @var string
      */
-    private string $page_referer = '';
+    private string $pageReferer = '';
 
     /**
      * Twig ハンドラー
@@ -69,7 +69,7 @@ class MailPost
     {
         $this->mailSettings = $settings->get('mail');
         $this->formSettings = $settings->get('form');
-        $app_path = $settings->get('app.path');
+        $appPath = $settings->get('appPath');
 
         // POSTデータから取得したデータを整形
         $sanitized = array();
@@ -84,13 +84,13 @@ class MailPost
                 $this->setPageReferer($value);
             }
         }
-        $this->post_data = $sanitized;
+        $this->postData = $sanitized;
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
             new TwigFileLoader(array(
-                $app_path . '/../templates/mail',
-                $app_path . '/src/Views/templates/mail',
+                $appPath . '/../templates/mail',
+                $appPath . '/src/Views/templates/mail',
             ))
         );
     }
@@ -102,7 +102,7 @@ class MailPost
      */
     public function getPosts(): array
     {
-        return $this->post_data;
+        return $this->postData;
     }
 
     /**
@@ -113,7 +113,7 @@ class MailPost
     public function getPostToString(): string
     {
         $response = '';
-        foreach ($this->post_data as $name => $value) {
+        foreach ($this->postData as $name => $value) {
             $output = '';
             if (is_array($value)) {
                 foreach ($value as $item) {
@@ -147,7 +147,7 @@ class MailPost
      */
     public function getPostToTwig(): array
     {
-        $post_data = $this->post_data;
+        $post_data = $this->postData;
         $posts = array();
         foreach ($post_data as $key => $value) {
             // アンダースコアは除外.
@@ -161,12 +161,12 @@ class MailPost
     /**
      * ユーザーメールをセット
      *
-     * @param  string $user_mail
+     * @param  string $email
      * @return void
      */
-    public function setUserMail(string $user_mail): void
+    public function setUserMail(string $email): void
     {
-        $this->user_mail = $user_mail;
+        $this->userMailAddress = $email;
     }
 
     /**
@@ -176,7 +176,7 @@ class MailPost
      */
     public function getUserMail(): string
     {
-        return $this->user_mail;
+        return $this->userMailAddress;
     }
 
     /**
@@ -189,7 +189,7 @@ class MailPost
         $subject = '';
         $before = isset($this->formSettings['SUBJECT_BEFORE']) ? $this->formSettings['SUBJECT_BEFORE'] : '';
         $after = isset($this->formSettings['SUBJECT_AFTER']) ? $this->formSettings['SUBJECT_AFTER'] : '';
-        foreach ($this->post_data as $key => $value) {
+        foreach ($this->postData as $key => $value) {
             if ($key === $this->formSettings['SUBJECT_ATTRIBUTE']) {
                 $subject = $value;
             }
@@ -207,7 +207,7 @@ class MailPost
     {
         // {name属性}で置換.
         $posts = array();
-        foreach ($this->post_data as $key => $value) {
+        foreach ($this->postData as $key => $value) {
             // アンダースコアは除外.
             if (substr($key, 0, 1) !== '_') {
                 $posts[$key] = $value;
@@ -216,7 +216,7 @@ class MailPost
 
         // クライアント情報の置換.
         $value = array(
-            '__FROM_SITE_NAME' => $this->mailSettings['from.name'],
+            '__FROM_NAME' => $this->mailSettings['FROM_NAME'],
             '__POST_ALL' => $this->getPostToString(),
             '__DATE' => date('Y/m/d (D) H:i:s', time()),
             '__IP' => $_SERVER['REMOTE_ADDR'],
@@ -238,14 +238,14 @@ class MailPost
         $header = array();
 
         // 管理者宛送信メール.
-        if (!empty($this->mailSettings['admin.cc'])) {
-            $header[] = 'Cc: ' . $this->mailSettings['admin.cc'];
+        if (!empty($this->mailSettings['ADMIN_CC'])) {
+            $header[] = 'Cc: ' . $this->mailSettings['ADMIN_CC'];
         }
-        if (!empty($this->mailSettings['admin.bcc'])) {
-            $header[] = 'Bcc: ' . $this->mailSettings['admin.bcc'];
+        if (!empty($this->mailSettings['ADMIN_BCC'])) {
+            $header[] = 'Bcc: ' . $this->mailSettings['ADMIN_BCC'];
         }
         if (!empty($this->formSettings['IS_FROM_USERMAIL'])) {
-            $header[] = 'Reply-To: ' . $this->user_mail;
+            $header[] = 'Reply-To: ' . $this->userMailAddress;
         }
 
         return $header;
@@ -299,34 +299,34 @@ class MailPost
     {
         $query = [];
 
-        foreach ($this->post_data as $name => $value) {
-            $output_value = '';
+        foreach ($this->postData as $name => $value) {
+            $output = '';
 
             // チェックボックス（配列）の結合
             if (is_array($value)) {
                 foreach ($value as $item) {
                     if (is_array($item)) {
-                        $output_value .= $this->changeJoin($item);
+                        $output .= $this->changeJoin($item);
                     } else {
-                        $output_value .= $item . ', ';
+                        $output .= $item . ', ';
                     }
                 }
-                $output_value = rtrim($output_value, ', ');
+                $output = rtrim($output, ', ');
             } else {
-                $output_value = $value;
+                $output = $value;
             }
 
             // 全角を半角へ変換
-            $output_value = $this->changeHankaku($output_value, $name);
+            $output = $this->changeHankaku($output, $name);
 
             // 確認をセット
             $query[]= [
                 'name' => $this->nameToLabel($name) . sprintf(
                     '<input type="hidden" name="%1$s" value="%2$s" />',
                     $this->kses($name),
-                    $this->kses($output_value)
+                    $this->kses($output)
                 ),
-                'value' => nl2br($this->kses($output_value))
+                'value' => nl2br($this->kses($output))
             ];
         }
         return $query;
@@ -376,7 +376,7 @@ class MailPost
      */
     public function setPageReferer($value): void
     {
-        $this->page_referer = $this->kses($value);
+        $this->pageReferer = $this->kses($value);
     }
 
     /**
@@ -386,11 +386,11 @@ class MailPost
      */
     public function getPageReferer(): string
     {
-        if (! $this->page_referer && isset($_SERVER['HTTP_REFERER'])) {
+        if (! $this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
             return $this->kses($_SERVER['HTTP_REFERER']);
             ;
         }
-        return $this->page_referer;
+        return $this->pageReferer;
     }
 
     /**

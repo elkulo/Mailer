@@ -21,14 +21,14 @@ class MySQLHandler implements DBHandlerInterface
     /**
      * @var LoggerInterface
      */
-    protected LoggerInterface $logger;
+    private $logger;
 
     /**
      * データーベース設定
      *
      * @var array
      */
-    private array $databaseSettings = [];
+    private $databaseSettings = [];
 
     /**
      * データベース
@@ -42,7 +42,7 @@ class MySQLHandler implements DBHandlerInterface
      *
      * @var string
      */
-    public string $table_name;
+    public $tableName = '';
 
     /**
      * DBを作成
@@ -59,8 +59,8 @@ class MySQLHandler implements DBHandlerInterface
             $this->databaseSettings = $settings->get('database');
 
             // DBテーブル名
-            $prefix = $this->databaseSettings['db.prefix'] ? strtolower($this->databaseSettings['db.prefix']) : '';
-            $this->table_name = $prefix . 'mailer';
+            $prefix = $this->databaseSettings['DB_PREFIX'] ? strtolower($this->databaseSettings['DB_PREFIX']) : '';
+            $this->tableName = $prefix . 'mailer';
 
             // DB設定
             $this->db = new Manager();
@@ -68,12 +68,12 @@ class MySQLHandler implements DBHandlerInterface
             // 接続情報
             $config = [
                 'driver'    => 'mysql',
-                'host'      => $this->databaseSettings['db.host'],
-                'database'  => $this->databaseSettings['db.name'],
-                'username'  => $this->databaseSettings['db.user'],
-                'password'  => $this->databaseSettings['db.password'],
-                'charset'   => $this->databaseSettings['db.charset'],
-                'collation' => $this->databaseSettings['db.collate'],
+                'host'      => $this->databaseSettings['DB_HOST'],
+                'database'  => $this->databaseSettings['DB_NAME'],
+                'username'  => $this->databaseSettings['DB_USER'],
+                'password'  => $this->databaseSettings['DB_PASSWORD'],
+                'charset'   => $this->databaseSettings['DB_CHARSET'],
+                'collation' => $this->databaseSettings['DB_COLLATE'],
                 'prefix' => $prefix,
             ];
 
@@ -140,9 +140,9 @@ class MySQLHandler implements DBHandlerInterface
             $db = $this->databaseSettings;
 
             $pdo = new \PDO(
-                'mysql:host=' . $db['db.host'] . ';dbname=' . $db['db.name'] . ';charset=' . $db['db.charset'],
-                $db['db.user'],
-                $db['db.password']
+                'mysql:host=' . $db['DB_HOST'] . ';dbname=' . $db['DB_NAME'] . ';charset=' . $db['DB_CHARSET'],
+                $db['DB_USER'],
+                $db['DB_PASSWORD']
             );
 
             // SQL実行時にもエラーの代わりに例外を投げるように設定
@@ -154,7 +154,7 @@ class MySQLHandler implements DBHandlerInterface
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
             // テーブル存在チェック
-            $sql = "CREATE TABLE IF NOT EXISTS {$this->table_name} (
+            $sql = "CREATE TABLE IF NOT EXISTS {$this->tableName} (
                     id INT(11) AUTO_INCREMENT PRIMARY KEY,
                     success VARCHAR(50),
                     email VARCHAR(256),
@@ -167,7 +167,7 @@ class MySQLHandler implements DBHandlerInterface
                     registry_datetime DATETIME,
                     created_at INT(11),
                     updated_at INT(11)
-                ) engine=innodb default charset={$db['db.charset']}";
+                ) engine=innodb default charset={$db['DB_CHARSET']}";
 
             // テーブル作成
             $pdo->query($sql);

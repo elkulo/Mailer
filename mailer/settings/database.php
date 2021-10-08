@@ -1,21 +1,23 @@
 <?php
-
-// DBサーバーの情報
+/**
+ * データーベースの設定
+ * 
+ */
 return [
 
-  'db.driver' => env('DB_DRIVER'),
+  'DB_DRIVER' => env('DB_DRIVER'),
 
-  'db.host' => env('DB_HOST'),
+  'DB_HOST' => env('DB_HOST'),
 
-  'db.name' => env('DB_NAME'),
+  'DB_NAME' => env('DB_NAME'),
 
-  'db.user' => env('DB_USER'),
+  'DB_USER' => env('DB_USER'),
 
-  'db.password' => env('DB_PASSWORD'),
+  'DB_PASSWORD' => env('DB_PASSWORD'),
 
-  'db.prefix' => env('DB_PREFIX'),
+  'DB_PREFIX' => env('DB_PREFIX'),
 
-  'db.charset' => env('DB_CHARSET'),
+  'DB_CHARSET' => env('DB_CHARSET'),
 
-  'db.collate' => env('DB_COLLATE'),
+  'DB_COLLATE' => env('DB_COLLATE'),
 ];
