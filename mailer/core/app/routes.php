@@ -42,8 +42,10 @@ return function (App $app) {
         $formSettings = $settings->get('form');
 
         // ルートにPOSTされた場合、スキップ設定で自動振り分け
-        $group->post('', empty($formSettings['IS_CONFIRM_SKIP']) ? ConfirmMailerAction::class : CompleteMailerAction::class);
-
+        $group->post(
+            '',
+            empty($formSettings['IS_CONFIRM_SKIP']) ? ConfirmMailerAction::class : CompleteMailerAction::class
+        );
         $group->get('', IndexMailerAction::class)->setName('mailer');
         $group->post('/confirm', ConfirmMailerAction::class)->setName('mailer.confirm');
         $group->post('/complete', CompleteMailerAction::class)->setName('mailer.complete');

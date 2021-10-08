@@ -59,8 +59,47 @@ return function (ContainerBuilder $containerBuilder) {
             $twig->getEnvironment()->addGlobal('Flash', $c->get(Messages::class));
             return $twig;
         },
+
+        // 検証ハンドラーの登録.
         ValidateHandlerInterface::class => \DI\autowire(ValidateHandler::class),
-        MailHandlerInterface::class => \DI\autowire(PHPMailerHandler::class),
-        DBHandlerInterface::class => \DI\autowire(SQLiteHandler::class),
+
+        // メーラーハンドラーの登録.
+        PHPMailerHandler::class => \DI\autowire(PHPMailerHandler::class),
+        WordPressHandler::class => \DI\autowire(WordPressHandler::class),
+
+        // メーラーハンドラーの選択.
+        MailHandlerInterface::class => function (ContainerInterface $c) {
+            $mailSettings = $c->get(SettingsInterface::class)->get('mail');
+            $mailHandler = isset($mailSettings['MAILER_DRIVER'])? $mailSettings['MAILER_DRIVER']: 'PHPMailer';
+            switch ($mailHandler) {
+                case ('WordPress'):
+                    return $c->get(WordPressHandler::class);
+                    break;
+                case ('PHPMailer'):
+                default:
+                    return $c->get(PHPMailerHandler::class);
+                    break;
+            }
+        },
+
+        // データーベースハンドラーの登録.
+        MySQLHandler::class => \DI\autowire(MySQLHandler::class),
+        SQLiteHandler::class => \DI\autowire(SQLiteHandler::class),
+
+        // データーベースハンドラーの選択.
+        DBHandlerInterface::class => function (ContainerInterface $c) {
+            $dbSettings = $c->get(SettingsInterface::class)->get('database');
+            $dbHandler = isset($dbSettings['DB_DRIVER'])? $dbSettings['DB_DRIVER']: null;
+            switch ($dbHandler) {
+                case ('MySQL'):
+                    return $c->get(MySQLHandler::class);
+                    break;
+                case ('SQLite'):
+                    return $c->get(SQLiteHandler::class);
+                    break;
+                default:
+                    return null;
+            }
+        },
     ]);
 };

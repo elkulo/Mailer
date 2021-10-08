@@ -67,7 +67,7 @@ class InMemoryMailerRepository implements MailerRepository
      *
      * @var DBHandlerInterface|null
      */
-    private $db;
+    private $db = null;
 
     /**
      * InMemoryMailerRepository constructor.
@@ -77,7 +77,7 @@ class InMemoryMailerRepository implements MailerRepository
      * @param SettingsInterface $settings
      * @param ValidateHandlerInterface $validate,
      * @param MailHandlerInterface $mail,
-     * @param DBHandlerInterface $db
+     * @param DBHandlerInterface|null $db
      */
     public function __construct(
         Guard $csrf,
@@ -85,7 +85,7 @@ class InMemoryMailerRepository implements MailerRepository
         SettingsInterface $settings,
         ValidateHandlerInterface $validate,
         MailHandlerInterface $mail,
-        DBHandlerInterface $db
+        ?DBHandlerInterface $db
     ) {
 
         // CSRF
@@ -273,17 +273,17 @@ class InMemoryMailerRepository implements MailerRepository
             }
 
             // DBに保存
-            $this->db->save(
+            isset($this->db) && $this->db->save(
                 $success,
                 $this->postData->getUserMail(),
                 $this->postData->getMailSubject(),
                 $this->postData->getPostToString(),
                 array(
-                    '_date' => date('Y/m/d (D) H:i:s', time()),
-                    '_ip' => $_SERVER['REMOTE_ADDR'],
-                    '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-                    '_url' => $this->postData->getPageReferer(),
-                )
+                        '_date' => date('Y/m/d (D) H:i:s', time()),
+                        '_ip' => $_SERVER['REMOTE_ADDR'],
+                        '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+                        '_url' => $this->postData->getPageReferer(),
+                    )
             );
 
             if (array_search(false, $success)) {
