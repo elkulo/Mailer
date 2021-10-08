@@ -23,7 +23,7 @@ class PHPMailerHandler implements MailHandlerInterface
      *
      * @var array
      */
-    private array $mailSettings = [];
+    private $mailSettings = [];
 
     /**
      * DBを作成
@@ -52,22 +52,22 @@ class PHPMailerHandler implements MailHandlerInterface
         // SMTP認証.
         $mailer = new PHPMailer;
         $mailer->isSMTP();
-        $mailer->Host = $mailSettings['smtp.host'];
-        $mailer->Port = $mailSettings['smtp.port'];
+        $mailer->Host = $mailSettings['SMTP_HOST'];
+        $mailer->Port = $mailSettings['SMTP_PORT'];
 
         // メーラー名を変更.
         $mailer->XMailer = 'PHPMailer';
 
-        if (isset($mailSettings['smtp.username'], $mailSettings['smtp.password'])) {
+        if (isset($mailSettings['SMTP_USERNAME'], $mailSettings['SMTP_PASSWORD'])) {
             $mailer->SMTPAuth = true;
-            $mailer->Username = $mailSettings['smtp.username'];
-            $mailer->Password = $mailSettings['smtp.password'];
+            $mailer->Username = $mailSettings['SMTP_USERNAME'];
+            $mailer->Password = $mailSettings['SMTP_PASSWORD'];
         } else {
             $mailer->SMTPAuth = false;
         }
 
-        if (isset($mailSettings['smtp.encrypt'])) {
-            $mailer->SMTPSecure = $mailSettings['smtp.encrypt'];
+        if (isset($mailSettings['SMTP_ENCRYPT'])) {
+            $mailer->SMTPSecure = $mailSettings['SMTP_ENCRYPT'];
             $mailer->SMTPAutoTLS = true;
         } else {
             $mailer->SMTPSecure  = false;
@@ -78,11 +78,11 @@ class PHPMailerHandler implements MailHandlerInterface
         $mailer->CharSet = 'ISO-2022-JP';
         $mailer->Encoding = 'base64';
         $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
-        $from_name = mb_encode_mimeheader($mailSettings['from.name'], 'ISO-2022-JP', 'UTF-8');
+        $fromName = mb_encode_mimeheader($mailSettings['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
         $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
 
         // 配信元.
-        $mailer->setFrom($mailSettings['smtp.mailaddress'], $from_name);
+        $mailer->setFrom($mailSettings['SMTP_MAILADDRESS'], $fromName);
 
         // 送信メール.
         $mailer->isHTML(false);
@@ -98,7 +98,7 @@ class PHPMailerHandler implements MailHandlerInterface
         }
 
         // 受信失敗時のリターン先.
-        $mailer->Sender = $mailSettings['smtp.mailaddress'];
+        $mailer->Sender = $mailSettings['SMTP_MAILADDRESS'];
 
         /**
          * デバックレベル 0 ~ 2
@@ -132,7 +132,7 @@ class PHPMailerHandler implements MailHandlerInterface
     {
         $cc       = array();
         $bcc      = array();
-        $reply_to = array();
+        $replyTo = array();
 
         // タイプ別の配列へ.
         foreach ((array) $headers as $header) {
@@ -150,7 +150,7 @@ class PHPMailerHandler implements MailHandlerInterface
                     $bcc = array_merge((array) $bcc, explode(',', $content));
                     break;
                 case 'reply-to':
-                    $reply_to = array_merge((array) $reply_to, explode(',', $content));
+                    $replyTo = array_merge((array) $replyTo, explode(',', $content));
                     break;
                 default:
                     // Add it to our grand headers array.
@@ -160,37 +160,37 @@ class PHPMailerHandler implements MailHandlerInterface
         }
 
         // 配列にまとめる.
-        $address_headers = compact('cc', 'bcc', 'reply_to');
+        $sendHeaders = compact('cc', 'bcc', 'reply_to');
 
-        foreach ($address_headers as $address_header => $addresses) {
+        foreach ($sendHeaders as $sendHeaderType => $addresses) {
             if (empty($addresses)) {
                 continue;
             }
 
             foreach ((array) $addresses as $address) {
                 try {
-                    $recipient_name = '';
+                    $recipient = '';
 
                     // "Foo <mail@example.com>" を "Foo" と "mail@example.com" に分解.
                     if (preg_match('/(.*)<(.+)>/', $address, $matches)) {
                         if (count($matches) == 3) {
-                            $recipient_name = $matches[1];
-                            $address        = $matches[2];
+                            $recipient = $matches[1];
+                            $address   = $matches[2];
                         }
                     }
 
                     // エンコード.
-                    $recipient_name = mb_encode_mimeheader($recipient_name, 'ISO-2022-JP', 'UTF-8');
+                    $recipient = mb_encode_mimeheader($recipient, 'ISO-2022-JP', 'UTF-8');
 
-                    switch ($address_header) {
+                    switch ($sendHeaderType) {
                         case 'cc':
-                            $phpmailer->addCc($address, $recipient_name);
+                            $phpmailer->addCc($address, $recipient);
                             break;
                         case 'bcc':
-                            $phpmailer->addBcc($address, $recipient_name);
+                            $phpmailer->addBcc($address, $recipient);
                             break;
                         case 'reply_to':
-                            $phpmailer->addReplyTo($address, $recipient_name);
+                            $phpmailer->addReplyTo($address, $recipient);
                             break;
                     }
                 } catch (Exception $e) {

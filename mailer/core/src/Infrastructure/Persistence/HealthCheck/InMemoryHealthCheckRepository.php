@@ -11,7 +11,7 @@ namespace App\Infrastructure\Persistence\HealthCheck;
 use Slim\Csrf\Guard;
 use Slim\Flash\Messages;
 use App\Domain\HealthCheck\HealthCheckRepository;
-use App\Domain\HealthCheck\HealthPost;
+use App\Domain\HealthCheck\HealthCheckPostData;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
@@ -25,42 +25,42 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      *
      * @var Guard
      */
-    protected Guard $csrf;
+    private $csrf;
 
     /**
      * フラッシュメッセージ
      *
      * @var Messages
      */
-    protected Messages $flash;
+    private $flash;
 
     /**
      * ロジック
      *
-     * @var HealthPost
+     * @var HealthCheckPostData
      */
-    private HealthPost $healthPost;
+    private $postData;
 
     /**
      * 設定値
      *
      * @var SettingsInterface
      */
-    private SettingsInterface $settings;
+    private $settings;
 
     /**
      * 検証ハンドラー
      *
      * @var ValidateHandlerInterface
      */
-    private ValidateHandlerInterface $validate;
+    private $validate;
 
     /**
      * メールハンドラー
      *
      * @var MailHandlerInterface
      */
-    private MailHandlerInterface $mail;
+    private $mail;
 
     /**
      * DBハンドラー
@@ -107,7 +107,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $this->db = $db;
 
         // POSTを格納
-        $this->healthPost = new HealthPost($_POST, $settings);
+        $this->postData = new HealthCheckPostData($_POST, $settings);
 
         // バリデーション準備
         $this->validate->set($_POST);
@@ -121,14 +121,14 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     public function index(): array
     {
         $mailSettings = $this->settings->get('mail');
-        $to = (array) $mailSettings['admin.mail'];
-        $cc = $mailSettings['admin.cc']? explode(',', $mailSettings['admin.cc']) : [];
-        $bcc = $mailSettings['admin.bcc']? explode(',', $mailSettings['admin.bcc']) : [];
+        $to = (array) $mailSettings['ADMIN_MAIL'];
+        $cc = $mailSettings['ADMIN_CC']? explode(',', $mailSettings['ADMIN_CC']) : [];
+        $bcc = $mailSettings['ADMIN_BCC']? explode(',', $mailSettings['ADMIN_BCC']) : [];
 
         try {
             // 環境設定のメールアドレスの形式に不備があれば警告.
-            foreach (array_merge($to, $cc, $bcc) as $admin_email) {
-                if (!$this->validate->isCheckMailFormat($admin_email)) {
+            foreach (array_merge($to, $cc, $bcc) as $mailaddress) {
+                if (!$this->validate->isCheckMailFormat($mailaddress)) {
                     throw new \Exception('環境設定のメールアドレスに不備があります。設定を見直してください。');
                 }
             }
@@ -140,8 +140,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'sectionTitle' => '送受信テスト',
-                'sectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。',
+                'SectionTitle' => '送受信テスト',
+                'SectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。',
                 'CSRF'   => [
                     'keys' => [
                         'name'  => $this->csrf->getTokenNameKey(),
@@ -162,18 +162,18 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     public function confirm(): array
     {
         $mailSettings = $this->settings->get('mail');
-        $post_data = $this->healthPost->getPosts();
-        $post_email = isset($post_data['email'])? $post_data['email']: '';
+        $posts = $this->postData->getPosts();
+        $postEmail = isset($posts['email'])? $posts['email']: '';
         $passcode = '';
         $success = false;
-        $to = (array) $mailSettings['admin.mail'];
-        $cc = $mailSettings['admin.cc']? explode(',', $mailSettings['admin.cc']) : [];
-        $bcc = $mailSettings['admin.bcc']? explode(',', $mailSettings['admin.bcc']) : [];
+        $to = (array) $mailSettings['ADMIN_MAIL'];
+        $cc = $mailSettings['ADMIN_CC']? explode(',', $mailSettings['ADMIN_CC']) : [];
+        $bcc = $mailSettings['ADMIN_BCC']? explode(',', $mailSettings['ADMIN_BCC']) : [];
 
         try {
             // 環境設定のメールアドレスの形式に不備がある場合は処理を中止.
-            foreach (array_merge($to, $cc, $bcc) as $admin_email) {
-                if (!$this->validate->isCheckMailFormat($admin_email)) {
+            foreach (array_merge($to, $cc, $bcc) as $mailaddress) {
+                if (!$this->validate->isCheckMailFormat($mailaddress)) {
                     return [
                         'redirect' => '../health-check'
                     ];
@@ -181,7 +181,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             }
 
             // 管理者メールの比較
-            if ($this->validate->isCheckMailFormat($post_email) && $post_email === $mailSettings['admin.mail']) {
+            if ($this->validate->isCheckMailFormat($postEmail) && $postEmail === $mailSettings['ADMIN_MAIL']) {
                 // パスコードの送信
                 $passcode = sprintf("%06d", mt_rand(1, 999999));
                 $_SESSION['healthCheckPasscode'] = $passcode;
@@ -192,8 +192,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                 } else {
                     $success = $this->mail->send(
                         $mailSettings['ADMIN_MAIL'],
-                        $this->healthPost->getMailSubject(),
-                        $this->healthPost->renderAdminMail(['passcode' => $passcode])
+                        $this->postData->getMailSubject(),
+                        $this->postData->renderAdminMail(['passcode' => $passcode])
                     );
                     if (!$success) {
                         throw new \Exception('環境設定のSMTPに不備があります。設定を見直してください。');
@@ -212,8 +212,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         return [
             'template' => 'confirm.twig',
             'data' => [
-                'sectionTitle' => '確認コード',
-                'sectionDescription' => '管理者のメールアドレス宛に確認コードを送信しました。受信された確認コードを入力してください。',
+                'SectionTitle' => '確認コード',
+                'SectionDescription' => '管理者のメールアドレス宛に確認コードを送信しました。受信された確認コードを入力してください。',
                 'CSRF'   => [
                     'keys' => [
                         'name'  => $this->csrf->getTokenNameKey(),
@@ -233,12 +233,13 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      */
     public function result(): array
     {
+        $phpMinSupport = $this->settings->get('phpMinSupport');
         $mailSettings = $this->settings->get('mail');
         $validateSettings = $this->settings->get('validate');
-        $post_data = $this->healthPost->getPosts();
+        $posts = $this->postData->getPosts();
         $resultList = [];
         $resultListCount = 0;
-        $post_passcode = [];
+        $postPasscode = [];
         $passcode = null;
 
         try {
@@ -246,18 +247,18 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             $passcode = isset($_SESSION['healthCheckPasscode']) ? $_SESSION['healthCheckPasscode'] : null;
 
             for ($i = 1; $i <= 6; $i++) {
-                $post_passcode[] = isset($post_data['passcode-' . $i])? $post_data['passcode-' . $i]: null;
+                $postPasscode[] = isset($posts['passcode-' . $i])? $posts['passcode-' . $i]: null;
             }
 
-            if (implode('', $post_passcode) === $passcode) {
+            if (implode('', $postPasscode) === $passcode) {
                 $resultList = [
                     1 => [
                         'description' => 'SMTPでのメール送信',
                         'success' => true
                     ],
                     2 => [
-                        'description' => 'PHPのバージョンがver7.4以上',
-                        'success' => (version_compare(PHP_VERSION, '7.4.0') >= 0) ? true : false
+                        'description' => "PHPのバージョンがver{$phpMinSupport}以上",
+                        'success' => (version_compare(PHP_VERSION, $phpMinSupport) >= 0) ? true : false
                     ],
                     3 => [
                         'description' => 'HTTPSで暗号化されたサイト',
@@ -265,7 +266,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     4 => [
                         'description' => 'SSL/TLSで暗号化されたメール送信',
-                        'success' => (in_array($mailSettings['smtp.encrypt'], ['ssl', 'tls'])) ? true : false
+                        'success' => (in_array($mailSettings['SMTP_ENCRYPT'], ['ssl', 'tls'])) ? true : false
                     ],
                     5 => [
                         'description' => 'データベースに接続',
@@ -273,7 +274,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     6 => [
                         'description' => 'データベースに履歴を保存',
-                        'success' => $this->db->test($mailSettings['admin.mail'])
+                        'success' => $this->db->test($mailSettings['ADMIN_MAIL'])
                     ],
                     7 => [
                         'description' => 'reCAPTCHA でBot対策',
@@ -308,10 +309,10 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         return [
             'template' => 'result.twig',
             'data' => [
-                'sectionTitle' => '結果',
-                'sectionDescription' => 'メールの送受信は正常に行えました。検証内容は次の通りです。',
-                'resultList' => $resultList,
-                'resultListCount' => $resultListCount
+                'SectionTitle' => 'チェック結果',
+                'SectionDescription' => 'メールの送受信は正常に行えました。検証内容は次の通りです。',
+                'ResultList' => $resultList,
+                'ResultListCount' => $resultListCount
             ]
         ];
     }

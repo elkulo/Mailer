@@ -37,7 +37,7 @@ class IndexDashboardAction extends DashboardAction
         $response = $this->view->render(
             $this->response,
             'dashboard/' . $repository['template'],
-            array_merge($repository['data'], ['router' => $router])
+            array_merge($repository['data'], ['Router' => $router])
         );
 
         return $response;

@@ -37,7 +37,7 @@ class ConfirmHealthCheckAction extends HealthCheckAction
         $response = $this->view->render(
             $this->response,
             'health-check/' . $repository['template'],
-            array_merge($repository['data'], ['action' => $router])
+            array_merge($repository['data'], ['Action' => $router])
         );
 
         return $response;

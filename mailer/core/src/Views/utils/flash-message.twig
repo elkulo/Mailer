@@ -1,5 +1,5 @@
-{% if flash.getMessages() is not empty %}
-  {% for level, messages in flash.getMessages() %}
+{% if Flash.getMessages() is not empty %}
+  {% for level, messages in Flash.getMessages() %}
   <div class="alert alert-{{level}} alert-dismissible fade show py-2 ps-0 px-sm-3 rounded-0" role="alert">
     <div class="container text-sm-center" style="max-width: 720px">
       <p class="mb-0">{% for message in messages %}{{ message }}{% endfor %}</p>

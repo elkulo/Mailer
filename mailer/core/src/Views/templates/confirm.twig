@@ -14,13 +14,13 @@
         <div class="col">
           <h1 class="h4">入力内容の確認</h1>
           <p class="text-muted" style="font-size:0.875rem">以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
-          <form id="confirm" action="{{action.url}}" method="POST">
+          <form id="confirm" action="{{ Action.url }}" method="POST">
             <div class="table-responsive" style="font-size:0.875rem">
               <table class="table table-bordered">
-                {% for post in posts %}
+                {% for post in Posts %}
                   <tr>
-                    <th class="table-light text-nowrap">{{post.name|raw}}</th>
-                    <td>{{post.value|raw}}</td>
+                    <th class="table-light text-nowrap">{{ post.name|raw }}</th>
+                    <td>{{ post.value|raw }}</td>
                   </tr>
                 {% endfor %}
               </table>
@@ -35,7 +35,7 @@
             </div>
 
             {# CSRF セキュリティのためFormタグ直前に必須 #}
-            {{CSRF|raw}}
+            {{ CSRF|raw }}
           </form>
         </div>
       </div>
@@ -44,7 +44,7 @@
 {# Google reCAPTCHAを使用する場合 #}
 {% if reCAPTCHA.key %}
 {% include '/assets/captcha.min.js.twig' %}
-<script>applyCaptcha( '#confirm', '{{reCAPTCHA.key}}' );</script>
+<script>applyCaptcha( '#confirm', '{{ reCAPTCHA.key }}' );</script>
 {% endif %}
 
   </body>

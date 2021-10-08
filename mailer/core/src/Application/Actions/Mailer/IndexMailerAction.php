@@ -32,7 +32,7 @@ class IndexMailerAction extends MailerAction
         $response = $this->view->render(
             $this->response,
             'templates/' . $repository['template'],
-            array_merge($repository['data'], ['action' => $router])
+            array_merge($repository['data'], ['Action' => $router])
         );
 
         return $response;

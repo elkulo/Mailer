@@ -15,6 +15,8 @@ return function (ContainerBuilder $containerBuilder) {
             $log_file = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
 
             return new Settings([
+                'phpMinSupport' => '7.4.0',
+                'appPath' => __DIR__ . '/../',
                 'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
                 // Should be set to false in production
                 'displayErrorDetails' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
@@ -36,7 +38,6 @@ return function (ContainerBuilder $containerBuilder) {
                 'form' => include __DIR__ . '/../../settings/form.php',
                 'mail' => include __DIR__ . '/../../settings/mail.php',
                 'validate' => include __DIR__ . '/../../settings/validate.php',
-                'app.path' => __DIR__ . '/../',
             ]);
         }
     ]);

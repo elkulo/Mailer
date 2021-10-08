@@ -12,7 +12,7 @@ use App\Application\Settings\SettingsInterface;
 use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Environment as TwigEnvironment;
 
-class HealthPost
+class HealthCheckPostData
 {
 
     /**
@@ -20,7 +20,7 @@ class HealthPost
      *
      * @var array
      */
-    private array $post_data = [];
+    private array $postData = [];
 
     /**
      * Twig ハンドラー
@@ -38,14 +38,14 @@ class HealthPost
      */
     public function __construct(array $posts, SettingsInterface $settings)
     {
-        $app_path = $settings->get('app.path');
+        $app_path = $settings->get('appPath');
 
         // POSTデータから取得したデータを整形
         $sanitized = array();
         foreach ($posts as $name => $value) {
             $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
         }
-        $this->post_data = $this->kses($sanitized);
+        $this->postData = $this->kses($sanitized);
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
@@ -62,7 +62,7 @@ class HealthPost
      */
     public function getPosts(): array
     {
-        return $this->post_data;
+        return $this->postData;
     }
 
     /**
