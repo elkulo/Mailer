@@ -22,11 +22,15 @@ class IndexMailerAction extends MailerAction
     protected function action(): Response
     {
         $repository = $this->mailerRepository->index();
+        $formSettings = $this->settings->get('form');
 
         // 次のステップURL.
         $router['url'] = RouteContext::fromRequest($this->request)
             ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'mailer.confirm');
+            ->fullUrlFor(
+                $this->request->getUri(),
+                empty($formSettings['IS_CONFIRM_SKIP'])? 'mailer.confirm' : 'mailer.complete'
+            );
 
         // bodyを生成
         $response = $this->view->render(
