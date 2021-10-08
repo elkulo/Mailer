@@ -362,7 +362,7 @@ class MailPostData
         if (isset($_SESSION['mailerToken'])) {
             unset($_SESSION['mailerToken']);
         } else {
-            throw new \Exception('連続した投稿の可能性があるため送信できません');
+            throw new \Exception('連続した投稿の可能性があるため送信できません。');
         }
     }
 
