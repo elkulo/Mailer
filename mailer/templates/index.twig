@@ -7,10 +7,16 @@
     <title>Hello World!</title>
     {% include '/assets/bootstrap.min.css.twig' %}
     {% include '/assets/bootstrap.min.js.twig' %}
+
+    {# reCAPTCHAを使用する場合 #}
+    {% if reCAPTCHA.key %}
+    {% include '/assets/captcha.min.js.twig' %}
+    <script>applyCaptcha( '#mailer-form', '{{ reCAPTCHA.key }}' );</script>
+    {% endif %}
   </head>
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 720px">
-      <form id="mailform" class="needs-validation" name="mailform" method="post" action="{{ Action.url }}" novalidate>
+      <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
         <div class="mb-3">
           <div class="form-label">件名</div>
           <div class="form-check form-check-inline">
@@ -93,12 +99,5 @@
         {{ CSRF|raw }}
       </form>
     </div>
-
-{# Google reCAPTCHAを使用する場合 #}
-{% if reCAPTCHA.key %}
-{% include '/assets/captcha.min.js.twig' %}
-<script>applyCaptcha( '#mailform', '{{ reCAPTCHA.key }}' );</script>
-{% endif %}
-
   </body>
 </html>

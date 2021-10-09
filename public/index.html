@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&family=Noto+Serif+JP:wght@500&display=swap" rel="stylesheet" />
 <link href="webpack/dest/app.min.css?ver=20211005" rel="stylesheet" type="text/css" media="all" />
 <script src="webpack/dest/app.min.js?ver=20211005" type="text/javascript" ></script>
+<script>applyValidate('#mailer-form');</script>
 </head>
 <body id="home" class="home">
 <div id="page" class="site">
@@ -74,7 +75,7 @@
 
             <!-- BEGIN: Form Style Framework by Bootstrap(https://getbootstrap.jp/docs/5.0/forms/overview/) -->
             <div class="container py-5 px-3 px-lg-5">
-              <form id="mailform" class="needs-validation" name="mailform" method="post" action="./mailer-alias/post" novalidate>
+              <form id="mailer-form" class="needs-validation" method="post" action="./mailer-alias/post" novalidate>
 
                 <div class="mb-3">
                   <div class="label">件名<span class="validate">必須</span></div>
@@ -235,19 +236,15 @@
 </div>
 <!-- #page --> 
 
-<!-- Validateを有効 -->
-<script type="text/javascript" src="webpack/dest/validate.min.js?ver=20211005"></script>
-<script>applyValidate('#mailform');</script>
-
 <!-- CSRFを有効 -->
 <script type="text/javascript" src="webpack/dest/csrf.min.js?ver=20211005"></script>
-<script>applyCSRF('#mailform');</script>
+<script>applyCSRF('#mailer-form');</script>
 
 <!-- reCAPTCHAを有効: xxxxxxxxxxx にサイトキーを記載 -->
 <!--
 <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=xxxxxxxxxxx"></script>
 <script type="text/javascript" src="webpack/dest/captcha.min.js?ver=20211005"></script>
-<script>applyCaptcha('#mailform', 'xxxxxxxxxxx');</script>
+<script>applyCaptcha('#mailer-form', 'xxxxxxxxxxx');</script>
 -->
 
 </body>

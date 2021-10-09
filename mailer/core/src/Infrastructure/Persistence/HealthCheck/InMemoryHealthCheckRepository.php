@@ -252,35 +252,35 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             if (implode('', $postPasscode) === $passcode) {
                 $resultList = [
                     1 => [
-                        'description' => 'SMTPでのメール送信',
+                        'description' => 'SMTPでのメール送信はできましたか？',
                         'success' => true
                     ],
                     2 => [
-                        'description' => "PHPのバージョンがver{$phpMinSupport}以上",
+                        'description' => "PHPのバージョンが ver{$phpMinSupport} 以上ありますか？",
                         'success' => (version_compare(PHP_VERSION, $phpMinSupport) >= 0) ? true : false
                     ],
                     3 => [
-                        'description' => 'HTTPSで暗号化されたサイト',
+                        'description' => 'HTTPSで暗号化されたサイト接続ですか？',
                         'success' => (isset($_SERVER['HTTPS'])) ? true : false
                     ],
                     4 => [
-                        'description' => 'SSL/TLSで暗号化されたメール送信',
+                        'description' => 'SSL/TLSで暗号化されたメールを送信されていますか？',
                         'success' => (in_array($mailSettings['SMTP_ENCRYPT'], ['ssl', 'tls'])) ? true : false
                     ],
                     5 => [
-                        'description' => 'データベースに接続',
+                        'description' => 'データベースに接続できましたか？',
                         'success' => ($this->db)? $this->db->make(): false
                     ],
                     6 => [
-                        'description' => 'データベースに履歴を保存',
+                        'description' => 'データベースに履歴は書き込めましたか？',
                         'success' => ($this->db)? $this->db->test($mailSettings['ADMIN_MAIL']): false
                     ],
                     7 => [
-                        'description' => 'reCAPTCHA でBot対策',
-                        'success' => !empty($validateSettings['captcha.secretkey'])? true: false
+                        'description' => 'reCAPTCHAでBOT対策はされていますか？',
+                        'success' => !empty($validateSettings['CAPTCHA.SECRETKEY'])? true: false
                     ],
                     8 => [
-                        'description' => 'デバッグモードが無効',
+                        'description' => 'デバッグモードが無効になっていますか？',
                         'success' => $this->settings->get('debug')? false: true
                     ],
                 ];
@@ -309,7 +309,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'template' => 'result.twig',
             'data' => [
                 'SectionTitle' => 'チェック結果',
-                'SectionDescription' => 'メールの送受信は正常に行えました。検証内容は次の通りです。',
+                'SectionDescription' => 'メールの送受信は正常に行えました。
+                    プログラムは正常に機能していますが、実際のメールフォームの送信内容の検証は、設置されたフォームからテストしてください。
+                    ヘルスチェックの検証内容は次の通りです。',
                 'ResultList' => $resultList,
                 'ResultListCount' => $resultListCount
             ]
