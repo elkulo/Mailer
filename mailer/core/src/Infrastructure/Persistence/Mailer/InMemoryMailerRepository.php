@@ -11,7 +11,7 @@ namespace App\Infrastructure\Persistence\Mailer;
 use Slim\Csrf\Guard;
 use Psr\Log\LoggerInterface;
 use App\Domain\Mailer\MailerRepository;
-use App\Domain\Mailer\MailPostData;
+use App\Domain\Mailer\MailerPostData;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
@@ -30,7 +30,7 @@ class InMemoryMailerRepository implements MailerRepository
     /**
      * ロジック
      *
-     * @var MailPostData
+     * @var MailerPostData
      */
     private $postData;
 
@@ -107,7 +107,7 @@ class InMemoryMailerRepository implements MailerRepository
         $this->db = $db;
 
         // POSTを格納
-        $this->postData = new MailPostData($_POST, $settings);
+        $this->postData = new MailerPostData($_POST, $settings);
 
         // バリデーション準備
         $this->validate->set($_POST);
@@ -304,25 +304,6 @@ class InMemoryMailerRepository implements MailerRepository
         return [
             'template' => 'complete.twig',
             'data' => array_merge($posts, ['Return' => $router])
-        ];
-    }
-
-    /**
-     * API
-     *
-     * @return array
-     */
-    public function api(): array
-    {
-        return [
-            'csrf'   => [
-                'keys' => [
-                    'name'  => $this->csrf->getTokenNameKey(),
-                    'value' => $this->csrf->getTokenValueKey(),
-                ],
-                'name'  => $this->csrf->getTokenName(),
-                'value' => $this->csrf->getTokenValue(),
-            ]
         ];
     }
 }

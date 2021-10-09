@@ -12,6 +12,7 @@ use App\Application\Actions\Action;
 use App\Domain\Dashboard\DashboardRepository;
 use Psr\Log\LoggerInterface;
 use Slim\Views\Twig;
+use Slim\Csrf\Guard;
 
 /**
  * DashboardAction
@@ -29,17 +30,27 @@ abstract class DashboardAction extends Action
     protected $view;
 
     /**
+     * CSRF対策
+     *
+     * @var Guard
+     */
+    protected $csrf;
+
+    /**
      * @param LoggerInterface $logger
      * @param DashboardRepository $dashboardRepository
      * @param Twig $twig
+     * @param Guard $csrf
      */
     public function __construct(
         LoggerInterface $logger,
         DashboardRepository $dashboardRepository,
-        Twig $twig
+        Twig $twig,
+        Guard $csrf
     ) {
         parent::__construct($logger);
         $this->dashboardRepository = $dashboardRepository;
         $this->view = $twig;
+        $this->csrf = $csrf;
     }
 }

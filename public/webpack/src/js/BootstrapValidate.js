@@ -26,8 +26,11 @@ const setValidate = ( element = '.needs-validation' ) => {
 		});
 	}
 };
-window.applyValidate = ( element = '.needs-validation' ) => {
-	document.addEventListener( 'DOMContentLoaded', () => {
-		setValidate( element );
-	}, false );
+
+export default () => {
+	window.applyValidate = ( element = '.needs-validation' ) => {
+		document.addEventListener( 'DOMContentLoaded', () => {
+			setValidate( element );
+		}, false );
+	};
 };

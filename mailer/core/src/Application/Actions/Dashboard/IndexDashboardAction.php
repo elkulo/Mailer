@@ -30,7 +30,15 @@ class IndexDashboardAction extends DashboardAction
                 ->fullUrlFor($this->request->getUri(), 'mailer'),
             'health_check' => RouteContext::fromRequest($this->request)
                 ->getRouteParser()
-                ->fullUrlFor($this->request->getUri(), 'health-check')
+                ->fullUrlFor($this->request->getUri(), 'health-check'),
+            'csrf' => [
+                'js' => RouteContext::fromRequest($this->request)
+                    ->getRouteParser()
+                    ->fullUrlFor($this->request->getUri(), 'assets-csrf-js'),
+                'json' => RouteContext::fromRequest($this->request)
+                    ->getRouteParser()
+                    ->fullUrlFor($this->request->getUri(), 'api-csrf-json'),
+            ],
         ];
 
         // bodyを生成

@@ -1,7 +1,7 @@
 /**
  * Webpack 5
  *
- * @version 2021.10.07
+ * @version 2021.10.09
  */
 const dirscript = "./public/webpack";
 
@@ -18,7 +18,6 @@ module.exports = {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
     csrf: path.resolve(__dirname, dirscript, "./src/csrf.js"),
     captcha: path.resolve(__dirname, dirscript, "./src/captcha.js"),
-    validate: path.resolve(__dirname, dirscript, "./src/validate.js"),
   },
   output: {
     path: path.resolve(__dirname, dirscript, "./dest"),

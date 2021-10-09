@@ -13,7 +13,7 @@ use Twig\Loader\FilesystemLoader as TwigFileLoader;
 use Twig\Loader\ArrayLoader as TwigArrayLoader;
 use Twig\Environment as TwigEnvironment;
 
-class MailPostData
+class MailerPostData
 {
 
     /**

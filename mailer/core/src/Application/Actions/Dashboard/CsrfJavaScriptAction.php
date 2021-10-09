@@ -6,22 +6,23 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Actions\Mailer;
+namespace App\Application\Actions\Dashboard;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
 /**
- * ApiMailerAction
+ * CsrfJavaScriptAction
  */
-class ApiMailerAction extends MailerAction
+class CsrfJavaScriptAction extends DashboardAction
 {
     /**
      * {@inheritdoc}
      */
     protected function action(): Response
     {
-        $repository = $this->mailerRepository->api();
-
-        return $this->respondWithData($repository);
+        return $this->view->render(
+            $this->response,
+            'assets/csrf.min.js.twig'
+        )->withHeader('Content-Type', 'text/javascript');
     }
 }

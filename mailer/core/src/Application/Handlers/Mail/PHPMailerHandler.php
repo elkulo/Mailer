@@ -171,7 +171,7 @@ class PHPMailerHandler implements MailHandlerInterface
         }
 
         // 配列にまとめる.
-        $sendHeaders = compact('cc', 'bcc', 'reply_to');
+        $sendHeaders = compact('cc', 'bcc', 'replyTo');
 
         foreach ($sendHeaders as $sendHeaderType => $addresses) {
             if (empty($addresses)) {
@@ -200,7 +200,7 @@ class PHPMailerHandler implements MailHandlerInterface
                         case 'bcc':
                             $phpmailer->addBcc($address, $recipient);
                             break;
-                        case 'reply_to':
+                        case 'replyTo':
                             $phpmailer->addReplyTo($address, $recipient);
                             break;
                     }

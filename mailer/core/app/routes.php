@@ -8,7 +8,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Actions\Dashboard\IndexDashboardAction;
-use App\Application\Actions\Mailer\ApiMailerAction;
+use App\Application\Actions\Dashboard\CsrfJavaScriptAction;
+use App\Application\Actions\Dashboard\CsrfJsonAction;
 use App\Application\Actions\Mailer\IndexMailerAction;
 use App\Application\Actions\Mailer\ConfirmMailerAction;
 use App\Application\Actions\Mailer\CompleteMailerAction;
@@ -27,6 +28,10 @@ return function (App $app) {
     // ダッシュボード
     $app->group('', function (Group $group) {
         $group->get('/', IndexDashboardAction::class)->setName('dashboard');
+
+        // CSRF API
+        $group->get('/assets-csrf-js', CsrfJavaScriptAction::class)->setName('assets-csrf-js');
+        $group->get('/api/v1/csrf', CsrfJsonAction::class)->setName('api-csrf-json');
 
         // 最後のスラッシュを強制.
         $group->get('', function (Request $request, Response $response) {
@@ -58,9 +63,6 @@ return function (App $app) {
             return $response->withHeader('Location', $router)->withStatus(301);
         });
     });
-
-    // API
-    $app->get('/api/v1/csrf', ApiMailerAction::class);
 
     // ヘルスチェック
     $app->group('/health-check', function (Group $group) {

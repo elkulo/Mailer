@@ -29,26 +29,24 @@ const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 	});
 
 	// トークンの更新.
-	const changeToken = ( e ) => {
+	const changeToken = () => {
 		const { grecaptcha } = window;
 		if ( typeof grecaptcha !== 'object' ) {
 			return;
 		}
-		e.preventDefault();
-		e.stopPropagation();
 		grecaptcha.ready( () => {
 			grecaptcha.execute( siteKey, { action: actionName })
 				.then( ( token ) => {
 					inputElement.captchaResponse.setAttribute( 'value', token );
-				}).then( () => {
-					e.target.submit();
-				})
-				.catch( ( error ) => {
-					console.warn( error );
 				});
 		});
 	};
-	formElement.addEventListener( 'submit', ( e ) => changeToken( e ), false );
+
+	// 更新トリガー.
+	formElement.querySelectorAll( 'input, textarea' ).forEach( element => {
+		element.addEventListener( 'blur', changeToken, false );
+	});
+	changeToken();
 };
 
 window.applyCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {

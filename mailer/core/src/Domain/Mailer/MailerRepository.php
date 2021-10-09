@@ -31,11 +31,4 @@ interface MailerRepository
      * @return array
      */
     public function complete(): array;
-
-    /**
-     * API
-     *
-     * @return array
-     */
-    public function api(): array;
 }

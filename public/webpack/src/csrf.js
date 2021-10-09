@@ -40,8 +40,8 @@ const setCSRF = ( formID, path = '' ) => {
 				formElement.appendChild( inputElement[key]);
 			});
 		})
-		.catch( ( error ) => {
-			console.warn( error );
+		.catch( ( /* error */ ) => {
+			/* console.warn( error ); */
 		});
 };
 window.applyCSRF = ( element, path = '' ) => {
