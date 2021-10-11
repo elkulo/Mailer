@@ -7,12 +7,6 @@
     <title>入力内容の確認</title>
     {% include '/assets/bootstrap.min.css.twig' %}
     {% include '/assets/bootstrap.min.js.twig' %}
-
-    {# reCAPTCHAを使用する場合 #}
-    {% if reCAPTCHA.key %}
-    {% include '/assets/captcha.min.js.twig' %}
-    <script>applyCaptcha( '#confirm-form', '{{ reCAPTCHA.key }}' );</script>
-    {% endif %}
   </head>
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded px-4 px-md-5 py-4" style="max-width: 720px">
@@ -40,11 +34,16 @@
               </div>
             </div>
 
-            {# CSRF セキュリティのためFormタグ直前に必須 #}
+            {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
             {{ CSRF|raw }}
           </form>
         </div>
       </div>
     </div>
+
+  {# NOTE: reCAPTCHAを使用する場合 #}
+  {{ reCAPTCHA.script|raw }}
+  <script>applyReCaptcha( '#confirm-form', '{{ reCAPTCHA.key }}' );</script>
+
   </body>
 </html>

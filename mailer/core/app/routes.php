@@ -8,8 +8,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Actions\Dashboard\IndexDashboardAction;
-use App\Application\Actions\Dashboard\CsrfJavaScriptAction;
 use App\Application\Actions\Dashboard\CsrfJsonAction;
+use App\Application\Actions\Dashboard\CsrfJavaScriptAction;
+use App\Application\Actions\Dashboard\ReCaptchaJavaScriptAction;
 use App\Application\Actions\Mailer\IndexMailerAction;
 use App\Application\Actions\Mailer\ConfirmMailerAction;
 use App\Application\Actions\Mailer\CompleteMailerAction;
@@ -32,6 +33,9 @@ return function (App $app) {
         // CSRF API
         $group->get('/assets-csrf-js', CsrfJavaScriptAction::class)->setName('assets-csrf-js');
         $group->get('/api/v1/csrf', CsrfJsonAction::class)->setName('api-csrf-json');
+
+        // reCAPTCHA JavaScript.
+        $group->get('/assets-recaptcha-js', ReCaptchaJavaScriptAction::class)->setName('assets-recaptcha-js');
 
         // 最後のスラッシュを強制.
         $group->get('', function (Request $request, Response $response) {

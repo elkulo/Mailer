@@ -99,5 +99,5 @@ interface ValidateHandlerInterface
      * @param  string $action
      * @return array
      */
-    public function getCaptchaScript():array;
+    public function getReCaptchaScript():array;
 }

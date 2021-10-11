@@ -9,8 +9,8 @@ return [
   'VALIDATE_LANG' => env('VALIDATE_LANG'),
 
   // Google reCAPTCHAのサイトキー
-  'CAPTCHA_SITEKEY' => env('CAPTCHA_SITEKEY'),
+  'RECAPTCHA_SITEKEY' => env('RECAPTCHA_SITEKEY'),
 
   // Google reCAPTCHAのシークレットキー
-  'CAPTCHA_SECRETKEY' => env('CAPTCHA_SECRETKEY'),
+  'RECAPTCHA_SECRETKEY' => env('RECAPTCHA_SECRETKEY'),
 ];
