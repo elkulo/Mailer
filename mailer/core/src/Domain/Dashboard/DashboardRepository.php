@@ -17,4 +17,11 @@ interface DashboardRepository
      * @return array
      */
     public function index(): array;
+
+    /**
+     * API
+     *
+     * @return array
+     */
+    public function api(): array;
 }

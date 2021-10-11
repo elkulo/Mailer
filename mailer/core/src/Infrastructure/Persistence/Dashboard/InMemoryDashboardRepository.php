@@ -11,6 +11,7 @@ namespace App\Infrastructure\Persistence\Dashboard;
 use App\Domain\Dashboard\DashboardRepository;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Router\RouterInterface;
+use Slim\Csrf\Guard;
 
 class InMemoryDashboardRepository implements DashboardRepository
 {
@@ -29,17 +30,27 @@ class InMemoryDashboardRepository implements DashboardRepository
     protected $router;
 
     /**
+     * CSRF対策
+     *
+     * @var Guard
+     */
+    protected $csrf;
+
+    /**
      * InMemoryDashboardRepository constructor.
      *
      * @param SettingsInterface $settings
      * @param RouterInterface $router
+     * @param Guard $csrf
      */
     public function __construct(
         SettingsInterface $settings,
-        RouterInterface $router
+        RouterInterface $router,
+        Guard $csrf
     ) {
         $this->settings = $settings;
         $this->router = $router;
+        $this->csrf = $csrf;
     }
 
     /**
@@ -56,14 +67,35 @@ class InMemoryDashboardRepository implements DashboardRepository
                 'Router' => [
                     'mailer' => $this->router->getUrl('mailer'),
                     'health_check' => $this->router->getUrl('health-check'),
+                    'api' => [
+                        'json' => $this->router->getUrl('api-json'),
+                    ],
                     'csrf' => [
                         'js' => $this->router->getUrl('assets-csrf-js'),
-                        'json' => $this->router->getUrl('api-csrf-json'),
                     ],
                     'recaptcha' => [
                         'js' => $this->router->getUrl('assets-recaptcha-js'),
                     ],
                 ],
+            ]
+        ];
+    }
+
+    /**
+     * API
+     *
+     * @return array
+     */
+    public function api(): array
+    {
+        return [
+            'csrf'   => [
+                'keys' => [
+                    'name'  => $this->csrf->getTokenNameKey(),
+                    'value' => $this->csrf->getTokenValueKey(),
+                ],
+                'name'  => $this->csrf->getTokenName(),
+                'value' => $this->csrf->getTokenValue(),
             ]
         ];
     }
