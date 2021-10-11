@@ -23,23 +23,14 @@ class ConfirmHealthCheckAction extends HealthCheckAction
     {
         $repository = $this->healthCheckRepository->confirm();
 
-        // POSTエラー時のリダイレクト.
         if (isset($repository['redirect']) && $repository['redirect']) {
             return $this->response->withHeader('Location', $repository['redirect'])->withStatus(303);
+        } else {
+            return $this->view->render(
+                $this->response,
+                'health-check/' . $repository['template'],
+                $repository['data']
+            );
         }
-
-        // 次のステップURL.
-        $router['url'] = RouteContext::fromRequest($this->request)
-            ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'health-check.result');
-
-        // bodyを生成
-        $response = $this->view->render(
-            $this->response,
-            'health-check/' . $repository['template'],
-            array_merge($repository['data'], ['Action' => $router])
-        );
-
-        return $response;
     }
 }

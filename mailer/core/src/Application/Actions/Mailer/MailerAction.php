@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Application\Actions\Mailer;
 
-use App\Application\Settings\SettingsInterface;
 use App\Application\Actions\Action;
 use App\Domain\Mailer\MailerRepository;
 use Psr\Log\LoggerInterface;
@@ -27,25 +26,17 @@ abstract class MailerAction extends Action
     protected $view;
 
     /**
-     * @var SettingsInterface
-     */
-    protected $settings;
-
-    /**
      * @param LoggerInterface $logger
      * @param MailerRepository $userRepository
      * @param Twig $twig
-     * @param SettingsInterface $settings
      */
     public function __construct(
         LoggerInterface $logger,
         MailerRepository $mailerRepository,
-        Twig $twig,
-        SettingsInterface $settings
+        Twig $twig
     ) {
         parent::__construct($logger);
         $this->mailerRepository = $mailerRepository;
         $this->view = $twig;
-        $this->settings = $settings;
     }
 }

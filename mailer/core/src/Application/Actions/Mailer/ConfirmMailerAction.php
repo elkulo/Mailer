@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Application\Actions\Mailer;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Routing\RouteContext;
 
 /**
  * ConfirmMailerAction
@@ -23,18 +22,10 @@ class ConfirmMailerAction extends MailerAction
     {
         $repository = $this->mailerRepository->confirm();
 
-        // 次のステップURL.
-        $router['url'] = RouteContext::fromRequest($this->request)
-            ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'mailer.complete');
-
-        // bodyを生成
-        $response = $this->view->render(
+        return $this->view->render(
             $this->response,
             'templates/' . $repository['template'],
-            array_merge($repository['data'], ['Action' => $router])
+            $repository['data']
         );
-
-        return $response;
     }
 }

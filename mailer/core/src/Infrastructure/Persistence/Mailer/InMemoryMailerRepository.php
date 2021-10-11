@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use App\Domain\Mailer\MailerRepository;
 use App\Domain\Mailer\MailerPostData;
 use App\Application\Settings\SettingsInterface;
+use App\Application\Router\RouterInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
@@ -49,6 +50,13 @@ class InMemoryMailerRepository implements MailerRepository
     private $settings;
 
     /**
+     * ルーター
+     *
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * 検証ハンドラー
      *
      * @var ValidateHandlerInterface
@@ -75,6 +83,7 @@ class InMemoryMailerRepository implements MailerRepository
      * @param Guard $csrf,
      * @param LoggerInterface $logger,
      * @param SettingsInterface $settings
+     * @param RouterInterface $router
      * @param ValidateHandlerInterface $validate,
      * @param MailHandlerInterface $mail,
      * @param DBHandlerInterface|null $db
@@ -83,6 +92,7 @@ class InMemoryMailerRepository implements MailerRepository
         Guard $csrf,
         LoggerInterface $logger,
         SettingsInterface $settings,
+        RouterInterface $router,
         ValidateHandlerInterface $validate,
         MailHandlerInterface $mail,
         ?DBHandlerInterface $db
@@ -99,6 +109,9 @@ class InMemoryMailerRepository implements MailerRepository
 
         // 設定値
         $this->settings = $settings;
+
+        // ルーター
+        $this->router = $router;
 
         // メールハンドラーをセット
         $this->mail = $mail;
@@ -134,6 +147,8 @@ class InMemoryMailerRepository implements MailerRepository
      */
     public function index(): array
     {
+        $has_confirm = empty($this->settings->get('form')['IS_CONFIRM_SKIP'])? 'mailer.confirm' : 'mailer.complete';
+
         return [
             'template' => 'index.twig',
             'data' => [
@@ -148,7 +163,10 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->csrf->getTokenValue()
                 ),
                 'reCAPTCHA' => $this->validate->getReCaptchaScript(),
-            ]
+                'Action' => [
+                    'url' => $this->router->getUrl($has_confirm)
+                ],
+            ],
         ];
     }
 
@@ -194,6 +212,9 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->postData->getPageReferer()
                 ),
                 'reCAPTCHA' => $this->validate->getReCaptchaScript(),
+                'Action' => [
+                    'url' => $this->router->getUrl('mailer.complete')
+                ],
             ];
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

@@ -22,18 +22,14 @@ class ResultHealthCheckAction extends HealthCheckAction
     {
         $repository = $this->healthCheckRepository->result();
 
-        // POSTエラー時のリダイレクト.
         if (isset($repository['redirect']) && $repository['redirect']) {
             return $this->response->withHeader('Location', $repository['redirect'])->withStatus(303);
+        } else {
+            return $this->view->render(
+                $this->response,
+                'health-check/' . $repository['template'],
+                $repository['data']
+            );
         }
-
-        // bodyを生成
-        $response = $this->view->render(
-            $this->response,
-            'health-check/' . $repository['template'],
-            $repository['data']
-        );
-
-        return $response;
     }
 }
