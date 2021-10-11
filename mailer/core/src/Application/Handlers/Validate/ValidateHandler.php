@@ -291,14 +291,24 @@ class ValidateHandler implements ValidateHandlerInterface
     {
         // reCAPTCHA サイトキー
         $key = isset($this->validateSettings['RECAPTCHA_SITEKEY'])? $this->validateSettings['RECAPTCHA_SITEKEY']: '';
-        return [
-            'key' => trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
-            'script' => sprintf(
-                '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>
-                 <script src="%2$s"></script>',
-                trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
-                htmlspecialchars($this->router->getUrl('assets-recaptcha-js'))
-            ),
-        ];
+        if ($key) {
+            return [
+                'key' => trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
+                'script' => sprintf(
+                    '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>
+                     <script src="%2$s"></script>',
+                    trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
+                    htmlspecialchars($this->router->getUrl('assets-recaptcha-js'))
+                ),
+            ];
+        } else {
+            return [
+                'key' => '',
+                'script' => sprintf(
+                    '<script src="%1$s"></script>',
+                    htmlspecialchars($this->router->getUrl('assets-recaptcha-js'))
+                )
+            ];
+        }
     }
 }
