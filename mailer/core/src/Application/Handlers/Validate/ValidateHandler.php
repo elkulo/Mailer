@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Application\Handlers\Validate;
 
 use App\Application\Settings\SettingsInterface;
+use App\Application\Router\RouterInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -48,16 +49,24 @@ class ValidateHandler implements ValidateHandlerInterface
     private $threshold = 0.5;
 
     /**
+     * ルーター
+     *
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * コンストラクタ
      *
      * @param  SettingsInterface $settings
-     * @param  LoggerInterface $logger
+     * @param  RouterInterface $router
      * @return void
      */
-    public function __construct(SettingsInterface $settings)
+    public function __construct(SettingsInterface $settings, RouterInterface $router)
     {
         $this->validateSettings = $settings->get('validate');
         $this->formSettings = $settings->get('form');
+        $this->router = $router;
     }
 
     /**
@@ -281,13 +290,14 @@ class ValidateHandler implements ValidateHandlerInterface
     public function getReCaptchaScript():array
     {
         // reCAPTCHA サイトキー
-        $siteKey = isset($this->validateSettings['RECAPTCHA_SITEKEY'])? $this->validateSettings['RECAPTCHA_SITEKEY']: '';
+        $key = isset($this->validateSettings['RECAPTCHA_SITEKEY'])? $this->validateSettings['RECAPTCHA_SITEKEY']: '';
         return [
-            'key' => trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8')),
+            'key' => trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
             'script' => sprintf(
                 '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>
-                 <script src="http://localhost:8000/mailer-alias/assets-recaptcha-js"></script>',
-                trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8'))
+                 <script src="%2$s"></script>',
+                trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
+                htmlspecialchars($this->router->getUrl('assets-recaptcha-js'))
             ),
         ];
     }

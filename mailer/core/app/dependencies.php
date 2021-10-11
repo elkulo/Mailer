@@ -12,6 +12,8 @@ use Slim\Psr7\Factory\ResponseFactory;
 use Slim\Views\Twig;
 use Slim\Flash\Messages;
 use App\Application\Settings\SettingsInterface;
+use App\Application\Router\RouterInterface;
+use App\Application\Router\Router;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
 use App\Application\Handlers\Validate\ValidateHandler;
 use App\Application\Handlers\Mail\MailHandlerInterface;
@@ -23,6 +25,7 @@ use App\Application\Handlers\DB\SQLiteHandler;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
+        RouterInterface::class => \DI\autowire(Router::class),
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
 

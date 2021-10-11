@@ -21,42 +21,42 @@ class MailerPostData
      *
      * @var array
      */
-    private array $mailSettings = [];
+    private $mailSettings = [];
 
     /**
      * フォーム設定値
      *
      * @var array
      */
-    private array $formSettings = [];
+    private $formSettings = [];
 
     /**
      * POSTデータ
      *
      * @var array
      */
-    private array $postData = [];
+    private $postData = [];
 
     /**
      * ユーザーメールの格納
      *
      * @var string
      */
-    private string $userMailAddress = '';
+    private $userMailAddress = '';
 
     /**
      * ページリファラー
      *
      * @var string
      */
-    private string $pageReferer = '';
+    private $pageReferer = '';
 
     /**
      * Twig ハンドラー
      *
      * @var object
      */
-    private object $view;
+    private $view;
 
     /**
      * コンストラクタ

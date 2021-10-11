@@ -20,14 +20,14 @@ class HealthCheckPostData
      *
      * @var array
      */
-    private array $postData = [];
+    private $postData = [];
 
     /**
      * Twig ハンドラー
      *
      * @var object
      */
-    private object $view;
+    private $view;
 
     /**
      * コンストラクタ

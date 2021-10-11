@@ -13,6 +13,7 @@ use Slim\Flash\Messages;
 use App\Domain\HealthCheck\HealthCheckRepository;
 use App\Domain\HealthCheck\HealthCheckPostData;
 use App\Application\Settings\SettingsInterface;
+use App\Application\Router\RouterInterface;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
@@ -49,6 +50,13 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     private $settings;
 
     /**
+     * ルーター
+     *
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * 検証ハンドラー
      *
      * @var ValidateHandlerInterface
@@ -75,6 +83,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      * @param Guard $csrf,
      * @param Messages $messages
      * @param SettingsInterface $settings
+     * @param RouterInterface $router
      * @param ValidateHandlerInterface $validate
      * @param MailHandlerInterface $mail
      * @param DBHandlerInterface|null $db
@@ -83,6 +92,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         Guard $csrf,
         Messages $messages,
         SettingsInterface $settings,
+        RouterInterface $router,
         ValidateHandlerInterface $validate,
         MailHandlerInterface $mail,
         ?DBHandlerInterface $db
@@ -95,6 +105,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
 
         // 設定
         $this->settings = $settings;
+
+        // ルーター
+        $this->router = $router;
 
         // バリデーションアクションをセット
         $this->validate = $validate;
@@ -148,6 +161,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     'name'  => $this->csrf->getTokenName(),
                     'value' => $this->csrf->getTokenValue(),
+                ],
+                'Action' => [
+                    'url' => $this->router->getUrl('health-check.confirm'),
                 ]
             ]
         ];
@@ -174,7 +190,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             foreach (array_merge($to, $cc, $bcc) as $mailaddress) {
                 if (!$this->validate->isCheckMailFormat($mailaddress)) {
                     return [
-                        'redirect' => '../health-check'
+                        'redirect' => $this->router->getUrl('health-check')
                     ];
                 }
             }
@@ -204,7 +220,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         } catch (\Exception $e) {
             $this->flash->addMessage('warning', $e->getMessage());
             return [
-                'redirect' => '../health-check'
+                'redirect' => $this->router->getUrl('health-check')
             ];
         }
 
@@ -220,6 +236,9 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     'name'  => $this->csrf->getTokenName(),
                     'value' => $this->csrf->getTokenValue(),
+                ],
+                'Action' => [
+                    'url' => $this->router->getUrl('health-check.result'),
                 ]
             ]
         ];
@@ -301,7 +320,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         } catch (\Exception $e) {
             $this->flash->addMessage('warning', $e->getMessage());
             return [
-                'redirect' => '../health-check'
+                'redirect' => $this->router->getUrl('health-check')
             ];
         }
 

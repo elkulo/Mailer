@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Application\Actions\Dashboard;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Routing\RouteContext;
 
 /**
  * IndexDashboardAction
@@ -23,31 +22,10 @@ class IndexDashboardAction extends DashboardAction
     {
         $repository = $this->dashboardRepository->index();
 
-        // 次のステップURL.
-        $router = [
-            'mailer' => RouteContext::fromRequest($this->request)
-                ->getRouteParser()
-                ->fullUrlFor($this->request->getUri(), 'mailer'),
-            'health_check' => RouteContext::fromRequest($this->request)
-                ->getRouteParser()
-                ->fullUrlFor($this->request->getUri(), 'health-check'),
-            'csrf' => [
-                'js' => RouteContext::fromRequest($this->request)
-                    ->getRouteParser()
-                    ->fullUrlFor($this->request->getUri(), 'assets-csrf-js'),
-                'json' => RouteContext::fromRequest($this->request)
-                    ->getRouteParser()
-                    ->fullUrlFor($this->request->getUri(), 'api-csrf-json'),
-            ],
-        ];
-
-        // bodyを生成
-        $response = $this->view->render(
+        return $this->view->render(
             $this->response,
             'dashboard/' . $repository['template'],
-            array_merge($repository['data'], ['Router' => $router])
+            $repository['data']
         );
-
-        return $response;
     }
 }

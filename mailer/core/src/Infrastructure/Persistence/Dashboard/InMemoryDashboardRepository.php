@@ -10,6 +10,7 @@ namespace App\Infrastructure\Persistence\Dashboard;
 
 use App\Domain\Dashboard\DashboardRepository;
 use App\Application\Settings\SettingsInterface;
+use App\Application\Router\RouterInterface;
 
 class InMemoryDashboardRepository implements DashboardRepository
 {
@@ -21,15 +22,24 @@ class InMemoryDashboardRepository implements DashboardRepository
     private $settings;
 
     /**
+     * ルーター
+     *
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
      * InMemoryDashboardRepository constructor.
      *
      * @param SettingsInterface $settings
+     * @param RouterInterface $router
      */
     public function __construct(
-        SettingsInterface $settings
+        SettingsInterface $settings,
+        RouterInterface $router
     ) {
-        // 設定
         $this->settings = $settings;
+        $this->router = $router;
     }
 
     /**
@@ -42,7 +52,18 @@ class InMemoryDashboardRepository implements DashboardRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'Debug' => $this->settings->get('debug')
+                'Debug' => $this->settings->get('debug'),
+                'Router' => [
+                    'mailer' => $this->router->getUrl('mailer'),
+                    'health_check' => $this->router->getUrl('health-check'),
+                    'csrf' => [
+                        'js' => $this->router->getUrl('assets-csrf-js'),
+                        'json' => $this->router->getUrl('api-csrf-json'),
+                    ],
+                    'recaptcha' => [
+                        'js' => $this->router->getUrl('assets-recaptcha-js'),
+                    ],
+                ],
             ]
         ];
     }

@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Application\Actions\HealthCheck;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Routing\RouteContext;
 
 /**
  * IndexHealthCheckAction
@@ -23,18 +22,10 @@ class IndexHealthCheckAction extends HealthCheckAction
     {
         $repository = $this->healthCheckRepository->index();
 
-        // 次のステップURL.
-        $router['url'] = RouteContext::fromRequest($this->request)
-            ->getRouteParser()
-            ->fullUrlFor($this->request->getUri(), 'health-check.confirm');
-
-        // bodyを生成
-        $response = $this->view->render(
+        return $this->view->render(
             $this->response,
             'health-check/' . $repository['template'],
-            array_merge($repository['data'], ['Action' => $router])
+            $repository['data']
         );
-
-        return $response;
     }
 }
