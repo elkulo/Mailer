@@ -58,6 +58,7 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                 $settings->get('twig')
             );
+
             // Globalにフラッシュメッセージを設定.
             $twig->getEnvironment()->addGlobal('Flash', $c->get(Messages::class));
             return $twig;

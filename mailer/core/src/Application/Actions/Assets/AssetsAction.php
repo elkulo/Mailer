@@ -83,7 +83,7 @@ class AssetsAction extends Action
         return $this->view->render(
             $response,
             'assets/bootstrap.min.css.twig'
-        )->withHeader('Content-Type', 'text/javascript');
+        )->withHeader('Content-Type', 'text/css');
     }
 
     /**

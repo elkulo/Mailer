@@ -71,10 +71,14 @@ class InMemoryDashboardRepository implements DashboardRepository
                         'json' => $this->router->getUrl('api-json'),
                     ],
                     'csrf' => [
-                        'js' => $this->router->getUrl('assets-csrf-js'),
+                        'js' => $this->router->getUrl('csrf.min.js'),
                     ],
                     'recaptcha' => [
-                        'js' => $this->router->getUrl('assets-recaptcha-js'),
+                        'js' => $this->router->getUrl('recaptcha.min.js'),
+                    ],
+                    'bootstrap' => [
+                        'css' => $this->router->getUrl('bootstrap.min.css'),
+                        'js' => $this->router->getUrl('bootstrap.min.js'),
                     ],
                 ],
             ]

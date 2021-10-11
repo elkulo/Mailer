@@ -37,20 +37,20 @@ return function (App $app) {
         $router->set('api-json');
 
         // CSRF for Javascript
-        $group->get('/assets-csrf-js', [AssetsAction::class, 'csrfScript'])->setName('assets-csrf-js');
-        $router->set('assets-csrf-js');
+        $group->get('/assets/csrf-min-js', [AssetsAction::class, 'csrfScript'])->setName('csrf.min.js');
+        $router->set('csrf.min.js');
 
         // reCAPTCHA for JavaScript.
-        $group->get('/assets-recaptcha-js', [AssetsAction::class, 'recaptchaScript'])->setName('assets-recaptcha-js');
-        $router->set('assets-recaptcha-js');
+        $group->get('/assets/recaptcha-min-js', [AssetsAction::class, 'recaptchaScript'])->setName('recaptcha.min.js');
+        $router->set('recaptcha.min.js');
 
         // Bootstrap for CSS.
-        $group->get('/assets-bootstrap-css', [AssetsAction::class, 'bootstrapStyle'])->setName('assets-bootstrap-css');
-        $router->set('assets-bootstrap-css');
+        $group->get('/assets/bootstrap-min-css', [AssetsAction::class, 'bootstrapStyle'])->setName('bootstrap.min.css');
+        $router->set('bootstrap.min.css');
 
         // Bootstrap for JavaScript.
-        $group->get('/assets-bootstrap-js', [AssetsAction::class, 'bootstrapScript'])->setName('assets-bootstrap-js');
-        $router->set('assets-bootstrap-js');
+        $group->get('/assets/bootstrap-min-js', [AssetsAction::class, 'bootstrapScript'])->setName('bootstrap.min.js');
+        $router->set('bootstrap.min.js');
 
         // 最後のスラッシュを強制.
         $group->get('', function (Request $request, Response $response) use ($router) {

@@ -18,6 +18,12 @@ const setCSRF = ( formID, path = '' ) => {
 	// APIのURLを取得
 	const api = path || actionURL.substr( 0, actionURL.indexOf( '/post' ) ) + '/api/v1/json';
 
+	// Wrapper用のDOM生成.
+	const wrapper = document.createElement( 'div' );
+	wrapper.style.display = 'none';
+	formElement.appendChild( wrapper );
+
+	// CSRF用のDOM生成.
 	const inputElement = {
 		csrfName: document.createElement( 'input' ),
 		csrfValue: document.createElement( 'input' ),
@@ -37,7 +43,7 @@ const setCSRF = ( formID, path = '' ) => {
 					inputElement[key].setAttribute( 'value', csrf.value );
 				}
 				inputElement[key].setAttribute( 'type', 'hidden' );
-				formElement.appendChild( inputElement[key]);
+				wrapper.appendChild( inputElement[key]);
 			});
 		})
 		.catch( ( /* error */ ) => {

@@ -81,6 +81,14 @@
               </div>
             </li>
           </ol>
+          <h3 class="m-3 h3 fw-bold">同梱しているCSS&JavaScript</h3>
+          <ul style="font-size:0.875rem">
+            <li class="mb-3">CSRF JavaScript<br /><a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a></li>
+            <li class="mb-3">reCAPTCHA JavaScript<br /><a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a></li>
+            <li class="mb-3">Bootstrap JavaScript<br /><a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a></li>
+            <li class="mb-3">Bootstrap Style<br /><a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a></li>
+          </ul>
+          <hr />
           <p class="mt-4 mx-2 text-secondary" style="font-size:0.875rem">本番環境に公開する時はデバッグモードを無効にしてください。デバッグモードが無効の場合はこのページは表示されませんが、ヘルスチェックは利用できます。</p>
         </div>
       </div>
@@ -106,7 +114,7 @@
 
     {% endif %}
 
-  {% include '/assets/svg-icon.twig' %}
+  {% include '/utils/svg-icon.twig' %}
   </body>
 </html>
 {% endapply %}
