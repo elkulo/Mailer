@@ -298,7 +298,7 @@ class ValidateHandler implements ValidateHandlerInterface
                     '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>
                      <script src="%2$s"></script>',
                     trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
-                    htmlspecialchars($this->router->getUrl('assets-recaptcha-js'))
+                    htmlspecialchars($this->router->getUrl('recaptcha.min.js'))
                 ),
             ];
         } else {
@@ -306,7 +306,7 @@ class ValidateHandler implements ValidateHandlerInterface
                 'key' => '',
                 'script' => sprintf(
                     '<script src="%1$s"></script>',
-                    htmlspecialchars($this->router->getUrl('assets-recaptcha-js'))
+                    htmlspecialchars($this->router->getUrl('recaptcha.min.js'))
                 )
             ];
         }

@@ -60,7 +60,7 @@ class Router implements RouterInterface
      */
     public function getUrl(string $key = '')
     {
-        return (empty($key)) ? static::$router : static::$router[$key];
+        return isset(static::$router[$key]) ? static::$router[$key]: false;
     }
 
     /**

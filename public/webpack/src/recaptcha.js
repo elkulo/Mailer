@@ -5,11 +5,22 @@
  */
 const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 
+	// リロードタイマー.
+	const reloadState = {
+		seconds: 2,
+		timer: null
+	};
+
 	const formElement = document.querySelector( formID );
 
 	if ( ! formElement || ! siteKey ) {
 		return;
 	}
+
+	// Wrapper用のDOM生成.
+	const wrapper = document.createElement( 'div' );
+	wrapper.style.display = 'none';
+	formElement.appendChild( wrapper );
 
 	// reCAPTCHA用のDOM生成.
 	const inputElement = {
@@ -25,7 +36,7 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 			inputElement[key].setAttribute( 'value', actionName );
 		}
 		inputElement[key].setAttribute( 'type', 'hidden' );
-		formElement.appendChild( inputElement[key]);
+		wrapper.appendChild( inputElement[key]);
 	});
 
 	// トークンの更新.
@@ -40,6 +51,10 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 					inputElement.captchaResponse.setAttribute( 'value', token );
 				});
 		});
+		if ( reloadState.timer ) {
+			clearTimeout( reloadState.timer );
+		}
+		reloadState.timer = setTimeout( () => changeToken(), 60 * 1000 * reloadState.seconds );
 	};
 
 	// 更新トリガー.
