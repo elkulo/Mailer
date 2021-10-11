@@ -11,18 +11,17 @@ namespace App\Application\Actions\Dashboard;
 use Psr\Http\Message\ResponseInterface as Response;
 
 /**
- * ReCaptchaJavaScriptAction
+ * APIAction
  */
-class ReCaptchaJavaScriptAction extends DashboardAction
+class APIAction extends DashboardAction
 {
     /**
      * {@inheritdoc}
      */
     protected function action(): Response
     {
-        return $this->view->render(
-            $this->response,
-            'assets/recaptcha.min.js.twig'
-        )->withHeader('Content-Type', 'text/javascript');
+        $repository = $this->dashboardRepository->api();
+
+        return $this->respondWithData($repository);
     }
 }

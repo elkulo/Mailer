@@ -7,10 +7,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Router\RouterInterface;
+use App\Application\Actions\Assets\AssetsAction;
 use App\Application\Actions\Dashboard\IndexDashboardAction;
-use App\Application\Actions\Dashboard\CsrfJsonAction;
-use App\Application\Actions\Dashboard\CsrfJavaScriptAction;
-use App\Application\Actions\Dashboard\ReCaptchaJavaScriptAction;
+use App\Application\Actions\Dashboard\APIAction;
 use App\Application\Actions\Mailer\IndexMailerAction;
 use App\Application\Actions\Mailer\ConfirmMailerAction;
 use App\Application\Actions\Mailer\CompleteMailerAction;
@@ -33,17 +32,25 @@ return function (App $app) {
         $group->get('/', IndexDashboardAction::class)->setName('dashboard');
         $router->set('dashboard');
 
-        // CSRF API for Javascript
-        $group->get('/assets-csrf-js', CsrfJavaScriptAction::class)->setName('assets-csrf-js');
+        // API for JSON
+        $group->get('/api/v1/json', APIAction::class)->setName('api-json');
+        $router->set('api-json');
+
+        // CSRF for Javascript
+        $group->get('/assets-csrf-js', [AssetsAction::class, 'csrfScript'])->setName('assets-csrf-js');
         $router->set('assets-csrf-js');
 
-        // CSRF API for JSON
-        $group->get('/api/v1/csrf', CsrfJsonAction::class)->setName('api-csrf-json');
-        $router->set('api-csrf-json');
-
         // reCAPTCHA for JavaScript.
-        $group->get('/assets-recaptcha-js', ReCaptchaJavaScriptAction::class)->setName('assets-recaptcha-js');
+        $group->get('/assets-recaptcha-js', [AssetsAction::class, 'recaptchaScript'])->setName('assets-recaptcha-js');
         $router->set('assets-recaptcha-js');
+
+        // Bootstrap for CSS.
+        $group->get('/assets-bootstrap-css', [AssetsAction::class, 'bootstrapStyle'])->setName('assets-bootstrap-css');
+        $router->set('assets-bootstrap-css');
+
+        // Bootstrap for JavaScript.
+        $group->get('/assets-bootstrap-js', [AssetsAction::class, 'bootstrapScript'])->setName('assets-bootstrap-js');
+        $router->set('assets-bootstrap-js');
 
         // 最後のスラッシュを強制.
         $group->get('', function (Request $request, Response $response) use ($router) {
