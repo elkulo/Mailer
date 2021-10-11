@@ -147,7 +147,7 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->csrf->getTokenValueKey(),
                     $this->csrf->getTokenValue()
                 ),
-                'reCAPTCHA' => $this->validate->getCaptchaScript(),
+                'reCAPTCHA' => $this->validate->getReCaptchaScript(),
             ]
         ];
     }
@@ -193,7 +193,7 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->csrf->getTokenValue(),
                     $this->postData->getPageReferer()
                 ),
-                'reCAPTCHA' => $this->validate->getCaptchaScript(),
+                'reCAPTCHA' => $this->validate->getReCaptchaScript(),
             ];
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

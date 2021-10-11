@@ -3,7 +3,7 @@
  * Copyright 2020-2021 A.Sudo
  * Licensed under MIT (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
-const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
+const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 
 	const formElement = document.querySelector( formID );
 
@@ -49,8 +49,8 @@ const setCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 	changeToken();
 };
 
-window.applyCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
+window.applyReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 	document.addEventListener( 'DOMContentLoaded', () => {
-		setCaptcha( formID, siteKey, actionName );
+		setReCaptcha( formID, siteKey, actionName );
 	}, false );
 };

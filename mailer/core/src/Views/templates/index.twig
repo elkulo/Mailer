@@ -7,12 +7,6 @@
     <title>Hello World!</title>
     {% include '/assets/bootstrap.min.css.twig' %}
     {% include '/assets/bootstrap.min.js.twig' %}
-
-    {# reCAPTCHAを使用する場合 #}
-    {% if reCAPTCHA.key %}
-    {% include '/assets/captcha.min.js.twig' %}
-    <script>applyCaptcha( '#mailer-form', '{{ reCAPTCHA.key }}' );</script>
-    {% endif %}
   </head>
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 720px">
@@ -95,9 +89,14 @@
           <button type="submit" class="btn btn-primary">上記内容を送信する</button>
         </div>
 
-        {# CSRF セキュリティのためFormタグ直前に必須 #}
+        {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
         {{ CSRF|raw }}
       </form>
     </div>
+
+  {# NOTE: reCAPTCHAを使用する場合 #}
+  {{ reCAPTCHA.script|raw }}
+  <script>applyReCaptcha( '#mailer-form', '{{ reCAPTCHA.key }}' );</script>
+
   </body>
 </html>

@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Application\Handlers\Validate;
 
 use App\Application\Settings\SettingsInterface;
-use Psr\Log\LoggerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -19,11 +18,6 @@ use ReCaptcha\ReCaptcha;
 
 class ValidateHandler implements ValidateHandlerInterface
 {
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * 設定情報
@@ -60,11 +54,10 @@ class ValidateHandler implements ValidateHandlerInterface
      * @param  LoggerInterface $logger
      * @return void
      */
-    public function __construct(SettingsInterface $settings, LoggerInterface $logger)
+    public function __construct(SettingsInterface $settings)
     {
         $this->validateSettings = $settings->get('validate');
         $this->formSettings = $settings->get('form');
-        $this->logger = $logger;
     }
 
     /**
@@ -247,8 +240,8 @@ class ValidateHandler implements ValidateHandlerInterface
     {
         // reCAPTCHA シークレットキー
         $secretKey = null;
-        if (isset($this->validateSettings['CAPTCHA_SECRETKEY'])) {
-            $secretKey = $this->validateSettings['CAPTCHA_SECRETKEY'];
+        if (isset($this->validateSettings['RECAPTCHA_SECRETKEY'])) {
+            $secretKey = $this->validateSettings['RECAPTCHA_SECRETKEY'];
         }
 
         if ($secretKey) {
@@ -285,23 +278,17 @@ class ValidateHandler implements ValidateHandlerInterface
      * @param  string $action
      * @return array
      */
-    public function getCaptchaScript():array
+    public function getReCaptchaScript():array
     {
         // reCAPTCHA サイトキー
-        $siteKey = isset($this->validateSettings['CAPTCHA_SITEKEY'])? $this->validateSettings['CAPTCHA_SITEKEY']: '';
-        if ($siteKey) {
-            return [
-                'key' => trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8')),
-                'script' => sprintf(
-                    '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>',
-                    trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8'))
-                ),
-            ];
-        } else {
-            return [
-                'key' => '',
-                'script' => '',
-            ];
-        }
+        $siteKey = isset($this->validateSettings['RECAPTCHA_SITEKEY'])? $this->validateSettings['RECAPTCHA_SITEKEY']: '';
+        return [
+            'key' => trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8')),
+            'script' => sprintf(
+                '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>
+                 <script src="http://localhost:8000/mailer-alias/assets-recaptcha-js"></script>',
+                trim(htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8'))
+            ),
+        ];
     }
 }
