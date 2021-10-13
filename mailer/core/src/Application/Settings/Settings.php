@@ -27,4 +27,14 @@ class Settings implements SettingsInterface
     {
         return (empty($key)) ? $this->settings : $this->settings[$key];
     }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function set(string $key, $value): void
+    {
+        $this->settings[$key] = $value;
+    }
 }

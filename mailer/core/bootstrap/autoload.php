@@ -19,12 +19,12 @@ session_name('MAILERID');
 $containerBuilder = new ContainerBuilder();
 
 // Set up Dotenv
-$env = __DIR__ . '/../../.env';
+$env = defined('ENV_DIR_PATH')? ENV_DIR_PATH . '.env': __DIR__ . '/../../.env';
 if (is_readable($env)) {
-  $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+  $dotenv = \Dotenv\Dotenv::createImmutable( defined('ENV_DIR_PATH')? ENV_DIR_PATH : __DIR__ . '/../../' );
   $dotenv->load();
 } else {
-  throw new \Exception('環境設定ファイルがありません');
+  die('環境設定ファイルがありません。');
 }
 
 // Set up Timezone
@@ -62,8 +62,18 @@ $middleware = require __DIR__ . '/../app/middleware.php';
 $middleware($app);
 
 // ベースパス
-if (isset($BASE_PATH)) {
-  $app->setBasePath($BASE_PATH);
+if (defined('BASE_PATH')) {
+  $app->setBasePath(BASE_PATH);
+}
+
+// 設定ディレクトリパス
+if (defined('SETTINGS_DIR_PATH')) {
+  $container->get(SettingsInterface::class)->set('settingsDirPath', SETTINGS_DIR_PATH . '/settings');
+}
+
+// テンプレートパス
+if (defined('TEMPLATES_DIR_PATH')) {
+  $container->get(SettingsInterface::class)->set('templatesDirPath', TEMPLATES_DIR_PATH . '/templates');
 }
 
 // Register routes
