@@ -33,7 +33,7 @@ class PHPMailerHandler implements MailHandlerInterface
     private $formSettings = [];
 
     /**
-     * DBを作成
+     * コンストラクタ
      *
      * @param  SettingsInterface $settings
      * @return void
@@ -56,7 +56,7 @@ class PHPMailerHandler implements MailHandlerInterface
     final public function send(string $to, string $subject, string $body, array $header = array()): bool
     {
         $mailSettings = $this->mailSettings;
-        $mailSettings = $this->mailSettings;
+        $formSettings = $this->formSettings;
 
         // SMTP認証.
         $mailer = new PHPMailer;
@@ -84,7 +84,7 @@ class PHPMailerHandler implements MailHandlerInterface
         }
 
         // HTMLメール or Plainメール
-        $mailer->isHTML($this->formSettings['IS_HTMLMAIL_TEMPLATE'] ? true : false);
+        $mailer->isHTML($formSettings['IS_HTMLMAIL_TEMPLATE'] ? true : false);
 
         // エンコード.
         $mailer->CharSet = 'ISO-2022-JP';
