@@ -12,6 +12,12 @@ use App\Application\Settings\SettingsInterface;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// Define Default set.
+defined('BASE_URL_PATH') || define('BASE_URL_PATH', '/');
+defined('ENV_DIR_PATH') || define('ENV_DIR_PATH', __DIR__ . '/../../');
+defined('SETTINGS_DIR_PATH') || define('SETTINGS_DIR_PATH', __DIR__ . '/../../');
+defined('TEMPLATES_DIR_PATH') || define('TEMPLATES_DIR_PATH', __DIR__ . '/../../');
+
 // SESSION Name.
 session_name('MAILERID');
 
@@ -19,10 +25,8 @@ session_name('MAILERID');
 $containerBuilder = new ContainerBuilder();
 
 // Set up Dotenv
-$env = defined('ENV_DIR_PATH')? ENV_DIR_PATH . '.env': __DIR__ . '/../../.env';
-if (is_readable($env)) {
-  $dotenv = \Dotenv\Dotenv::createImmutable( defined('ENV_DIR_PATH')? ENV_DIR_PATH : __DIR__ . '/../../' );
-  $dotenv->load();
+if (is_readable(ENV_DIR_PATH . '.env')) {
+  \Dotenv\Dotenv::createImmutable( ENV_DIR_PATH )->load();
 } else {
   die('環境設定ファイルがありません。');
 }
@@ -62,18 +66,8 @@ $middleware = require __DIR__ . '/../app/middleware.php';
 $middleware($app);
 
 // ベースパス
-if (defined('BASE_PATH')) {
-  $app->setBasePath(BASE_PATH);
-}
-
-// 設定ディレクトリパス
-if (defined('SETTINGS_DIR_PATH')) {
-  $container->get(SettingsInterface::class)->set('settingsDirPath', SETTINGS_DIR_PATH . '/settings');
-}
-
-// テンプレートパス
-if (defined('TEMPLATES_DIR_PATH')) {
-  $container->get(SettingsInterface::class)->set('templatesDirPath', TEMPLATES_DIR_PATH . '/templates');
+if (BASE_URL_PATH !== '/') {
+  $app->setBasePath( rtrim(BASE_URL_PATH, '/') );
 }
 
 // Register routes
