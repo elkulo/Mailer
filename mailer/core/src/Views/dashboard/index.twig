@@ -48,8 +48,9 @@
                   <p class="m-0">外部からの悪意ある攻撃からWebアプリケーションを守るために、メールプログラムはCSRFトークンを持たないリクエストを一切受け付けません。</p>
                 </div>
                 <div class="mb-1 fw-bold">(A) 独自のHTMLページからPOSTする場合</div>
-                <p>Ajaxで <a href="{{Router.api.json}}" target="_blank">API経由</a> のCSRFトークンを挿入する必要があります。formタグのidまたはclassを <code>applyCSRF()</code> の第一引数に渡します。指定のformタグ内にCSRFタグが自動で挿入されます。</p>
+                <p>Ajaxで <a href="{{Router.api.json}}" target="_blank">API経由</a> のCSRFトークンを挿入する必要があります。</p>
                 <p>AjaxのJavaScriptは同梱しています。こちらの <a href="{{Router.csrf.js}}" target="_blank">javascriptファイル</a> をダウンロードして任意の場所に設置してください。</p>
+                <p>formタグのidまたはclassを <code>applyCSRF()</code> の第一引数に渡します。指定のformタグ内にCSRFタグが自動で挿入されます。</p>
                 <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
 &lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
                 <hr />

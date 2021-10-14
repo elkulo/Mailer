@@ -1,3 +1,15 @@
+{##
+ # 確認ページ
+ #
+ # Twig変数
+ #  {{Action.url}}            自動生成された次へ進むフォームアクションのURL
+ #  {% for post in Posts %}   POSTされたの配列
+ #  ### {{post.name|raw}}     フォームの項目のラベルのHTML
+ #  ### {{post.value|raw}}    フォームの項目の投稿内容のHTML
+ #  {{CSRF|raw}}              CSRFタグのHTML
+ #  {{reCAPTCHA.script|raw}}  reCAPTCHAのHTML
+ #  {{reCAPTCHA.key}}         reCAPTCHAのサイトキー
+ #}
 <!DOCTYPE html>
 <html lang="ja">
   <head>

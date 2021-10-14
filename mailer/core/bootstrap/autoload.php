@@ -67,7 +67,7 @@ $middleware($app);
 
 // ベースパス
 if (BASE_URL_PATH !== '/') {
-  $app->setBasePath( rtrim(BASE_URL_PATH, '/') );
+  $app->setBasePath( '/' . trim(BASE_URL_PATH, '/') );
 }
 
 // Register routes
