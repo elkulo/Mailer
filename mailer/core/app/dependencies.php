@@ -53,7 +53,7 @@ return function (ContainerBuilder $containerBuilder) {
             $settings = $c->get(SettingsInterface::class);
             $twig = Twig::create(
                 [
-                    __DIR__ . '/../../',
+                    rtrim(TEMPLATES_DIR_PATH, '/'),
                     __DIR__ . '/../src/Views',
                 ],
                 $settings->get('twig')

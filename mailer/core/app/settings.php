@@ -17,8 +17,6 @@ return function (ContainerBuilder $containerBuilder) {
             return new Settings([
                 'phpMinSupport' => '7.4.0',
                 'appPath' => __DIR__ . '/../',
-                'settingsDirPath' => __DIR__ . '/../../settings',
-                'templatesDirPath' => __DIR__ . '/../../templates',
                 'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
                 // Should be set to false in production
                 'displayErrorDetails' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
@@ -36,10 +34,10 @@ return function (ContainerBuilder $containerBuilder) {
                     'cache' => false,
                     'auto_reload' => true
                 ],
-                'database' => include __DIR__ . '/../../settings/database.php',
-                'form' => include __DIR__ . '/../../settings/form.php',
-                'mail' => include __DIR__ . '/../../settings/mail.php',
-                'validate' => include __DIR__ . '/../../settings/validate.php',
+                'database' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/database.php',
+                'form' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/form.php',
+                'mail' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/mail.php',
+                'validate' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/validate.php',
             ]);
         }
     ]);
