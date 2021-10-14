@@ -38,7 +38,7 @@
           <div class="card shadow-sm">
             <div class="card-header text-center">{{ SectionTitle }}</div>
             <div class="card-body py-sm-4 px-sm-5">
-              {% if ResultListCount == ResultList|length %}
+              {% if ResultSeccessCount == ResultList|length %}
               <div class="row g-1 justify-content-center align-items-center mb-3 pe-4 fw-bold text-center text-success">
                 <div class="col-auto">
                   <svg class="icon icon-check-circle" style="width: 24px; height: 24px;" aria-hidden="true" role="img"><use href="#icon-check-circle" xlink:href="#icon-check-circle"></use></svg>
@@ -54,11 +54,17 @@
               </div>
               {% endif %}
 
+              <div class="d-flex align-items-center justify-content-center">
+                <div class="h1 fw-light text-center text-success bg-light rounded w-100 p-3 mb-3">
+                  {{ ResultSeccessRatio }}
+                </div>
+              </div>
+
               <p class="card-text">{{ SectionDescription }}</p>
 
               <div class="table-responsive">
                 <table class="table my-0">
-                  <caption>Score {{ ResultListCount }} / {{ ResultList|length }}
+                  <caption>Score {{ ResultSeccessCount }} / {{ ResultList|length }}
                   </caption>
                   <thead class="table-light">
                     <tr>

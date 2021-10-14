@@ -256,7 +256,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $validateSettings = $this->settings->get('validate');
         $posts = $this->postData->getPosts();
         $resultList = [];
-        $resultListCount = 0;
+        $resultSeccessCount = 0;
         $postPasscode = [];
         $passcode = null;
 
@@ -306,7 +306,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     
                 foreach ($resultList as $value) {
                     if ($value['success']) {
-                        $resultListCount++;
+                        $resultSeccessCount++;
                     }
                 }
             } else {
@@ -332,7 +332,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     プログラムは正常に機能していますが、実際のメールフォームの送信内容の検証は、設置されたフォームからテストしてください。
                     ヘルスチェックの検証内容は次の通りです。',
                 'ResultList' => $resultList,
-                'ResultListCount' => $resultListCount
+                'ResultSeccessCount' => $resultSeccessCount,
+                'ResultSeccessRatio' => floor($resultSeccessCount / count($resultList) * 100) . '%'
             ]
         ];
     }
