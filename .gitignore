@@ -94,5 +94,10 @@ node_modules/
 jspm_packages/
 package-lock.json
 
-# Composer
-*.log
+# Monolog
+**/logs/*
+!**/logs/.gitkeep
+
+# SQLite
+**/database/
+*.sqlite

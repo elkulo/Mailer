@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # mailerディレクトリのZipを作成
-zip -r dist/Mailer-latest-ja.zip mailer/ -x '*.git*' '*.env*' '*.DS_Store' '*__MACOSX*' '*.log*'
+zip -r dist/Mailer-latest-ja.zip mailer/ -x '*.git*' '*.env*' '*.DS_Store' '*__MACOSX*' '*.log*' '*/logs/' '*.sql*' '*/database/'
 
 # publicディレクトリをexample名でZipに追加
 cp -R public/ example/

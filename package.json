@@ -1,6 +1,6 @@
 {
   "name": "elkulo_mailer",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Built locally with Webpack",
   "private": true,
   "scripts": {
@@ -10,30 +10,32 @@
     "format": "eslint --fix './public/webpack/src/**/*.js'",
     "build": "webpack --mode production",
     "serve": "php -S localhost:8000 -t ./public",
-    "composer:update": "cd mailer/app/ && composer update",
-    "composer:phpcs": "cd mailer/app/ && composer phpcs",
-    "composer:phpcbf": "cd mailer/app/ && composer phpcbf",
+    "composer:install": "cd mailer/core/ && composer install",
+    "composer:update": "cd mailer/core/ && composer update",
+    "composer:phpcs": "cd mailer/core/ && composer phpcs",
+    "composer:phpcbf": "cd mailer/core/ && composer phpcbf",
     "deploy": "sh deploy.sh"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.6",
-    "@babel/preset-env": "^7.14.7",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
     "babel-loader": "^8.2.2",
-    "core-js": "^3.15.2",
-    "css-loader": "^5.2.6",
-    "css-minimizer-webpack-plugin": "^3.0.2",
-    "eslint": "^7.29.0",
-    "eslint-webpack-plugin": "^2.5.4",
-    "mini-css-extract-plugin": "^2.0.0",
-    "prettier": "^2.3.2",
-    "sass": "^1.35.1",
-    "sass-loader": "^12.1.0",
-    "typescript": "^4.3.5",
-    "webpack": "^5.41.1",
-    "webpack-cli": "^4.7.2"
+    "core-js": "^3.18.3",
+    "css-loader": "^6.4.0",
+    "css-minimizer-webpack-plugin": "^3.1.1",
+    "eslint": "^7.32.0",
+    "eslint-webpack-plugin": "^3.0.1",
+    "mini-css-extract-plugin": "^2.4.2",
+    "prettier": "^2.4.1",
+    "sass": "^1.43.2",
+    "sass-loader": "^12.2.0",
+    "typescript": "^4.4.4",
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.0"
   },
   "dependencies": {
-    "@popperjs/core": "^2.9.2",
-    "bootstrap": "^5.0.2"
+    "@popperjs/core": "^2.10.2",
+    "axios": "^0.23.0",
+    "bootstrap": "^5.1.3"
   }
 }

@@ -1,0 +1,76 @@
+{% apply spaceless %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>HEALTH CHECK - 1{% if SectionTitle %} - {{ SectionTitle }}{% endif %}</title>
+    <link href="{{ full_url_for('bootstrap.min.css') }}" rel="stylesheet" />
+    <script src="{{ full_url_for('bootstrap.min.js') }}"></script>
+  </head>
+  <body class="bg-light">
+    {% include '/utils/flash-message.twig' %}
+
+    <div class="container-fluid mt-5 mb-3">
+      <div class="row">
+        <div class="col">
+          <h1 class="h5 text-center fw-lighter">HEALTH CHECK</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mb-5" style="max-width: 720px">
+      <div class="row justify-content-center mb-4">
+        <div class="col-8">
+          <div class="position-relative m-4">
+            <div class="progress" style="height: 1px">
+              <div class="progress-bar" role="progressbar" style="width: calc(50% - 1.25rem)" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <button type="button" class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary shadow-none rounded-pill fw-lighter pe-none" style="width: 2rem; height: 2rem">1</button>
+            <button type="button" class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-secondary shadow-none rounded-pill fw-lighter pe-none" style="width: 2rem; height: 2rem">2</button>
+            <button type="button" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-secondary shadow-none rounded-pill fw-lighter pe-none" style="width: 2rem; height: 2rem">3</button>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-header text-center">{{ SectionTitle }}</div>
+            <div class="card-body py-sm-4 px-sm-5">
+              <p class="card-text">{{ SectionDescription }}</p>
+              <form action="{{ Action.url }}" method="POST">
+                <div class="row g-2 align-items-center">
+                  <div class="col-4 col-md-auto">
+                    <label for="inputEmail" class="col-form-label d-block text-end text-secondary" style="font-size:0.875rem">メールアドレス</label>
+                  </div>
+                  <div class="col-6">
+                    <input type="email" name="email" id="inputEmail" class="form-control email" placeholder="mail@example.com" />
+                  </div>
+                  <div class="col-2 col-md-auto">
+                    <button type="submit" class="btn btn-primary">確認</button>
+                  </div>
+                </div>
+                <div style="display:none">
+                  <input type="hidden" name="{{ CSRF.keys.name }}" value="{{ CSRF.name }}">
+                  <input type="hidden" name="{{ CSRF.keys.value }}" value="{{ CSRF.value }}">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <script>
+  (function() {
+    'use strict';
+    const email = document.querySelector('#inputEmail');
+    if ( email ) email.focus();
+  })();
+  </script>
+
+  {% include '/utils/svg-icon.twig' %}
+  </body>
+</html>
+{% endapply %}
