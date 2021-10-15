@@ -1,0 +1,104 @@
+{% apply spaceless %}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>HEALTH CHECK - 3{% if SectionTitle %} - {{ SectionTitle }}{% endif %}</title>
+    <link href="{{ full_url_for('bootstrap.min.css') }}" rel="stylesheet" />
+    <script src="{{ full_url_for('bootstrap.min.js') }}"></script>
+  </head>
+  <body class="bg-light">
+    {% include '/utils/flash-message.twig' %}
+
+    <div class="container-fluid mt-5 mb-3">
+      <div class="row">
+        <div class="col">
+          <h1 class="h5 text-center fw-lighter">HEALTH CHECK</h1>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mb-5" style="max-width: 720px">
+      <div class="row justify-content-center mb-4">
+        <div class="col-8">
+          <div class="position-relative m-4">
+            <div class="progress" style="height: 1px">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <button type="button" class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-success shadow-none rounded-pill fw-lighter pe-none" style="width: 2rem; height: 2rem">1</button>
+            <button type="button" class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-success shadow-none rounded-pill fw-lighter pe-none" style="width: 2rem; height: 2rem">2</button>
+            <button type="button" class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-success shadow-none rounded-pill fw-lighter pe-none" style="width: 2rem; height: 2rem">3</button>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-header text-center">{{ SectionTitle }}</div>
+            <div class="card-body py-sm-4 px-sm-5">
+              {% if ResultSeccessCount == ResultList|length %}
+              <div class="row g-1 justify-content-center align-items-center mb-3 pe-4 fw-bold text-center text-success">
+                <div class="col-auto">
+                  <svg class="icon icon-check-circle" style="width: 24px; height: 24px;" aria-hidden="true" role="img"><use href="#icon-check-circle" xlink:href="#icon-check-circle"></use></svg>
+                </div>
+                <div class="col-auto">Good Job!</div>
+              </div>
+              {% else %}
+              <div class="row g-1 justify-content-center align-items-center mb-3 pe-3 fw-bold text-center text-secondary">
+                <div class="col-auto">
+                  <svg class="icon icon-cone-striped" style="width: 24px; height: 24px;" aria-hidden="true" role="img"><use href="#icon-cone-striped" xlink:href="#icon-cone-striped"></use></svg>
+                </div>
+                <div class="col-auto">Not quite...</div>
+              </div>
+              {% endif %}
+
+              <div class="d-flex align-items-center justify-content-center">
+                <div class="h1 fw-light text-center text-success bg-light rounded w-100 p-3 mb-3">
+                  {{ ResultSeccessRatio }}
+                </div>
+              </div>
+
+              <p class="card-text">{{ SectionDescription }}</p>
+
+              <div class="table-responsive">
+                <table class="table my-0">
+                  <caption>Score {{ ResultSeccessCount }} / {{ ResultList|length }}
+                  </caption>
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>検証内容</th>
+                      <th>結果</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for key, result in ResultList %}
+                    <tr>
+                      <th>{{ key }}</th>
+                      <td>{{ result.description }}</td>
+                      {% if result.success %}
+                      <td class="text-success">
+                        <svg class="icon icon-check" style="width: 16px; height: 16px;" aria-hidden="true" role="img"><use href="#icon-check" xlink:href="#icon-check"></use></svg>
+                      </td>
+                      {% else %}
+                      <td class="text-secondary">
+                        <svg class="icon icon-dash" style="width: 16px; height: 16px;" aria-hidden="true" role="img"><use href="#icon-dash" xlink:href="#icon-dash"></use></svg>
+                      </td>
+                      {% endif %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% include '/utils/svg-icon.twig' %}
+  </body>
+</html>
+{% endapply %}

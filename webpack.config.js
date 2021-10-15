@@ -1,7 +1,7 @@
 /**
  * Webpack 5
  *
- * @version 2021.06.01
+ * @version 2021.10.11
  */
 const dirscript = "./public/webpack";
 
@@ -16,11 +16,13 @@ module.exports = {
   mode: "production",
   entry: {
     app: path.resolve(__dirname, dirscript, "./src/app.js"),
+    csrf: path.resolve(__dirname, dirscript, "./src/csrf.js"),
+    recaptcha: path.resolve(__dirname, dirscript, "./src/recaptcha.js"),
   },
   output: {
     path: path.resolve(__dirname, dirscript, "./dest"),
     filename: "[name].min.js",
-    publicPath: "./",
+    publicPath: "auto",
     assetModuleFilename: "_output/[hash][ext]",
   },
   module: {
