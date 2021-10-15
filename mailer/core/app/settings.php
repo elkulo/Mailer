@@ -17,6 +17,8 @@ return function (ContainerBuilder $containerBuilder) {
             return new Settings([
                 'phpMinSupport' => '7.4.0',
                 'appPath' => __DIR__ . '/../',
+                'templatesDirPath' => rtrim(TEMPLATES_DIR_PATH, '/'),
+                'settingsDirPath' => rtrim(SETTINGS_DIR_PATH, '/'),
                 'debug' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,
                 // Should be set to false in production
                 'displayErrorDetails' => isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'true' : false,

@@ -61,7 +61,7 @@ return function (App $app) {
     // メールフォーム
     $app->group('/post', function (Group $group) use ($settings, $router) {
 
-        // ルートにPOSTされた場合、スキップ設定で自動振り分け
+        // ルートに投稿された場合、スキップ設定で自動振り分け
         $group->post(
             '',
             empty($settings->get('form')['IS_CONFIRM_SKIP']) ? ConfirmMailerAction::class : CompleteMailerAction::class

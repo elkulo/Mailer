@@ -54,7 +54,7 @@ class MailerPostData
     /**
      * Twig ハンドラー
      *
-     * @var object
+     * @var TwigEnvironment
      */
     private $view;
 
@@ -69,10 +69,9 @@ class MailerPostData
     {
         $this->mailSettings = $settings->get('mail');
         $this->formSettings = $settings->get('form');
-        $appPath = $settings->get('appPath');
 
         // POSTデータから取得したデータを整形
-        $sanitized = array();
+        $sanitized = [];
         foreach ($posts as $name => $value) {
             // アンダースコアは除外.
             if (substr($name, 0, 1) !== '_') {
@@ -88,10 +87,10 @@ class MailerPostData
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
-            new TwigFileLoader(array(
-                $appPath . '/../templates/mail',
-                $appPath . '/src/Views/templates/mail',
-            ))
+            new TwigFileLoader([
+                $settings->get('templatesDirPath') . '/templates/mail',
+                $settings->get('appPath') . '/src/Views/mailer/templates/mail',
+            ])
         );
     }
 
@@ -260,9 +259,9 @@ class MailerPostData
         // 管理者宛送信メール.
         if (!empty($this->formSettings['TEMPLATE_ADMIN_MAIL'])) {
             return (new TwigEnvironment(
-                new TwigArrayLoader(array(
+                new TwigArrayLoader([
                     'admin.mail.tpl' => $this->formSettings['TEMPLATE_ADMIN_MAIL']
-                ))
+                ])
             ))->render('admin.mail.tpl', $data);
         }
         return $this->view->render('admin.mail.twig', $data);
@@ -279,9 +278,9 @@ class MailerPostData
         // ユーザ宛送信メール.
         if (!empty($this->formSettings['TEMPLATE_USER_MAIL'])) {
             return (new TwigEnvironment(
-                new TwigArrayLoader(array(
+                new TwigArrayLoader([
                     'user.mail.tpl' => $this->formSettings['TEMPLATE_USER_MAIL']
-                ))
+                ])
             ))->render('user.mail.tpl', $data);
         }
         return $this->view->render('user.mail.twig', $data);

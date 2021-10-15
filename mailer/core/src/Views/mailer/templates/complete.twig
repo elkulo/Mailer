@@ -1,6 +1,10 @@
 {##
  # 完了ページ
  #
+ # Twig関数
+ #  {{full_url_for('bootstrap.min.css')}}  Bootstrap Style のURL
+ #  {{full_url_for('bootstrap.min.js')}}   Bootstrap JavaScript のURL
+ #
  # Twig変数
  #  {{Return.url}}  設定で指定された戻り先のURL
  #}
@@ -11,8 +15,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
     <title>メッセージの送信完了</title>
-    <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
-    <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
+    <link href="{{ full_url_for('bootstrap.min.css') }}" rel="stylesheet" />
+    <script src="{{ full_url_for('bootstrap.min.js') }}"></script>
   </head>
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded px-4 px-md-5 py-4" style="max-width: 720px">

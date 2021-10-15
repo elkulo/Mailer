@@ -25,7 +25,7 @@ class HealthCheckPostData
     /**
      * Twig ハンドラー
      *
-     * @var object
+     * @var TwigEnvironment
      */
     private $view;
 
@@ -41,7 +41,7 @@ class HealthCheckPostData
         $app_path = $settings->get('appPath');
 
         // POSTデータから取得したデータを整形
-        $sanitized = array();
+        $sanitized = [];
         foreach ($posts as $name => $value) {
             $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
         }
@@ -49,9 +49,9 @@ class HealthCheckPostData
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
-            new TwigFileLoader(array(
+            new TwigFileLoader([
                 $app_path . '/src/Views/health-check/mail',
-            ))
+            ])
         );
     }
 
