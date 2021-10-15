@@ -24,7 +24,7 @@ class ConfirmMailerAction extends MailerAction
 
         return $this->view->render(
             $this->response,
-            'templates/' . $repository['template'],
+            $repository['template'],
             $repository['data']
         );
     }

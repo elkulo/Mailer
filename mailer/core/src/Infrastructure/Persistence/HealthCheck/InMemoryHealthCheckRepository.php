@@ -202,17 +202,16 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                 $_SESSION['healthCheckPasscode'] = $passcode;
 
                 // 管理者宛に届くメールをセット
-                if ($this->settings->get('debug')) {
-                    console($passcode);
-                } else {
-                    $success = $this->mail->send(
-                        $mailSettings['ADMIN_MAIL'],
-                        $this->postData->getMailSubject(),
-                        $this->postData->renderAdminMail(['passcode' => $passcode])
-                    );
-                    if (!$success) {
-                        throw new \Exception('環境設定のSMTPに不備があります。設定を見直してください。');
-                    }
+                $success = $this->mail->send(
+                    $mailSettings['ADMIN_MAIL'],
+                    $this->postData->getMailSubject(),
+                    $this->postData->renderAdminMail([
+                        'Passcode' => $passcode,
+                        'FromName' => $mailSettings['FROM_NAME']
+                    ])
+                );
+                if (!$success) {
+                    throw new \Exception('環境設定のSMTPに不備があります。設定を見直してください。');
                 }
             } else {
                 throw new \Exception('入力内容に誤りがあります。入力内容を確認の上、再度お試しください。');
@@ -296,7 +295,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     7 => [
                         'description' => 'reCAPTCHAでBOT対策はされていますか？',
-                        'success' => !empty($validateSettings['CAPTCHA.SECRETKEY'])? true: false
+                        'success' => !empty($validateSettings['RECAPTCHA_SECRETKEY'])? true: false
                     ],
                     8 => [
                         'description' => 'デバッグモードが無効になっていますか？',
@@ -328,8 +327,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'template' => 'result.twig',
             'data' => [
                 'SectionTitle' => 'チェック結果',
-                'SectionDescription' => 'メールの送受信は正常に行えました。
-                    プログラムは正常に機能していますが、実際のメールフォームの送信内容の検証は、設置されたフォームからテストしてください。
+                'SectionDescription' => 'メールプログラムは正常に機能しています。
+                    実際のメールフォームからの送信内容の検証は、設置されたフォームからテストをしてください。
                     ヘルスチェックの検証内容は次の通りです。',
                 'ResultList' => $resultList,
                 'ResultSeccessCount' => $resultSeccessCount,

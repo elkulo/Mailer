@@ -25,7 +25,11 @@ use App\Application\Handlers\DB\SQLiteHandler;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
+
+        // ルーター.
         RouterInterface::class => \DI\autowire(Router::class),
+
+        // ロガー.
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
 
@@ -40,20 +44,24 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
+
+        // クロスサイトリクエストフォージェリ.
         Guard::class => function () {
             $guard = new Guard(new ResponseFactory(), '_csrf');
             $guard->setPersistentTokenMode(true);
             return $guard;
         },
-        Messages::class => function () {
-            $storage = [];
-            return new Messages($storage);
-        },
+
+        // フラッシュメッセージ.
+        Messages::class => \DI\autowire()->constructor([]),
+
+        // ビューテンプレート.
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $twig = Twig::create(
                 [
-                    rtrim(TEMPLATES_DIR_PATH, '/'),
+                    $settings->get('templatesDirPath') . '/templates',
+                    __DIR__ . '/../src/Views/mailer/templates',
                     __DIR__ . '/../src/Views',
                 ],
                 $settings->get('twig')
@@ -84,11 +92,11 @@ return function (ContainerBuilder $containerBuilder) {
             }
         },
 
-        // データーベースハンドラーの登録.
+        // データベースハンドラーの登録.
         MySQLHandler::class => \DI\autowire(MySQLHandler::class),
         SQLiteHandler::class => \DI\autowire(SQLiteHandler::class),
 
-        // データーベースハンドラーの選択.
+        // データベースハンドラーの選択.
         DBHandlerInterface::class => function (ContainerInterface $c) {
             $dbSettings = $c->get(SettingsInterface::class)->get('database');
             $dbHandler = isset($dbSettings['DB_DRIVER'])? $dbSettings['DB_DRIVER']: null;

@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
     <title>HEALTH CHECK - 2{% if SectionTitle %} - {{ SectionTitle }}{% endif %}</title>
-    <style>{% include 'assets/bootstrap.min.css.twig' %}</style>
-    <script>{% include 'assets/bootstrap.min.js.twig' %}</script>
+    <link href="{{ full_url_for('bootstrap.min.css') }}" rel="stylesheet" />
+    <script src="{{ full_url_for('bootstrap.min.js') }}"></script>
   </head>
   <body class="bg-light">
     {% include '/utils/flash-message.twig' %}
