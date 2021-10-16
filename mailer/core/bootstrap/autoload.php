@@ -25,8 +25,8 @@ session_name('MAILERID');
 $containerBuilder = new ContainerBuilder();
 
 // Set up Dotenv
-if (is_readable(ENV_DIR_PATH . '.env')) {
-  \Dotenv\Dotenv::createImmutable( ENV_DIR_PATH )->load();
+if (is_readable(rtrim(ENV_DIR_PATH, '/') . '/.env')) {
+  \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/' )->load();
 } else {
   die('環境設定ファイルがありません。');
 }
