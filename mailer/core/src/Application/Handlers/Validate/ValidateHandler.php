@@ -239,10 +239,8 @@ class ValidateHandler implements ValidateHandlerInterface
     }
 
     /**
-     * Google reCAPTCHA
+     * BOT判定
      *
-     * @param  string $token
-     * @param  string $action
      * @return void
      */
     public function checkinHuman(): void
@@ -283,8 +281,6 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * Google reCAPTCHA
      *
-     * @param  string $token
-     * @param  string $action
      * @return array
      */
     public function getReCaptchaScript():array
