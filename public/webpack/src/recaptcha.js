@@ -8,7 +8,9 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 	// リロードタイマー.
 	const reloadState = {
 		minute: 2,
-		timer: null
+		timer: null,
+		limit: 5,
+		count: 0,
 	};
 
 	const formElement = document.querySelector( formID );
@@ -40,7 +42,7 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 	});
 
 	// トークンの更新.
-	const changeToken = () => {
+	const changeToken = ( e = null ) => {
 		const { grecaptcha } = window;
 		if ( typeof grecaptcha !== 'object' ) {
 			return;
@@ -54,12 +56,22 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 		if ( reloadState.timer ) {
 			clearTimeout( reloadState.timer );
 		}
-		reloadState.timer = setTimeout( () => changeToken(), 60 * 1000 * reloadState.minute );
+		if ( reloadState.count < reloadState.limit ) {
+			reloadState.timer = setTimeout(
+				() => changeToken(),
+				60 * 1000 * reloadState.minute
+			);
+		}
+		if ( e && e.type === 'blur' ) {
+			reloadState.count = 0;
+		} else {
+			reloadState.count++;
+		}
 	};
 
 	// 更新トリガー.
 	formElement.querySelectorAll( 'input, textarea' ).forEach( element => {
-		element.addEventListener( 'blur', changeToken, false );
+		element.addEventListener( 'blur', ( e ) => changeToken( e ), false );
 	});
 	changeToken();
 };
