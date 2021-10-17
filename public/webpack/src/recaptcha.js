@@ -7,7 +7,7 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 
 	// リロードタイマー.
 	const reloadState = {
-		seconds: 2,
+		minute: 2,
 		timer: null
 	};
 
@@ -54,7 +54,7 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 		if ( reloadState.timer ) {
 			clearTimeout( reloadState.timer );
 		}
-		reloadState.timer = setTimeout( () => changeToken(), 60 * 1000 * reloadState.seconds );
+		reloadState.timer = setTimeout( () => changeToken(), 60 * 1000 * reloadState.minute );
 	};
 
 	// 更新トリガー.
