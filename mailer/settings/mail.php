@@ -26,8 +26,8 @@ return [
     // 送信ポート(465 or 587)
     'SMTP_PORT' => env('SMTP_PORT'),
 
-    // 配信元の表示名
-    'FROM_NAME' => env('FROM_NAME'),
+    // 配信元の表示名(サイト名)
+    'FROM_NAME' => env('SITE_TITLE'),
 
     // 管理者メールアドレス
     'ADMIN_MAIL' => env('ADMIN_MAIL'),

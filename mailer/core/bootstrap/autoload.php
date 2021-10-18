@@ -21,9 +21,6 @@ defined('TEMPLATES_DIR_PATH') || define('TEMPLATES_DIR_PATH', __DIR__ . '/../../
 // SESSION Name.
 session_name('MAILERID');
 
-// Instantiate PHP-DI ContainerBuilder
-$containerBuilder = new ContainerBuilder();
-
 // Set up Dotenv
 if (is_readable(rtrim(ENV_DIR_PATH, '/') . '/.env')) {
   \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/' )->load();
@@ -31,15 +28,8 @@ if (is_readable(rtrim(ENV_DIR_PATH, '/') . '/.env')) {
   die('環境設定ファイルがありません。');
 }
 
-// Set up Timezone
-if (isset($_ENV['TIME_ZONE'])) {
-  date_default_timezone_set($_ENV['TIME_ZONE']);
-}
-
-// Should be set to true in production
-if (isset($_ENV['DEBUG']) ? $_ENV['DEBUG'] === 'false' : false) {
-  $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
-}
+// Instantiate PHP-DI ContainerBuilder
+$containerBuilder = new ContainerBuilder();
 
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
@@ -65,6 +55,12 @@ $callableResolver = $app->getCallableResolver();
 $middleware = require __DIR__ . '/../app/middleware.php';
 $middleware($app);
 
+/** @var SettingsInterface $settings */
+$settings = $container->get(SettingsInterface::class);
+
+// タイムゾーン.
+date_default_timezone_set($settings->get('timeZone'));
+
 // ベースパス.
 if (BASE_URL_PATH !== '/') {
   $app->setBasePath( '/' . trim(BASE_URL_PATH, '/') );
@@ -74,9 +70,7 @@ if (BASE_URL_PATH !== '/') {
 $routes = require __DIR__ . '/../app/routes.php';
 $routes($app);
 
-/** @var SettingsInterface $settings */
-$settings = $container->get(SettingsInterface::class);
-
+// Error details.
 $displayErrorDetails = $settings->get('displayErrorDetails');
 $logError = $settings->get('logError');
 $logErrorDetails = $settings->get('logErrorDetails');

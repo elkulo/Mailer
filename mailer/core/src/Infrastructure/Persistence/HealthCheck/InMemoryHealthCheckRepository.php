@@ -207,7 +207,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     $this->postData->getMailSubject(),
                     $this->postData->renderAdminMail([
                         'Passcode' => $passcode,
-                        'FromName' => $mailSettings['FROM_NAME']
+                        '__FROM_NAME' => $mailSettings['FROM_NAME']
                     ])
                 );
                 if (!$success) {
