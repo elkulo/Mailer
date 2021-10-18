@@ -9,6 +9,7 @@ use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
 use App\Application\ResponseEmitter\ResponseEmitter;
 use App\Application\Settings\SettingsInterface;
+use Selective\BasePath\BasePathDetector;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -65,10 +66,9 @@ $callableResolver = $app->getCallableResolver();
 $middleware = require __DIR__ . '/../app/middleware.php';
 $middleware($app);
 
-// ベースパス
-if (BASE_URL_PATH !== '/') {
-  $app->setBasePath( '/' . trim(BASE_URL_PATH, '/') );
-}
+// ベースパス.
+$basePath = (new BasePathDetector($_SERVER))->getBasePath();
+$app->setBasePath( $basePath );
 
 // Register routes
 $routes = require __DIR__ . '/../app/routes.php';

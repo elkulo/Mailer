@@ -10,6 +10,7 @@ use App\Application\Middleware\SessionMiddleware;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Router\RouterInterface;
 use Middlewares\Whoops;
+use Selective\BasePath\BasePathMiddleware;
 
 return function (App $app) {
     $app->add(SessionMiddleware::class);
@@ -38,6 +39,7 @@ return function (App $app) {
     );
 
     // Router.
+    $app->add(new BasePathMiddleware($app));
     $app->add(
         function ($request, $next) use ($app) {
             $app->getContainer()->get(RouterInterface::class)->init($request);
