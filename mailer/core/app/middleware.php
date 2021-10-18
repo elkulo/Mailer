@@ -15,8 +15,7 @@ return function (App $app) {
     $app->add(SessionMiddleware::class);
 
     // Whoops.
-    $settings = $app->getContainer()->get(SettingsInterface::class);
-    if ($settings->get('debug')) {
+    if ($app->getContainer()->get(SettingsInterface::class)->get('debug')) {
         $app->add(Whoops::class);
     }
 

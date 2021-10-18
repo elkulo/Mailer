@@ -3,9 +3,9 @@
  #
  # ### 外部HTMLのFORMタグからPOSTする場合はこのテンプレートは必要ありません。
  #
- # Twig関数
- #  {{full_url_for('bootstrap.min.css')}}  Bootstrap Style のURL
- #  {{full_url_for('bootstrap.min.js')}}   Bootstrap JavaScript のURL
+ # Twigインクルードライブラリ
+ #  {% include '/assets/bootstrap.min.css.twig' %}  Bootstrap Style のURL
+ #  {% include '/assets/bootstrap.min.js.twig' %}   Bootstrap JavaScript のURL
  #
  # Twig変数
  #  {{CSRF|raw}}              CSRFタグのHTML
@@ -18,9 +18,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>Hello World!</title>
-    <link href="{{ full_url_for('bootstrap.min.css') }}" rel="stylesheet" />
-    <script src="{{ full_url_for('bootstrap.min.js') }}"></script>
+    <title>{{__SITE_TITLE}} - Hello World!</title>
+    <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
+    <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
   <body class="bg-light py-5 px-3">
     <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 720px">

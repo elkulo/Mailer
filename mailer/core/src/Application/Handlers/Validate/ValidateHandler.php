@@ -23,6 +23,13 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * 設定情報
      *
+     * @var SettingsInterface
+     */
+    private $settings = [];
+
+    /**
+     * バリデーション設定
+     *
      * @var array
      */
     private $validateSettings = [];
@@ -64,6 +71,7 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function __construct(SettingsInterface $settings, RouterInterface $router)
     {
+        $this->settings = $settings;
         $this->validateSettings = $settings->get('validate');
         $this->formSettings = $settings->get('form');
         $this->router = $router;
@@ -77,7 +85,7 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function set(array $posts): void
     {
-        Validator::lang($this->validateSettings['VALIDATE_LANG']);
+        Validator::lang($this->settings->get('siteLang'));
         $this->validate = new Validator($posts);
         $this->validate->labels($this->formSettings['NAME_FOR_LABELS']);
     }

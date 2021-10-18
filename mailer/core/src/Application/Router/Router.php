@@ -11,9 +11,16 @@ namespace App\Application\Router;
 use Slim\Routing\RouteContext;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Application\Settings\SettingsInterface;
 
 class Router implements RouterInterface
 {
+
+    /**
+     * @var SettingsInterface
+     */
+    private $settings;
+
     /**
      * @var array
      */
@@ -27,8 +34,9 @@ class Router implements RouterInterface
     /**
      * Router constructor.
      */
-    public function __construct()
+    public function __construct(SettingsInterface $settings)
     {
+        $this->settings = $settings;
     }
 
     /**
@@ -39,12 +47,8 @@ class Router implements RouterInterface
         if ($request) {
             $urls = [];
             foreach (static::$urlNames as $name) {
-                $urls[$name] = RouteContext::fromRequest($request)
-                ->getRouteParser()
-                ->fullUrlFor(
-                    $request->getUri(),
-                    $name
-                );
+                $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
+                $urls[$name] = $this->settings->get('siteUrl') . $dir;
             }
             static::$router = $urls;
         }
@@ -77,9 +81,8 @@ class Router implements RouterInterface
      */
     public function redirect($name, Request $request, Response $response, int $statusCode = 301):Response
     {
-        $router = RouteContext::fromRequest($request)
-            ->getRouteParser()
-            ->fullUrlFor($request->getUri(), $name);
+        $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
+        $router = $this->settings->get('siteUrl') . $dir;
         return $response->withHeader('Location', $router)->withStatus($statusCode);
     }
 }
