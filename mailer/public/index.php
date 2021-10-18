@@ -40,16 +40,6 @@ declare(strict_types=1);
 //require_once __DIR__ . '/../../../../wp-load.php';
 
 /**
- * サブディレクトリに設置: BASE_URL_PATH
- * 
- * このPHPファイルを置いているディレクトリまでのパスを、
- * 公開URLのルートからのパスで指定してください。
- * 例）https://example.com/path/to/mailer-alias/ なら '/path/to/mailer-alias'
- */
-// 任意のディレクトリ名
-//define('BASE_URL_PATH', '/mailer-alias');
-
-/**
  * 任意なファイル名
  * 
  * Mailerプログラムを公開ディレクトリ以外（httpでアクセスできない場所）に設置、
