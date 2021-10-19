@@ -5,12 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{__SITE_TITLE}} - {% if Debug %}Hello World!{% else %}Hello... !{% endif %}</title>
+    <title>{{SITE_TITLE}} - {% if Debug %}Hello World!{% else %}Hello...!!{% endif %}</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
   <body class="bg-light">
     {% if Debug %}
+    {% include '/utils/flash-message.twig' %}
 
     <div class="container my-5" style="max-width: 700px">
       <div class="row">
@@ -107,7 +108,7 @@
       <div class="container" style="max-width: 700px">
         <div class="row">
           <div class="col">
-            <h1 class="text-center fw-lighter">Hello... !</h1>
+            <h1 class="text-center fw-lighter">Hello...!!</h1>
           </div>
         </div>
       </div>
