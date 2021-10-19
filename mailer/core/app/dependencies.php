@@ -71,8 +71,8 @@ return function (ContainerBuilder $containerBuilder) {
             $twig->getEnvironment()->addGlobal('Flash', $c->get(Messages::class));
 
             // Globalにサイト情報を設定.
-            $twig->getEnvironment()->addGlobal('__SITE_TITLE', $settings->get('siteTitle'));
-            $twig->getEnvironment()->addGlobal('__SITE_URL', $settings->get('siteUrl'));
+            $twig->getEnvironment()->addGlobal('SITE_TITLE', $settings->get('siteTitle'));
+            $twig->getEnvironment()->addGlobal('SITE_URL', $settings->get('siteUrl'));
             return $twig;
         },
 

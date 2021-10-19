@@ -5,6 +5,10 @@
  #  {% include '/assets/bootstrap.min.css.twig' %}  Bootstrap Style のURL
  #  {% include '/assets/bootstrap.min.js.twig' %}   Bootstrap JavaScript のURL
  #
+ # Twig定数
+ #  {{SITE_TITLE}}  サイトタイトル
+ #  {{SITE_URL}}    サイトURL
+ #
  # Twig変数
  #  {{Message}}  システムが拒否した内容のテキスト
  #}
@@ -14,7 +18,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{__SITE_TITLE}} - 無効なリクエスト</title>
+    <title>{{SITE_TITLE}} - 無効なリクエスト</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>

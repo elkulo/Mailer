@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Dashboard;
 
+use Slim\Csrf\Guard;
+use Slim\Flash\Messages;
 use App\Domain\Dashboard\DashboardRepository;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Router\RouterInterface;
-use Slim\Csrf\Guard;
+use App\Application\Handlers\Validate\ValidateHandlerInterface;
 
 class InMemoryDashboardRepository implements DashboardRepository
 {
@@ -30,6 +32,13 @@ class InMemoryDashboardRepository implements DashboardRepository
     protected $router;
 
     /**
+     * 検証ハンドラー
+     *
+     * @var ValidateHandlerInterface
+     */
+    private $validate;
+
+    /**
      * CSRF対策
      *
      * @var Guard
@@ -37,20 +46,42 @@ class InMemoryDashboardRepository implements DashboardRepository
     protected $csrf;
 
     /**
+     * フラッシュメッセージ
+     *
+     * @var Messages
+     */
+    private $flash;
+
+    /**
      * InMemoryDashboardRepository constructor.
      *
      * @param SettingsInterface $settings
      * @param RouterInterface $router
+     * @param ValidateHandlerInterface $validate
      * @param Guard $csrf
+     * @param Messages $messages
      */
     public function __construct(
         SettingsInterface $settings,
         RouterInterface $router,
-        Guard $csrf
+        ValidateHandlerInterface $validate,
+        Guard $csrf,
+        Messages $messages
     ) {
+        // 設定
         $this->settings = $settings;
+
+        // ルーター
         $this->router = $router;
+
+        // バリデーションアクションをセット
+        $this->validate = $validate;
+
+        // CSRF
         $this->csrf = $csrf;
+
+        // フラッシュメッセージ
+        $this->flash = $messages;
     }
 
     /**
@@ -60,6 +91,23 @@ class InMemoryDashboardRepository implements DashboardRepository
      */
     public function index(): array
     {
+        $mailSettings = $this->settings->get('mail');
+        $to = (array) $mailSettings['ADMIN_MAIL'];
+        $cc = $mailSettings['ADMIN_CC']? explode(',', $mailSettings['ADMIN_CC']) : [];
+        $bcc = $mailSettings['ADMIN_BCC']? explode(',', $mailSettings['ADMIN_BCC']) : [];
+
+        try {
+            // 環境設定のメールアドレスの形式に不備があれば警告.
+            foreach (array_merge($to, $cc, $bcc) as $mailaddress) {
+                if (!$this->validate->isCheckMailFormat($mailaddress)) {
+                    throw new \Exception('環境設定のメールアドレスに不備があります。設定を見直してください。');
+                }
+            }
+        } catch (\Exception $e) {
+            $this->flash->clearMessages();
+            $this->flash->addMessageNow('danger', $e->getMessage());
+        }
+
         return [
             'template' => 'index.twig',
             'data' => [

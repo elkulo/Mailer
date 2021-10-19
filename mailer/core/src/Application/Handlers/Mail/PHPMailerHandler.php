@@ -141,9 +141,9 @@ class PHPMailerHandler implements MailHandlerInterface
      */
     private function addMailHeader(PHPMailer $phpmailer, array $headers): void
     {
-        $cc       = array();
-        $bcc      = array();
-        $replyTo = array();
+        $cc      = [];
+        $bcc     = [];
+        $replyTo = [];
 
         // タイプ別の配列へ.
         foreach ((array) $headers as $header) {

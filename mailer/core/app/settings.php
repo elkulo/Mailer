@@ -53,7 +53,7 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
 
     // Should be set to true in production
-    if (isset($site['DEBUG']) ? ! $site['DEBUG'] : false) {
+    if (false) {
         $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
     }
 };
