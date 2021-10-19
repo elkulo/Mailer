@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Application\Handlers\DB;
 
 use App\Application\Settings\SettingsInterface;
+use App\Application\Router\RouterInterface;
 use Psr\Log\LoggerInterface;
 use Illuminate\Database\Capsule\Manager;
 
@@ -17,6 +18,11 @@ use Illuminate\Database\Capsule\Manager;
  */
 class MySQLHandler implements DBHandlerInterface
 {
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @var LoggerInterface
@@ -48,12 +54,14 @@ class MySQLHandler implements DBHandlerInterface
      * DBを作成
      *
      * @param  SettingsInterface $settings
+     * @param  RouterInterface $router
      * @param  LoggerInterface $logger
      * @return void
      */
-    public function __construct(SettingsInterface $settings, LoggerInterface $logger)
+    public function __construct(SettingsInterface $settings, RouterInterface $router, LoggerInterface $logger)
     {
         try {
+            $this->router = $router;
             $this->logger = $logger;
 
             $this->databaseSettings = $settings->get('database');
@@ -201,7 +209,7 @@ class MySQLHandler implements DBHandlerInterface
                 '_date' => date('Y/m/d (D) H:i:s', time()),
                 '_ip' => $_SERVER['REMOTE_ADDR'],
                 '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-                '_url' => '',
+                '_url' => $this->router->getUrl('health-check'),
             )
         );
     }
