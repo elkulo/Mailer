@@ -31,6 +31,11 @@ if (is_readable(rtrim(ENV_DIR_PATH, '/') . '/.env')) {
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 
+// Should be set to true in production
+if (false) {
+  $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
+}
+
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
