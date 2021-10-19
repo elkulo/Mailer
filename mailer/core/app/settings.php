@@ -38,16 +38,15 @@ return function (ContainerBuilder $containerBuilder) {
                 ],
                 'twig' => [
                     'debug' => isset($site['DEBUG']) ? $site['DEBUG'] === 'true' : false,
-                    'strict_variables' => true,
+                    'auto_reload' => isset($site['DEBUG']) ? $site['DEBUG'] === 'true' : false,
+                    'strict_variables' => isset($site['DEBUG']) ? $site['DEBUG'] === 'true' : false,
                     //'cache' => __DIR__ . '/../var/cache/twig',
                     'cache' => false,
-                    'auto_reload' => true
                 ],
                 'database' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/database.php',
                 'form' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/form.php',
                 'mail' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/mail.php',
                 'validate' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/validate.php',
-                'test' => DI\get('db.host')
             ]);
         }
     ]);
