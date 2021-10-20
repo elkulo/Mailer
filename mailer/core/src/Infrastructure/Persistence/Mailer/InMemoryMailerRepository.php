@@ -205,6 +205,11 @@ class InMemoryMailerRepository implements MailerRepository
                 throw new \Exception('メールプログラムは停止しています。');
             }
 
+            // リファラチェック
+            if (!$this->validate->isCheckReferer()) {
+                throw new \Exception('指定のページ以外から送信されています。');
+            }
+
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
                 throw new \Exception('バリデーションエラー', 400);
@@ -275,6 +280,11 @@ class InMemoryMailerRepository implements MailerRepository
             // 管理者メールチェック
             if (!$this->validate->isCheckMailFormat($adminEmail)) {
                 throw new \Exception('メールプログラムは停止しています。');
+            }
+
+            // リファラチェック
+            if (!$this->validate->isCheckReferer()) {
+                throw new \Exception('指定のページ以外から送信されています。');
             }
 
             // 重複投稿をチェック

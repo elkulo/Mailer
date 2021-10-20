@@ -75,7 +75,7 @@ class MailerPostData
         foreach ($posts as $name => $value) {
             // アンダースコアは除外.
             if (substr($name, 0, 1) !== '_') {
-                $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
+                $sanitized[$name] = $this->kses($value);
             }
 
             // フォームの設置ページを保存.
@@ -83,7 +83,7 @@ class MailerPostData
                 $this->setPageReferer($value);
             }
         }
-        $this->postData = $sanitized;
+        $this->postData = $this->esc($sanitized);
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
@@ -131,30 +131,10 @@ class MailerPostData
             // 全角を半角へ変換.
             $output = $this->changeHankaku($output, $name);
 
-            // アンダースコアで始まる文字は除外.
-            if (substr($name, 0, 1) !== '_') {
-                $response .= $this->nameToLabel($name) . ': ' . $output . PHP_EOL;
-            }
+            // 結合.
+            $response .= $this->nameToLabel($name) . ': ' . $output . PHP_EOL;
         }
-        return $this->kses($response);
-    }
-
-    /**
-     * Twigテンプレート用に{{name属性}}で置換.
-     *
-     * @return array
-     */
-    public function getPostToTwig(): array
-    {
-        $post_data = $this->postData;
-        $posts = array();
-        foreach ($post_data as $key => $value) {
-            // アンダースコアは除外.
-            if (substr($key, 0, 1) !== '_') {
-                $posts[$key] = $value;
-            }
-        }
-        return $posts;
+        return $this->esc($response);
     }
 
     /**
@@ -193,7 +173,7 @@ class MailerPostData
                 $subject = $value;
             }
         }
-        return str_replace(PHP_EOL, '', $this->kses($before . $subject . $after));
+        return str_replace(PHP_EOL, '', $this->esc($before . $subject . $after));
     }
 
     /**
@@ -203,14 +183,6 @@ class MailerPostData
      */
     public function getMailBody(): array
     {
-        $posts = [];
-        foreach ($this->postData as $key => $value) {
-            // アンダースコアは除外.
-            if (substr($key, 0, 1) !== '_') {
-                $posts[$key] = $value;
-            }
-        }
-
         // クライアント情報の置換.
         $value = array(
             '__FROM_NAME' => $this->mailSettings['FROM_NAME'],
@@ -221,7 +193,7 @@ class MailerPostData
             '__URL' => $this->getPageReferer(),
         );
 
-        return array_merge($posts, $value);
+        return array_merge($this->postData, $value);
     }
 
     /**
@@ -319,10 +291,10 @@ class MailerPostData
             $query[]= [
                 'name' => $this->nameToLabel($name) . sprintf(
                     '<input type="hidden" name="%1$s" value="%2$s" />',
-                    $this->kses($name),
-                    $this->kses($output)
+                    $this->esc($name),
+                    $this->esc($output)
                 ),
-                'value' => nl2br($this->kses($output))
+                'value' => nl2br($this->esc($output))
             ];
         }
         return $query;
@@ -335,7 +307,7 @@ class MailerPostData
      */
     public function getReturnURL(): string
     {
-        return $this->kses($this->formSettings['RETURN_PAGE']);
+        return $this->esc($this->formSettings['RETURN_PAGE']);
     }
 
 
@@ -372,7 +344,7 @@ class MailerPostData
      */
     public function setPageReferer($value): void
     {
-        $this->pageReferer = $this->kses($value);
+        $this->pageReferer = $this->esc($value);
     }
 
     /**
@@ -383,7 +355,7 @@ class MailerPostData
     public function getPageReferer(): string
     {
         if (! $this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
-            return $this->kses($_SERVER['HTTP_REFERER']);
+            return $this->esc($_SERVER['HTTP_REFERER']);
         }
         return $this->pageReferer;
     }
@@ -396,7 +368,7 @@ class MailerPostData
      */
     public function nameToLabel(string $name): string
     {
-        $label = $this->kses($name);
+        $label = $this->esc($name);
         if (isset($this->formSettings['NAME_FOR_LABELS'][$label])) {
             $label = $this->formSettings['NAME_FOR_LABELS'][$label];
         }
@@ -456,15 +428,34 @@ class MailerPostData
      * @param  string $encode
      * @return mixed
      */
-    public function kses($content, string $encode = 'UTF-8')
+    private function esc($content, string $encode = 'UTF-8')
     {
-        $sanitized = array();
+        $sanitized = [];
         if (is_array($content)) {
             foreach ($content as $key => $value) {
                 $sanitized[$key] = trim(htmlspecialchars($value, ENT_QUOTES, $encode));
             }
         } else {
             return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
+        }
+        return $sanitized;
+    }
+
+    /**
+     * 除去
+     *
+     * @param  mixed $content
+     * @return mixed
+     */
+    private function kses($content)
+    {
+        $sanitized = [];
+        if (is_array($content)) {
+            foreach ($content as $key => $value) {
+                $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
+            }
+        } else {
+            return trim(strip_tags(str_replace("\0", '', $content)));
         }
         return $sanitized;
     }

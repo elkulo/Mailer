@@ -193,6 +193,11 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                 }
             }
 
+            // リファラチェック
+            if (!$this->validate->isCheckReferer()) {
+                throw new \Exception('指定のページ以外から送信されています。');
+            }
+
             // 管理者メールの比較
             if ($this->validate->isCheckMailFormat($postEmail) && $postEmail === $mailSettings['ADMIN_MAIL']) {
                 // パスコードの送信
