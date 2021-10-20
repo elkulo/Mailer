@@ -275,11 +275,13 @@ class ValidateHandler implements ValidateHandlerInterface
                         if (!$response->isSuccess()) {
                             throw new \Exception($response->getErrorCodes()[0]);
                         }
+                    } else {
+                        throw new \Exception('不明なアクセス');
                     }
+                    return true;
                 } catch (\Exception $e) {
                     return false;
                 }
-                return true;
             });
             $this->validate->rule('HumanValidator', '_recaptcha-response')->message('ロボットによる投稿は受け付けていません。');
             $this->validate->rule('required', ['_recaptcha-response', '_recaptcha-action'])->message('');

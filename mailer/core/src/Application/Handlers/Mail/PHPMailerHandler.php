@@ -58,75 +58,74 @@ class PHPMailerHandler implements MailHandlerInterface
         $mailSettings = $this->mailSettings;
         $formSettings = $this->formSettings;
 
-        // SMTP認証.
-        $mailer = new PHPMailer;
-        $mailer->isSMTP();
-        $mailer->Host = $mailSettings['SMTP_HOST'];
-        $mailer->Port = $mailSettings['SMTP_PORT'];
-
-        // メーラー名を変更.
-        $mailer->XMailer = 'PHPMailer';
-
-        if (isset($mailSettings['SMTP_USERNAME'], $mailSettings['SMTP_PASSWORD'])) {
-            $mailer->SMTPAuth = true;
-            $mailer->Username = $mailSettings['SMTP_USERNAME'];
-            $mailer->Password = $mailSettings['SMTP_PASSWORD'];
-        } else {
-            $mailer->SMTPAuth = false;
-        }
-
-        if (isset($mailSettings['SMTP_ENCRYPT'])) {
-            $mailer->SMTPSecure = $mailSettings['SMTP_ENCRYPT'];
-            $mailer->SMTPAutoTLS = true;
-        } else {
-            $mailer->SMTPSecure  = false;
-            $mailer->SMTPAutoTLS = false;
-        }
-
-        // HTMLメール or Plainメール
-        $mailer->isHTML($formSettings['IS_HTMLMAIL_TEMPLATE'] ? true : false);
-
-        // エンコード.
-        $mailer->CharSet = 'ISO-2022-JP';
-        $mailer->Encoding = 'base64';
-        $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
-        $fromName = mb_encode_mimeheader($mailSettings['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
-        $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
-
-        // 配信元.
-        $mailer->setFrom($mailSettings['SMTP_MAILADDRESS'], $fromName);
-
-        // 送信メール.
-        $mailer->Subject = $subject;
-        $mailer->Body = $body;
-
-        // メールヘッダ.
-        $mailer->addAddress($to);
-
-        // 追加のメールヘッダ.
-        if ($header) {
-            $this->addMailHeader($mailer, $header);
-        }
-
-        // 受信失敗時のリターン先.
-        $mailer->Sender = $mailSettings['SMTP_MAILADDRESS'];
-
-        /**
-         * デバックレベル 0 ~ 2
-         * (0)デバッグを無効にします（これを完全に省略することもできます、0がデフォルト）
-         * (1)クライアントから送信されたメッセージを出力
-         * (2)1に加えて、サーバーから受信した応答
-         * (3)2に加えて、初期接続についての詳細情報 - このレベルはSTARTTLSエラーの診断
-         */
-        // $mailer->SMTPDebug = 1;
-
-        // メール送信の実行.
         try {
-            if ($mailer->send()) {
-                return true;
+            // SMTP認証.
+            $mailer = new PHPMailer;
+            $mailer->isSMTP();
+            $mailer->Host = $mailSettings['SMTP_HOST'];
+            $mailer->Port = $mailSettings['SMTP_PORT'];
+
+            // メーラー名を変更.
+            $mailer->XMailer = 'PHPMailer';
+
+            if (isset($mailSettings['SMTP_USERNAME'], $mailSettings['SMTP_PASSWORD'])) {
+                $mailer->SMTPAuth = true;
+                $mailer->Username = $mailSettings['SMTP_USERNAME'];
+                $mailer->Password = $mailSettings['SMTP_PASSWORD'];
             } else {
+                $mailer->SMTPAuth = false;
+            }
+
+            if (isset($mailSettings['SMTP_ENCRYPT'])) {
+                $mailer->SMTPSecure = $mailSettings['SMTP_ENCRYPT'];
+                $mailer->SMTPAutoTLS = true;
+            } else {
+                $mailer->SMTPSecure  = false;
+                $mailer->SMTPAutoTLS = false;
+            }
+
+            // HTMLメール or Plainメール
+            $mailer->isHTML($formSettings['IS_HTMLMAIL_TEMPLATE'] ? true : false);
+
+            // エンコード.
+            $mailer->CharSet = 'ISO-2022-JP';
+            $mailer->Encoding = 'base64';
+            $subject = mb_encode_mimeheader($subject, 'ISO-2022-JP', 'UTF-8');
+            $fromName = mb_encode_mimeheader($mailSettings['FROM_NAME'], 'ISO-2022-JP', 'UTF-8');
+            $body = mb_convert_encoding($body, 'ISO-2022-JP', 'UTF-8');
+
+            // 配信元.
+            $mailer->setFrom($mailSettings['SMTP_MAILADDRESS'], $fromName);
+
+            // 送信メール.
+            $mailer->Subject = $subject;
+            $mailer->Body = $body;
+
+            // メールヘッダ.
+            $mailer->addAddress($to);
+
+            // 追加のメールヘッダ.
+            if ($header) {
+                $this->addMailHeader($mailer, $header);
+            }
+
+            // 受信失敗時のリターン先.
+            $mailer->Sender = $mailSettings['SMTP_MAILADDRESS'];
+
+            /**
+             * デバックレベル 0 ~ 2
+             * (0)デバッグを無効にします（これを完全に省略することもできます、0がデフォルト）
+             * (1)クライアントから送信されたメッセージを出力
+             * (2)1に加えて、サーバーから受信した応答
+             * (3)2に加えて、初期接続についての詳細情報 - このレベルはSTARTTLSエラーの診断
+             */
+            // $mailer->SMTPDebug = 1;
+
+            // メール送信の実行.
+            if (!$mailer->send()) {
                 throw new Exception('PHPMailer Error');
             }
+            return true;
         } catch (Exception $e) {
             return false;
         }

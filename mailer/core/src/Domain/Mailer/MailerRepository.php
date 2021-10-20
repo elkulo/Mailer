@@ -12,7 +12,7 @@ interface MailerRepository
 {
 
     /**
-     * インデックス
+     * 入力画面
      *
      * @return array
      */
