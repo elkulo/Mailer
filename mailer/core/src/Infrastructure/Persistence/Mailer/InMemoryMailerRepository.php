@@ -129,45 +129,64 @@ class InMemoryMailerRepository implements MailerRepository
         $formSettings = $this->settings->get('form');
 
         // POSTデータ
-        $post_data = $this->postData->getPosts();
+        $postData = $this->postData->getPosts();
 
         // ユーザーメールを形式チェックして格納
-        $email_attr = isset($formSettings['EMAIL_ATTRIBUTE']) ? $formSettings['EMAIL_ATTRIBUTE'] : null;
-        if (isset($post_data[$email_attr])) {
-            if ($this->validate->isCheckMailFormat($post_data[$email_attr])) {
-                $this->postData->setUserMail($post_data[$email_attr]);
+        $emailAttr = isset($formSettings['EMAIL_ATTRIBUTE']) ? $formSettings['EMAIL_ATTRIBUTE'] : null;
+        if (isset($postData[$emailAttr])) {
+            if ($this->validate->isCheckMailFormat($postData[$emailAttr])) {
+                $this->postData->setUserMail($postData[$emailAttr]);
             }
         }
     }
 
     /**
-     * インデックス
+     * 入力画面
      *
      * @return array
      */
     public function index(): array
     {
-        $has_confirm = empty($this->settings->get('form')['IS_CONFIRM_SKIP'])? 'mailer.confirm' : 'mailer.complete';
+        $formSettings = $this->settings->get('form');
+        $mailSettings = $this->settings->get('mail');
+        $adminEmail = isset($mailSettings['ADMIN_MAIL'])? $mailSettings['ADMIN_MAIL']: '';
 
-        return [
-            'template' => 'index.twig',
-            'data' => [
-                'CSRF'   => sprintf(
-                    '<div style="display:none">
-                        <input type="hidden" name="%1$s" value="%2$s">
-                        <input type="hidden" name="%3$s" value="%4$s">
-                     </div>',
-                    $this->csrf->getTokenNameKey(),
-                    $this->csrf->getTokenName(),
-                    $this->csrf->getTokenValueKey(),
-                    $this->csrf->getTokenValue()
-                ),
-                'reCAPTCHA' => $this->validate->getReCaptchaScript(),
-                'Action' => [
-                    'url' => $this->router->getUrl($has_confirm)
+        try {
+            // 管理者メールチェック
+            if (!$this->validate->isCheckMailFormat($adminEmail)) {
+                throw new \Exception('メールプログラムは停止しています。');
+            }
+
+            // 入力画面を生成.
+            return [
+                'template' => 'index.twig',
+                'data' => [
+                    'CSRF'   => sprintf(
+                        '<div style="display:none">
+                            <input type="hidden" name="%1$s" value="%2$s">
+                            <input type="hidden" name="%3$s" value="%4$s">
+                         </div>',
+                        $this->csrf->getTokenNameKey(),
+                        $this->csrf->getTokenName(),
+                        $this->csrf->getTokenValueKey(),
+                        $this->csrf->getTokenValue()
+                    ),
+                    'reCAPTCHA' => $this->validate->getReCaptchaScript(),
+                    'Action' => [
+                        'url' => $this->router->getUrl(
+                            empty($formSettings['IS_CONFIRM_SKIP'])? 'mailer.confirm' : 'mailer.complete'
+                        )
+                    ],
                 ],
-            ],
-        ];
+            ];
+        } catch (\Exception $e) {
+            return [
+                'template' => 'exception.twig',
+                'data' => [
+                    'Message' => $e->getMessage()
+                ]
+            ];
+        }
     }
 
     /**
@@ -177,60 +196,67 @@ class InMemoryMailerRepository implements MailerRepository
      */
     public function confirm(): array
     {
-        $posts = [];
-        $system = [];
+        $mailSettings = $this->settings->get('mail');
+        $adminEmail = isset($mailSettings['ADMIN_MAIL'])? $mailSettings['ADMIN_MAIL']: '';
 
         try {
+            // 管理者メールチェック
+            if (!$this->validate->isCheckMailFormat($adminEmail)) {
+                throw new \Exception('メールプログラムは停止しています。');
+            }
+
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
-                return [
-                    'template' => 'validate.twig',
-                    'data' => [
-                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors())
-                    ]
-                ];
+                throw new \Exception('バリデーションエラー', 400);
             }
 
             // 固有のメール送信のトークンを生成.
             $this->postData->createMailerToken();
 
-            // 適正な$_POSTを取得.
-            $posts = $this->postData->getPosts();
-
-            $system = [
-                'Posts' => $this->postData->getConfirmQuery(),
-                'CSRF'   => sprintf(
-                    '<div style="display:none">
-                        <input type="hidden" name="%1$s" value="%2$s">
-                        <input type="hidden" name="%3$s" value="%4$s">
-                        <input type="hidden" name="_http_referer" value="%5$s" />
-                     </div>',
-                    $this->csrf->getTokenNameKey(),
-                    $this->csrf->getTokenName(),
-                    $this->csrf->getTokenValueKey(),
-                    $this->csrf->getTokenValue(),
-                    $this->postData->getPageReferer()
+            // 確認画面を生成.
+            return [
+                'template' => 'confirm.twig',
+                'data' => array_merge(
+                    $this->postData->getPosts(),
+                    [
+                        'Posts' => $this->postData->getConfirmQuery(),
+                        'CSRF'   => sprintf(
+                            '<div style="display:none">
+                                <input type="hidden" name="%1$s" value="%2$s">
+                                <input type="hidden" name="%3$s" value="%4$s">
+                                <input type="hidden" name="_http_referer" value="%5$s" />
+                             </div>',
+                            $this->csrf->getTokenNameKey(),
+                            $this->csrf->getTokenName(),
+                            $this->csrf->getTokenValueKey(),
+                            $this->csrf->getTokenValue(),
+                            $this->postData->getPageReferer()
+                        ),
+                        'reCAPTCHA' => $this->validate->getReCaptchaScript(),
+                        'Action' => [
+                            'url' => $this->router->getUrl('mailer.complete')
+                        ],
+                    ]
                 ),
-                'reCAPTCHA' => $this->validate->getReCaptchaScript(),
-                'Action' => [
-                    'url' => $this->router->getUrl('mailer.complete')
-                ],
             ];
         } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            return [
-                'template' => 'exception.twig',
-                'data' => [
-                    'Message' => $e->getMessage()
-                ]
-            ];
+            if ($e->getCode() === 400) {
+                return [
+                    'template' => 'validate.twig',
+                    'data' => [
+                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                    ]
+                ];
+            } else {
+                $this->logger->error($e->getMessage());
+                return [
+                    'template' => 'exception.twig',
+                    'data' => [
+                        'Message' => $e->getMessage()
+                    ]
+                ];
+            }
         }
-
-        // 確認画面を生成.
-        return [
-            'template' => 'confirm.twig',
-            'data' => array_merge($posts, $system)
-        ];
     }
 
     /**
@@ -242,45 +268,39 @@ class InMemoryMailerRepository implements MailerRepository
     {
         $mailSettings = $this->settings->get('mail');
         $formSettings = $this->settings->get('form');
-        $router = [];
-        $posts = [];
-        $mailBody = [];
         $success = ['admin' => false, 'user' => false];
+        $adminEmail = isset($mailSettings['ADMIN_MAIL'])? $mailSettings['ADMIN_MAIL']: '';
 
         try {
+            // 管理者メールチェック
+            if (!$this->validate->isCheckMailFormat($adminEmail)) {
+                throw new \Exception('メールプログラムは停止しています。');
+            }
+
             // 重複投稿をチェック
-            if ($formSettings['IS_CONFIRM_SKIP']) {
-                // 確認画面スキップの場合はCSRFトークンを削除
-                $csrfName = $this->csrf->getTokenName();
-                $this->csrf->removeTokenFromStorage($csrfName);
-            } else {
+            if (empty($formSettings['IS_CONFIRM_SKIP'])) {
                 // 確認画面経由の場合は固有のメールの送信トークンを削除
                 $this->postData->checkinMailerToken();
+            } else {
+                // 確認画面スキップの場合はCSRFトークンを削除
+                $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
             }
 
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
-                return [
-                    'template' => 'validate.twig',
-                    'data' => [
-                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors())
-                    ]
-                ];
+                throw new \Exception('バリデーションエラー', 400);
             }
-
-            // Twigテンプレート用に{{name属性}}で置換.
-            $posts = $this->postData->getPosts();
-
-            // メールボディを取得
-            $mailBody = $this->postData->getMailBody();
 
             // 管理者宛に届くメールをセット
             $success['admin'] = $this->mail->send(
                 $mailSettings['ADMIN_MAIL'],
                 $this->postData->getMailSubject(),
-                $this->postData->renderAdminMail($mailBody),
+                $this->postData->renderAdminMail($this->postData->getMailBody()),
                 $this->postData->getMailAdminHeader()
             );
+            if (! $success['admin']) {
+                throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
+            }
 
             // ユーザーに届くメールをセット
             if (!empty($formSettings['IS_REPLY_USERMAIL'])) {
@@ -288,7 +308,7 @@ class InMemoryMailerRepository implements MailerRepository
                     $success['user'] = $this->mail->send(
                         $this->postData->getUserMail(),
                         $this->postData->getMailSubject(),
-                        $this->postData->renderUserMail($mailBody)
+                        $this->postData->renderUserMail($this->postData->getMailBody())
                     );
                 }
             }
@@ -307,24 +327,35 @@ class InMemoryMailerRepository implements MailerRepository
                     )
             );
 
-            if (array_search(false, $success)) {
-                throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
-            }
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
+            // 完了画面を生成.
             return [
-                'template' => 'exception.twig',
-                'data' => [
-                    'Message' => $e->getMessage()
-                ]
+                'template' => 'complete.twig',
+                'data' => array_merge(
+                    $this->postData->getPosts(),
+                    [
+                        'Return' => [
+                            'url' => $this->postData->getReturnURL(),
+                        ]
+                    ]
+                ),
             ];
+        } catch (\Exception $e) {
+            if ($e->getCode() === 400) {
+                return [
+                    'template' => 'validate.twig',
+                    'data' => [
+                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                    ]
+                ];
+            } else {
+                $this->logger->error($e->getMessage());
+                return [
+                    'template' => 'exception.twig',
+                    'data' => [
+                        'Message' => $e->getMessage()
+                    ]
+                ];
+            }
         }
-
-        // 完了画面を生成.
-        $router['url'] = $this->postData->getReturnURL();
-        return [
-            'template' => 'complete.twig',
-            'data' => array_merge($posts, ['Return' => $router])
-        ];
     }
 }

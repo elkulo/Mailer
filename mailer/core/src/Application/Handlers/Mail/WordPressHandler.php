@@ -26,16 +26,15 @@ class WordPressHandler implements MailHandlerInterface
     final public function send(string $to, string $subject, string $body, array $header = array()): bool
     {
         try {
+            // WordPress関数で送信.
             if (function_exists('wp_mail')) {
-                // WordPress関数で送信
-                if (\wp_mail($to, $subject, $body, $header)) {
-                    return true;
-                } else {
+                if (! \wp_mail($to, $subject, $body, $header)) {
                     throw new \Exception('Error wp_mail.');
                 }
             } else {
                 throw new \Exception('Error wp_mail.');
             }
+            return true;
         } catch (\Exception $e) {
             return false;
         }

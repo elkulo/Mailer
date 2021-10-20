@@ -189,9 +189,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             // 環境設定のメールアドレスの形式に不備がある場合は処理を中止.
             foreach (array_merge($to, $cc, $bcc) as $mailaddress) {
                 if (!$this->validate->isCheckMailFormat($mailaddress)) {
-                    return [
-                        'redirect' => $this->router->getUrl('health-check')
-                    ];
+                    throw new \Exception('環境設定のメールアドレスに不備があります。設定を見直してください。');
                 }
             }
 
@@ -260,13 +258,18 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $passcode = null;
 
         try {
-            // パスコードの比較
+            // セッションからパスコードを取得して削除.
             $passcode = isset($_SESSION['healthCheckPasscode']) ? $_SESSION['healthCheckPasscode'] : null;
+            if (isset($_SESSION['healthCheckPasscode'])) {
+                unset($_SESSION['healthCheckPasscode']);
+            }
 
+            // パスコードの結合.
             for ($i = 1; $i <= 6; $i++) {
                 $postPasscode[] = isset($posts['passcode-' . $i])? $posts['passcode-' . $i]: null;
             }
 
+            // パスコードの比較.
             if (implode('', $postPasscode) === $passcode) {
                 $resultList = [
                     1 => [
@@ -310,11 +313,6 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                 }
             } else {
                 throw new \Exception('確認コードが一致しませんでした。入力内容を確認の上、再度お試しください。');
-            }
-
-            // セッションを削除
-            if (isset($_SESSION['healthCheckPasscode'])) {
-                unset($_SESSION['healthCheckPasscode']);
             }
         } catch (\Exception $e) {
             $this->flash->addMessage('warning', $e->getMessage());
