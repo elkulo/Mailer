@@ -31,10 +31,10 @@ declare(strict_types=1);
  *
  * !! WordPress と連携する場合のみ書き換える !!
  *
- * wp-load.php を読み込むことでWordPressの関数が使用可能。
- * envで MAILER_DRIVER='WordPress' に切り替えでメール送信を wp_mail() にする。
- * そのため、WordPressのSMTP等のプラグインとも連携ができます。
- * WordPressの設定を使用する場合はwp-load.phpをインクルードさせるとWP関数も使用可能。
+ * wp-load.php を読み込むことでWordPressの関数が使用できます。
+ * settings 内の各設定ファイルをWP関数で置き換えると良いでしょう。
+ * さらに、envで MAILER_DRIVER='WordPress' に切り替えでメール送信は wp_mail() 関数を使用します。
+ * 本プログラムのSMTP機能は無視されますが、WordPress側でSMTP等のプラグインと連携ができます。
  */
 // WordPressがインストールされているディレクトリの wp-load.php を指定
 //require_once __DIR__ . '/../../../../wp-load.php';
@@ -44,7 +44,7 @@ declare(strict_types=1);
  * 
  * このPHPファイルを置いているディレクトリまでのパスを、
  * 公開URLのルートからのパスで指定してください。
- * 例）https://example.com/path/to/mailer-alias/ なら '/path/to/mailer-alias'
+ * 例）https://example.com/path/to/mailer-alias/ なら "/path/to/mailer-alias"
  */
 // 任意のディレクトリ名
 //define('BASE_URL_PATH', '/mailer-alias');
@@ -53,8 +53,7 @@ declare(strict_types=1);
  * 任意なファイル名
  * 
  * Mailerプログラムを公開ディレクトリ以外（httpでアクセスできない場所）に設置、
- * /mailer/bootstrap.php を require_once で読み込めば、任意のディレクトリやファイル名で実行できます。
- * <form action="..."> のactionに読み込みさせたファイルを指定する。
+ * 本プログラム直下の bootstrap.php ファイルを require_once で読み込めば、任意のディレクトリやファイル名で実行ができます。
  */
 // Mailerプログラムの bootstrap.php を指定
 require_once __DIR__ . '/../bootstrap.php';

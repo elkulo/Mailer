@@ -14,10 +14,10 @@ interface ValidateHandlerInterface
     /**
      * POSTデータをセット
      *
-     * @param  array $post_data
+     * @param  array $posts
      * @return void
      */
-    public function set(array $post_data): void;
+    public function set(array $posts): void;
 
     /**
      * バリデーションチェック
