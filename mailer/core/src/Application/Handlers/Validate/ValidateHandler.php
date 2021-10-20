@@ -201,7 +201,10 @@ class ValidateHandler implements ValidateHandlerInterface
                 }
                 return true;
             });
-            $this->validate->rule('BlockNGValidator', '*')->message('禁止ワードが含まれているため送信できません。');
+            $this->validate->rule(
+                'BlockNGValidator',
+                $this->formSettings['WORDFILTER_ATTRIBUTE']
+            )->message('禁止ワードが含まれているため送信できません。');
         }
     }
 
@@ -246,6 +249,23 @@ class ValidateHandler implements ValidateHandlerInterface
         return $validator->isValid(trim($value), $multipleValidations); //true
     }
 
+    /**
+     * リファラチェック
+     *
+     * @return bool
+     */
+    public function isCheckReferer(): bool
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            if (strpos($_SERVER['HTTP_REFERER'], $this->settings->get('siteUrl')) === false) {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * BOT判定
      *

@@ -41,11 +41,7 @@ class HealthCheckPostData
         $app_path = $settings->get('appPath');
 
         // POSTデータから取得したデータを整形
-        $sanitized = [];
-        foreach ($posts as $name => $value) {
-            $sanitized[$name] = trim(strip_tags(str_replace("\0", '', $value)));
-        }
-        $this->postData = $this->kses($sanitized);
+        $this->postData = $this->esc($this->kses($posts));
 
         // Twigの初期化
         $this->view = new TwigEnvironment(
@@ -72,7 +68,7 @@ class HealthCheckPostData
      */
     public function getMailSubject(): string
     {
-        return str_replace(PHP_EOL, '', $this->kses('HEALTH CHECKの確認コード'));
+        return str_replace(PHP_EOL, '', $this->esc('HEALTH CHECKの確認コード'));
     }
 
     /**
@@ -93,7 +89,7 @@ class HealthCheckPostData
      * @param  string $encode
      * @return mixed
      */
-    public function kses($content, string $encode = 'UTF-8')
+    private function esc($content, string $encode = 'UTF-8')
     {
         $sanitized = array();
         if (is_array($content)) {
@@ -102,6 +98,25 @@ class HealthCheckPostData
             }
         } else {
             return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
+        }
+        return $sanitized;
+    }
+
+    /**
+     * 除去
+     *
+     * @param  mixed $content
+     * @return mixed
+     */
+    private function kses($content)
+    {
+        $sanitized = [];
+        if (is_array($content)) {
+            foreach ($content as $key => $value) {
+                $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
+            }
+        } else {
+            return trim(strip_tags(str_replace("\0", '', $content)));
         }
         return $sanitized;
     }

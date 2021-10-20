@@ -84,6 +84,13 @@ interface ValidateHandlerInterface
     public function isCheckMailFormat(string $value): bool;
 
     /**
+     * リファラチェック
+     *
+     * @return bool
+     */
+    public function isCheckReferer(): bool;
+
+    /**
      * BOT判定
      *
      * @return void

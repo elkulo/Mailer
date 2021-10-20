@@ -68,7 +68,7 @@ return [
     'MULTIBYTE_ATTRIBUTE' => 'requestContent',
 
     // (12)禁止ワードを含む文章をブロック
-    'WORD_FILTER_ATTRIBUTE' => 'requestContent',
+    'WORDFILTER_ATTRIBUTE' => 'requestContent',
 
     // (13)禁止ワードのリスト
     // 単語は半角全角を別々の単語と認識します。
