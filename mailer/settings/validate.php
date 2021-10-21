@@ -11,6 +11,9 @@ return [
   // Google reCAPTCHAのシークレットキー
   'RECAPTCHA_SECRETKEY' => env('RECAPTCHA_SECRETKEY'),
 
+  // 必須項目が未記入時のメッセージ。{field}でラベル名に置き換える
+  'MESSAGE_REQUIRED_FIELD' => '{field}を入力してください。',
+
   // 不正なメールアドレス形式での投稿時のメッセージ
   'MESSAGE_EMAIL_FORMAT' => 'メールアドレスの形式が正しくありません。',
 

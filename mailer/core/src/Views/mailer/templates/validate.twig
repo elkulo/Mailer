@@ -10,7 +10,7 @@
  #  {{SITE_URL}}    サイトURL
  #
  # Twig変数
- #  {% for message in Messages %}  検証されたエラー内容の配列
+ #  {% for message in Errors %}  検証されたエラー内容の配列
  #   |- {{message}}     検証結果のエラー内容のメッセージ
  #}
 <!DOCTYPE html>
@@ -30,7 +30,7 @@
           <h1 class="h4">入力内容の検証</h1>
           <p class="text-muted" style="font-size:0.875rem">下記をご確認の上、内容の修正をお願いいたします。</p>
           <div class="px-3 pt-4 pb-2 text-sm-center text-danger border-top border-bottom border-danger" style="font-size:0.875rem">
-            {% for message in Messages %}
+            {% for message in Errors %}
               <p>{{ message }}</p>
             {% endfor %}
           </div>

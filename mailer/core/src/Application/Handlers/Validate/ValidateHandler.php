@@ -141,7 +141,10 @@ class ValidateHandler implements ValidateHandlerInterface
     public function checkinRequired(): void
     {
         if (isset($this->formSettings['REQUIRED_ATTRIBUTES'])) {
-            $this->validate->rule('required', $this->formSettings['REQUIRED_ATTRIBUTES']);
+            $this->validate->rule(
+                'required',
+                $this->formSettings['REQUIRED_ATTRIBUTES']
+            )->message($this->validateSettings['MESSAGE_REQUIRED_FIELD']);
         }
     }
 
@@ -326,16 +329,13 @@ class ValidateHandler implements ValidateHandlerInterface
                     '<script src="https://www.google.com/recaptcha/api.js?render=%1$s"></script>
                      <script src="%2$s"></script>',
                     trim(htmlspecialchars($key, ENT_QUOTES, 'UTF-8')),
-                    htmlspecialchars($this->router->getUrl('recaptcha.min.js'))
+                    $this->router->getUrl('recaptcha.min.js')
                 ),
             ];
         } else {
             return [
                 'key' => '',
-                'script' => sprintf(
-                    '<script src="%1$s"></script>',
-                    htmlspecialchars($this->router->getUrl('recaptcha.min.js'))
-                )
+                'script' => '',
             ];
         }
     }

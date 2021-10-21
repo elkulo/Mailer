@@ -183,7 +183,7 @@ class InMemoryMailerRepository implements MailerRepository
             return [
                 'template' => 'exception.twig',
                 'data' => [
-                    'Message' => $e->getMessage()
+                    'ExceptionMessage' => $e->getMessage()
                 ]
             ];
         }
@@ -249,7 +249,7 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'validate.twig',
                     'data' => [
-                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                        'Errors' => array_map(fn($n) => $n[0], $this->validate->errors()),
                     ]
                 ];
             } else {
@@ -257,7 +257,7 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'exception.twig',
                     'data' => [
-                        'Message' => $e->getMessage()
+                        'ExceptionMessage' => $e->getMessage()
                     ]
                 ];
             }
@@ -355,7 +355,7 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'validate.twig',
                     'data' => [
-                        'Messages' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                        'Errors' => array_map(fn($n) => $n[0], $this->validate->errors()),
                     ]
                 ];
             } else {
@@ -363,7 +363,7 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'exception.twig',
                     'data' => [
-                        'Message' => $e->getMessage()
+                        'ExceptionMessage' => $e->getMessage()
                     ]
                 ];
             }
