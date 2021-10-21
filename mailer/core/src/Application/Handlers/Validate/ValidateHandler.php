@@ -159,7 +159,7 @@ class ValidateHandler implements ValidateHandlerInterface
             $this->validate->rule(
                 'EmailValidator',
                 $this->formSettings['EMAIL_ATTRIBUTE']
-            )->message('メールアドレスの形式が正しくありません。');
+            )->message($this->validateSettings['MESSAGE_EMAIL_FORMAT']);
         }
     }
 
@@ -180,7 +180,7 @@ class ValidateHandler implements ValidateHandlerInterface
             $this->validate->rule(
                 'MultibyteValidator',
                 $this->formSettings['MULTIBYTE_ATTRIBUTE']
-            )->message('日本語を含まない文章は送信できません。');
+            )->message($this->validateSettings['MESSAGE_MULTIBYTE_TEXT']);
         }
     }
 
@@ -204,7 +204,7 @@ class ValidateHandler implements ValidateHandlerInterface
             $this->validate->rule(
                 'BlockNGValidator',
                 $this->formSettings['WORDFILTER_ATTRIBUTE']
-            )->message('禁止ワードが含まれているため送信できません。');
+            )->message($this->validateSettings['MESSAGE_FORBIDDEN_WORD']);
         }
     }
 
@@ -228,7 +228,7 @@ class ValidateHandler implements ValidateHandlerInterface
             $this->validate->rule(
                 'BlockDomainValidator',
                 $this->formSettings['EMAIL_ATTRIBUTE']
-            )->message('指定のメールアドレスからの送信はお受けできません。');
+            )->message($this->validateSettings['MESSAGE_FORBIDDEN_EMAIL']);
         }
     }
 
@@ -296,14 +296,16 @@ class ValidateHandler implements ValidateHandlerInterface
                             throw new \Exception($response->getErrorCodes()[0]);
                         }
                     } else {
-                        throw new \Exception('不明なアクセス');
+                        throw new \Exception('Unknown Terminal.');
                     }
                     return true;
                 } catch (\Exception $e) {
                     return false;
                 }
             });
-            $this->validate->rule('HumanValidator', '_recaptcha-response')->message('ロボットによる投稿は受け付けていません。');
+            $this->validate->rule('HumanValidator', '_recaptcha-response')->message(
+                $this->validateSettings['MESSAGE_UNKNOWN_ACCESS']
+            );
             $this->validate->rule('required', ['_recaptcha-response', '_recaptcha-action'])->message('');
         }
     }
