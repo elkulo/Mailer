@@ -309,7 +309,8 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->postData->getMailAdminHeader()
             );
             if (! $success['admin']) {
-                throw new \Exception('メールの送信でエラーが起きました。別の方法でサイト管理者にお問い合わせください。');
+                // SMTPサーバー障害や設定ミスによる送信失敗時の致命的なエラーメッセージ.
+                throw new \Exception($this->settings->get('validate')['MESSAGE_FATAL_ERROR']);
             }
 
             // ユーザーに届くメールをセット
