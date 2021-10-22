@@ -112,6 +112,9 @@
       </form>
     </div>
 
+    {# NOTE: reCAPTCHAのクレジットをインラインで表示する場合 #}
+    {% include '/utils/google-copyright.twig' %}
+
   {# NOTE: reCAPTCHAを使用する場合 #}
   {% if reCAPTCHA.key %}
   {{ reCAPTCHA.script|raw }}
