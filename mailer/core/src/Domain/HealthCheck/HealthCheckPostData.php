@@ -16,6 +16,13 @@ class HealthCheckPostData
 {
 
     /**
+     * 設定値
+     *
+     * @var SettingsInterface
+     */
+    private $settings;
+
+    /**
      * POSTデータ
      *
      * @var array
@@ -38,7 +45,8 @@ class HealthCheckPostData
      */
     public function __construct(array $posts, SettingsInterface $settings)
     {
-        $app_path = $settings->get('appPath');
+        $this->settings = $settings;
+        $appPath = $settings->get('appPath');
 
         // POSTデータから取得したデータを整形
         $this->postData = $this->esc($this->kses($posts));
@@ -46,7 +54,7 @@ class HealthCheckPostData
         // Twigの初期化
         $this->view = new TwigEnvironment(
             new TwigFileLoader([
-                $app_path . '/src/Views/health-check/mail',
+                $appPath . '/src/Views/health-check/mail',
             ])
         );
     }
@@ -62,13 +70,14 @@ class HealthCheckPostData
     }
 
     /**
-     * メール件名（共通）
+     * メール件名
      *
      * @return string
      */
     public function getMailSubject(): string
     {
-        return str_replace(PHP_EOL, '', $this->esc('HEALTH CHECKの確認コード'));
+        $subject = $this->esc('HEALTH CHECKの確認コード - ' . $this->settings->get('siteTitle'));
+        return str_replace(PHP_EOL, '', $subject);
     }
 
     /**

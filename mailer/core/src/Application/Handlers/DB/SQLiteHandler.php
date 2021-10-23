@@ -78,7 +78,7 @@ class SQLiteHandler implements DBHandlerInterface
             $this->router = $router;
             $this->logger = $logger;
 
-            $app_path = $settings->get('appPath');
+            $appPath = $settings->get('appPath');
             $this->databaseSettings = $settings->get('database');
 
             // DBテーブル名
@@ -86,7 +86,7 @@ class SQLiteHandler implements DBHandlerInterface
             $this->tableName = $prefix . 'mailer';
 
             // DBの場所
-            $this->dbDirectory = $app_path . '/../database/';
+            $this->dbDirectory = $appPath . '/../database/';
             $this->sqliteFile = $this->dbDirectory . $this->databaseSettings['DB_NAME'];
 
             // DB設定
