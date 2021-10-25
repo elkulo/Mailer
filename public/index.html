@@ -26,7 +26,7 @@
           <button class="menu-trigger" aria-controls="top-menu" aria-expanded="false">
             <span></span><span></span><span></span>
           </button>
-          <div class="site-description">オープンソースのPHPメールフォーム"CHiDORi"の開発</div>
+          <div class="site-description">Slim Framework 製 PHPメールフォーム"CHiDORi"の開発</div>
           <nav id="site-navigation" class="main-navigation" role="navigation">
             <ul id="top-menu" class="menu">
               <li class="menu__item"><a href="/">HOME</a></li>
@@ -43,8 +43,10 @@
       <div class="custom-header__hero">
         <h2 class="custom-header__hero__title"><small>As Your Partner!</small>CHiDORi</h2>
         <p class="custom-header__hero__description">
-          開発バージョンでは、<span style="display: inline-block;">意図しない不具合が発生する可能性があります。</span><br />
-          開発以外では本番バージョンの<span style="display: inline-block;">最新パッケージをご利用ください。</span>
+          Githubに公開中の開発バージョンでは、<br />
+          意図しない不具合が発生する可能性があります。<br />
+          本番環境では最新パッケージを<br />
+          Publisher Blog からダウンロードしてご利用ください。
         </p>
         <div class="custom-header__hero__button">
           <a href="https://github.com/elkulo/Mailer" target="_blank" class="button">
@@ -66,9 +68,9 @@
           <div class="demo-header">
             <h2 class="demo-header__title">DEMO</h2>
             <div class="demo-header__summary">
-              <p>このメールフォームはお試し用のサンプルです。</p>
+              <p>このメールフォームはお試し用のサンプルです。<br />This mail form is a sample for you.</p>
             </div>
-            <div class="demo-header__description">次の項目にご入力をお願いいたします。</div>
+            <div class="demo-header__description">お問い合わせ</div>
           </div>
 
           <div class="demo-content">
@@ -78,27 +80,25 @@
               <form id="mailer-form" class="needs-validation" method="post" action="./mailer-alias/post" novalidate>
 
                 <div class="mb-3">
-                  <div class="label">件名<span class="validate">必須</span></div>
-                  <div class="form-check form-check-inline">
+                  <div class="form-label">件名<span class="validate">必須</span></div>
+                    <div class="form-check form-check-inline">
                     <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
-                    <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
+                    <label class="form-check-label" for="CustomerSubject1">お問い合わせ</label>
                   </div>
                   <div class="form-check form-check-inline">
                     <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
-                    <label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
+                    <label class="form-check-label" for="CustomerSubject2">仕事のご相談（事業関係者様）</label>
                   </div>
                 </div>
 
                 <div class="mb-3">
                   <label for="CustomerType" class="form-label">種別<span class="validate">必須</span></label>
                   <select name="customerType" id="CustomerType" class="form-select" required>
-                    <option value="見積希望" selected>見積希望</option>
-                    <option value="通信・弱電工事全般">通信・弱電工事全般</option>
-                    <option value="音響・映像機器設置">音響・映像機器設置</option>
-                    <option value="LED照明取付工事">LED照明取付工事</option>
-                    <option value="通信ケーブル各種配線">通信ケーブル各種配線</option>
-                    <option value="各種家電商品販売">各種家電商品販売</option>
-                    <option value="セキュリティ機器取付">セキュリティ機器取付</option>
+                    <option value="Webサイトの制作について" selected>Webサイトの制作について</option>
+                    <option value="チラシ・ポスター等の印刷物の制作について">チラシ・ポスター等の印刷物の制作について</option>
+                    <option value="グラフィックデザインについて">グラフィックデザインについて</option>
+                    <option value="執筆関連について">執筆関連について</option>
+                    <option value="写真撮影について">写真撮影について</option>
                     <option value="その他">その他</option>
                   </select>
                 </div>

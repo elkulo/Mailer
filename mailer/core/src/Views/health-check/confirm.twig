@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="container mb-5" style="max-width: 720px">
+    <div class="container mb-5" style="max-width: 768px">
       <div class="row justify-content-center mb-4">
         <div class="col-8">
           <div class="position-relative m-4">
@@ -41,28 +41,28 @@
               <p class="card-text">{{ SectionDescription }}</p>
               <form action="{{ Action.url }}" method="POST">
                 <div class="row g-2 align-items-center">
-                  <div class="col-3 col-md-auto">
-                    <label for="inputPasscode" class="col-form-label d-block text-end text-secondary" style="font-size:0.875rem">6桁のコード</label>
+                  <div class="col-12 col-sm-3">
+                    <label for="inputPasscode" class="col-form-label d-block text-sm-end text-secondary" style="font-size:0.875rem">6桁のコード</label>
                   </div>
-                  <div class="col-1">
+                  <div class="col-2 col-sm-1">
                     <input type="text" name="passcode-1" id="inputPasscode1" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
-                  <div class="col-1">
+                  <div class="col-2 col-sm-1">
                     <input type="text" name="passcode-2" id="inputPasscode2" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
-                  <div class="col-1">
+                  <div class="col-2 col-sm-1">
                     <input type="text" name="passcode-3" id="inputPasscode3" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
-                  <div class="col-1">
+                  <div class="col-2 col-sm-1">
                     <input type="text" name="passcode-4" id="inputPasscode4" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
-                  <div class="col-1">
+                  <div class="col-2 col-sm-1">
                     <input type="text" name="passcode-5" id="inputPasscode5" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
-                  <div class="col-1">
+                  <div class="col-2 col-sm-1">
                     <input type="text" name="passcode-6" id="inputPasscode6" class="form-control text-center px-0 passcode" placeholder="-" maxlength="1" min="0" max="9" />
                   </div>
-                  <div class="col-3 col-md-auto">
+                  <div class="col-auto col-sm-2">
                     <button type="submit" id="inputPasscodeSubmit" class="btn btn-primary">検証</button>
                   </div>
                 </div>
@@ -83,9 +83,11 @@
     const passcodes = document.querySelectorAll('.passcode');
     if (passcodes[0]) {
       passcodes[0].focus();
-      passcodes.forEach((code, idx) => {
-        code.addEventListener('keydown', (e) => {
-          if ( 0 <= e.key && e.key <= 9 ) {
+      passcodes.forEach((passcodeElement, idx) => {
+
+        // キー入力でinput要素のフォーカス調整.
+        passcodeElement.addEventListener('keydown', (e) => {
+          if ( e.key && 0 <= e.key && e.key <= 9 ) {
             if ( idx < passcodes.length - 1 ) {
               setTimeout(() => passcodes[idx + 1].focus(), 10);
             } else {
@@ -93,9 +95,32 @@
             }
           } else if ( idx && e.key === 'Backspace' ) {
               setTimeout(() => passcodes[idx - 1].focus(), 10);
+          }
+        });
+
+        // フォーカスアウト時に入力文字を検査.
+        passcodeElement.addEventListener('blur', (e) => {
+          let inputValue = passcodes[idx].value || '';
+          inputValue = inputValue.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+          if ( ! isNaN(inputValue) && 0 <= inputValue && inputValue <= 9 ) {
+            passcodes[idx].value = inputValue.trim();
           } else {
             passcodes[idx].value = '';
           }
+        });
+
+        // ペースト時にパスコードを配分.
+        passcodeElement.addEventListener('paste', (event) => {
+          event.preventDefault();
+          const words = (event.clipboardData || window.clipboardData).getData('text').split('');
+          passcodes.forEach((input, idx) => {
+            const inputValue = words[idx] || '';
+            if ( ! isNaN(inputValue) && 0 <= inputValue && inputValue <= 9 ) {
+              input.value = inputValue.trim();
+            } else {
+              input.value = '';
+            }
+          });
         });
       });
     }

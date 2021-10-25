@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{SITE_TITLE}} - {% if Debug %}Hello World!{% else %}Hello...!!{% endif %}</title>
+    <title>{{SITE_TITLE}} - {% if Debug %}DASHBOARD{% else %}Hello...!!{% endif %}</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
@@ -13,93 +13,123 @@
     {% if Debug %}
     {% include '/utils/flash-message.twig' %}
 
-    <div class="container my-5" style="max-width: 700px">
+    <div class="container-fluid mt-5 mb-3">
       <div class="row">
         <div class="col">
-          <h1 class="card-title fw-lighter">Hello World!</h1>
+          <h1 class="h5 text-center fw-lighter">DASHBOARD</h1>
+        </div>
+      </div>
+    </div>
 
+    <div class="container mb-5" style="max-width: 768px">
+      <div class="row">
+        <div class="col">
+          <h2 class="h1 card-title fw-lighter border-top pt-4">SETUP.</h2>
           <p class="card-text mt-3">
             設定ファイルを変更した場合は、必ずヘルスチェックをすることをオススメします。ヘルスチェックではメールの送信テストから、データベースの書き込みテストなどを行います。
           </p>
-          <div class="mt-3 mb-4">
+          <div class="mt-3">
             <a href="{{Router.health_check}}" class="btn btn-dark shadow-none px-5">ヘルスチェック</a>
           </div>
+        </div>
+      </div>
+    </div>
 
-          <h2 class="h6 text-secondary fw-light">How to use</h2>
-          <ol class="list-group list-group-numbered">
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0 rounded-0">
-              <div class="ms-2 me-auto w-100">
-                <div class="h4 fw-bold">formタグのPOSTを指定</div>
-                <p>action属性に <code>action="{{Router.mailer}}"</code> を、method属性に <code>method="post"</code> を設定します。
-                あとは自由にinput要素, textarea要素などを追加しましょう。</p>
-                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
+    <ul class="nav nav-tabs justify-content-sm-center px-3" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="how-to-tab" data-bs-toggle="tab" href="#how-to" role="tab" aria-controls="how-to" aria-selected="true">How to use</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="library-tab" data-bs-toggle="tab" href="#library" role="tab" aria-controls="library" aria-selected="false">CSS / JavaScript</a>
+      </li>
+    </ul>
+
+    <div class="bg-white">
+      <div class="container py-5" style="max-width: 768px">
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="how-to" role="tabpanel" aria-labelledby="how-to-tab">
+            <h2 class="h6 text-secondary fw-light">How to use</h2>
+            <ol class="list-group list-group-numbered">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0 rounded-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">formタグのPOSTを指定</div>
+                  <p>action属性に <code>action="{{Router.mailer}}"</code> を、method属性に <code>method="post"</code> を設定します。
+                  あとは自由にinput要素, textarea要素などを追加しましょう。</p>
+                  <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
   &lt;input type="text" name="firstname" value="" /&gt;
   &lt;input type="text" name="lastname" value="" /&gt;
   &lt;input type="email" name="email" value="" /&gt;
   :
   &lt;input type="submit" name="submit" value="送信" /&gt;
 &lt;/form&gt;</code></pre>
-              </div>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
-              <div class="ms-2 me-auto w-100">
-                <div class="h4 fw-bold">CSRFトークンの導入</div>
-                <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
-                  <div class="mb-1 fw-bold">CSRF対策</div>
-                  <p class="m-0">外部からの悪意ある攻撃からWebアプリケーションを守るために、メールプログラムはCSRFトークンを持たないリクエストを一切受け付けません。</p>
                 </div>
-                <div class="mb-1 fw-bold">(A) 独自のHTMLページからPOSTする場合</div>
-                <p>Ajaxで <a href="{{Router.api.json}}" target="_blank">API経由</a> のCSRFトークンを挿入する必要があります。</p>
-                <p>AjaxのJavaScriptは同梱しています。こちらの <a href="{{Router.csrf.js}}" target="_blank">javascriptファイル</a> をダウンロードして任意の場所に設置してください。</p>
-                <p>formタグのidまたはclassを <code>applyCSRF()</code> の第一引数に渡します。指定のformタグ内にCSRFタグが自動で挿入されます。</p>
-                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">CSRFトークンの導入</div>
+                  <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
+                    <div class="mb-1 fw-bold">CSRF対策</div>
+                    <p class="m-0">外部からの悪意ある攻撃からWebアプリケーションを守るために、メールプログラムはCSRFトークンを持たないリクエストを一切受け付けません。</p>
+                  </div>
+                  <div class="mb-1 fw-bold">(A) 独自のHTMLページからPOSTする場合</div>
+                  <p>Ajaxで <a href="{{Router.api.json}}" target="_blank">API経由</a> のCSRFトークンを挿入する必要があります。</p>
+                  <p>AjaxのJavaScriptは同梱しています。こちらの <a href="{{Router.csrf.js}}" target="_blank">javascriptファイル</a> をダウンロードして任意の場所に設置してください。</p>
+                  <p>formタグのidまたはclassを <code>applyCSRF()</code> の第一引数に渡します。指定のformタグ内にCSRFタグが自動で挿入されます。</p>
+                  <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
 &lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
-                <hr />
-                <div class="mb-1 fw-bold">(B) Templateディレクトリ内からPOSTする場合</div>
-                <p>templates内のTwigファイルでは、あらかじめ用意されたTwig変数でCSRFトークンを設置できます。formタグ内に直接 <code>{{ '{{CSRF|raw}}' }}</code> を記載します。JavaScriptは不要で最も簡単なやり方です。</p>
-                <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
+                  <hr />
+                  <div class="mb-1 fw-bold">(B) Templateディレクトリ内からPOSTする場合</div>
+                  <p>templates内のTwigファイルでは、あらかじめ用意されたTwig変数でCSRFトークンを設置できます。formタグ内に直接 <code>{{ '{{CSRF|raw}}' }}</code> を記載します。JavaScriptは不要で最も簡単なやり方です。</p>
+                  <pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
   :
   {{ '{{CSRF|raw}}' }}
 &lt;/form&gt;</code></pre>
-              </div>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
-              <div class="ms-2 me-auto w-100">
-                <div class="h4 fw-bold">環境設定</div>
-                <p>env.sample.txt を .env にリネームして内容を編集します。.envの環境設定は settings ディレクトリ内の各PHPファイルを通り再設定されます。</p>
-              </div>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
-              <div class="ms-2 me-auto w-100">
-                <div class="h4 fw-bold">HTMLフォーム情報</div>
-                <p>設置するフォームの要素に合わせて settings/form.php を編集しましょう。また、他のCMSやフレームワーク等との連携があれば必要に応じて settings ディレクト内の database.php, validate.php, mail.php も編集し環境設定を上書きします。</p>
-              </div>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
-              <div class="ms-2 me-auto w-100">
-                <div class="h4 fw-bold">メールの雛形</div>
-                <p>確認ページや送信メールのテンプレートは templates ディレクトリ内のTwigファイルを編集してカスタマイズします。
-                name属性を<code>{{ '{{email}}' }}</code>の波括弧で囲む記述で、入力されたvalueの値に置き換わります。</p>
-              </div>
-            </li>
-          </ol>
-          <h3 class="m-3 h3 fw-bold">同梱しているCSS&JavaScript</h3>
-          <ul style="font-size:0.875rem">
-            <li class="mb-3">CSRF JavaScript<br /><a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a></li>
-            <li class="mb-3">reCAPTCHA JavaScript<br /><a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a></li>
-            <li class="mb-3">Bootstrap JavaScript<br /><a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a></li>
-            <li class="mb-3">Bootstrap Style<br /><a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a></li>
-          </ul>
-          <hr />
-          <p class="mt-4 mx-2 text-secondary" style="font-size:0.875rem">本番環境に公開する時はデバッグモードを無効にしてください。デバッグモードが無効の場合はこのページは表示されませんが、ヘルスチェックは利用できます。</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">環境設定</div>
+                  <p>env.sample.txt を .env にリネームして内容を編集します。.envの環境設定は settings ディレクトリ内の各PHPファイルを通り再設定されます。</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">HTMLフォーム情報</div>
+                  <p>設置するフォームの要素に合わせて settings/form.php を編集しましょう。また、他のCMSやフレームワーク等との連携があれば必要に応じて settings ディレクト内の database.php, validate.php, mail.php も編集し環境設定を上書きします。</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">メールの雛形</div>
+                  <p>確認ページや送信メールのテンプレートは templates ディレクトリ内のTwigファイルを編集してカスタマイズします。
+                  name属性を<code>{{ '{{email}}' }}</code>の波括弧で囲む記述で、入力されたvalueの値に置き換わります。</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="tab-pane" id="library" role="tabpanel" aria-labelledby="library-tab">
+            <h2 class="h6 text-secondary fw-light pb-2 border-bottom">同梱しているライブラリ</h2>
+            <ul style="font-size:0.875rem">
+              <li class="mb-3">CSRF JavaScript<br /><a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a></li>
+              <li class="mb-3">reCAPTCHA JavaScript<br /><a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a></li>
+              <li class="mb-3">Bootstrap JavaScript<br /><a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a></li>
+              <li class="mb-3">Bootstrap Style<br /><a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a></li>
+            </ul>
+          </div>
+
         </div>
+
+        <p class="mt-4 pt-4 px-2 text-secondary border-top" style="font-size:0.875rem">本番環境に公開する時はデバッグモードを無効にしてください。デバッグモードが無効の場合はこのページは表示されませんが、ヘルスチェックは利用できます。</p>
+
       </div>
-    </div>
-    <div class="my-5 text-center fw-lighter">
-      <a href="https://github.com/elkulo/Mailer" target="_brank" title="GitHub - elkulo/Mailer" class="link-dark">
-        <svg class="icon icon-github" style="width: 32px; height: 32px;" aria-hidden="true" role="img"><use href="#icon-github" xlink:href="#icon-github"></use></svg>
-      </a>
-      <div class="mt-2">Powered by CHiDORi, from Mailer.<div>
+      <div class="pb-5 text-center fw-lighter">
+        <a href="https://github.com/elkulo/Mailer" target="_brank" title="GitHub - elkulo/Mailer" class="link-dark">
+          <svg class="icon icon-github" style="width: 32px; height: 32px;" aria-hidden="true" role="img"><use href="#icon-github" xlink:href="#icon-github"></use></svg>
+        </a>
+        <div class="mt-2">Powered by CHiDORi, from Mailer.<div>
+      </div>
     </div>
 
     {% else %}
@@ -114,7 +144,7 @@
       </div>
     </div>
 
-    {% endif %}
+  {% endif %}
 
   {% include '/utils/svg-icon.twig' %}
   </body>
