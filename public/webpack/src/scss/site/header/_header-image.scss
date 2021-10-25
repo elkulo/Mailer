@@ -33,20 +33,17 @@
 		&__title {
 			margin: 0 0 1rem;
 			color: #fff;
-			font-size: 1.325rem;
+			font-size: 3rem;
 			font-weight: 900;
 			letter-spacing: -0.02em;
 
-			@include media(mobile) {
-				font-size: 2rem;
-			}
 			@include media(tablet) {
-				font-size: 3rem;
+				font-size: 3.5rem;
 			}
 
 			small {
 				display: block;
-				font-size: 0.75em;
+				font-size: 0.5em;
 				color: #ffaa55;
 				margin: 0 0 0.25rem;
 			}
@@ -54,10 +51,10 @@
 		
 		&__description {
 			color: #f1f1f1;
-			font-size: 0.75rem;
+			font-size: 0.875rem;
 
 			@include media(mobile) {
-				font-size: 0.875rem;
+				font-size: 1rem;
 			}
 		}
 

@@ -28,30 +28,29 @@
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
   <body class="bg-light py-5 px-3">
-    <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 720px">
+    <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 768px">
       <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
+
         <div class="mb-3">
           <div class="form-label">件名</div>
           <div class="form-check form-check-inline">
             <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
-            <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般のお客様）</label>
+            <label class="form-check-label" for="CustomerSubject1">お問い合わせ</label>
           </div>
           <div class="form-check form-check-inline">
             <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
-            <label class="form-check-label" for="CustomerSubject2">工事のご依頼（事業関係者様）</label>
+            <label class="form-check-label" for="CustomerSubject2">仕事のご相談（事業関係者様）</label>
           </div>
         </div>
 
         <div class="mb-3">
           <label for="CustomerType" class="form-label">種別</label>
           <select name="customerType" id="CustomerType" class="form-select" required>
-            <option value="見積希望" selected>見積希望</option>
-            <option value="通信・弱電工事全般">通信・弱電工事全般</option>
-            <option value="音響・映像機器設置">音響・映像機器設置</option>
-            <option value="LED照明取付工事">LED照明取付工事</option>
-            <option value="通信ケーブル各種配線">通信ケーブル各種配線</option>
-            <option value="各種家電商品販売">各種家電商品販売</option>
-            <option value="セキュリティ機器取付">セキュリティ機器取付</option>
+            <option value="Webサイトの制作について" selected>Webサイトの制作について</option>
+            <option value="チラシ・ポスター等の印刷物の制作について">チラシ・ポスター等の印刷物の制作について</option>
+            <option value="グラフィックデザインについて">グラフィックデザインについて</option>
+            <option value="執筆関連について">執筆関連について</option>
+            <option value="写真撮影について">写真撮影について</option>
             <option value="その他">その他</option>
           </select>
         </div>

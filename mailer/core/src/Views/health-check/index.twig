@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{SITE_TITLE}} - HEALTH CHECK{% if SectionTitle %} {{ SectionTitle }}{% endif %}</title>
+    <title>{{SITE_TITLE}} - HEALTH CHECK</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="container mb-5" style="max-width: 720px">
+    <div class="container mb-5" style="max-width: 768px">
       <div class="row justify-content-center mb-4">
         <div class="col-8">
           <div class="position-relative m-4">
@@ -41,13 +41,13 @@
               <p class="card-text">{{ SectionDescription }}</p>
               <form action="{{ Action.url }}" method="POST">
                 <div class="row g-2 align-items-center">
-                  <div class="col-4 col-md-auto">
-                    <label for="inputEmail" class="col-form-label d-block text-end text-secondary" style="font-size:0.875rem">メールアドレス</label>
+                  <div class="col-12 col-sm-3">
+                    <label for="inputEmail" class="col-form-label d-block text-sm-end text-secondary" style="font-size:0.875rem">メールアドレス</label>
                   </div>
-                  <div class="col-6">
+                  <div class="col-auto col-sm-6">
                     <input type="email" name="email" id="inputEmail" class="form-control email" placeholder="mail@example.com" />
                   </div>
-                  <div class="col-2 col-md-auto">
+                  <div class="col-auto col-sm-2">
                     <button type="submit" class="btn btn-primary">確認</button>
                   </div>
                 </div>
