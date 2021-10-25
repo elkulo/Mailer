@@ -8,6 +8,7 @@
     <title>{{SITE_TITLE}} - HEALTH CHECK</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
+    <script>{% include '/assets/passcode.min.js.twig' %}</script>
   </head>
   <body class="bg-light">
     {% include '/utils/flash-message.twig' %}
@@ -42,10 +43,10 @@
               <form action="{{ Action.url }}" method="POST">
                 <div class="row g-2 align-items-center">
                   <div class="col-12 col-sm-3">
-                    <label for="inputEmail" class="col-form-label d-block text-sm-end text-secondary" style="font-size:0.875rem">メールアドレス</label>
+                    <label for="admin-email" class="col-form-label d-block text-sm-end text-secondary" style="font-size:0.875rem">メールアドレス</label>
                   </div>
                   <div class="col-auto col-sm-6">
-                    <input type="email" name="email" id="inputEmail" class="form-control email" placeholder="mail@example.com" />
+                    <input type="email" name="email" id="admin-email" class="form-control email" placeholder="mail@example.com" />
                   </div>
                   <div class="col-auto col-sm-2">
                     <button type="submit" class="btn btn-primary">確認</button>
@@ -61,14 +62,6 @@
         </div>
       </div>
     </div>
-
-  <script>
-  (function() {
-    'use strict';
-    const email = document.querySelector('#inputEmail');
-    if ( email ) email.focus();
-  })();
-  </script>
 
   {% include '/utils/svg-icon.twig' %}
   </body>
