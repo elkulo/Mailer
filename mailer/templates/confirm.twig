@@ -29,13 +29,14 @@
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
-  <body class="bg-light py-5 px-3">
-    <div class="container shadow-sm bg-white border rounded px-4 px-md-5 py-4" style="max-width: 768px">
-      <div class="row">
-        <div class="col">
+  <body class="bg-light p-3 p-sm-5">
+    <div class="container" style="max-width: 768px">
+      <div class="row shadow-sm bg-white border rounded">
+        <div class="col p-4 px-sm-5">
           <h1 class="h4">入力内容の確認</h1>
           <p class="text-muted" style="font-size:0.875rem">以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
           <form id="confirm-form" action="{{ Action.url }}" method="POST">
+
             <div class="table-responsive" style="font-size:0.875rem">
               <table class="table table-bordered">
                 {% for post in Posts %}
@@ -46,18 +47,20 @@
                 {% endfor %}
               </table>
             </div>
-            <div class="row g-2 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
               <div class="d-grid gap-2 col-5 col-sm-4">
                 <input type="submit" value="送信する" class="btn btn-primary" />
-              </div>
-              <div class="d-grid gap-2 col-5 col-sm-4">
-                <button onClick="history.back()" class="btn btn-light">キャンセル</button>
               </div>
             </div>
 
             {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
             {{ CSRF|raw }}
           </form>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center mt-2">
+        <div class="col-auto">
+          <button onClick="history.back()" class="btn btn-link shadow-none">キャンセル</button>
         </div>
       </div>
     </div>

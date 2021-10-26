@@ -27,89 +27,93 @@
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
-  <body class="bg-light py-5 px-3">
-    <div class="container shadow-sm bg-white border rounded p-4 py-md-4 px-md-5" style="max-width: 768px">
-      <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
+  <body class="bg-light p-3 p-sm-5">
+    <div class="container" style="max-width: 768px">
+      <div class="row shadow-sm bg-white border rounded">
+        <div class="col p-4 px-sm-5">
+          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
 
-        <div class="mb-3">
-          <div class="form-label">件名</div>
-          <div class="form-check form-check-inline">
-            <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
-            <label class="form-check-label" for="CustomerSubject1">お問い合わせ</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
-            <label class="form-check-label" for="CustomerSubject2">仕事のご相談（事業関係者様）</label>
-          </div>
+            <div class="mb-3">
+              <div class="form-label">件名</div>
+              <div class="form-check form-check-inline">
+                <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
+                <label class="form-check-label" for="CustomerSubject1">お問い合わせ</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
+                <label class="form-check-label" for="CustomerSubject2">仕事のご相談（事業関係者様）</label>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerType" class="form-label">種別</label>
+              <select name="customerType" id="CustomerType" class="form-select" required>
+                <option value="Webサイトの制作について" selected>Webサイトの制作について</option>
+                <option value="チラシ・ポスター等の印刷物の制作について">チラシ・ポスター等の印刷物の制作について</option>
+                <option value="グラフィックデザインについて">グラフィックデザインについて</option>
+                <option value="執筆関連について">執筆関連について</option>
+                <option value="写真撮影について">写真撮影について</option>
+                <option value="その他">その他</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerName" class="form-label">お名前</label>
+              <input type="tel" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
+              <div class="invalid-feedback">
+                お名前を記入してください。
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerPhonetic" class="form-label">フリガナ</label>
+              <input type="text" id="CustomerPhonetic" class="form-control" name="customerNameKana" placeholder="フリガナ" required>
+              <div class="invalid-feedback">
+                フリガナを記入してください。
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerDomicile" class="form-label">ご住所<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
+              <input type="text" id="CustomerDomicile" class="form-control" name="address" placeholder="東京都千代田区">
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerEmail" class="form-label">メールアドレス</label>
+              <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="email" placeholder="mail@example.com" required>
+              <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
+              <div class="invalid-feedback">
+                メールアドレスを記入してください。
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerTell" class="form-label">電話番号<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
+              <input type="tel" id="CustomerTell" class="form-control" name="phoneNumber" placeholder="03-1234-00XX">
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerComment" class="form-label">ご要望</label>
+              <textarea id="CustomerComment" class="form-control" name="requestContent" placeholder="ご要望などお書きください..." rows="5" required></textarea>
+              <div class="invalid-feedback">
+                ご要望を記入してください。
+              </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
+              <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
+            </div>
+
+            <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">
+              <button type="submit" class="btn btn-primary">上記内容を送信する</button>
+            </div>
+
+            {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
+            {{ CSRF|raw }}
+          </form>
         </div>
-
-        <div class="mb-3">
-          <label for="CustomerType" class="form-label">種別</label>
-          <select name="customerType" id="CustomerType" class="form-select" required>
-            <option value="Webサイトの制作について" selected>Webサイトの制作について</option>
-            <option value="チラシ・ポスター等の印刷物の制作について">チラシ・ポスター等の印刷物の制作について</option>
-            <option value="グラフィックデザインについて">グラフィックデザインについて</option>
-            <option value="執筆関連について">執筆関連について</option>
-            <option value="写真撮影について">写真撮影について</option>
-            <option value="その他">その他</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label for="CustomerName" class="form-label">お名前</label>
-          <input type="tel" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
-          <div class="invalid-feedback">
-            お名前を記入してください。
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="CustomerPhonetic" class="form-label">フリガナ</label>
-          <input type="text" id="CustomerPhonetic" class="form-control" name="customerNameKana" placeholder="フリガナ" required>
-          <div class="invalid-feedback">
-            フリガナを記入してください。
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="CustomerDomicile" class="form-label">ご住所<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
-          <input type="text" id="CustomerDomicile" class="form-control" name="address" placeholder="東京都千代田区">
-        </div>
-
-        <div class="mb-3">
-          <label for="CustomerEmail" class="form-label">メールアドレス</label>
-          <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="email" placeholder="mail@example.com" required>
-          <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
-          <div class="invalid-feedback">
-            メールアドレスを記入してください。
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="CustomerTell" class="form-label">電話番号<span class="badge rounded-pill bg-secondary ms-2">任意</span></label>
-          <input type="tel" id="CustomerTell" class="form-control" name="phoneNumber" placeholder="03-1234-00XX">
-        </div>
-
-        <div class="mb-3">
-          <label for="CustomerComment" class="form-label">ご要望</label>
-          <textarea id="CustomerComment" class="form-control" name="requestContent" placeholder="ご要望などお書きください..." rows="5" required></textarea>
-          <div class="invalid-feedback">
-            ご要望を記入してください。
-          </div>
-        </div>
-
-        <div class="mb-3 form-check">
-          <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
-          <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
-        </div>
-
-        <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">
-          <button type="submit" class="btn btn-primary">上記内容を送信する</button>
-        </div>
-
-        {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
-        {{ CSRF|raw }}
-      </form>
+      </div>
     </div>
 
     {# NOTE: reCAPTCHAのクレジットをインラインで表示する場合 #}
