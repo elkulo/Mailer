@@ -36,12 +36,12 @@
             <div class="mb-3">
               <div class="form-label">件名</div>
               <div class="form-check form-check-inline">
-                <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般のお客様）" checked>
-                <label class="form-check-label" for="CustomerSubject1">お問い合わせ</label>
+                <input type="radio" id="CustomerSubject1" class="form-check-input" name="customerTitle" value="お問い合わせ（一般の方）" checked>
+                <label class="form-check-label" for="CustomerSubject1">お問い合わせ（一般の方）</label>
               </div>
               <div class="form-check form-check-inline">
-                <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="工事のご依頼（事業関係者様）">
-                <label class="form-check-label" for="CustomerSubject2">仕事のご相談（事業関係者様）</label>
+                <input type="radio" id="CustomerSubject2" class="form-check-input" name="customerTitle" value="仕事のご相談（事業関係者）">
+                <label class="form-check-label" for="CustomerSubject2">仕事のご相談（事業関係者）</label>
               </div>
             </div>
 
@@ -59,7 +59,7 @@
 
             <div class="mb-3">
               <label for="CustomerName" class="form-label">お名前</label>
-              <input type="tel" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
+              <input type="text" id="CustomerName" class="form-control" name="customerName" placeholder="お名前" required>
               <div class="invalid-feedback">
                 お名前を記入してください。
               </div>
@@ -80,8 +80,7 @@
 
             <div class="mb-3">
               <label for="CustomerEmail" class="form-label">メールアドレス</label>
-              <input type="email" id="CustomerEmail" class="form-control" aria-describedby="emailHelp" name="email" placeholder="mail@example.com" required>
-              <div id="emailHelp" class="form-text">メールアドレスが公開されることはございません。</div>
+              <input type="email" id="CustomerEmail" class="form-control" name="email" placeholder="mail@example.com" required>
               <div class="invalid-feedback">
                 メールアドレスを記入してください。
               </div>
