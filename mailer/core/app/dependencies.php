@@ -58,14 +58,16 @@ return function (ContainerBuilder $containerBuilder) {
         // ビューテンプレート.
         Twig::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
-            $twig = Twig::create(
-                [
-                    $settings->get('templatesDirPath') . '/templates',
-                    __DIR__ . '/../src/Views/mailer/templates',
-                    __DIR__ . '/../src/Views',
-                ],
-                $settings->get('twig')
-            );
+
+            // テンプレートディレクトリをセット.
+            $templatePath = [
+                __DIR__ . '/../src/Views/mailer/templates',
+                __DIR__ . '/../src/Views',
+            ];
+            if (file_exists($settings->get('templatesDirPath') . '/templates')) {
+                array_unshift($templatePath, $settings->get('templatesDirPath') . '/templates');
+            }
+            $twig = Twig::create($templatePath, $settings->get('twig'));
 
             // Globalにフラッシュメッセージを設定.
             $twig->getEnvironment()->addGlobal('Flash', $c->get(Messages::class));

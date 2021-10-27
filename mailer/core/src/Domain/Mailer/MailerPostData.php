@@ -86,12 +86,13 @@ class MailerPostData
         $this->postData = $this->esc($sanitized);
 
         // Twigの初期化
-        $this->view = new TwigEnvironment(
-            new TwigFileLoader([
-                $settings->get('templatesDirPath') . '/templates/mail',
-                $settings->get('appPath') . '/src/Views/mailer/templates/mail',
-            ])
-        );
+        $mailTemplatePath = [
+            $settings->get('appPath') . '/src/Views/mailer/templates/mail'
+        ];
+        if (file_exists($settings->get('templatesDirPath') . '/templates/mail')) {
+            array_unshift($mailTemplatePath, $settings->get('templatesDirPath') . '/templates/mail');
+        }
+        $this->view = new TwigEnvironment(new TwigFileLoader($mailTemplatePath));
     }
 
     /**
