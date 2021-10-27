@@ -17,13 +17,15 @@ defined('BASE_URL_PATH') || define('BASE_URL_PATH', '/');
 defined('ENV_DIR_PATH') || define('ENV_DIR_PATH', __DIR__ . '/../../');
 defined('SETTINGS_DIR_PATH') || define('SETTINGS_DIR_PATH', __DIR__ . '/../../');
 defined('TEMPLATES_DIR_PATH') || define('TEMPLATES_DIR_PATH', __DIR__ . '/../../');
+defined('ENV_IDENTIFY') || define('ENV_IDENTIFY', '');
 
 // SESSION Name.
 session_name('MAILERID');
 
 // Set up Dotenv
-if (is_readable(rtrim(ENV_DIR_PATH, '/') . '/.env')) {
-  \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/' )->load();
+$env = '.env' . ( ENV_IDENTIFY ? '.' .ENV_IDENTIFY: '' );
+if ( file_exists( rtrim(ENV_DIR_PATH, '/') . '/' . $env ) ) {
+  \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/', $env )->load();
 } else {
   die('環境設定ファイルがありません。');
 }

@@ -6,10 +6,14 @@ declare(strict_types=1);
  * 
  * envまでのパスを変更することができます。
  * デフォルトはMailerプログラム直下になります。
+ * また、envファイル名を固有にすれば環境設定を分けられます。
  * 変更がない場合はコメントアウトを解除する必要はありません。
  */
 // 任意の .env がある場所までのパス
 //define('ENV_DIR_PATH', __DIR__ . '/../');
+
+// 任意の .env.example の example 部分を変更可能
+//define('ENV_IDENTIFY', 'example');
 
 /**
  * 設定とテンプレート: SETTINGS_DIR_PATH, TEMPLATES_DIR_PATH
@@ -20,10 +24,10 @@ declare(strict_types=1);
  * デフォルトはMailerプログラム直下になります。
  * 変更がない場合はコメントアウトを解除する必要はありません。
  */
-// 任意の設定ディレクトリがある場所までのパス
+// 任意の settingsディレクトリがある場所までのパス
 //define('SETTINGS_DIR_PATH', __DIR__ . '/../');
 
-// 任意のテンプレートディレクトリがある場所までのパス
+// 任意の templatesディレクトリがある場所までのパス
 //define('TEMPLATES_DIR_PATH', __DIR__ . '/../');
 
 /**
@@ -37,7 +41,7 @@ declare(strict_types=1);
  * 本プログラムのSMTP機能は無視されますが、WordPress側でSMTP等のプラグインと連携ができます。
  */
 // WordPressがインストールされているディレクトリの wp-load.php を指定
-//require_once __DIR__ . '/../../../../wp-load.php';
+//require_once __DIR__ . '/../wp-load.php';
 
 /**
  * サブディレクトリに設置: BASE_URL_PATH
