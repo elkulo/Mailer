@@ -2,9 +2,9 @@
  # 確認ページ
  #
  # Twigインクルードライブラリ
- #  {% include '/assets/bootstrap.min.css.twig' %}  Bootstrap Style のインラインCSS
- #  {% include '/assets/bootstrap.min.js.twig' %}   Bootstrap JavaScript のインラインJavaScript
- #  {% include '/utils/google-copyright.twig' %}    reCAPTCHA使用時にGoogleクレジットをインライン表示する場合のHTMLタグ
+ #  {% include '/assets/bootstrap.min.css.twig' %}          Bootstrap Style のインラインCSS
+ #  {% include '/assets/bootstrap.min.js.twig' %}           Bootstrap JavaScript のインラインJavaScript
+ #  {% include '/utils/google-recaptcha-copyright.twig' %}  reCAPTCHA使用時にGoogleクレジットをインライン表示する場合のHTMLタグ
  #
  # Twig定数
  #  {{SITE_TITLE}}  サイトタイトル
@@ -12,7 +12,7 @@
  #
  # Twig変数
  #  {{Action.url}}            自動生成された次へ進むフォームアクションのURL
- #  {% for post in Posts %}   POSTされたの配列
+ #  {% for post in Posts %}   POSTされた配列
  #   |- {{post.name|raw}}     フォームの項目のラベルのHTML
  #   |- {{post.value|raw}}    フォームの項目の投稿内容のHTML
  #  {{CSRF|raw}}              CSRFタグのHTML
@@ -66,7 +66,7 @@
     </div>
 
     {# NOTE: reCAPTCHAのクレジットをインラインで表示する場合 #}
-    {% include '/utils/google-copyright.twig' %}
+    {% include '/utils/google-recaptcha-copyright.twig' %}
 
   {# NOTE: reCAPTCHAを使用する場合 #}
   {% if reCAPTCHA.key %}
