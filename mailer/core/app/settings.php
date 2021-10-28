@@ -7,19 +7,19 @@ use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
 
 return function (ContainerBuilder $containerBuilder) {
-
-    // サイト設定値
-    $site = include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/site.php';
-
     // Global Settings Object
     $containerBuilder->addDefinitions([
-        SettingsInterface::class => function () use ($site) {
+        SettingsInterface::class => function () {
 
-            $log_file = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
+            // サイト設定値.
+            $site = include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/site.php';
+
+            // ログファイル.
+            $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
 
             return new Settings([
                 'phpMinSupport' => '7.4.0',
-                'appPath' => __DIR__ . '/../',
+                'appPath' => rtrim(__DIR__ . '/../', '/'),
                 'siteTitle' => $site['SITE_TITLE'],
                 'siteUrl' => (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . rtrim($site['SITE_DOMAIN'], '/'),
                 'siteLang' => $site['SITE_LANG'],
@@ -33,7 +33,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logErrorDetails'     => isset($site['DEBUG']) ? ! $site['DEBUG'] : true,
                 'logger' => [
                     'name' => 'slim-app',
-                    'path' => $log_file,
+                    'path' => $logFile,
                     'level' => Logger::DEBUG,
                 ],
                 'twig' => [

@@ -37,10 +37,13 @@
 
     <ul class="nav nav-tabs justify-content-sm-center px-3" role="tablist">
       <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="how-to-tab" data-bs-toggle="tab" href="#how-to" role="tab" aria-controls="how-to" aria-selected="true">How to use</a>
+        <a class="nav-link active" id="how-to-tab" data-bs-toggle="tab" href="#how-to" role="tab" aria-controls="how-to" aria-selected="true">HTML</a>
       </li>
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="library-tab" data-bs-toggle="tab" href="#library" role="tab" aria-controls="library" aria-selected="false">CSS / JavaScript</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="twig-tab" data-bs-toggle="tab" href="#twig" role="tab" aria-controls="twig" aria-selected="false">Twig</a>
       </li>
     </ul>
 
@@ -110,15 +113,81 @@
           </div>
 
           <div class="tab-pane" id="library" role="tabpanel" aria-labelledby="library-tab">
-            <h2 class="h6 text-secondary fw-light pb-2 border-bottom">同梱しているライブラリ</h2>
-            <ul style="font-size:0.875rem">
-              <li class="mb-3">CSRF JavaScript<br /><a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a></li>
-              <li class="mb-3">reCAPTCHA JavaScript<br /><a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a></li>
-              <li class="mb-3">Bootstrap JavaScript<br /><a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a></li>
-              <li class="mb-3">Bootstrap Style<br /><a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a></li>
+            <h2 class="h6 text-secondary fw-light pb-2 border-bottom">Built-in Library</h2>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="w-100">
+                  <div class="h4 fw-bold">CSRF JavaScript</div>
+                  <a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a><br />
+                  指定したformタグ内に CSRFトークン をAjaxで取得して挿入します。
+<pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
+&lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="w-100">
+                  <div class="h4 fw-bold">reCAPTCHA JavaScript</div>
+                  <a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a><br />
+                指定したformタグ内に Google reCAPTCHA のトークンをAjaxで取得して挿入します。
+<pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="{{Router.recaptcha.js}}"&gt;&lt;/script&gt;
+&lt;script&gt;window.applyReCaptcha( '#mailer-form', 'YOUR_SITE_KEY' );&lt;/script&gt;</code></pre>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="w-100">
+                  <div class="h4 fw-bold">Bootstrap JavaScript</div>
+                  <a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a><br />
+                  Bootstrap のJavascriptを使用できます。
+<pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;script type="text/javascript" src="{{Router.bootstrap.js}}"&gt;&lt;/script&gt;</code></pre>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+                <div class="w-100">
+                  <div class="h4 fw-bold">Bootstrap Style</div>
+                  <a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a><br />
+                Bootstrap のCSSを使用できます。
+<pre class="rounded text-secondary p-3 mt-2" style="background:#f4f4f4;font-size:0.75rem"><code>&lt;link href="{{Router.bootstrap.css}}" rel="stylesheet" type="text/css" media="all" /&gt;</code></pre>
+                </div>
+              </li>
             </ul>
           </div>
 
+          <div class="tab-pane" id="twig" role="tabpanel" aria-labelledby="twig-tab">
+            <h2 class="h6 text-secondary fw-light pb-2 border-bottom">Twig Template</h2>
+            <div class="table-responsive" style="white-space:nowrap;font-size:0.875rem">
+              <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                  <tr><th scope="col">Twigファイル名</th><th>説明</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>templates/index.twig</td><td>入力画面</td></tr>
+                  <tr><td>templates/confirm.twig</td><td>確認画面</td></tr>
+                  <tr><td>templates/complete.twig</td><td>完了画面</td></tr>
+                  <tr><td>templates/validate.twig</td><td>バリデーションのエラー画面</td></tr>
+                  <tr><td>templates/exception.twig</td><td>例外投稿のエラー画面</td></tr>
+                  <tr><td>templates/mail/admin.mail.twig</td><td>管理者への通知メール</td></tr>
+                  <tr><td>templates/mail/user.mail.twig</td><td>ユーザーへの返信メール</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-responsive" style="white-space:nowrap;font-size:0.875rem">
+              <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                  <tr><th scope="col">Twig変数名</th><th>出力内容</th><th>使用できるテンプレート</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>{{'{{SITE_TITLE}}'}}</td><td>サイト名</td><td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig</td></tr>
+                  <tr><td>{{'{{SITE_URL}}'}}</td><td>サイトルートのURL</td><td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig</td></tr>
+                  <tr><td>{{'{{__POST_ALL}}'}}</td><td>POSTの一覧を自動整形</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><td>{{'{{__DATE}}'}}</td><td>POSTされた時刻</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><td>{{'{{__IP}}'}}</td><td>クライアントのIP</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><td>{{'{{__HOST}}'}}</td><td>サイトのホスト名</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><td>{{'{{__URL}}'}}</td><td>POST元のページURL</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <p class="mt-4 pt-4 px-2 text-secondary border-top" style="font-size:0.875rem">本番環境に公開する時はデバッグモードを無効にしてください。デバッグモードが無効の場合はこのページは表示されませんが、ヘルスチェックは利用できます。</p>
