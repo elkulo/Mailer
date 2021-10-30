@@ -1,7 +1,7 @@
 {
   "name": "elkulo_mailer",
   "version": "3.0.0",
-  "description": "Slim Framework 製 PHPメールフォーム CHiDORi の開発",
+  "description": "Slim Framework のモダンでシンプルなメールフォーム",
   "private": true,
   "scripts": {
     "clean": "rm -rf node_modules package-lock.json && npm install",
