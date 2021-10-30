@@ -1,6 +1,8 @@
 # Mailer for Github開発バージョン
 
-**Githubで公開しているコードは開発中のバージョンです。** 開発バージョンでは、テスト中のコードも含むため意図しない不具合が発生する可能性があります。
+**Githubで公開しているコードは開発中のバージョンです。**
+
+開発バージョンでは、テスト中のコードも含むため意図しない不具合が発生する可能性があります。
 
 本番環境では最新パッケージをパブリッシャーのサイトから[ダウンロード](https://walkyxwalky.com/download)してご利用ください。
 
@@ -144,3 +146,10 @@ PHPのビルドインサーバーが起動します。
 ~~~
 npm serve
 ~~~
+
+---
+
+[Mailer](https://github.com/elkulo/Mailer/)  
+Copyright 2020-2021 A.Sudo  
+Licensed under LGPL-2.1-only  
+https://github.com/elkulo/Mailer/blob/main/LICENSE
