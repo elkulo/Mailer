@@ -1,4 +1,4 @@
-# Mailer for Github開発バージョン
+# Mailer for Github
 
 **Githubで公開しているコードは開発中のバージョンです。**
 
@@ -126,26 +126,6 @@ require_once __DIR__ . '/../../mailer/bootstrap.php';
 公開ディレクトリにプログラムを設置している場合は、coreディレクトリ にアクセス制限をかけましょう。
 coreディレクトリ の中の logs にはメール送信失敗などのログファイルが残ります。
 また、履歴の保存にSQLiteを使用する場合は databaseディレクトリ 本プログラム直下に作成されるので、SQLiteファイルの場所にも気をつけてください。
-
----
-
-## 開発環境のクローン
-
-開発環境をクローンしてどなたでも開発に参加いただけます。
-
-~~~
-git clone https://github.com/elkulo/Mailer.git Mailer
-cd Mailer
-npm install
-~~~
-
-### コマンドライン
-
-PHPのビルドインサーバーが起動します。
-
-~~~
-npm serve
-~~~
 
 ---
 
