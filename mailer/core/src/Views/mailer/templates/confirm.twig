@@ -34,17 +34,17 @@
       <div class="row shadow-sm bg-white border rounded">
         <div class="col p-4 px-sm-5">
           <h1 class="h4">入力内容の確認</h1>
-          <p class="text-muted" style="font-size:0.875rem">以下の内容でお間違いなければ、「送信する」ボタンを押してください。</p>
+          <p style="font-size:0.875rem">
+            <span class="d-inline-block me-1 ps-1 bg-danger text-white">まだ送信されておりません。</span>
+            <span class="text-muted">次の内容でお間違いなければ「送信をする」を押してください。</span>
+          </p>
           <form id="confirm-form" action="{{ Action.url }}" method="POST">
 
             <table class="table table-bordered" style="font-size:0.875rem">
               {% for post in Posts %}
-                <tr class="d-table-row d-md-none table-light text-nowrap">
-                  <th colspan="2">{{ post.name|raw }}</th>
-                </tr>
                 <tr>
-                  <th class="d-none d-md-table-cell table-light text-nowrap">{{ post.name|raw }}</th>
-                  <td>{{ post.value|raw }}</td>
+                  <th class="d-block d-md-table-cell table-light text-nowrap">{{ post.name|raw }}</th>
+                  <td class="d-block d-md-table-cell">{{ post.value|raw }}</td>
                 </tr>
               {% endfor %}
             </table>

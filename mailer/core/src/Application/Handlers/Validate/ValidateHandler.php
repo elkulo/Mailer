@@ -75,6 +75,11 @@ class ValidateHandler implements ValidateHandlerInterface
         $this->validateSettings = $settings->get('validate');
         $this->formSettings = $settings->get('form');
         $this->router = $router;
+
+        // reCAPTCHAの閾値の変更.
+        if ($this->validateSettings['RECAPTCHA_THRESHOLD']) {
+            $this->threshold = $this->validateSettings['RECAPTCHA_THRESHOLD'];
+        }
     }
 
     /**
