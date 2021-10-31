@@ -76,7 +76,7 @@ class HealthCheckPostData
      */
     public function getMailSubject(): string
     {
-        $subject = $this->esc('HEALTH CHECKの確認コード - ' . $this->settings->get('siteTitle'));
+        $subject = $this->esc('ヘルスチェックの確認コード - ' . $this->settings->get('siteTitle'));
         return str_replace(PHP_EOL, '', $subject);
     }
 
