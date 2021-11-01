@@ -143,7 +143,8 @@ class MailerPostData
      *
      * @return array
      */
-    public function getPostStatus(): array {
+    public function getPostStatus(): array
+    {
         return [
             '_date' => date('Y/m/d (D) H:i:s', time()),
             '_ip' => $_SERVER['REMOTE_ADDR'],
