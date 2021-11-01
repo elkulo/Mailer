@@ -178,20 +178,22 @@ class SQLiteHandler implements DBHandlerInterface
                 $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
                 // テーブル作成
-                $pdo->exec("CREATE TABLE IF NOT EXISTS {$this->tableName} (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    success VARCHAR(50),
-                    email VARCHAR(256),
-                    subject VARCHAR(78),
-                    body VARCHAR(998),
-                    date VARCHAR(50),
-                    ip VARCHAR(50),
-                    host VARCHAR(50),
-                    referer VARCHAR(50),
-                    registry_datetime DATETIME,
-                    created_at INTEGER,
-                    updated_at INTEGER
-                )");
+                foreach ([$this->tableName, $this->tableName.'_test'] as $table) {
+                    $pdo->exec("CREATE TABLE IF NOT EXISTS {$table} (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        success VARCHAR(50),
+                        email VARCHAR(256),
+                        subject VARCHAR(78),
+                        body VARCHAR(3998),
+                        date VARCHAR(50),
+                        ip VARCHAR(50),
+                        host VARCHAR(50),
+                        referer VARCHAR(50),
+                        registry_datetime DATETIME,
+                        created_at INTEGER,
+                        updated_at INTEGER
+                    )");
+                }
 
                 // 一度閉じる.
                 $pdo = null;
@@ -211,20 +213,33 @@ class SQLiteHandler implements DBHandlerInterface
      */
     final public function test(string $email): bool
     {
-        return $this->save(
-            array(
-                'admin' => true,
-                'user' => false
-            ),
-            $email,
-            '[HEALTH CHECK] メールプログラムからの動作検証',
-            '//------------ ヘルスチェックによりメールの送信履歴が正常に保存されることを確認しました。 ------------//',
-            array(
-                '_date' => date('Y/m/d (D) H:i:s', time()),
-                '_ip' => $_SERVER['REMOTE_ADDR'],
-                '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-                '_url' => $this->router->getUrl('health-check'),
-            )
-        );
+        try {
+            $values = [
+                'success' => 'true',
+                'email' => $email,
+                'subject' => 'メールプログラムからの動作検証',
+                'body' => 'ヘルスチェックによりメールの送信履歴が正常に保存されることを確認しました。',
+                'date' => date('Y/m/d (D) H:i:s', time()),
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+                'referer' => $this->router->getUrl('health-check'),
+                'registry_datetime' => date('Y-m-d H:i:s'),
+                'created_at' => time(),
+                'updated_at' => time()
+            ];
+
+            // 保存テスト.
+            if ($this->db) {
+                $this->db->table('mailer_test')->insert($values); // prefixは省略
+
+                // 直前のテストを削除.
+                $column = $this->db->table('mailer_test')->select('*')->get()->all();
+                $this->db->table('mailer_test')->delete($column[array_key_last($column)]->id);
+            }
+        } catch (\Exception $e) {
+            $this->logger->error('データベース接続エラー');
+            return false;
+        }
+        return true;
     }
 }
