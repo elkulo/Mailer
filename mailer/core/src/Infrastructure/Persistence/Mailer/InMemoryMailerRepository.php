@@ -330,12 +330,7 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->postData->getUserMail(),
                 $this->postData->getMailSubject(),
                 $this->postData->getPostToString(),
-                array(
-                        '_date' => date('Y/m/d (D) H:i:s', time()),
-                        '_ip' => $_SERVER['REMOTE_ADDR'],
-                        '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-                        '_url' => $this->postData->getPageReferer(),
-                    )
+                $this->postData->getPostStatus()
             );
 
             // 完了画面を生成.

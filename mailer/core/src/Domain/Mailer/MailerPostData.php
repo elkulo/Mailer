@@ -139,6 +139,20 @@ class MailerPostData
     }
 
     /**
+     * POST元のステータス
+     *
+     * @return array
+     */
+    public function getPostStatus(): array {
+        return [
+            '_date' => date('Y/m/d (D) H:i:s', time()),
+            '_ip' => $_SERVER['REMOTE_ADDR'],
+            '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+            '_url' => $this->getPageReferer(),
+        ];
+    }
+
+    /**
      * ユーザーメールをセット
      *
      * @param  string $email
@@ -184,17 +198,19 @@ class MailerPostData
      */
     public function getMailBody(): array
     {
-        // クライアント情報の置換.
-        $value = array(
-            '__FROM_NAME' => $this->mailSettings['FROM_NAME'],
-            '__POST_ALL' => $this->getPostToString(),
-            '__DATE' => date('Y/m/d (D) H:i:s', time()),
-            '__IP' => $_SERVER['REMOTE_ADDR'],
-            '__HOST' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-            '__URL' => $this->getPageReferer(),
+        $status = $this->getPostStatus();
+        // Twig変数にクライアント情報の置換.
+        return array_merge(
+            $this->postData,
+            [
+                '__FROM_NAME' => $this->mailSettings['FROM_NAME'],
+                '__POST_ALL' => $this->getPostToString(),
+                '__DATE' => $status['_date'],
+                '__IP' => $status['_ip'],
+                '__HOST' => $status['_host'],
+                '__URL' => $status['_url'],
+            ]
         );
-
-        return array_merge($this->postData, $value);
     }
 
     /**
@@ -358,7 +374,7 @@ class MailerPostData
         if (! $this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
             return $this->esc($_SERVER['HTTP_REFERER']);
         }
-        return $this->pageReferer;
+        return $this->esc($this->pageReferer);
     }
 
     /**
