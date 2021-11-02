@@ -177,10 +177,10 @@ class MySQLHandler implements DBHandlerInterface
                     created_at INT(11),
                     updated_at INT(11)
                 ) engine=innodb default charset={$db['DB_CHARSET']}";
-            }
 
-            // テーブル作成
-            $pdo->query($sql);
+                // テーブル作成
+                $pdo->query($sql);
+            }
 
             // 一度閉じる.
             $pdo = null;
