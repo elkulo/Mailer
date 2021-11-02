@@ -299,7 +299,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     6 => [
                         'description' => 'データベースに履歴は書き込めましたか？',
-                        'success' => ($this->db)? $this->db->test($mailSettings['ADMIN_MAIL']): false
+                        'success' => ($this->db)? $this->db->test(): false
                     ],
                     7 => [
                         'description' => 'reCAPTCHAでBOT対策はされていますか？',
