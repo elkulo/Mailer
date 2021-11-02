@@ -162,25 +162,32 @@ class MySQLHandler implements DBHandlerInterface
             $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
             // テーブル存在チェック
-            foreach ([$this->tableName, $this->tableName.'_test'] as $table) {
-                $sql = "CREATE TABLE IF NOT EXISTS {$table} (
-                    id INT(11) AUTO_INCREMENT PRIMARY KEY,
-                    success VARCHAR(50),
-                    email VARCHAR(256),
-                    subject VARCHAR(78),
-                    body VARCHAR(3998),
-                    date VARCHAR(50),
-                    ip VARCHAR(50),
-                    host VARCHAR(50),
-                    referer VARCHAR(50),
-                    registry_datetime DATETIME,
-                    created_at INT(11),
-                    updated_at INT(11)
-                ) engine=innodb default charset={$db['DB_CHARSET']}";
+            $sql = "CREATE TABLE IF NOT EXISTS {$this->tableName} (
+                id INT(11) AUTO_INCREMENT PRIMARY KEY,
+                success VARCHAR(50),
+                email VARCHAR(256),
+                subject VARCHAR(78),
+                body VARCHAR(3998),
+                date VARCHAR(50),
+                ip VARCHAR(50),
+                host VARCHAR(50),
+                referer VARCHAR(50),
+                registry_datetime DATETIME,
+                created_at INT(11),
+                updated_at INT(11)
+            ) engine=innodb default charset={$db['DB_CHARSET']}";
 
-                // テーブル作成
-                $pdo->query($sql);
-            }
+            // メタテーブル存在チェック
+            $metaTable = $this->tableName.'meta';
+            $metaSQL = "CREATE TABLE IF NOT EXISTS {$metaTable} (
+                meta_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+                meta_key VARCHAR(50),
+                meta_value VARCHAR(256)
+            ) engine=innodb default charset={$db['DB_CHARSET']}";
+
+            // テーブル作成
+            $pdo->query($sql);
+            $pdo->query($metaSQL);
 
             // 一度閉じる.
             $pdo = null;
@@ -194,33 +201,17 @@ class MySQLHandler implements DBHandlerInterface
     /**
      * DBに保存をテスト
      *
-     * @param  string $email
      * @return bool
      */
-    final public function test(string $email): bool
+    final public function test(): bool
     {
         try {
-            $values = [
-                'success' => 'true',
-                'email' => $email,
-                'subject' => 'メールプログラムからの動作検証',
-                'body' => 'ヘルスチェックによりメールの送信履歴が正常に保存されることを確認しました。',
-                'date' => date('Y/m/d (D) H:i:s', time()),
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
-                'referer' => $this->router->getUrl('health-check'),
-                'registry_datetime' => date('Y-m-d H:i:s'),
-                'created_at' => time(),
-                'updated_at' => time()
-            ];
-
-            // 保存テスト.
             if ($this->db) {
-                $this->db->table('mailer_test')->insert($values); // prefixは省略
-
-                // 直前のテストを削除.
-                $column = $this->db->table('mailer_test')->select('*')->get()->all();
-                $this->db->table('mailer_test')->delete($column[array_key_last($column)]->id);
+                $this->db->table('mailermeta')->update([
+                    'meta_id' => 1,
+                    'meta_key' => 'health_check_ok',
+                    'meta_value' => '1'
+                ]);
             }
         } catch (\Exception $e) {
             $this->logger->error('データベース接続エラー');

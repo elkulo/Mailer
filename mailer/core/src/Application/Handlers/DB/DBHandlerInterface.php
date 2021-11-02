@@ -36,5 +36,5 @@ interface DBHandlerInterface
      *
      * @return bool
      */
-    public function test(string $email): bool;
+    public function test(): bool;
 }
