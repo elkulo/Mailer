@@ -207,11 +207,15 @@ class MySQLHandler implements DBHandlerInterface
     {
         try {
             if ($this->db) {
-                $this->db->table('mailermeta')->update([
-                    'meta_id' => 1,
-                    'meta_key' => 'health_check_ok',
-                    'meta_value' => '1'
-                ]);
+                $this->db->table('mailermeta')->updateOrInsert(
+                    [
+                        'meta_id' => 1,
+                    ],
+                    [
+                        'meta_key' => 'health_check_ok',
+                        'meta_value' => '1'
+                    ]
+                );
             }
         } catch (\Exception $e) {
             $this->logger->error('データベース接続エラー');
