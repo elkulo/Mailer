@@ -101,8 +101,4 @@ package-lock.json
 
 # SQLite
 **/database/
-*.sqlite
-
-# Apache
-.htaccess
-.ftaccess
+*.sql*
