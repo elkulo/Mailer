@@ -85,6 +85,7 @@ nb-configuration.xml
 # Visual Studio Code
 .vscode/
 
+# PHPUnit Test
 /results/
 /phpunit*.xml
 /.phpunit.*.cache
