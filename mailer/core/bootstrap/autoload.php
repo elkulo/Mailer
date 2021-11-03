@@ -22,12 +22,23 @@ defined('ENV_IDENTIFY') || define('ENV_IDENTIFY', '');
 // SESSION Name.
 session_name('MAILERID');
 
+// 言語設定.
+$lang = "ja_JP.UTF-8";
+//$lang = "en_US.UTF-8";
+
+// 翻訳ファイル.
+$domain = 'mailer';
+setlocale(LC_ALL, $lang); // ロケールを指定.
+bindtextdomain($domain, __DIR__ . '/../languages/'); // 翻訳ファイルのパス.
+textdomain($domain); // 翻訳ファイル名のドメイン指定.
+bind_textdomain_codeset($domain, 'UTF-8'); // エンコード.
+
 // Set up Dotenv
 $env = '.env' . ( ENV_IDENTIFY ? '.' .ENV_IDENTIFY: '' );
 if ( file_exists( rtrim(ENV_DIR_PATH, '/') . '/' . $env ) ) {
   \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/', $env )->load();
 } else {
-  die('環境設定ファイルがありません。');
+  die(_('There is no environment setting file.'));
 }
 
 // Instantiate PHP-DI ContainerBuilder
