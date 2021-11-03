@@ -14,6 +14,8 @@
     "composer:update": "cd mailer/core/ && composer update",
     "composer:phpcs": "cd mailer/core/ && composer phpcs",
     "composer:phpcbf": "cd mailer/core/ && composer phpcbf",
+    "locale:en": "msgfmt mailer/core/languages/en_US/LC_MESSAGES/mailer.po -o mailer/core/languages/en_US/LC_MESSAGES/mailer.mo",
+    "locale:ja": "msgfmt mailer/core/languages/ja_JP/LC_MESSAGES/mailer.po -o mailer/core/languages/ja_JP/LC_MESSAGES/mailer.mo",
     "deploy": "sh deploy.sh"
   },
   "devDependencies": {
