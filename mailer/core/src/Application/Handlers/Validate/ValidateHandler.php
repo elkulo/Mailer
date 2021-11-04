@@ -21,6 +21,20 @@ class ValidateHandler implements ValidateHandlerInterface
 {
 
     /**
+     * Google reCAPTCHAの閾値
+     *
+     * @var float
+     */
+    private $threshold = 0.5;
+
+    /**
+     * Google reCaptcha
+     *
+     * @var ReCaptcha
+     */
+    private $recaptcha;
+
+    /**
      * 設定情報
      *
      * @var SettingsInterface
@@ -49,13 +63,6 @@ class ValidateHandler implements ValidateHandlerInterface
     private $validate;
 
     /**
-     * reCAPTCHAの閾値
-     *
-     * @var float
-     */
-    private $threshold = 0.5;
-
-    /**
      * ルーター
      *
      * @var RouterInterface
@@ -79,6 +86,12 @@ class ValidateHandler implements ValidateHandlerInterface
         // reCAPTCHAの閾値の変更.
         if ($this->validateSettings['RECAPTCHA_THRESHOLD']) {
             $this->threshold = $this->validateSettings['RECAPTCHA_THRESHOLD'];
+        }
+
+        // reCAPTCHAを初期化.
+        if (!empty($this->validateSettings['RECAPTCHA_SECRETKEY'])) {
+            $secretKey = $this->validateSettings['RECAPTCHA_SECRETKEY'];
+            $this->recaptcha = new ReCaptcha($secretKey);
         }
     }
 
@@ -281,41 +294,34 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinHuman(): void
     {
-        // reCAPTCHA シークレットキー
-        $secretKey = null;
-        if (isset($this->validateSettings['RECAPTCHA_SECRETKEY'])) {
-            $secretKey = $this->validateSettings['RECAPTCHA_SECRETKEY'];
-        }
-
-        if ($secretKey) {
-            Validator::addRule('HumanValidator', function ($field, $value, $params, $fields) use ($secretKey) {
-                try {
+        Validator::addRule('HumanValidator', function ($field, $value, $params, $fields) {
+            try {
+                if (isset($this->validateSettings['RECAPTCHA_SECRETKEY'])) {
                     if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
                         // 指定したアクション名を取得.
                         $action = isset($fields['_recaptcha-action'])? $fields['_recaptcha-action']: '';
 
-                        $recaptcha = new ReCaptcha($secretKey);
-                        $response = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+                        $response = $this->recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
                             ->setExpectedAction($action)
                             ->setScoreThreshold($this->threshold)
                             ->verify($value, $_SERVER['REMOTE_ADDR']);
         
                         if (!$response->isSuccess()) {
-                            throw new \Exception($response->getErrorCodes()[0]);
+                            throw new \Exception('reCAPTCHA Not Found.');
                         }
                     } else {
                         throw new \Exception('Unknown Terminal.');
                     }
-                    return true;
-                } catch (\Exception $e) {
-                    return false;
                 }
-            });
-            $this->validate->rule('HumanValidator', '_recaptcha-response')->message(
-                $this->validateSettings['MESSAGE_UNKNOWN_ACCESS']
-            );
-            $this->validate->rule('required', ['_recaptcha-response', '_recaptcha-action'])->message('');
-        }
+            } catch (\Exception $e) {
+                return false;
+            }
+            return true;
+        });
+        $this->validate->rule('HumanValidator', '_recaptcha-response')->message(
+            $this->validateSettings['MESSAGE_UNKNOWN_ACCESS']
+        );
+        $this->validate->rule('required', ['_recaptcha-response', '_recaptcha-action'])->message('');
     }
 
     /**
