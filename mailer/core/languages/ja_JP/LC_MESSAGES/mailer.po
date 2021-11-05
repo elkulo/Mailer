@@ -20,3 +20,11 @@ msgstr ""
 #: autoload.php:36
 msgid "There is no environment setting file."
 msgstr "環境設定ファイルがありません。"
+
+#: InMemoryHealthCheckRepository.php:155
+msgid "Send and receive tests"
+msgstr "送受信テスト"
+
+#: InMemoryHealthCheckRepository.php:156
+msgid "Test if there are any problems sending and receiving emails. A verification code will be sent to the administrator's email address to initiate the health check."
+msgstr "メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。"

@@ -152,8 +152,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         return [
             'template' => 'index.twig',
             'data' => [
-                'SectionTitle' => '送受信テスト',
-                'SectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。',
+                'SectionTitle' => _('Send and receive tests'), // phpcs:ignore
+                'SectionDescription' => _('Test if there are any problems sending and receiving emails. A verification code will be sent to the administrator\'s email address to initiate the health check.'), // phpcs:ignore
                 'CSRF'   => [
                     'keys' => [
                         'name'  => $this->csrf->getTokenNameKey(),

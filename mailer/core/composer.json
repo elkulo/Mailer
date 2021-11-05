@@ -53,6 +53,7 @@
             "App\\": "src/"
         },
         "files": [
+            "helpers/locale.php",
             "helpers/console.php"
         ]
     },
