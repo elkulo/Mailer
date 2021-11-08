@@ -209,8 +209,7 @@ class ValidateHandler implements ValidateHandlerInterface
                     if (! $this->validate->errors($field)) {
                         $this->logger->error($e->getMessage(), [
                             'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
-                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
-                            'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']]
                         ]);
                     }
                     return false;
@@ -244,8 +243,7 @@ class ValidateHandler implements ValidateHandlerInterface
                     if (! $this->validate->errors($field)) {
                         $this->logger->error($e->getMessage(), [
                             'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
-                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
-                            'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']]
                         ]);
                     }
                     return false;
@@ -279,8 +277,7 @@ class ValidateHandler implements ValidateHandlerInterface
                     if (! $this->validate->errors($field)) {
                         $this->logger->error($e->getMessage(), [
                             'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
-                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
-                            'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']]
                         ]);
                     }
                     return false;
@@ -327,10 +324,7 @@ class ValidateHandler implements ValidateHandlerInterface
                 throw new \Exception('Send from unknown referrer.');
             }
         } catch (\Exception $e) {
-            $this->logger->error(
-                $e->getMessage(),
-                [ 'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:'' ]
-            );
+            $this->logger->error($e->getMessage());
             return false;
         }
         return true;
