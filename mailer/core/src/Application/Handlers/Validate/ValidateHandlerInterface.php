@@ -103,4 +103,12 @@ interface ValidateHandlerInterface
      * @return array
      */
     public function getReCaptchaScript():array;
+
+    /**
+     * 伏字のEmail
+     *
+     * @param  string $email
+     * @return string
+     */
+    public function getHiddenEmail(string $email): string;
 }

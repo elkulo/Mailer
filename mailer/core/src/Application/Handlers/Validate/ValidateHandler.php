@@ -330,7 +330,7 @@ class ValidateHandler implements ValidateHandlerInterface
                 }
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage(), [
-                    'email' => $fields[$this->formSettings['EMAIL_ATTRIBUTE']],
+                    'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
                     'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']]
                 ]);
                 return false;
@@ -368,5 +368,16 @@ class ValidateHandler implements ValidateHandlerInterface
                 'script' => '',
             ];
         }
+    }
+
+    /**
+     * 伏字のEmail
+     *
+     * @param  string $email
+     * @return string
+     */
+    public function getHiddenEmail(string $email): string
+    {
+        return substr($email, 0, 1) . str_repeat('*', strlen(strstr($email, '@', true)) - 1) . strstr($email, '@');
     }
 }
