@@ -4,6 +4,12 @@
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
+	const formElement = document.querySelector( formID );
+	const { grecaptcha } = window;
+
+	if ( ! formElement || ! siteKey || typeof grecaptcha !== 'object' ) {
+		return;
+	}
 
 	// リロードタイマー.
 	const reloadState = {
@@ -12,12 +18,7 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 		limit: 5,
 		count: 0,
 	};
-
-	const formElement = document.querySelector( formID );
-
-	if ( ! formElement || ! siteKey ) {
-		return;
-	}
+	let hasRecaptchaResponse = true;
 
 	// Wrapper用のDOM生成.
 	const wrapper = document.createElement( 'div' );
@@ -41,18 +42,8 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 		wrapper.appendChild( inputElement[key]);
 	});
 
-	// トークンの更新.
-	const changeToken = ( e = null ) => {
-		const { grecaptcha } = window;
-		if ( typeof grecaptcha !== 'object' ) {
-			return;
-		}
-		grecaptcha.ready( () => {
-			grecaptcha.execute( siteKey, { action: actionName })
-				.then( ( token ) => {
-					inputElement.captchaResponse.setAttribute( 'value', token );
-				});
-		});
+	// トークンの自動更新.
+	const autoChangeToken = ( eventType = null ) => {
 		if ( reloadState.timer ) {
 			clearTimeout( reloadState.timer );
 		}
@@ -62,16 +53,43 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 				60 * 1000 * reloadState.minute
 			);
 		}
-		if ( e && e.type === 'blur' ) {
+		if ( eventType === 'focus' ) {
 			reloadState.count = 0;
 		} else {
 			reloadState.count++;
 		}
 	};
 
+	// トークンの更新.
+	const changeToken = ( e = null ) => {
+		if ( ! hasRecaptchaResponse ) {
+			return; // 初回でreCAPTCHAが確認できなければ二回目以降は無効.
+		}
+		new Promise( ( resolve, reject ) => {
+			grecaptcha.ready( () => {
+				new Promise( () => {
+					const response = grecaptcha.execute( siteKey, { action: actionName })
+						.then( ( token ) => {
+							inputElement.captchaResponse.setAttribute( 'value', token );
+						});
+					resolve( response );
+				}).catch( ( error ) => {
+					reject( error );
+				});
+			});
+		}).then( () => {
+			autoChangeToken( e && e.type === 'focus' );
+		}).catch( ( error ) => {
+			if ( error ) {
+				console.error( 'reCAPTHCAのサイトキーが無効です。' ); // eslint-disable-line no-console
+			}
+			hasRecaptchaResponse = false;
+		});
+	};
+
 	// 更新トリガー.
 	formElement.querySelectorAll( 'input, textarea' ).forEach( element => {
-		element.addEventListener( 'blur', ( e ) => changeToken( e ), false );
+		element.addEventListener( 'focus', ( e ) => changeToken( e ), false );
 	});
 	changeToken();
 };
