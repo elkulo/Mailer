@@ -5,6 +5,8 @@ use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
+use Monolog\Processor\WebProcessor;
+use Monolog\Processor\MemoryUsageProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Csrf\Guard;
@@ -36,6 +38,15 @@ return function (ContainerBuilder $containerBuilder) {
             $loggerSettings = $settings->get('logger');
             $logger = new Logger($loggerSettings['name']);
 
+            // メモリー情報を追加.
+            $memory = new MemoryUsageProcessor();
+            $logger->pushProcessor($memory);
+
+            // Web情報を追加.
+            $ip = new WebProcessor();
+            $logger->pushProcessor($ip);
+
+            // ユニークIDを追加.
             $processor = new UidProcessor();
             $logger->pushProcessor($processor);
 
