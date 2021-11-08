@@ -200,8 +200,19 @@ class ValidateHandler implements ValidateHandlerInterface
     public function checkinMultibyteWord(): void
     {
         if (isset($this->formSettings['MULTIBYTE_ATTRIBUTE'])) {
-            Validator::addRule('MultibyteValidator', function ($field, $value) {
-                if (strlen($value) === mb_strlen($value, 'UTF-8')) {
+            Validator::addRule('MultibyteValidator', function ($field, $value, $params, $fields) {
+                try {
+                    if (strlen($value) === mb_strlen($value, 'UTF-8')) {
+                        throw new \Exception('Japanese was not included.');
+                    }
+                } catch (\Exception $e) {
+                    if (! $this->validate->errors($field)) {
+                        $this->logger->error($e->getMessage(), [
+                            'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
+                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
+                            'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                        ]);
+                    }
                     return false;
                 }
                 return true;
@@ -220,13 +231,24 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinBlockNGWord(): void
     {
-        $ng_words = (array) explode(' ', $this->formSettings['BLOCK_NG_WORD']);
-        if (isset($ng_words[0])) {
-            Validator::addRule('BlockNGValidator', function ($field, $value) use ($ng_words) {
-                foreach ($ng_words as $word) {
-                    if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
-                        return false;
+        $blockWords = (array) explode(' ', $this->formSettings['BLOCK_NG_WORD']);
+        if (isset($blockWords[0])) {
+            Validator::addRule('BlockNGValidator', function ($field, $value, $params, $fields) use ($blockWords) {
+                try {
+                    foreach ($blockWords as $word) {
+                        if (mb_strpos($value, $word, 0, 'UTF-8') !== false) {
+                            throw new \Exception('Forbidden word was included.');
+                        }
                     }
+                } catch (\Exception $e) {
+                    if (! $this->validate->errors($field)) {
+                        $this->logger->error($e->getMessage(), [
+                            'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
+                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
+                            'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                        ]);
+                    }
+                    return false;
                 }
                 return true;
             });
@@ -244,13 +266,24 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinBlockDomain(): void
     {
-        $block_domains = $this->formSettings['BLOCK_DOMAINS'];
-        if (isset($block_domains[0])) {
-            Validator::addRule('BlockDomainValidator', function ($field, $value) use ($block_domains) {
-                foreach ($block_domains as $mail) {
-                    if (strpos($value, $mail) !== false) {
-                        return false;
+        $blockDomains = $this->formSettings['BLOCK_DOMAINS'];
+        if (isset($blockDomains[0])) {
+            Validator::addRule('BlockDomainValidator', function ($field, $value, $params, $fields) use ($blockDomains) {
+                try {
+                    foreach ($blockDomains as $mail) {
+                        if (strpos($value, $mail) !== false) {
+                            throw new \Exception('Forbidden domain was included.');
+                        }
                     }
+                } catch (\Exception $e) {
+                    if (! $this->validate->errors($field)) {
+                        $this->logger->error($e->getMessage(), [
+                            'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
+                            'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
+                            'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                        ]);
+                    }
+                    return false;
                 }
                 return true;
             });
@@ -285,14 +318,22 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function isCheckReferer(): bool
     {
-        if (isset($_SERVER['HTTP_REFERER'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], $this->settings->get('siteUrl')) === false) {
-                return false;
+        try {
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                if (strpos($_SERVER['HTTP_REFERER'], $this->settings->get('siteUrl')) === false) {
+                    throw new \Exception('Send from unknown referrer.');
+                }
+            } else {
+                throw new \Exception('Send from unknown referrer.');
             }
-            return true;
-        } else {
+        } catch (\Exception $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [ 'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:'' ]
+            );
             return false;
         }
+        return true;
     }
     
     /**
@@ -311,7 +352,7 @@ class ValidateHandler implements ValidateHandlerInterface
                     // 指定したアクション名を取得.
                     $action = isset($fields['_recaptcha-action'])? $fields['_recaptcha-action']: '';
                     if (! method_exists($this->recaptcha, 'setExpectedHostname')) {
-                        throw new \Exception('reCAPTCHA Configuration Error.');
+                        throw new \Exception('reCAPTCHA configuration error.');
                     }
                     $response = $this->recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
                         ->setExpectedAction($action)
@@ -322,17 +363,20 @@ class ValidateHandler implements ValidateHandlerInterface
                         if ($response->getScore() !== null) {
                             throw new \Exception('reCAPTCHA score' . (string) $response->getScore());
                         } else {
-                            throw new \Exception('reCAPTCHA Response Error.');
+                            throw new \Exception('reCAPTCHA response error.');
                         }
                     }
                 } else {
-                    throw new \Exception('Unknown Terminal.');
+                    throw new \Exception('Unknown response.');
                 }
             } catch (\Exception $e) {
-                $this->logger->error($e->getMessage(), [
-                    'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
-                    'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']]
-                ]);
+                if (! $this->validate->errors($field)) {
+                    $this->logger->error($e->getMessage(), [
+                        'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
+                        'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
+                        'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                    ]);
+                }
                 return false;
             }
             return true;
