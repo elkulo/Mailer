@@ -10,6 +10,7 @@ namespace App\Application\Handlers\Validate;
 
 use App\Application\Settings\SettingsInterface;
 use App\Application\Router\RouterInterface;
+use Psr\Log\LoggerInterface;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\DNSCheckValidation;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
@@ -33,6 +34,11 @@ class ValidateHandler implements ValidateHandlerInterface
      * @var ReCaptcha
      */
     private $recaptcha;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * 設定情報
@@ -72,12 +78,14 @@ class ValidateHandler implements ValidateHandlerInterface
     /**
      * コンストラクタ
      *
+     * @param  LoggerInterface $logger
      * @param  SettingsInterface $settings
      * @param  RouterInterface $router
      * @return void
      */
-    public function __construct(SettingsInterface $settings, RouterInterface $router)
+    public function __construct(LoggerInterface $logger, SettingsInterface $settings, RouterInterface $router)
     {
+        $this->logger = $logger;
         $this->settings = $settings;
         $this->validateSettings = $settings->get('validate');
         $this->formSettings = $settings->get('form');
@@ -294,26 +302,37 @@ class ValidateHandler implements ValidateHandlerInterface
      */
     public function checkinHuman(): void
     {
+        if (empty($this->validateSettings['RECAPTCHA_SECRETKEY'])) {
+            return;
+        }
         Validator::addRule('HumanValidator', function ($field, $value, $params, $fields) {
             try {
-                if (isset($this->validateSettings['RECAPTCHA_SECRETKEY'])) {
-                    if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
-                        // 指定したアクション名を取得.
-                        $action = isset($fields['_recaptcha-action'])? $fields['_recaptcha-action']: '';
-
-                        $response = $this->recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
-                            ->setExpectedAction($action)
-                            ->setScoreThreshold($this->threshold)
-                            ->verify($value, $_SERVER['REMOTE_ADDR']);
-        
-                        if (!$response->isSuccess()) {
-                            throw new \Exception('reCAPTCHA Not Found.');
-                        }
-                    } else {
-                        throw new \Exception('Unknown Terminal.');
+                if (isset($_SERVER['SERVER_NAME'], $_SERVER['REMOTE_ADDR'])) {
+                    // 指定したアクション名を取得.
+                    $action = isset($fields['_recaptcha-action'])? $fields['_recaptcha-action']: '';
+                    if (! method_exists($this->recaptcha, 'setExpectedHostname')) {
+                        throw new \Exception('reCAPTCHA Configuration Error.');
                     }
+                    $response = $this->recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+                        ->setExpectedAction($action)
+                        ->setScoreThreshold($this->threshold)
+                        ->verify($value, $_SERVER['REMOTE_ADDR']);
+        
+                    if (!$response->isSuccess()) {
+                        if ($response->getScore() !== null) {
+                            throw new \Exception('reCAPTCHA score' . (string) $response->getScore());
+                        } else {
+                            throw new \Exception('reCAPTCHA Response Error.');
+                        }
+                    }
+                } else {
+                    throw new \Exception('Unknown Terminal.');
                 }
             } catch (\Exception $e) {
+                $this->logger->error($e->getMessage(), [
+                    'email' => $fields[$this->formSettings['EMAIL_ATTRIBUTE']],
+                    'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']]
+                ]);
                 return false;
             }
             return true;

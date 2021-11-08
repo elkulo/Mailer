@@ -32,7 +32,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logError'            => isset($site['DEBUG']) ? ! $site['DEBUG'] : true,
                 'logErrorDetails'     => isset($site['DEBUG']) ? ! $site['DEBUG'] : true,
                 'logger' => [
-                    'name' => 'slim-app',
+                    'name' => 'mailer',
                     'path' => $logFile,
                     'level' => Logger::DEBUG,
                 ],
