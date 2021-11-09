@@ -66,25 +66,31 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 			return; // 初回でreCAPTCHAが確認できなければ二回目以降は無効.
 		}
 		new Promise( ( resolve, reject ) => {
-			grecaptcha.ready( () => {
-				new Promise( () => {
-					const response = grecaptcha.execute( siteKey, { action: actionName })
+			grecaptcha.ready( async() => {
+				try {
+					await grecaptcha
+						.execute( siteKey, { action: actionName })
 						.then( ( token ) => {
-							inputElement.captchaResponse.setAttribute( 'value', token );
+							inputElement.captchaResponse.setAttribute(
+								'value',
+								token
+							);
 						});
-					resolve( response );
-				}).catch( ( error ) => {
+					await resolve();
+				} catch ( error ) {
 					reject( error );
-				});
+				}
 			});
-		}).then( () => {
-			autoChangeToken( e && e.type === 'focus' );
-		}).catch( ( error ) => {
-			if ( error ) {
-				console.error( 'reCAPTHCAのサイトキーが無効です。' ); // eslint-disable-line no-console
-			}
-			hasRecaptchaResponse = false;
-		});
+		})
+			.then( () => {
+				autoChangeToken( e && e.type === 'focus' );
+			})
+			.catch( ( error ) => {
+				if ( error ) {
+					console.error( '無効なreCAPTHCAのサイトキー' ); // eslint-disable-line no-console
+				}
+				hasRecaptchaResponse = false;
+			});
 	};
 
 	// 更新トリガー.
