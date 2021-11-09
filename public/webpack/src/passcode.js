@@ -1,6 +1,6 @@
 /*!
  * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
- * Copyright 2020-2021 A.Sudo
+ * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 const setPasscode = () => {
