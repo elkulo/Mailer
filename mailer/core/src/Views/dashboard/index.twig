@@ -73,7 +73,7 @@
           <div class="tab-pane active" id="how-to" role="tabpanel" aria-labelledby="how-to-tab">
             <h2 class="h6 text-secondary fw-light">How to use</h2>
             <ol class="list-group list-group-numbered rounded-0">
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0 rounded-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0 rounded-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">formタグのPOSTを指定</div>
                   <p>action属性に <code>action="{{Router.mailer}}"</code> を、method属性に <code>method="post"</code> を設定します。
@@ -87,7 +87,7 @@
 &lt;/form&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">CSRFトークンの導入</div>
                   <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
@@ -101,7 +101,7 @@
                   <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
 &lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
                   <hr />
-                  <div class="mb-1 fw-bold">(B) Templateディレクトリ内からPOSTする場合</div>
+                  <div class="mb-1 fw-bold">(B) Twigファイルを使用する場合</div>
                   <p>Twigファイルでは、あらかじめ用意されたTwig変数でCSRFトークンを設置できます。formタグ内に直接 <code>{{ '{{CSRF|raw}}' }}</code> を記載します。JavaScriptは不要で最も簡単なやり方です。</p>
                   <pre class="rounded text-secondary p-3 mt-2"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
   :
@@ -109,49 +109,49 @@
 &lt;/form&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">reCAPTCHAも導入する場合</div>
+                  <div class="h4 fw-bold">reCAPTCHAの導入</div>
                   <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
                     <div class="mb-1 fw-bold">BOT対策</div>
-                    <p class="m-0">Google reCAPTCHA でBOTからのスパム行為を防ぎます。Google reCAPTCHAにあらかじめ登録してサイトキーを取得してください。</p>
+                    <p class="m-0">reCAPTCHAの使用は任意ですが、導入することでBOTによるスパムを防ぎます。有効にするには<a href="https://www.google.com/recaptcha/about/" target="_blank" class="link-success">Google reCAPTCHA</a>からサイトキーを取得してください。環境設定ファイル(.env)にもサイトキーとシークレットキーを記載してください。</p>
                   </div>
                   <div class="mb-1 fw-bold">(A) 独自のHTMLページからPOSTする場合</div>
                   <p>Google APIのJavaScriptと、こちらの <a href="{{Router.recaptcha.js}}" target="_blank">JavaScriptファイル</a> を読み込みます。
-                    <code>applyReCaptcha()</code> の第一引数にformタグのidまたはclassを、第二引数にサイトキーを渡します。下記の xxxxxxxxxxx にはreCAPTCHAで取得したサイトキーを記載します。</p>
-                  <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=xxxxxxxxxxx"&gt;&lt;/script&gt;
+                    <code>applyReCaptcha()</code> の第一引数にformタグのidまたはclassを、第二引数にサイトキーを渡します。下記の YOUR_SITE_KEY にはreCAPTCHAで取得したサイトキーを記載します。</p>
+                  <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="{{Router.recaptcha.js}}"&gt;&lt;/script&gt;
-&lt;script&gt;window.applyReCaptcha('#mailer-form', 'xxxxxxxxxxx');&lt;/script&gt;</code></pre>
+&lt;script&gt;window.applyReCaptcha('#mailer-form', 'YOUR_SITE_KEY');&lt;/script&gt;</code></pre>
                   <hr />
-                  <div class="mb-1 fw-bold">(B) Templateディレクトリ内からPOSTする場合</div>
-                  <p>あらかじめ用意されたTwig変数でreCAPTCHAを設置できます。<code>{{ '{{reCAPTCHA.script|raw}}' }}</code>
+                  <div class="mb-1 fw-bold">(B) Twigファイルを使用する場合</div>
+                  <p>TwigファイルではTwig変数でreCAPTCHAを設置できます。<code>{{ '{{reCAPTCHA.script|raw}}' }}</code>
                     でJavaScriptを読み込み、<code>applyReCaptcha()</code> の第一引数にformタグのidまたはclassを、第二引数に <code>{{ '{{reCAPTCHA.key}}' }}</code> でサイトキーを渡します。</p>
                   <pre class="rounded text-secondary p-3 mt-2"><code>{{ '{{reCAPTCHA.script|raw}}' }}
 &lt;script&gt;window.applyReCaptcha('#mailer-form', '{{'{{reCAPTCHA.key}}'}}');&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">環境設定</div>
                   <p>env.sample.txt を .env にリネームして内容を編集します。.envの環境設定は必ず settings ディレクトリ内の各PHPファイルで読み込まれ定義されます。</p>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">HTMLフォーム情報</div>
                   <p>設置するフォームの要素に合わせて settings/form.php を編集しましょう。また、他のCMSやフレームワーク等との連携があれば必要に応じて settings ディレクト内の database.php, validate.php, mail.php 等も編集し環境設定を上書きできます。</p>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">フォームの雛形</div>
-                  <p>templatesディレクトリ内の各Twigテンプレートを編集して、フォームのデザインをカスタマイズします。</p>
+                  <p>templatesディレクトリ内の各Twigファイルを編集して、フォームのデザインをカスタマイズします。</p>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">メールの雛形</div>
-                  <p>送信メールのテンプレートは admin.mail.twig と user.mail.twig を編集してカスタマイズします。</p>
+                  <p>送信メールのテンプレートは templates/mailディレクトリ内にある admin.mail.twig と user.mail.twig を編集してカスタマイズします。</p>
                 </div>
               </li>
             </ol>
@@ -160,7 +160,7 @@
           <div class="tab-pane" id="library" role="tabpanel" aria-labelledby="library-tab">
             <h2 class="h6 text-secondary fw-light pb-2 border-bottom">Built-in Library</h2>
             <ul class="list-group list-group-flush border-bottom">
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">CSRF JavaScript</div>
                   <a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a><br />
@@ -169,7 +169,7 @@
 &lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">reCAPTCHA JavaScript</div>
                   <a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a><br />
@@ -179,7 +179,7 @@
 &lt;script&gt;window.applyReCaptcha( '#mailer-form', 'YOUR_SITE_KEY' );&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">Bootstrap JavaScript</div>
                   <a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a><br />
@@ -187,7 +187,7 @@
 <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.bootstrap.js}}"&gt;&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">Bootstrap Style</div>
                   <a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a><br />
@@ -203,7 +203,7 @@
             <div class="table-responsive">
               <table class="table table-bordered table-striped">
                 <thead class="table-dark">
-                  <tr><th scope="col">Twigファイル名</th><th>説明</th></tr>
+                  <tr><th scope="col">templates内のTwigファイル</th><th>説明</th></tr>
                 </thead>
                 <tbody>
                   <tr><th>index.twig</th><td>入力画面</td></tr>
@@ -211,8 +211,8 @@
                   <tr><th>complete.twig</th><td>完了画面</td></tr>
                   <tr><th>validate.twig</th><td>バリデーションのエラー画面</td></tr>
                   <tr><th>exception.twig</th><td>例外投稿のエラー画面</td></tr>
-                  <tr><th>admin.mail.twig</th><td>管理者への通知メール</td></tr>
-                  <tr><th>user.mail.twig</th><td>ユーザーへの返信メール</td></tr>
+                  <tr><th>mail/admin.mail.twig</th><td>管理者への通知メール</td></tr>
+                  <tr><th>mail/user.mail.twig</th><td>ユーザーへの返信メール</td></tr>
                 </tbody>
               </table>
             </div>
@@ -274,8 +274,8 @@
                   <tr><th scope="col">Twigインクルードライブラリ</th><th>説明</th></tr>
                 </thead>
                 <tbody>
-                  <tr><th>{{'{% include "/assets/bootstrap.min.css.twig" %}'}}</th><td>Bootstrap Style のインラインCSS</td></tr>
-                  <tr><th>{{'{% include "/assets/bootstrap.min.js.twig" %}'}}</th><td>Bootstrap JavaScript のインラインJavaScript</td></tr>
+                  <tr><th>{{'{% include "/assets/bootstrap.min.css.twig" %}'}}</th><td>Bootstrap のインラインCSS</td></tr>
+                  <tr><th>{{'{% include "/assets/bootstrap.min.js.twig" %}'}}</th><td>Bootstrap のインラインJavaScript</td></tr>
                   <tr><th>{{'{% include "/utils/google-recaptcha-copyright.twig" %}'}}</th><td>reCAPTCHA使用時にGoogleクレジットをインライン表示するHTMLタグ</td></tr>
                 </tbody>
               </table>
