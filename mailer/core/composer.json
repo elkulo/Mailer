@@ -16,7 +16,6 @@
         "ext-json": "*",
         "egulias/email-validator": "^3.1",
         "filp/whoops": "^2.14",
-        "gettext/gettext": "^5.5",
         "google/recaptcha": "^1.2",
         "illuminate/database": "^8.55",
         "middlewares/whoops": "^2.0",
@@ -53,7 +52,6 @@
             "App\\": "src/"
         },
         "files": [
-            "helpers/locale.php",
             "helpers/console.php"
         ]
     },

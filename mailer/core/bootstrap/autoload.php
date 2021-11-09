@@ -27,7 +27,7 @@ $env = '.env' . ( ENV_IDENTIFY ? '.' .ENV_IDENTIFY: '' );
 if ( file_exists( rtrim(ENV_DIR_PATH, '/') . '/' . $env ) ) {
   \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/', $env )->load();
 } else {
-  die('There is no environment setting file.');
+  die('環境設定ファイルがありません。');
 }
 
 // Instantiate PHP-DI ContainerBuilder
@@ -72,9 +72,6 @@ date_default_timezone_set($settings->get('timeZone'));
 if (BASE_URL_PATH !== '/') {
   $app->setBasePath( '/' . trim(BASE_URL_PATH, '/') );
 }
-
-// 言語設定.
-locale($settings->get('siteLang'));
 
 // Register routes
 $routes = require __DIR__ . '/../app/routes.php';
