@@ -18,7 +18,7 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 		limit: 5,
 		count: 0,
 	};
-	let hasRecaptchaResponse = true;
+	let hasToken = true;
 
 	// Wrapper用のDOM生成.
 	const wrapper = document.createElement( 'div' );
@@ -62,34 +62,32 @@ const setReCaptcha = ( formID, siteKey, actionName = 'mailer' ) => {
 
 	// トークンの更新.
 	const changeToken = ( e = null ) => {
-		if ( ! hasRecaptchaResponse ) {
+		if ( ! hasToken ) {
 			return; // 初回でreCAPTCHAが確認できなければ二回目以降は無効.
 		}
 		new Promise( ( resolve, reject ) => {
-			grecaptcha.ready( async() => {
+			grecaptcha.ready( () => {
 				try {
-					await grecaptcha
+					grecaptcha
 						.execute( siteKey, { action: actionName })
-						.then( ( token ) => {
-							inputElement.captchaResponse.setAttribute(
-								'value',
-								token
-							);
-						});
-					await resolve();
+						.then( ( token ) => resolve( token ) );
 				} catch ( error ) {
 					reject( error );
 				}
 			});
 		})
-			.then( () => {
+			.then( ( token ) => {
+				inputElement.captchaResponse.setAttribute(
+					'value',
+					token
+				);
 				autoChangeToken( e && e.type === 'focus' );
 			})
 			.catch( ( error ) => {
 				if ( error ) {
 					console.error( '無効なreCAPTHCAのサイトキー' ); // eslint-disable-line no-console
 				}
-				hasRecaptchaResponse = false;
+				hasToken = false;
 			});
 	};
 

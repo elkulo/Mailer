@@ -487,7 +487,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v8.69.0",
+            "version": "v8.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -541,7 +541,7 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v8.69.0",
+            "version": "v8.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -592,7 +592,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v8.69.0",
+            "version": "v8.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -640,16 +640,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v8.69.0",
+            "version": "v8.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "43c7ffb6299ae55b000b286cf1278afd268ef29f"
+                "reference": "06a01de1d80a568079cab54b66ea710482c3ca29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/43c7ffb6299ae55b000b286cf1278afd268ef29f",
-                "reference": "43c7ffb6299ae55b000b286cf1278afd268ef29f",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/06a01de1d80a568079cab54b66ea710482c3ca29",
+                "reference": "06a01de1d80a568079cab54b66ea710482c3ca29",
                 "shasum": ""
             },
             "require": {
@@ -704,11 +704,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-10-29T19:46:53+00:00"
+            "time": "2021-11-09T22:47:38+00:00"
         },
         {
             "name": "illuminate/macroable",
-            "version": "v8.69.0",
+            "version": "v8.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -754,16 +754,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v8.69.0",
+            "version": "v8.70.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "a8851b7001530d3c11626a81449ed9b63dd10db7"
+                "reference": "1ed88eed1d179e5a27171324e57692366449eca0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/a8851b7001530d3c11626a81449ed9b63dd10db7",
-                "reference": "a8851b7001530d3c11626a81449ed9b63dd10db7",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/1ed88eed1d179e5a27171324e57692366449eca0",
+                "reference": "1ed88eed1d179e5a27171324e57692366449eca0",
                 "shasum": ""
             },
             "require": {
@@ -818,7 +818,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-10-29T13:34:03+00:00"
+            "time": "2021-11-09T17:40:38+00:00"
         },
         {
             "name": "middlewares/utils",
@@ -3657,16 +3657,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v5.3.1",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "accaddf133651d4b5cf81a119f25296736ffc850"
+                "reference": "d4394d044ed69a8f244f3445bcedf8a0d7fe2403"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/accaddf133651d4b5cf81a119f25296736ffc850",
-                "reference": "accaddf133651d4b5cf81a119f25296736ffc850",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/d4394d044ed69a8f244f3445bcedf8a0d7fe2403",
+                "reference": "d4394d044ed69a8f244f3445bcedf8a0d7fe2403",
                 "shasum": ""
             },
             "require": {
@@ -3689,7 +3689,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.3-dev"
+                    "dev-master": "5.4-dev"
                 }
             },
             "autoload": {
@@ -3719,7 +3719,7 @@
             ],
             "support": {
                 "issues": "https://github.com/vlucas/phpdotenv/issues",
-                "source": "https://github.com/vlucas/phpdotenv/tree/v5.3.1"
+                "source": "https://github.com/vlucas/phpdotenv/tree/v5.4.0"
             },
             "funding": [
                 {
@@ -3731,7 +3731,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-02T19:24:42+00:00"
+            "time": "2021-11-10T01:08:39+00:00"
         },
         {
             "name": "vlucas/valitron",
