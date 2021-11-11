@@ -154,7 +154,7 @@ class MailerPostData
     public function getPostStatus(): array
     {
         return [
-            '_date' => date('Y/m/d (D) H:i:s', time()),
+            '_date' => date($this->settings->get('dateFormat'), time()),
             '_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
             '_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
             '_url' => $this->getPageReferer(),
