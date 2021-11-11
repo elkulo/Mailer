@@ -19,4 +19,8 @@ return [
 
   // タイムゾーンの設定
   'TIME_ZONE' => env('TIME_ZONE'),
+  
+  // 時刻フォーマット
+  'DATE_FORMAT' => env('DATE_FORMAT'),
+
 ];
