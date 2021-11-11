@@ -9,8 +9,8 @@
  #  {% include '/utils/google-recaptcha-copyright.twig' %}  reCAPTCHA使用時にGoogleクレジットをインライン表示する場合のHTMLタグ
  #
  # Twig定数
- #  {{SITE_TITLE}}  サイトタイトル
- #  {{SITE_URL}}    サイトURL
+ #  {{__SITE_TITLE}}  サイトタイトル
+ #  {{__SITE_URL}}    サイトURL
  #
  # Twig変数
  #  {{CSRF|raw}}              CSRFタグのHTML
@@ -23,7 +23,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{SITE_TITLE}} - Mailer</title>
+    <title>{{__SITE_TITLE}} - Mailer</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
