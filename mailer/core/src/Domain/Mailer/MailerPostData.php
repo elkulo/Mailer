@@ -17,6 +17,13 @@ class MailerPostData
 {
 
     /**
+     * 設定値
+     *
+     * @var SettingsInterface
+     */
+    private $settings;
+
+    /**
      * メール設定値
      *
      * @var array
@@ -67,6 +74,7 @@ class MailerPostData
      */
     public function __construct(array $posts, SettingsInterface $settings)
     {
+        $this->settings = $settings;
         $this->mailSettings = $settings->get('mail');
         $this->formSettings = $settings->get('form');
 
@@ -147,9 +155,10 @@ class MailerPostData
     {
         return [
             '_date' => date('Y/m/d (D) H:i:s', time()),
-            '_ip' => $_SERVER['REMOTE_ADDR'],
-            '_host' => getHostByAddr($_SERVER['REMOTE_ADDR']),
+            '_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
+            '_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
             '_url' => $this->getPageReferer(),
+            '_ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
         ];
     }
 
@@ -204,12 +213,14 @@ class MailerPostData
         return array_merge(
             $this->postData,
             [
-                '__FROM_NAME' => $this->mailSettings['FROM_NAME'],
+                '__SITE_TITLE' => $this->settings->get('siteTitle'),
+                '__SITE_URL' => $this->settings->get('siteUrl'),
                 '__POST_ALL' => $this->getPostToString(),
                 '__DATE' => $status['_date'],
                 '__IP' => $status['_ip'],
                 '__HOST' => $status['_host'],
                 '__URL' => $status['_url'],
+                '__UA' => $status['_ua'],
             ]
         );
     }

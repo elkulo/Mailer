@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{SITE_TITLE}} - {% if Debug %}DASHBOARD{% else %}Hello...!!{% endif %}</title>
+    <title>{{__SITE_TITLE}} - {% if Debug %}DASHBOARD{% else %}Hello...!!{% endif %}</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
     <style>
@@ -75,7 +75,7 @@
             <ol class="list-group list-group-numbered rounded-0">
               <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0 rounded-0">
                 <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">formタグのPOSTを指定</div>
+                  <div class="h4 fw-bold">formタグの指定</div>
                   <p>action属性に <code>action="{{Router.mailer}}"</code> を、method属性に <code>method="post"</code> を設定します。
                   あとは自由にinput要素, textarea要素などを追加しましょう。</p>
                   <pre class="rounded text-secondary p-3 mt-2"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
@@ -85,6 +85,7 @@
   :
   &lt;input type="submit" name="submit" value="送信" /&gt;
 &lt;/form&gt;</code></pre>
+                  <p class="mb-1 text-danger" style="font-size:0.875rem">※ アンダースコア(_)から始まるname属性はシステムの予約語で使われるため使用できません。</p>
                 </div>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
@@ -209,8 +210,8 @@
                   <tr><th>index.twig</th><td>入力画面</td></tr>
                   <tr><th>confirm.twig</th><td>確認画面</td></tr>
                   <tr><th>complete.twig</th><td>完了画面</td></tr>
-                  <tr><th>validate.twig</th><td>バリデーションのエラー画面</td></tr>
-                  <tr><th>exception.twig</th><td>例外投稿のエラー画面</td></tr>
+                  <tr><th>validate.twig</th><td>バリデーションで拒否されたエラー画面</td></tr>
+                  <tr><th>exception.twig</th><td>システムに拒否された場合のエラー画面</td></tr>
                   <tr><th>mail/admin.mail.twig</th><td>管理者への通知メール</td></tr>
                   <tr><th>mail/user.mail.twig</th><td>ユーザーへの返信メール</td></tr>
                 </tbody>
@@ -222,15 +223,10 @@
                   <tr><th scope="col">Twig変数名</th><th>出力内容</th><th>使用できるTwigファイル</th></tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th>{{'{{ SITE_TITLE }}'}}</th>
-                    <td>サイト名</td>
-                    <td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig<br />admin.mail.twig<br />user.mail.twig</td>
-                  </tr>
-                  <tr>
-                    <th>{{'{{ SITE_URL }}'}}</th>
-                    <td>サイトルートのURL</td>
-                    <td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig<br />admin.mail.twig<br />user.mail.twig</td>
+                 <tr>
+                    <th>{{'{{ name属性 }}'}}</th>
+                    <td>該当するname属性からPOSTされたvalue値。<br />例えば name="fullname" のvalue属性の値を {{'{{ fullname }}'}} で表示します。</td>
+                    <td>confirm.twig<br />admin.mail.twig<br />user.mail.twig</td>
                   </tr>
                   <tr><th>{{'{{ Action.url }}'}}</th><td>formタグのaction属性のURLを自動設定</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr>
@@ -247,24 +243,30 @@
                         {{'{{ message }}'}}<br />
                         {{'{% endfor %}'}}
                     </th>
-                    <td>検証されたエラー内容の配列。<br />配列の中は検証結果のエラーメッセージ</td>
+                    <td>検証されたエラー内容の配列。<br />配列の中はバリデーション結果のエラーメッセージ</td>
                     <td>validate.twig</td>
                   </tr>
-                  <tr><th>{{'{{ ExceptionMessage }}'}}</th><td>システムが拒否した内容のメッセージ</td><td>exception.twig</td></tr>
+                  <tr><th>{{'{{ ExceptionMessage }}'}}</th><td>システムが拒否した時のメッセージ</td><td>exception.twig</td></tr>
                   <tr><th>{{'{{ Return.url }}'}}</th><td>設定で指定された戻り先のURL</td><td>complete.twig</td></tr>
                   <tr><th>{{'{{ CSRF | raw }}'}}</th><td>CSRFタグのHTML</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr><th>{{'{{ reCAPTCHA.script | raw }}'}}</th><td>reCAPTCHAのHTML</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr><th>{{'{{ reCAPTCHA.key }}'}}</th><td>reCAPTCHAのサイトキー</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr>
-                    <th>{{'{{ name属性 }}'}}</th>
-                    <td>該当するname属性からPOSTされたvalue値。<br />例えば name="fullname" のvalue属性の値を {{'{{ fullname }}'}} で表示します。</td>
-                    <td>confirm.twig<br />admin.mail.twig<br />user.mail.twig</td>
+                    <th>{{'{{ __SITE_TITLE }}'}}</th>
+                    <td>サイト名</td>
+                    <td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig<br />admin.mail.twig<br />user.mail.twig</td>
                   </tr>
-                  <tr><th>{{'{{ __POST_ALL }}'}}</th><td>POSTされたvalue値の一覧を自動整形</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr>
+                    <th>{{'{{ __SITE_URL }}'}}</th>
+                    <td>サイトルートのURL</td>
+                    <td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig<br />admin.mail.twig<br />user.mail.twig</td>
+                  </tr>
+                  <tr><th>{{'{{ __POST_ALL }}'}}</th><td>POSTされたvalue値の一覧を表示<br />また、アンダースコア(_)から始まるname属性のvalue値は除外されます。</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
                   <tr><th>{{'{{ __DATE }}'}}</th><td>POSTされた時刻</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __IP }}'}}</th><td>クライアントのIP</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __HOST }}'}}</th><td>サイトのホスト名</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __URL }}'}}</th><td>POSTされたページのURL</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __IP }}'}}</th><td>送信者のIP</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __HOST }}'}}</th><td>送信元のサイトのホスト名</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __URL }}'}}</th><td>送信元のページのURL</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __UA }}'}}</th><td>送信者のユーザーエージェント</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
                 </tbody>
               </table>
             </div>
