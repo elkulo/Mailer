@@ -1,9 +1,12 @@
+@use "../../variables/variables" as variable;
+@use "../../mixins/mixins" as mixin;
+
 .site-header {
 	
 	.wrap {
 		padding: 0 0 0 1rem;
 		
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			padding: 0 1rem 0 2rem;
 			max-width: 100%;
 		}
@@ -14,7 +17,7 @@
 		justify-content: space-between;
 		align-items: center;
 
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			padding: 0.25rem 0;
 		}
 

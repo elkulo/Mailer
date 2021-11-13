@@ -1,3 +1,6 @@
+@use "../../variables/variables" as variable;
+@use "../../mixins/mixins" as mixin;
+
 .navigation-top {
 	.site-description {
 		display: none;
@@ -6,7 +9,7 @@
 		font-weight: 500;
 		margin: 0.125rem 1rem;
 
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			display: block;
 			text-align: right;
 		}
@@ -19,12 +22,12 @@
 		color: #fff;
 		white-space: nowrap;
 
-		@include media(tablet) {
-			color: $color__link;
+		@include mixin.media(tablet) {
+			color: variable.$color__link;
 		}
 
 		&:hover {
-			color: $color__link-hover;
+			color: variable.$color__link-hover;
 		}
 	}
 
@@ -33,7 +36,7 @@
 		padding: 5rem 0 0;
 		margin: 0;
 
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			padding: 0;
 			display: flex;
 			justify-content: flex-end;
@@ -45,7 +48,7 @@
 			margin: 0;
 			padding: 0;
 
-			@include media(tablet) {
+			@include mixin.media(tablet) {
 				margin-left: 1rem;
 
 				&:first-child {
@@ -79,7 +82,7 @@
 					transform: scaleX(1) translateZ(0);
 				}
 
-				@include media(tablet) {
+				@include mixin.media(tablet) {
 					padding: 0 1rem 0.125rem;
 					font-size: 1rem;
 
@@ -128,7 +131,7 @@ body.drawer-on {
 		background: rgba(0, 0, 0, 0.9);
 	}
 
-	@include media(tablet) {
+	@include mixin.media(tablet) {
 		position: static;
 		width: auto;
 		height: auto;
@@ -161,7 +164,7 @@ body.drawer-on {
 		color: currentColor;
 	}
 
-	@include media(tablet) {
+	@include mixin.media(tablet) {
 		display: none;
 	}
 

@@ -1,13 +1,16 @@
+@use "../variables/variables" as variable;
+@use "../mixins/mixins" as mixin;
+
 .wrap {
 	box-sizing: content-box;
 	display: flow-root;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: $size__site-max-content;
-	padding-left: $size__spacing-unit;
-	padding-right: $size__spacing-unit;
+	max-width: variable.$size__site-max-content;
+	padding-left: variable.$size__spacing-unit;
+	padding-right: variable.$size__spacing-unit;
 	
-	@include media(desktop) {
+	@include mixin.media(desktop) {
 		padding-left: 0;
 		padding-right: 0;
 	}

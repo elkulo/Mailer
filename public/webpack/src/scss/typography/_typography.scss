@@ -1,22 +1,28 @@
+@use "../variables/variables" as variable;
+@use "../mixins/mixins" as mixin;
+
+@forward "headings";
+
+@forward "copy";
 
 html {
-	font-size: $font__size_base;
+	font-size: variable.$font__size_base;
 }
 
 body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	color: $color__text-main;
-	font-family: $font__body;
+	color: variable.$color__text-main;
+	font-family: variable.$font__body;
 	font-weight: 400;
 	font-size: 1rem;
-	line-height: $font__line-height-body;
+	line-height: variable.$font__line-height-body;
 	margin: 0;
 	text-rendering: optimizeLegibility;
-	font-size: $font__size-sm;
+	font-size: variable.$font__size-sm;
 
-	@include media(tablet) {
-		font-size: $font__size_base;
+	@include mixin.media(tablet) {
+		font-size: variable.$font__size_base;
 	}	
 }
 
@@ -25,13 +31,9 @@ input,
 select,
 optgroup,
 textarea {
-	color: $color__text-main;
-	font-family: $font__body;
+	color: variable.$color__text-main;
+	font-family: variable.$font__body;
 	font-weight: 400;
-	line-height: $font__line-height-body;
+	line-height: variable.$font__line-height-body;
 	text-rendering: optimizeLegibility;
 }
-
-@import "headings";
-
-@import "copy";

@@ -1,0 +1,88 @@
+@use "../variables/variables" as variable;
+@use "../mixins/mixins" as mixin;
+
+body {
+	background-color: variable.$color__background-body;
+}
+
+a {
+	@include mixin.button-all-transition();
+	color: variable.$color__link;
+	box-shadow: 0 0px 0 variable.$color__link;
+	text-decoration: none;
+
+	&:visited {
+		color: variable.$color__link-visited;
+	}
+
+	&:hover,
+	&:active {
+		color: variable.$color__link-hover;
+		outline: 0;
+		text-decoration: none;
+		box-shadow: 0 2px 0 variable.$color__link-hover;
+	}
+
+	&:focus {
+		outline: thin;
+		outline-style: dotted;
+		text-decoration: none;
+	}
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	clear: both;
+	margin: variable.$size__spacing-unit 0;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+hr {
+	background-color: variable.$color__text-light;
+	border: 0;
+	height: 2px;
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+	position: relative;
+}
+
+figure {
+	margin: 0;
+}
+
+blockquote {
+	border-left: 2px solid variable.$color__link;
+	margin-left: 0;
+	padding: 0 0 0 variable.$size__spacing-unit;
+
+	> p {
+		margin: 0 0 variable.$size__spacing-unit;
+	}
+
+	cite {
+		color: variable.$color__text-light;
+	}
+}
+
+video {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+
+	img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+}

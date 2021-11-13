@@ -1,3 +1,6 @@
+@use "../../variables/variables" as variable;
+@use "../../mixins/mixins" as mixin;
+
 .custom-header {
 	position: relative;
 	overflow: hidden;
@@ -10,13 +13,13 @@
 	padding-bottom: 100%;
 	min-height: 600px;
 
-	@include media(tablet) {
+	@include mixin.media(tablet) {
 		padding-bottom: 75%;
 	}
-	@include media(desktop) {
+	@include mixin.media(desktop) {
 		padding-bottom: 50%;
 	}
-	@include media(wide) {
+	@include mixin.media(wide) {
 		padding-bottom: 0;
 		min-height: 800px;
 	}
@@ -37,7 +40,7 @@
 			font-weight: 900;
 			letter-spacing: -0.02em;
 
-			@include media(tablet) {
+			@include mixin.media(tablet) {
 				font-size: 3.5rem;
 			}
 
@@ -53,7 +56,7 @@
 			color: #f1f1f1;
 			font-size: 0.875rem;
 
-			@include media(mobile) {
+			@include mixin.media(mobile) {
 				font-size: 1rem;
 			}
 		}
@@ -75,8 +78,8 @@
 			margin-top: 0.5rem;
 			color: #eee;
 			text-shadow: 0 0 3px #000;
-			font-family: $font__code;
-			font-size: $font__size-sm;
+			font-family: variable.$font__code;
+			font-size: variable.$font__size-sm;
 			font-weight: 400;
 		}
 	}
