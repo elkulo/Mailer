@@ -1,3 +1,5 @@
+@use "structure" as structure;
+
 $columns: (
 	1: calc(1 * (100vw / 12)),
 	2: calc(2 * (100vw / 12)),
@@ -13,4 +15,4 @@ $columns: (
 	12: calc(12 * (100vw / 12))
 );
 
-$columns__margin: $size__spacing-unit;
+$columns__margin: structure.$size__spacing-unit;

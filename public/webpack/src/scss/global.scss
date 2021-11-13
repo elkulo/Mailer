@@ -1,37 +1,25 @@
 /*!
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 
-/**
- * [命名規則] BEMによるSass(SCSS)
- * 
- * 例1: .block__element--modifier
- * 例2: .block__block__list__item
- */
+/* 1.Typography */
 
-/* 1.Mixins */
+@use "typography/typography";
 
-@import "variables-site/variables-site";
-@import "mixins/mixins-master";
+/* 2.Elements */
 
-/* 2.Typography */
+@use "elements/elements";
 
-@import "typography/typography";
+/* 3.Forms */
 
-/* 3.Elements */
+@use "forms/forms";
 
-@import "elements/elements";
+/* 4.Layout */
 
-/* 4.Forms */
+@use "layout/layout";
 
-@import "forms/forms";
+/* 5.Site */
 
-/* 5.Layout */
-
-@import "layout/layout";
-
-/* 6.Site */
-
-@import "site/site";
+@use "site/site";

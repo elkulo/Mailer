@@ -1,13 +1,16 @@
+@use "../variables/variables" as variable;
+@use "../mixins/mixins" as mixin;
+
 table {
-	margin: 0 0 $size__spacing-unit;
+	margin: 0 0 variable.$size__spacing-unit;
 	border-collapse: collapse;
 	width: 100%;
-	font-family: $font__heading;
+	font-family: variable.$font__heading;
 
 	td,
 	th {
 		padding: 0.5em;
-		border: 1px solid $color__text-light;
+		border: 1px solid variable.$color__text-light;
 		word-break: break-all;
 	}
 }
