@@ -1,0 +1,35 @@
+@use "../variables/variables" as variable;
+@use "../mixins/mixins" as mixin;
+
+html {
+	font-size: variable.$font__size_base;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: variable.$color__text-main;
+	font-family: variable.$font__body;
+	font-weight: 400;
+	font-size: 1rem;
+	line-height: variable.$font__line-height-body;
+	margin: 0;
+	text-rendering: optimizeLegibility;
+	font-size: variable.$font__size-sm;
+
+	@include mixin.media(tablet) {
+		font-size: variable.$font__size_base;
+	}	
+}
+
+button,
+input,
+select,
+optgroup,
+textarea {
+	color: variable.$color__text-main;
+	font-family: variable.$font__body;
+	font-weight: 400;
+	line-height: variable.$font__line-height-body;
+	text-rendering: optimizeLegibility;
+}

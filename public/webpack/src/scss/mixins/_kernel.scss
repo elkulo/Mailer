@@ -1,9 +1,10 @@
+@use "sass:math";
 @use "../variables/variables" as variable;
+@use "utilities" as utility;
 
 // Rem output with px fallback
-@mixin font-size($sizeValue: 1) {
-	font-size: ($sizeValue * 16) * 1px;
-	font-size: $sizeValue * 1rem;
+@mixin font-size($sizeValue: 16) {
+	font-size: math.div($sizeValue, variable.$font__size_base) * 1rem;
 }
 
 // Center block
@@ -110,7 +111,7 @@
 	max-width: variable.$size__site-tablet-content;
 	margin: auto;
 
-	@include media(desktop) {
+	@include utility.media(desktop) {
 		max-width: variable.$size__site-desktop-content;
 	}
 }
