@@ -118,11 +118,14 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         // データベースハンドラーをセット
         $this->db = $db;
 
-        // POSTを格納
-        $this->postData = new HealthCheckPostData($_POST, $settings);
+        // POSTデータを取得
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING)?? [];
 
-        // バリデーション準備
-        $this->validate->set($_POST);
+        // POSTデータをサニタイズして格納
+        $this->postData = new HealthCheckPostData($posts, $settings);
+
+        // POSTデータをバリデーションに格納
+        $this->validate->set($posts);
     }
 
     /**
@@ -288,7 +291,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     3 => [
                         'description' => 'HTTPSで暗号化されたサイト接続ですか？',
-                        'success' => (isset($_SERVER['HTTPS'])) ? true : false
+                        'success' => filter_input(INPUT_SERVER, 'HTTPS')? true: false
                     ],
                     4 => [
                         'description' => 'SSL/TLSで暗号化されたメールを送信されていますか？',

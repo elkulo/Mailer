@@ -119,24 +119,25 @@ class InMemoryMailerRepository implements MailerRepository
         // データベースハンドラーをセット
         $this->db = $db;
 
-        // POSTを格納
-        $this->postData = new MailerPostData($_POST, $settings);
+        // POSTデータを取得
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING)?? [];
 
-        // バリデーション準備
-        $this->validate->set($_POST);
+        // POSTデータをサニタイズして格納
+        $this->postData = new MailerPostData($posts, $settings);
+
+        // POSTデータをバリデーションに格納
+        $this->validate->set($posts);
+
+        // サニタイズしたPOSTデータを取得
+        $postData = $this->postData->getPosts();
 
         // 設定値の取得
         $formSettings = $this->settings->get('form');
 
-        // POSTデータ
-        $postData = $this->postData->getPosts();
-
         // ユーザーメールを形式チェックして格納
         $emailAttr = isset($formSettings['EMAIL_ATTRIBUTE']) ? $formSettings['EMAIL_ATTRIBUTE'] : null;
-        if (isset($postData[$emailAttr])) {
-            if ($this->validate->isCheckMailFormat($postData[$emailAttr])) {
-                $this->postData->setUserMail($postData[$emailAttr]);
-            }
+        if (isset($postData[$emailAttr]) && $this->validate->isCheckMailFormat($postData[$emailAttr])) {
+            $this->postData->setUserMail($postData[$emailAttr]);
         }
     }
 
