@@ -31,7 +31,7 @@
     <div class="container" style="max-width: 768px">
       <div class="row shadow-sm bg-white border rounded">
         <div class="col p-4 px-sm-5">
-          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
+          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate enctype="multipart/form-data">
 
             <div class="mb-3">
               <div class="form-label">件名</div>
@@ -102,6 +102,11 @@
             <div class="mb-3 form-check">
               <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
               <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerAvatar" class="form-label">添付画像(JPEG/GIF/PNG)</label>
+              <input type="file" id="CustomerAvatar" class="form-control" name="attachmentAvatar" accept="image/jpeg, image/png">
             </div>
 
             <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">

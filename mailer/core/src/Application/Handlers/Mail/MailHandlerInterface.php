@@ -18,7 +18,14 @@ interface MailHandlerInterface
      * @param  string $subject
      * @param  string $body
      * @param  array $header
+     * @param  array $attachments
      * @return bool
      */
-    public function send(string $to, string $subject, string $body, array $header = array()): bool;
+    public function send(
+        string $to,
+        string $subject,
+        string $body,
+        array $header = array(),
+        array $attachments = array()
+    ): bool;
 }
