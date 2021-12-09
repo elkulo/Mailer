@@ -15,7 +15,7 @@ return function (ContainerBuilder $containerBuilder) {
             $site = include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/site.php';
 
             // ログファイル.
-            $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
+            $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date('Y-m-d') . '.log';
 
             return new Settings([
                 'phpMinSupport' => '7.4.0',

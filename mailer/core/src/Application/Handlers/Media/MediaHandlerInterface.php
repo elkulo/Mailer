@@ -19,13 +19,6 @@ interface MediaHandlerInterface
     public function init(): void;
 
     /**
-     * アップロード画像を取得
-     *
-     * @return array|bool
-     */
-    public function get($key);
-
-    /**
      * アップロード画像をすべて取得
      *
      * @return array
@@ -35,7 +28,7 @@ interface MediaHandlerInterface
     /**
      * アップロード画像を削除
      *
-     * @return bool
+     * @return void
      */
-    public function destroy(): bool;
+    public function destroy(): void;
 }
