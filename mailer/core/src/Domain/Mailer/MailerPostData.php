@@ -317,7 +317,7 @@ class MailerPostData
             $output = $this->changeHankaku($output, $name);
 
             // 確認をセット
-            $query[]= [
+            $query[] = [
                 'name' => $this->nameToLabel($name) . sprintf(
                     '<input type="hidden" name="%1$s" value="%2$s" />',
                     $this->esc($name),
@@ -338,7 +338,6 @@ class MailerPostData
     {
         return $this->esc($this->formSettings['RETURN_PAGE']);
     }
-
 
     /**
      * 固有のトークン生成
@@ -383,7 +382,7 @@ class MailerPostData
      */
     public function getPageReferer(): string
     {
-        if (! $this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
+        if (!$this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
             return $this->esc($_SERVER['HTTP_REFERER']);
         }
         return $this->esc($this->pageReferer);

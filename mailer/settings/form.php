@@ -94,7 +94,20 @@ return [
    * 
    * 添付ファイル「type="file"」のname属性の値
    */
-  'ATTACHMENT_ATTRIBUTES' => ['uploadFile'],
+  'ATTACHMENT_ATTRIBUTES' => [
+    'uploadFile' => [
+      'image/png',
+      'image/gif',
+      'image/jpeg',
+      'image/jpg'
+    ],
+    'attachmentAvatar' => [
+      'image/png',
+      'image/gif',
+      'image/jpeg',
+      'image/jpg'
+    ]
+  ],
 
   /**(12)
    * 
@@ -105,6 +118,13 @@ return [
     'image/gif',
     'image/jpeg'
   ],
+
+  /**(12)
+   * 
+   * 添付ファイルの最大サイズ(MB単位)の制限
+   * 合計値をサーバーの送受信の容量以内に納める必要があります。
+   */
+  'ATTACHMENT_MAXSIZE' => 400,
 
   /**(13)
    * 

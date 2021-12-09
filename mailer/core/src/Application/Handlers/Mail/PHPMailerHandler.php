@@ -51,10 +51,16 @@ class PHPMailerHandler implements MailHandlerInterface
      * @param  string $subject
      * @param  string $body
      * @param  array $header
+     * @param  array $attachments
      * @return bool
      */
-    final public function send(string $to, string $subject, string $body, array $header = array()): bool
-    {
+    final public function send(
+        string $to,
+        string $subject,
+        string $body,
+        array $header = array(),
+        array $attachments = array()
+    ): bool {
         $mailSettings = $this->mailSettings;
         $formSettings = $this->formSettings;
 
@@ -111,6 +117,17 @@ class PHPMailerHandler implements MailHandlerInterface
 
             // 受信失敗時のリターン先.
             $mailer->Sender = $mailSettings['SMTP_MAILADDRESS'];
+
+            // 添付ファイル.
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    try {
+                        $mailer->addAttachment($attachment);
+                    } catch (Exception $e) {
+                        continue;
+                    }
+                }
+            }
 
             /**
              * デバックレベル 0 ~ 2

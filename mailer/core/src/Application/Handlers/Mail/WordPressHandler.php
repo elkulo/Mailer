@@ -20,15 +20,22 @@ class WordPressHandler implements MailHandlerInterface
      * @param  string $to
      * @param  string $subject
      * @param  string $body
-     * @param  array $header
+     * @param  array  $header
+     * @param  array  $attachments
      * @return bool
      */
-    final public function send(string $to, string $subject, string $body, array $header = array()): bool
-    {
+    final public function send(
+        string $to,
+        string $subject,
+        string $body,
+        array $header = array(),
+        array $attachments = array()
+    ): bool {
         try {
             // WordPress関数で送信.
             if (function_exists('wp_mail')) {
-                if (! \wp_mail($to, $subject, $body, $header)) {
+                // phpcs:ignore
+                if (!\wp_mail($to, $subject, $body, $header, $attachments)) {
                     throw new \Exception('Error wp_mail.');
                 }
             } else {

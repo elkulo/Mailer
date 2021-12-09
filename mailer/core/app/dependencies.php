@@ -16,6 +16,8 @@ use Slim\Flash\Messages;
 use App\Application\Settings\SettingsInterface;
 use App\Application\Router\RouterInterface;
 use App\Application\Router\Router;
+use App\Application\Handlers\Media\MediaHandlerInterface;
+use App\Application\Handlers\Media\MediaHandler;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
 use App\Application\Handlers\Validate\ValidateHandler;
 use App\Application\Handlers\Mail\MailHandlerInterface;
@@ -88,6 +90,9 @@ return function (ContainerBuilder $containerBuilder) {
             $twig->getEnvironment()->addGlobal('__SITE_URL', $settings->get('siteUrl'));
             return $twig;
         },
+
+        // 画像アップローダーの登録.
+        MediaHandlerInterface::class => \DI\autowire(MediaHandler::class),
 
         // 検証ハンドラーの登録.
         ValidateHandlerInterface::class => \DI\autowire(ValidateHandler::class),
