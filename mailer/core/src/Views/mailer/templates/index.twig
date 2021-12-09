@@ -107,6 +107,9 @@
             <div class="mb-3">
               <label for="CustomerAvatar" class="form-label">添付画像(JPEG/GIF/PNG)</label>
               <input type="file" id="CustomerAvatar" class="form-control" name="attachmentAvatar" accept="image/jpeg, image/png">
+              <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('CustomerAvatar').value = ''">
+                画像クリア
+              </button>
             </div>
 
             <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">

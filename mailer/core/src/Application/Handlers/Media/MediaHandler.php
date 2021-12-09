@@ -44,6 +44,7 @@ class MediaHandler implements MediaHandlerInterface
     {
         $this->settings = $settings;
         $this->uploadDir = $this->settings->get('appPath') . '/var/tmp/';
+        $this->clearOldFiles();
         $this->flashTmpFiles();
     }
 
@@ -51,7 +52,6 @@ class MediaHandler implements MediaHandlerInterface
      * アップロード画像を保存
      *
      * @return void
-     * @throws \Exception アップロードに失敗した理由
      */
     public function init(): void
     {
@@ -100,16 +100,6 @@ class MediaHandler implements MediaHandlerInterface
     }
 
     /**
-     * アップロード画像を取得
-     *
-     * @return array|bool
-     */
-    public function get($key)
-    {
-        return isset($this->files[$key]) ? $this->files[$key] : false;
-    }
-
-    /**
      * アップロード画像をすべて取得
      *
      * @return array
@@ -135,9 +125,9 @@ class MediaHandler implements MediaHandlerInterface
     /**
      * アップロード画像を削除
      *
-     * @return bool
+     * @return void
      */
-    public function destroy(): bool
+    public function destroy(): void
     {
         try {
             foreach ($this->files as $file) {
@@ -154,9 +144,34 @@ class MediaHandler implements MediaHandlerInterface
             }
         } catch (\Exception $e) {
             console($e->getMessage());
-            return false;
         }
-        return true;
+    }
+
+    /**
+     * 古いアップロード画像を削除
+     *
+     * @return void
+     */
+    private function clearOldFiles(): void
+    {
+        try {
+            $expire = strtotime('-1 hour');
+
+            $listDirFiles = scandir($this->uploadDir);
+
+            foreach ($listDirFiles as $file) {
+                $filePath = $this->uploadDir . $file;
+                // フォルダと隠しファイルは除外
+                if (is_file($filePath) && substr($file, 0, 1) !== '.') {
+                    $mod = filemtime($filePath);
+                    if ($mod < $expire) {
+                        unlink($filePath);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            console($e->getMessage());
+        }
     }
 
     /**
@@ -166,7 +181,6 @@ class MediaHandler implements MediaHandlerInterface
      */
     private function seveTmpFiles(): void
     {
-        // セッションにNonceを保存
         $_SESSION['updateFiles'] = $this->files;
     }
 
