@@ -92,26 +92,17 @@ return [
 
   /**(11)
    * 
-   * 添付ファイル「type="file"」のname属性の値
+   * フォームからの添付ファイル送信を許可
+   * 「type="file"」のname属性の値
    */
   'ATTACHMENT_ATTRIBUTES' => [
-    'uploadFile' => [
-      'image/png',
-      'image/gif',
-      'image/jpeg',
-      'image/jpg'
-    ],
-    'attachmentAvatar' => [
-      'image/png',
-      'image/gif',
-      'image/jpeg',
-      'image/jpg'
-    ]
+    'uploadFile',
+    'attachmentAvatar'
   ],
 
   /**(12)
    * 
-   * 添付ファイルで許可するファイルの種類
+   * フォームからの添付ファイルで許可するファイルの種類
    */
   'ATTACHMENT_ACCEPTS' => [
     'image/png',
@@ -119,36 +110,36 @@ return [
     'image/jpeg'
   ],
 
-  /**(12)
+  /**(13)
    * 
-   * 添付ファイルの最大サイズ(MB単位)の制限
+   * フォームからの添付ファイルの最大サイズ(MB単位)の制限
    * 合計値をサーバーの送受信の容量以内に納める必要があります。
    */
   'ATTACHMENT_MAXSIZE' => 400,
 
-  /**(13)
+  /**(14)
    * 
    * 日本語を含まない文章の受付をブロック
    * 本文にあたるname属性を1つ指定してください。
    */
   'MULTIBYTE_ATTRIBUTE' => 'requestContent',
 
-  /**(14)
+  /**(15)
    * 
    * 禁止ワードを含む文章をブロック
    */
   'WORDFILTER_ATTRIBUTE' => 'requestContent',
 
-  /**(15)
+  /**(16)
    * 
    * 禁止ワードのリスト
    * 単語は半角全角を別々の単語と認識します。
    * 半角スペースで1つの単語として区切られます。
-   * (14)で指定のname属性で判定します。
+   * (15)で指定のname属性で判定します。
    */
   'BLOCK_NG_WORD' => 'bitch fuck',
 
-  /**(16)
+  /**(17)
    * 
    * 禁止メールアドレスからの送信をブロック
    * 配列で複数指定してください。
@@ -163,21 +154,30 @@ return [
     'noreply',
   ],
 
-  /**(17)
+  /**(18)
    * 
    * 確認画面のスキップ(スキップする=1, スキップしない=0)
    * 投稿画面からのPOSTを即時送信します。
    */
   'IS_CONFIRM_SKIP' => 0,
 
-  /**(18)
+  /**(19)
    * 
    * HTMLタグを使用したメールテンプレート(HTML形式=1, Plain形式=0)
    * 入力内容の改行にはTwigタグの nl2br を指定する必要があります。
    */
   'IS_HTMLMAIL_TEMPLATE' => 0,
 
-  /**(19)
+  /**(20)
+   * 
+   * ユーザ宛の自動返信メールの添付ファイル(オプション)
+   * templates/attachment/内に添付ファイルを配置し
+   * 配列で添付したいファイル名を指定してください。
+   * 「attachment」ディレクトリがなければ作成する必要があります。
+   */
+  'USER_MAIL_ATTACHMENTS' => [],
+
+  /**(21)
    * 
    * 管理者宛のメールテンプレート(オプション)
    * PHPで生成したTwigテンプレートを使用する場合
@@ -185,7 +185,7 @@ return [
    */
   'TEMPLATE_ADMIN_MAIL' => '',
 
-  /**(20)
+  /**(22)
    * 
    * ユーザ宛のメールテンプレート(オプション)
    * PHPで生成したTwigテンプレートを使用する場合

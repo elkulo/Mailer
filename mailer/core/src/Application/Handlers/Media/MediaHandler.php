@@ -60,7 +60,14 @@ class MediaHandler implements MediaHandlerInterface
         $file = [];
 
         try {
-            foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $key => $allowed) {
+            foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $key) {
+                // 許可するファイルタイプ
+                $accepts = (empty($formSettings['ATTACHMENT_ACCEPTS']))? [
+                    'image/png',
+                    'image/gif',
+                    'image/jpeg'
+                ]: $formSettings['ATTACHMENT_ACCEPTS'];
+
                 if (isset($_FILES[$key]) && !empty($_FILES[$key]['tmp_name'])) {
                     $file = [
                         '_origin_tmp' => $_FILES[$key]['tmp_name'],
@@ -74,7 +81,7 @@ class MediaHandler implements MediaHandlerInterface
                     // POSTされたファイルの判定.
                     if (is_writable($uploadDir) && is_uploaded_file($file['_origin_tmp'])) {
                         // 許可されたファイルか判定.
-                        if (!in_array($file['type'], $allowed)) {
+                        if (!in_array($file['type'], $accepts)) {
                             throw new \Exception('許可されていない拡張子');
                         }
 
