@@ -55,16 +55,16 @@ class FileDataHandler implements FileDataHandlerInterface
         $this->settings = $settings;
         $this->uploadDir = $this->settings->get('appPath') . '/var/tmp/';
         $this->destroyOldFiles();
-        $this->flashTmpFiles();
     }
 
     /**
      * アップロード画像を保存
      *
+     * @param  bool $clear 一時ファイルを読み込み削除
      * @return void
      * @throws \Exception  アップロードエラー
      */
-    public function init(): void
+    public function init(bool $clear = false): void
     {
         $formSettings = $this->settings->get('form');
         $uploadDir = $this->uploadDir;
@@ -72,6 +72,11 @@ class FileDataHandler implements FileDataHandlerInterface
         $fileNames = [];
 
         try {
+            // 一時ファイルを読み込み.
+            if ($clear) {
+                $this->flashTmpFiles();
+            }
+
             foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attributeName) {
                 // 許可するファイルタイプ
                 $accepts = (empty($formSettings['ATTACHMENT_ACCEPTS']))? [

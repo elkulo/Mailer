@@ -16,7 +16,7 @@ interface FileDataHandlerInterface
      *
      * @return void
      */
-    public function init(): void;
+    public function init(bool $clear = false): void;
 
     /**
      * Twig変数の取得
