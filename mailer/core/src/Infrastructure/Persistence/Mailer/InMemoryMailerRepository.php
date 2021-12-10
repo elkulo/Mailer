@@ -311,6 +311,10 @@ class InMemoryMailerRepository implements MailerRepository
             if (empty($formSettings['IS_CONFIRM_SKIP'])) {
                 // 重複投稿をチェックは固有のメールの送信トークンを削除
                 $this->postData->checkinMailerToken();
+
+                // 画像のアップロード
+                // NOTE: 確認画面を挟む場合は引数trueでセッションからアップロード画像を読み込み、エラーの場合は例外をスローします。
+                $this->fileData->init(true);
             } else {
                 // 重複投稿をチェックはCSRFトークンを削除
                 $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
