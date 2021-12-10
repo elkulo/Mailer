@@ -19,6 +19,13 @@ interface FileDataHandlerInterface
     public function init(bool $clear = false): void;
 
     /**
+     * 変数の取得
+     *
+     * @return array
+     */
+    public function getFileData(): array;
+
+    /**
      * Twig変数の取得
      *
      * @return array
