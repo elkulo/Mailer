@@ -66,6 +66,8 @@ return [
     'phoneNumber' => '電話番号',
     'requestContent' => 'ご要望',
     'personalInformation' => '個人情報取扱',
+    'uploadFile' => '添付ファイル1',
+    'attachmentAvatar' => '添付ファイル2'
   ],
 
   /**(9)

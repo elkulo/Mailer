@@ -452,9 +452,9 @@ class MailerPostData
     /**
      * エスケープ
      *
-     * @param  mixed $content
+     * @param  array|string $content
      * @param  string $encode
-     * @return mixed
+     * @return array|string
      */
     private function esc($content, string $encode = 'UTF-8')
     {
@@ -472,8 +472,8 @@ class MailerPostData
     /**
      * 除去
      *
-     * @param  mixed $content
-     * @return mixed
+     * @param  array|string $content
+     * @return array|string
      */
     private function kses($content)
     {
