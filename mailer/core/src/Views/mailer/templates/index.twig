@@ -105,7 +105,15 @@
             </div>
 
             <div class="mb-3">
-              <label for="CustomerAvatar" class="form-label">添付画像(JPEG/GIF/PNG)</label>
+              <label for="UploadFile" class="form-label">添付画像1(JPEG/GIF/PNG)</label>
+              <input type="file" id="UploadFile" class="form-control" name="uploadFile" accept="image/jpeg, image/png">
+              <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('UploadFile').value = ''">
+                画像クリア
+              </button>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerAvatar" class="form-label">添付画像2(JPEG/GIF/PNG)</label>
               <input type="file" id="CustomerAvatar" class="form-control" name="attachmentAvatar" accept="image/jpeg, image/png">
               <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('CustomerAvatar').value = ''">
                 画像クリア

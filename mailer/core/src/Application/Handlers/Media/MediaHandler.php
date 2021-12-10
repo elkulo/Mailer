@@ -9,9 +9,17 @@ declare(strict_types=1);
 namespace App\Application\Handlers\Media;
 
 use App\Application\Settings\SettingsInterface;
+use Psr\Log\LoggerInterface;
 
 class MediaHandler implements MediaHandlerInterface
 {
+
+    /**
+     * ロガー
+     *
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * 設定値
@@ -37,11 +45,13 @@ class MediaHandler implements MediaHandlerInterface
     /**
      * コンストラクタ
      *
+     * @param LoggerInterface $logger,
      * @param  SettingsInterface $settings
      * @return void
      */
-    public function __construct(SettingsInterface $settings)
+    public function __construct(LoggerInterface $logger, SettingsInterface $settings)
     {
+        $this->logger = $logger;
         $this->settings = $settings;
         $this->uploadDir = $this->settings->get('appPath') . '/var/tmp/';
         $this->clearOldFiles();
@@ -52,15 +62,17 @@ class MediaHandler implements MediaHandlerInterface
      * アップロード画像を保存
      *
      * @return void
+     * @throws \Exception  アップロードエラー
      */
     public function init(): void
     {
         $formSettings = $this->settings->get('form');
         $uploadDir = $this->uploadDir;
         $file = [];
+        $fileNames = [];
 
         try {
-            foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $key) {
+            foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attributeName) {
                 // 許可するファイルタイプ
                 $accepts = (empty($formSettings['ATTACHMENT_ACCEPTS']))? [
                     'image/png',
@@ -68,40 +80,51 @@ class MediaHandler implements MediaHandlerInterface
                     'image/jpeg'
                 ]: $formSettings['ATTACHMENT_ACCEPTS'];
 
-                if (isset($_FILES[$key]) && !empty($_FILES[$key]['tmp_name'])) {
+                if (isset($_FILES[$attributeName]) && !empty($_FILES[$attributeName]['tmp_name'])) {
                     $file = [
-                        '_origin_tmp' => $_FILES[$key]['tmp_name'],
-                        'name' => $_FILES[$key]['name'],
-                        'type' => $_FILES[$key]['type'],
-                        'size' => $_FILES[$key]['size'],
-                        'ext' => pathinfo($_FILES[$key]['name'], PATHINFO_EXTENSION),
+                        '_origin_tmp' => $_FILES[$attributeName]['tmp_name'],
+                        'name' => $_FILES[$attributeName]['name'],
+                        'type' => $_FILES[$attributeName]['type'],
+                        'size' => $_FILES[$attributeName]['size'],
+                        'ext' => pathinfo($_FILES[$attributeName]['name'], PATHINFO_EXTENSION),
                         'tmp' => '',
                     ];
+
+                    // ファイル名が重複している場合はスキップ.
+                    if (in_array($file['name'], $fileNames)) {
+                        continue;
+                    } else {
+                        $fileNames[] = $file['name'];
+                    }
 
                     // POSTされたファイルの判定.
                     if (is_writable($uploadDir) && is_uploaded_file($file['_origin_tmp'])) {
                         // 許可されたファイルか判定.
                         if (!in_array($file['type'], $accepts)) {
-                            throw new \Exception('許可されていない拡張子');
+                            throw new \Exception('添付のファイルタイプでは送信できません。');
                         }
 
-                        // ユニークなファイル名に変換.
-                        $hashFile = $uploadDir . md5(uniqid($file['name'], true)) . '.' . $file['ext'];
+                        // エンコード可能か調べてユニークなファイル名に変換.
+                        if (mb_check_encoding( $file['name'], 'ISO-2022-JP')) {
+                            $hashFile = $uploadDir . md5(uniqid($file['name'], true)) . '.' . $file['ext'];
+                        } else {
+                            throw new \Exception('添付ファイルの名前では文字化けが起こります。ファイル名を変更してください。');
+                        }
 
                         // ファイルがアップロード成功したかの判定.
                         if (move_uploaded_file($file['_origin_tmp'], $hashFile)) {
                             $file['tmp'] = $hashFile;
                         } else {
-                            throw new \Exception('画像ファイルのアップロードに失敗しました');
+                            throw new \Exception('添付ファイルのアップロードに失敗しました。');
                         }
                     } else {
-                        throw new \Exception('キャッシュディレクトリの書き込みが許可されていません');
+                        throw new \Exception('キャッシュディレクトリの書き込みが許可されていません。');
                     }
-                    $this->files[$key] = $file;
+                    $this->files[$attributeName] = $file;
                 }
             }
         } catch (\Exception $e) {
-            console($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
         $this->seveTmpFiles();
     }
@@ -116,14 +139,15 @@ class MediaHandler implements MediaHandlerInterface
         $uploadDir = $this->uploadDir;
         $attachments = [];
         foreach ($this->files as $key => $file) {
-            $attachmentPath = $uploadDir . $file['name'];
 
-            // 一時ファイルをリネーム
-            if ($file['tmp'] !== $attachmentPath && rename($file['tmp'], $attachmentPath)) {
-                $attachments[] = $attachmentPath;
+            // ファイル名をエンコードしてリネーム.
+            $attachmentFile = $uploadDir . mb_encode_mimeheader( $file['name'], 'ISO-2022-JP', 'UTF-8' );
+            if ($file['tmp'] !== $attachmentFile && rename($file['tmp'], $attachmentFile)) {
+
+                $attachments[] = $attachmentFile;
 
                 // 一時ファイルへ格納
-                $this->files[$key]['tmp'] = $attachmentPath;
+                $this->files[$key]['tmp'] = $attachmentFile;
             }
         }
         return $attachments;
@@ -150,7 +174,7 @@ class MediaHandler implements MediaHandlerInterface
                 }
             }
         } catch (\Exception $e) {
-            console($e->getMessage());
+            $this->logger->error($e->getMessage());
         }
     }
 
@@ -172,12 +196,20 @@ class MediaHandler implements MediaHandlerInterface
                 if (is_file($filePath) && substr($file, 0, 1) !== '.') {
                     $mod = filemtime($filePath);
                     if ($mod < $expire) {
-                        unlink($filePath);
+                        if (is_writable($filePath)) {
+                            if (!unlink($filePath)) {
+                                throw new \Exception($filePath . 'の削除に失敗しました');
+                                break;
+                            }
+                        } else {
+                            throw new \Exception('tmpディレクトリに書き込み権限がありません');
+                            break;
+                        }
                     }
                 }
             }
         } catch (\Exception $e) {
-            console($e->getMessage());
+            $this->logger->error($e->getMessage());
         }
     }
 

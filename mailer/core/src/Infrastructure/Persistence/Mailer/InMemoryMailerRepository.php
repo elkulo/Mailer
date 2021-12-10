@@ -225,6 +225,7 @@ class InMemoryMailerRepository implements MailerRepository
             }
 
             // 画像のアップロード
+            // NOTE: エラーの場合は例外をスローします。
             $this->media->init();
 
             // バリデーションチェック
@@ -313,6 +314,7 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
 
                 // 画像のアップロード
+                // NOTE: エラーの場合は例外をスローします。
                 $this->media->init();
             }
 
