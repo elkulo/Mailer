@@ -17,7 +17,7 @@ use App\Application\Router\RouterInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
-use App\Application\Handlers\Media\MediaHandlerInterface;
+use App\Application\Handlers\File\FileDataHandlerInterface;
 
 class InMemoryMailerRepository implements MailerRepository
 {
@@ -30,11 +30,18 @@ class InMemoryMailerRepository implements MailerRepository
     private $csrf;
 
     /**
-     * ロジック
+     * POSTロジック
      *
      * @var MailerPostData
      */
     private $postData;
+
+    /**
+     * 画像アップロードハンドラー
+     *
+     * @var FileDataHandlerInterface
+     */
+    private $fileData;
 
     /**
      * ロガー
@@ -72,13 +79,6 @@ class InMemoryMailerRepository implements MailerRepository
     private $mail;
 
     /**
-     * 画像アップロードハンドラー
-     *
-     * @var MediaHandlerInterface
-     */
-    private $media;
-
-    /**
      * DBハンドラー
      *
      * @var DBHandlerInterface|null
@@ -94,7 +94,7 @@ class InMemoryMailerRepository implements MailerRepository
      * @param RouterInterface $router
      * @param ValidateHandlerInterface $validate,
      * @param MailHandlerInterface $mail,
-     * @param MediaHandlerInterface $media,
+     * @param FileDataHandlerInterface $fileData,
      * @param DBHandlerInterface|null $db
      */
     public function __construct(
@@ -104,7 +104,7 @@ class InMemoryMailerRepository implements MailerRepository
         RouterInterface $router,
         ValidateHandlerInterface $validate,
         MailHandlerInterface $mail,
-        MediaHandlerInterface $media,
+        FileDataHandlerInterface $fileData,
         ?DBHandlerInterface $db
     ) {
 
@@ -127,7 +127,7 @@ class InMemoryMailerRepository implements MailerRepository
         $this->mail = $mail;
 
         // 画像アップロードハンドラーをセット
-        $this->media = $media;
+        $this->fileData = $fileData;
 
         // データベースハンドラーをセット
         $this->db = $db;
@@ -226,7 +226,7 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 画像のアップロード
             // NOTE: エラーの場合は例外をスローします。
-            $this->media->init();
+            $this->fileData->init();
 
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
@@ -241,8 +241,10 @@ class InMemoryMailerRepository implements MailerRepository
                 'template' => 'confirm.twig',
                 'data' => array_merge(
                     $this->postData->getPosts(),
+                    $this->fileData->getFiles(),
                     [
                         'Posts' => $this->postData->getConfirmQuery(),
+                        'Files' => $this->fileData->getConfirmQuery(),
                         'CSRF'   => sprintf(
                             '<div style="display:none">
                                 <input type="hidden" name="%1$s" value="%2$s">
@@ -315,7 +317,7 @@ class InMemoryMailerRepository implements MailerRepository
 
                 // 画像のアップロード
                 // NOTE: エラーの場合は例外をスローします。
-                $this->media->init();
+                $this->fileData->init();
             }
 
             // バリデーションチェック
@@ -329,7 +331,7 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->postData->getMailSubject(),
                 $this->postData->renderAdminMail($this->postData->getMailBody()),
                 $this->postData->getMailAdminHeader(),
-                $this->media->getAttachmentAll()
+                $this->fileData->getAttachmentAll()
             );
             if (!$success['admin']) {
                 // SMTPサーバー障害や設定ミスによる送信失敗時の致命的なエラーメッセージ.
@@ -357,7 +359,7 @@ class InMemoryMailerRepository implements MailerRepository
             );
 
             // 添付ファイルを削除.
-            $this->media->destroy();
+            $this->fileData->destroy();
 
             // 完了画面を生成.
             return [

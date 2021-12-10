@@ -15,6 +15,10 @@
  #  {% for post in Posts %}   POSTされた配列
  #   |- {{post.name|raw}}     フォームの項目のラベルのHTML
  #   |- {{post.value|raw}}    フォームの項目の投稿内容のHTML
+ #  {% for file in Files %}   POSTと同時にアップロードされた添付ファイルの配列
+ #   |- {{file.name}}         添付ファイルのフォームの項目のラベルのテキスト
+ #   |- {{file.value}}        添付ファイルのフォームの項目の投稿内容のテキスト
+ #   |- {{file.size}}         添付ファイルのサイズ
  #  {{CSRF|raw}}              CSRFタグのHTML
  #  {{reCAPTCHA.script|raw}}  reCAPTCHAのHTML
  #  {{reCAPTCHA.key}}         reCAPTCHAのサイトキー
@@ -45,6 +49,15 @@
                 <tr>
                   <th class="d-block d-md-table-cell table-light text-nowrap">{{ post.name|raw }}</th>
                   <td class="d-block d-md-table-cell">{{ post.value|raw }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+
+            <table class="table table-bordered" style="font-size:0.875rem">
+              {% for file in Files %}
+                <tr>
+                  <th class="d-block d-md-table-cell table-light text-nowrap">{{ file.name }}</th>
+                  <td class="d-block d-md-table-cell">{{ file.value }} <small>({{ file.size }})</small></td>
                 </tr>
               {% endfor %}
             </table>

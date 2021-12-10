@@ -6,9 +6,9 @@
  */
 declare(strict_types=1);
 
-namespace App\Application\Handlers\Media;
+namespace App\Application\Handlers\File;
 
-interface MediaHandlerInterface
+interface FileDataHandlerInterface
 {
 
     /**
@@ -17,6 +17,20 @@ interface MediaHandlerInterface
      * @return void
      */
     public function init(): void;
+
+    /**
+     * Twig変数の取得
+     *
+     * @return array
+     */
+    public function getFiles(): array;
+
+    /**
+     * Twig変数のすべて取得
+     *
+     * @return array
+     */
+    public function getConfirmQuery(): array;
 
     /**
      * アップロード画像をすべて取得
