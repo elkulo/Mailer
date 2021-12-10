@@ -288,11 +288,11 @@ class MailerPostData
     }
 
     /**
-     * 確認画面の入力内容の出力
+     * 確認画面の入力内容の表示の出力
      *
      * @return array
      */
-    public function getConfirmQuery(): array
+    public function getDataQuery(): array
     {
         $query = [];
 
@@ -318,13 +318,28 @@ class MailerPostData
 
             // 確認をセット
             $query[] = [
-                'name' => $this->nameToLabel($name) . sprintf(
-                    '<input type="hidden" name="%1$s" value="%2$s" />',
-                    $this->esc($name),
-                    $this->esc($output)
-                ),
+                'name' => $this->nameToLabel($name),
                 'value' => nl2br($this->esc($output))
             ];
+        }
+        return $query;
+    }
+
+    /**
+     * 確認画面の入力内容の隠し出力
+     *
+     * @return string
+     */
+    public function getHiddenQuery(): string
+    {
+        $query = '';
+
+        foreach ($this->postData as $name => $value) {
+            $query .= sprintf(
+                    '<input type="hidden" name="%1$s" value="%2$s" />',
+                    $this->esc($name),
+                    $this->esc($value)
+                );
         }
         return $query;
     }
