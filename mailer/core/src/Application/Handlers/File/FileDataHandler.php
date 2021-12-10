@@ -109,6 +109,11 @@ class FileDataHandler implements FileDataHandlerInterface
                             throw new \Exception('添付のファイルタイプでは送信できません。');
                         }
 
+                        // アップロードサイズを制限.
+                        if ($formSettings['ATTACHMENT_MAXSIZE'] < ceil($file['size'] / 1024)) {
+                            throw new \Exception('添付ファイルのサイズが大き過ぎます。');
+                        }
+
                         // エンコード可能か調べてユニークなファイル名に変換.
                         $hashFile = $uploadDir . md5(uniqid($file['name'], true)) . '.' . $file['ext'];
 
@@ -128,6 +133,16 @@ class FileDataHandler implements FileDataHandlerInterface
             throw new \Exception($e->getMessage());
         }
         $this->seveTmpFiles();
+    }
+
+    /**
+     * 変数の取得
+     *
+     * @return array
+     */
+    public function getFileData(): array
+    {
+        return $this->fileData;
     }
 
     /**
@@ -162,7 +177,7 @@ class FileDataHandler implements FileDataHandlerInterface
             }
 
             // ファイルサイズ
-            $bytes = $this->prettyBytes($file['size']);
+            $bytes = $this->prettyBytes($file['size'], 2);
 
             // 確認をセット
             $query[] = [
@@ -282,25 +297,36 @@ class FileDataHandler implements FileDataHandlerInterface
     /**
      * 単位変換
      *
-     * @param  int $bytes
+     * @param  int  $bytes     バイト数
+     * @param  int  $dec       小数点の省略する桁
+     * @param  bool $separate  桁区切り
      * @return int
      */
-    private function prettyBytes(int $bytes)
+    private function prettyBytes(int $bytes, $dec = -1, $separate = false)
     {
-        if ($bytes >= 1073741824) {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        } elseif ($bytes >= 1048576) {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        } elseif ($bytes >= 1024) {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        } elseif ($bytes > 1) {
-            $bytes = $bytes . ' bytes';
-        } elseif ($bytes == 1) {
-            $bytes = $bytes . ' byte';
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        $digits = ($bytes == 0) ? 0 : floor(log($bytes, 1024));
+         
+        $over = false;
+        $maxDigit = count($units) -1 ;
+     
+        if ($digits == 0) {
+            $num = $bytes;
+        } elseif (!isset($units[$digits])) {
+            $num = $bytes / (pow(1024, $maxDigit));
+            $over = true;
         } else {
-            $bytes = '0 bytes';
+            $num = $bytes / (pow(1024, $digits));
         }
-        return $bytes;
+         
+        if ($dec > -1 && $digits > 0) {
+            $num = sprintf("%.{$dec}f", $num);
+        }
+        if ($separate && $digits > 0) {
+            $num = number_format($num, $dec);
+        }
+         
+        return ($over) ? $num . $units[$maxDigit] : $num . $units[$digits];
     }
 
     /**

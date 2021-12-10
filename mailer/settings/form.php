@@ -82,6 +82,7 @@ return [
     'email',
     'requestContent',
     'personalInformation',
+    'uploadFile'
   ],
 
   /**(10)
@@ -114,10 +115,10 @@ return [
 
   /**(13)
    * 
-   * フォームからの添付ファイルの最大サイズ(MB単位)の制限
+   * フォームからの添付ファイルの最大サイズ(kb)の制限
    * 合計値をサーバーの送受信の容量以内に納める必要があります。
    */
-  'ATTACHMENT_MAXSIZE' => 400,
+  'ATTACHMENT_MAXSIZE' => 4000,
 
   /**(14)
    * 
@@ -177,7 +178,7 @@ return [
    * 配列で添付したいファイル名を指定してください。
    * 「attachment」ディレクトリがなければ作成する必要があります。
    */
-  'USER_MAIL_ATTACHMENTS' => [],
+  'USER_MAIL_ATTACHMENTS' => ['テストファイル.png'],
 
   /**(21)
    * 
