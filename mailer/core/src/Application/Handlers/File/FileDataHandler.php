@@ -36,6 +36,13 @@ class FileDataHandler implements FileDataHandlerInterface
     private $uploadDir;
 
     /**
+     * $_FILESの格納
+     *
+     * @var array
+     */
+    private $tmpFiles = [];
+
+    /**
      * アップロードファイルの格納
      *
      * @var array
@@ -58,13 +65,23 @@ class FileDataHandler implements FileDataHandlerInterface
     }
 
     /**
-     * アップロード画像を保存
+     * $_FILESをセット
+     *
+     * @param  array $files
+     */
+    public function set(array $files): void
+    {
+        $this->tmpFiles = $files;
+    }
+
+    /**
+     * アップロードを実行
      *
      * @param  bool $clear 一時ファイルを読み込み削除
      * @return void
      * @throws \Exception  アップロードエラー
      */
-    public function init(bool $clear = false): void
+    public function run(bool $clear = false): void
     {
         $formSettings = $this->settings->get('form');
         $uploadDir = $this->uploadDir;
@@ -77,21 +94,22 @@ class FileDataHandler implements FileDataHandlerInterface
                 $this->flashTmpFiles();
             }
 
-            foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attributeName) {
+            foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
                 // 許可するファイルタイプ
                 $accepts = (empty($formSettings['ATTACHMENT_ACCEPTS']))? [
                     'image/png',
                     'image/gif',
-                    'image/jpeg'
+                    'image/jpeg',
+                    'image/jpg',
                 ]: $formSettings['ATTACHMENT_ACCEPTS'];
 
-                if (isset($_FILES[$attributeName]) && !empty($_FILES[$attributeName]['tmp_name'])) {
+                if (isset($this->tmpFiles[$attr]) && !empty($this->tmpFiles[$attr]['tmp_name'])) {
                     $file = [
-                        '_origin_tmp' => $_FILES[$attributeName]['tmp_name'],
-                        'name' => $_FILES[$attributeName]['name'],
-                        'type' => $_FILES[$attributeName]['type'],
-                        'size' => $_FILES[$attributeName]['size'],
-                        'ext' => pathinfo($_FILES[$attributeName]['name'], PATHINFO_EXTENSION),
+                        '_origin_tmp' => $this->tmpFiles[$attr]['tmp_name'],
+                        'name' => $this->tmpFiles[$attr]['name'],
+                        'type' => $this->tmpFiles[$attr]['type'],
+                        'size' => $this->tmpFiles[$attr]['size'],
+                        'ext' => pathinfo($this->tmpFiles[$attr]['name'], PATHINFO_EXTENSION),
                         'tmp' => '',
                     ];
 
@@ -126,7 +144,7 @@ class FileDataHandler implements FileDataHandlerInterface
                     } else {
                         throw new \Exception('キャッシュディレクトリの書き込みが許可されていません。');
                     }
-                    $this->fileData[$attributeName] = $file;
+                    $this->fileData[$attr] = $file;
                 }
             }
         } catch (\Exception $e) {
@@ -136,13 +154,27 @@ class FileDataHandler implements FileDataHandlerInterface
     }
 
     /**
-     * 変数の取得
+     * POSTされたFILE変数の取得
      *
      * @return array
      */
-    public function getFileData(): array
+    public function getPostFiles(): array
     {
-        return $this->fileData;
+        $formSettings = $this->settings->get('form');
+        $fileStatus = [];
+
+        // セッションから取得
+        $sessionData = isset($_SESSION['updateFiles'])? $_SESSION['updateFiles']: [];
+
+        foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
+            $fileStatus[$attr] = isset($this->tmpFiles[$attr]['name']) ? $this->tmpFiles[$attr]['name'] : '';
+
+            // セッションからの取得を試みる.
+            if (!$fileStatus[$attr]) {
+                $fileStatus[$attr] = isset($sessionData[$attr]['name']) ? $sessionData[$attr]['name'] : '';
+            }
+        }
+        return $fileStatus;
     }
 
     /**
@@ -164,7 +196,7 @@ class FileDataHandler implements FileDataHandlerInterface
      *
      * @return array
      */
-    public function getConfirmQuery(): array
+    public function getDataQuery(): array
     {
         $formSettings = $this->settings->get('form');
         $query = [];
@@ -177,13 +209,13 @@ class FileDataHandler implements FileDataHandlerInterface
             }
 
             // ファイルサイズ
-            $bytes = $this->prettyBytes($file['size'], 2);
+            $bytes = (string) $this->prettyBytes((int) $file['size'], 2);
 
             // 確認をセット
             $query[] = [
                 'name' => $this->esc($label),
                 'value' => $this->esc($file['name']),
-                'size' => $this->esc((string) $bytes),
+                'size' => $this->esc($bytes),
             ];
         }
         return $query;
@@ -302,7 +334,7 @@ class FileDataHandler implements FileDataHandlerInterface
      * @param  bool $separate  桁区切り
      * @return int
      */
-    private function prettyBytes(int $bytes, $dec = -1, $separate = false)
+    private function prettyBytes(int $bytes, int $dec = -1, bool $separate = false)
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         $digits = ($bytes == 0) ? 0 : floor(log($bytes, 1024));

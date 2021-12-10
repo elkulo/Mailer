@@ -12,18 +12,25 @@ interface FileDataHandlerInterface
 {
 
     /**
-     * アップロード画像を保存
+     * $_FILESの格納
+     *
+     * @param  array $files
+     */
+    public function set(array $files): void;
+
+    /**
+     * アップロードを実行
      *
      * @return void
      */
-    public function init(bool $clear = false): void;
+    public function run(bool $clear = false): void;
 
     /**
-     * 変数の取得
+     * POSTされたFILE変数の取得
      *
      * @return array
      */
-    public function getFileData(): array;
+    public function getPostFiles(): array;
 
     /**
      * Twig変数の取得
@@ -37,7 +44,7 @@ interface FileDataHandlerInterface
      *
      * @return array
      */
-    public function getConfirmQuery(): array;
+    public function getDataQuery(): array;
 
     /**
      * アップロード画像をすべて取得

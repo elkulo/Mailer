@@ -128,6 +128,10 @@ class InMemoryMailerRepository implements MailerRepository
 
         // 画像アップロードハンドラーをセット
         $this->fileData = $fileData;
+        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_STRING) ?? []);
+
+        // POSTされたFILE変数を取得
+        $files = $this->fileData->getPostFiles();
 
         // データベースハンドラーをセット
         $this->db = $db;
@@ -138,8 +142,8 @@ class InMemoryMailerRepository implements MailerRepository
         // POSTデータをサニタイズして格納
         $this->postData = new MailerPostData($posts, $settings);
 
-        // POSTデータをバリデーションに格納
-        $this->validate->set($posts);
+        // POSTデータとFILEデータを統合してバリデーションに格納
+        $this->validate->set(array_merge($posts, $files));
 
         // サニタイズしたPOSTデータを取得
         $postData = $this->postData->getPosts();
@@ -226,7 +230,7 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 画像のアップロード
             // NOTE: エラーの場合は例外をスローします。
-            $this->fileData->init();
+            $this->fileData->run();
 
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
@@ -243,19 +247,21 @@ class InMemoryMailerRepository implements MailerRepository
                     $this->postData->getPosts(),
                     $this->fileData->getFiles(),
                     [
-                        'Posts' => $this->postData->getConfirmQuery(),
-                        'Files' => $this->fileData->getConfirmQuery(),
+                        'Posts' => $this->postData->getDataQuery(),
+                        'Files' => $this->fileData->getDataQuery(),
                         'CSRF'   => sprintf(
                             '<div style="display:none">
                                 <input type="hidden" name="%1$s" value="%2$s">
                                 <input type="hidden" name="%3$s" value="%4$s">
                                 <input type="hidden" name="_http_referer" value="%5$s" />
+                                %6$s
                              </div>',
                             $this->csrf->getTokenNameKey(),
                             $this->csrf->getTokenName(),
                             $this->csrf->getTokenValueKey(),
                             $this->csrf->getTokenValue(),
-                            $this->postData->getPageReferer()
+                            $this->postData->getPageReferer(),
+                            $this->postData->getHiddenQuery()
                         ),
                         'reCAPTCHA' => $this->validate->getReCaptchaScript(),
                         'Action' => [
@@ -314,14 +320,14 @@ class InMemoryMailerRepository implements MailerRepository
 
                 // 画像のアップロード
                 // NOTE: 確認画面を挟む場合は引数trueでセッションからアップロード画像を読み込み、エラーの場合は例外をスローします。
-                $this->fileData->init(true);
+                $this->fileData->run(true);
             } else {
                 // 重複投稿をチェックはCSRFトークンを削除
                 $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
 
                 // 画像のアップロード
                 // NOTE: エラーの場合は例外をスローします。
-                $this->fileData->init();
+                $this->fileData->run();
             }
 
             // バリデーションチェック
