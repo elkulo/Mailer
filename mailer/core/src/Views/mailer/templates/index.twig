@@ -9,8 +9,8 @@
  #  {% include '/utils/google-recaptcha-copyright.twig' %}  reCAPTCHA使用時にGoogleクレジットをインライン表示する場合のHTMLタグ
  #
  # Twig定数
- #  {{SITE_TITLE}}  サイトタイトル
- #  {{SITE_URL}}    サイトURL
+ #  {{__SITE_TITLE}}  サイトタイトル
+ #  {{__SITE_URL}}    サイトURL
  #
  # Twig変数
  #  {{CSRF|raw}}              CSRFタグのHTML
@@ -23,7 +23,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>{{SITE_TITLE}} - Mailer</title>
+    <title>{{__SITE_TITLE}} - Mailer</title>
     <style>{% include '/assets/bootstrap.min.css.twig' %}</style>
     <script>{% include '/assets/bootstrap.min.js.twig' %}</script>
   </head>
@@ -31,7 +31,7 @@
     <div class="container" style="max-width: 768px">
       <div class="row shadow-sm bg-white border rounded">
         <div class="col p-4 px-sm-5">
-          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
+          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate enctype="multipart/form-data">
 
             <div class="mb-3">
               <div class="form-label">件名</div>
@@ -105,7 +105,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="UploadFile" class="form-label">添付画像1(JPEG/GIF/PNG)</label>
+              <label for="UploadFile" class="form-label">添付画像1<small class="d-inline-block text-secondary ms-2">(JPEG/GIF/PNG)</small></label>
               <input type="file" id="UploadFile" class="form-control" name="uploadFile" accept="image/jpeg, image/png">
               <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('UploadFile').value = ''">
                 画像クリア
@@ -113,7 +113,7 @@
             </div>
 
             <div class="mb-3">
-              <label for="CustomerAvatar" class="form-label">添付画像2(JPEG/GIF/PNG)</label>
+              <label for="CustomerAvatar" class="form-label">添付画像2<small class="d-inline-block text-secondary ms-2">(JPEG/GIF/PNG)</small></label>
               <input type="file" id="CustomerAvatar" class="form-control" name="attachmentAvatar" accept="image/jpeg, image/png">
               <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('CustomerAvatar').value = ''">
                 画像クリア
