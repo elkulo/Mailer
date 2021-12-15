@@ -47,11 +47,18 @@ interface FileDataHandlerInterface
     public function getDataQuery(): array;
 
     /**
-     * アップロード画像をすべて取得
+     * 管理者へのアップロード画像を取得
      *
      * @return array
      */
-    public function getAttachmentAll(): array;
+    public function getAdminMailAttachment(): array;
+
+    /**
+     * ユーザーへのアップロード画像を取得
+     *
+     * @return array
+     */
+    public function getUserMailAttachment(): array;
 
     /**
      * 確認画面の入力内容の隠しにアップロードIDを出力

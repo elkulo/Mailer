@@ -15,7 +15,7 @@ return [
    * 自動応答
    * ユーザーのEmailに指定したname属性の値に自動応答のメールを送信(送る=1, 送らない=0)
    */
-  'IS_REPLY_USERMAIL' => 0,
+  'IS_REPLY_USERMAIL' => 1,
 
   /**(3)
    * 
