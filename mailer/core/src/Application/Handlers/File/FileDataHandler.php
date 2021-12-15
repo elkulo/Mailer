@@ -50,9 +50,16 @@ class FileDataHandler implements FileDataHandlerInterface
     private $fileData = [];
 
     /**
+     * アップロードファイルのID
+     *
+     * @var string
+     */
+    private $uploadFileID;
+
+    /**
      * コンストラクタ
      *
-     * @param LoggerInterface $logger,
+     * @param  LoggerInterface   $logger,
      * @param  SettingsInterface $settings
      * @return void
      */
@@ -61,7 +68,7 @@ class FileDataHandler implements FileDataHandlerInterface
         $this->logger = $logger;
         $this->settings = $settings;
         $this->uploadDir = $this->settings->get('appPath') . '/var/tmp/';
-        $this->destroyOldFiles();
+        $this->clearOldFiles();
     }
 
     /**
@@ -72,16 +79,27 @@ class FileDataHandler implements FileDataHandlerInterface
     public function set(array $files): void
     {
         $this->tmpFiles = $files;
+        $getSessionFileData = function (): array {
+            $sessionFileData = [];
+            $postUploadFileID = filter_input(INPUT_POST, '_upload_file_id', FILTER_SANITIZE_STRING) ?? '';
+            if (isset($_SESSION['uploadFiles'], $_SESSION['uploadFileID']) &&
+                $_SESSION['uploadFileID'] === $postUploadFileID
+            ) {
+                $sessionFileData = $_SESSION['uploadFiles'];
+            }
+            unset($_SESSION['uploadFiles'], $_SESSION['uploadFileID']);
+            return $sessionFileData;
+        };
+        $this->fileData = $getSessionFileData();
     }
 
     /**
      * アップロードを実行
      *
-     * @param  bool $clear 一時ファイルを読み込み削除
      * @return void
      * @throws \Exception  アップロードエラー
      */
-    public function run(bool $clear = false): void
+    public function run(): void
     {
         $formSettings = $this->settings->get('form');
         $uploadDir = $this->uploadDir;
@@ -89,19 +107,14 @@ class FileDataHandler implements FileDataHandlerInterface
         $fileNames = [];
 
         try {
-            // 一時ファイルを読み込み.
-            if ($clear) {
-                $this->flashTmpFiles();
-            }
-
             foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
                 // 許可するファイルタイプ
-                $accepts = (empty($formSettings['ATTACHMENT_ACCEPTS']))? [
+                $accepts = (empty($formSettings['ATTACHMENT_ACCEPTS'])) ? [
                     'image/png',
                     'image/gif',
                     'image/jpeg',
                     'image/jpg',
-                ]: $formSettings['ATTACHMENT_ACCEPTS'];
+                ] : $formSettings['ATTACHMENT_ACCEPTS'];
 
                 if (isset($this->tmpFiles[$attr]) && !empty($this->tmpFiles[$attr]['tmp_name'])) {
                     $file = [
@@ -158,23 +171,23 @@ class FileDataHandler implements FileDataHandlerInterface
      *
      * @return array
      */
-    public function getPostFiles(): array
+    public function getPostedFiles(): array
     {
         $formSettings = $this->settings->get('form');
-        $fileStatus = [];
+        $postFiles = [];
 
         // セッションから取得
-        $sessionData = isset($_SESSION['updateFiles'])? $_SESSION['updateFiles']: [];
+        $fileData = $this->fileData;
 
         foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
-            $fileStatus[$attr] = isset($this->tmpFiles[$attr]['name']) ? $this->tmpFiles[$attr]['name'] : '';
+            $postFiles[$attr] = isset($this->tmpFiles[$attr]['name']) ? $this->tmpFiles[$attr]['name'] : '';
 
             // セッションからの取得を試みる.
-            if (!$fileStatus[$attr]) {
-                $fileStatus[$attr] = isset($sessionData[$attr]['name']) ? $sessionData[$attr]['name'] : '';
+            if (!$postFiles[$attr]) {
+                $postFiles[$attr] = isset($fileData[$attr]['name']) ? $fileData[$attr]['name'] : '';
             }
         }
-        return $fileStatus;
+        return $postFiles;
     }
 
     /**
@@ -233,11 +246,15 @@ class FileDataHandler implements FileDataHandlerInterface
         foreach ($this->fileData as $key => $file) {
             // ファイル名をエンコードしてリネーム.
             $attachmentFile = $uploadDir . mb_encode_mimeheader($file['name'], 'ISO-2022-JP', 'UTF-8');
-            if ($file['tmp'] !== $attachmentFile && rename($file['tmp'], $attachmentFile)) {
-                $attachments[] = $attachmentFile;
+            if (is_writable($file['tmp'])) {
+                if ($file['tmp'] !== $attachmentFile && rename($file['tmp'], $attachmentFile)) {
+                    $attachments[] = $attachmentFile;
 
-                // 一時ファイルへ格納
-                $this->fileData[$key]['tmp'] = $attachmentFile;
+                    // 一時ファイルへ格納
+                    $this->fileData[$key]['tmp'] = $attachmentFile;
+                }
+            } else {
+                $this->logger->error($file['tmp'] . 'が存在しません');
             }
         }
         return $attachments;
@@ -273,7 +290,7 @@ class FileDataHandler implements FileDataHandlerInterface
      *
      * @return void
      */
-    private function destroyOldFiles(): void
+    private function clearOldFiles(): void
     {
         try {
             $expire = strtotime('-1 hour');
@@ -304,26 +321,28 @@ class FileDataHandler implements FileDataHandlerInterface
     }
 
     /**
-     * セッションに一時保存
+     * 確認画面の入力内容の隠しにアップロードIDを出力
+     *
+     * @return void
+     */
+    public function getTmpFiles(): string
+    {
+        return sprintf(
+            '<input type="hidden" name="_upload_file_id" value="%1$s">',
+            $this->uploadFileID
+        );
+    }
+
+    /**
+     * ファイル情報をセッションに一時保存
      *
      * @return void
      */
     private function seveTmpFiles(): void
     {
-        $_SESSION['updateFiles'] = $this->fileData;
-    }
-
-    /**
-     * セッションから取得して削除
-     *
-     * @return void
-     */
-    private function flashTmpFiles(): void
-    {
-        if (isset($_SESSION['updateFiles'])) {
-            $this->fileData = $_SESSION['updateFiles'];
-            unset($_SESSION['updateFiles']);
-        }
+        $this->uploadFileID = sha1(uniqid((string)mt_rand(), true));
+        $_SESSION['uploadFileID'] = $this->uploadFileID;
+        $_SESSION['uploadFiles'] = $this->fileData;
     }
 
     /**
@@ -338,10 +357,10 @@ class FileDataHandler implements FileDataHandlerInterface
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         $digits = ($bytes == 0) ? 0 : floor(log($bytes, 1024));
-         
+
         $over = false;
-        $maxDigit = count($units) -1 ;
-     
+        $maxDigit = count($units) - 1;
+
         if ($digits == 0) {
             $num = $bytes;
         } elseif (!isset($units[$digits])) {
@@ -350,14 +369,14 @@ class FileDataHandler implements FileDataHandlerInterface
         } else {
             $num = $bytes / (pow(1024, $digits));
         }
-         
+
         if ($dec > -1 && $digits > 0) {
             $num = sprintf("%.{$dec}f", $num);
         }
         if ($separate && $digits > 0) {
             $num = number_format($num, $dec);
         }
-         
+
         return ($over) ? $num . $units[$maxDigit] : $num . $units[$digits];
     }
 

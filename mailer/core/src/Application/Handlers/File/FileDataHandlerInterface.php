@@ -23,14 +23,14 @@ interface FileDataHandlerInterface
      *
      * @return void
      */
-    public function run(bool $clear = false): void;
+    public function run(): void;
 
     /**
      * POSTされたFILE変数の取得
      *
      * @return array
      */
-    public function getPostFiles(): array;
+    public function getPostedFiles(): array;
 
     /**
      * Twig変数の取得
@@ -52,6 +52,13 @@ interface FileDataHandlerInterface
      * @return array
      */
     public function getAttachmentAll(): array;
+
+    /**
+     * 確認画面の入力内容の隠しにアップロードIDを出力
+     *
+     * @return string
+     */
+    public function getTmpFiles(): string;
 
     /**
      * アップロード画像を削除

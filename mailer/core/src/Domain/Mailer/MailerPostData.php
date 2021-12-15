@@ -330,16 +330,16 @@ class MailerPostData
      *
      * @return string
      */
-    public function getHiddenQuery(): string
+    public function getTmpPosts(): string
     {
         $query = '';
 
         foreach ($this->postData as $name => $value) {
             $query .= sprintf(
-                    '<input type="hidden" name="%1$s" value="%2$s" />',
-                    $this->esc($name),
-                    $this->esc($value)
-                );
+                '<input type="hidden" name="%1$s" value="%2$s" />',
+                $this->esc($name),
+                $this->esc($value)
+            );
         }
         return $query;
     }
