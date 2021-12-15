@@ -339,7 +339,7 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->postData->getMailSubject(),
                 $this->postData->renderAdminMail($this->postData->getMailBody()),
                 $this->postData->getMailAdminHeader(),
-                $this->fileData->getAttachmentAll()
+                $this->fileData->getAdminMailAttachment()
             );
             if (!$success['admin']) {
                 // SMTPサーバー障害や設定ミスによる送信失敗時の致命的なエラーメッセージ.
@@ -352,7 +352,9 @@ class InMemoryMailerRepository implements MailerRepository
                     $success['user'] = $this->mail->send(
                         $this->postData->getUserMail(),
                         $this->postData->getMailSubject(),
-                        $this->postData->renderUserMail($this->postData->getMailBody())
+                        $this->postData->renderUserMail($this->postData->getMailBody()),
+                        [],
+                        $this->fileData->getUserMailAttachment()
                     );
                 }
             }

@@ -235,11 +235,11 @@ class FileDataHandler implements FileDataHandlerInterface
     }
 
     /**
-     * アップロード画像をすべて取得
+     * 管理者へのアップロード画像を取得
      *
      * @return array
      */
-    public function getAttachmentAll(): array
+    public function getAdminMailAttachment(): array
     {
         $uploadDir = $this->uploadDir;
         $attachments = [];
@@ -261,6 +261,46 @@ class FileDataHandler implements FileDataHandlerInterface
     }
 
     /**
+     * ユーザーへのアップロード画像を取得
+     *
+     * @return array
+     */
+    public function getUserMailAttachment(): array
+    {
+        $templatesAttachmentDir = $this->settings->get('templatesDirPath') . '/templates/attachment/';
+        $formSettings = $this->settings->get('form');
+        $uploadDir = $this->uploadDir;
+        $attachments = [];
+
+        // ファイルサイズの制限(100,000KB=100MB).
+        $maxFileSize = 100000;
+
+        foreach ($formSettings['USER_MAIL_ATTACHMENTS'] as $file) {
+            // ファイル名をエンコードしてリネーム.
+            $prevNameFile = $templatesAttachmentDir . $file;
+            $renameFile = $uploadDir . mb_encode_mimeheader($file, 'ISO-2022-JP', 'UTF-8');
+            if (is_writable($prevNameFile)) {
+                // ファイルサイズの制限.
+                if (ceil(filesize($prevNameFile) / 1024) < $maxFileSize) {
+                    // ファイル名リネームしたコピーを移動して作成.
+                    if ($prevNameFile !== $renameFile && copy($prevNameFile, $renameFile)) {
+                        $attachments[] = $renameFile;
+                    }
+                } else {
+                    $this->logger->error(sprintf(
+                        '自動返信の添付ファイル[%1$s]のサイズが大きいため添付できませんでした。合計%2$sまでの添付が可能です。',
+                        $file,
+                        $this->prettyBytes($maxFileSize, 0)
+                    ));
+                }
+            } else {
+                $this->logger->error('['. $prevNameFile . ']が存在しません');
+            }
+        }
+        return $attachments;
+    }
+
+    /**
      * アップロード画像を削除
      *
      * @return void
@@ -268,16 +308,32 @@ class FileDataHandler implements FileDataHandlerInterface
     public function destroy(): void
     {
         try {
+            $formSettings = $this->settings->get('form');
+            $uploadDir = $this->uploadDir;
+
+            // ユーザーのアップロード画像を削除
             foreach ($this->fileData as $file) {
                 if (!isset($file['tmp'])) {
                     continue;
                 }
                 if (is_writable($file['tmp'])) {
                     if (!unlink($file['tmp'])) {
-                        throw new \Exception($file['tmp'] . 'の削除に失敗しました');
+                        throw new \Exception('['. $file['name'] . ']の削除に失敗しました');
                     }
                 } else {
                     throw new \Exception('tmpディレクトリに書き込み権限がありません');
+                }
+            }
+
+            // 管理者のアップロード画像を削除
+            foreach ($formSettings['USER_MAIL_ATTACHMENTS'] as $file) {
+                $renameFile = $uploadDir . mb_encode_mimeheader($file, 'ISO-2022-JP', 'UTF-8');
+                if (file_exists($renameFile)) {
+                    if (is_writable($renameFile) && !unlink($renameFile)) {
+                        throw new \Exception('['. $file . ']の削除に失敗しました');
+                    } else {
+                        throw new \Exception('tmpディレクトリに書き込み権限がありません');
+                    }
                 }
             }
         } catch (\Exception $e) {
@@ -305,11 +361,11 @@ class FileDataHandler implements FileDataHandlerInterface
                     if ($mod < $expire) {
                         if (is_writable($filePath)) {
                             if (!unlink($filePath)) {
-                                throw new \Exception($filePath . 'の削除に失敗しました');
+                                throw new \Exception('['.$file . ']の削除に失敗しました');
                                 break;
                             }
                         } else {
-                            throw new \Exception('tmpディレクトリに書き込み権限がありません');
+                            throw new \Exception('キャッシュディレクトリに書き込み権限がありません');
                             break;
                         }
                     }
@@ -356,12 +412,12 @@ class FileDataHandler implements FileDataHandlerInterface
     private function prettyBytes(int $bytes, int $dec = -1, bool $separate = false)
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-        $digits = ($bytes == 0) ? 0 : floor(log($bytes, 1024));
+        $digits = ($bytes === 0) ? 0 : floor(log($bytes, 1024));
 
         $over = false;
         $maxDigit = count($units) - 1;
 
-        if ($digits == 0) {
+        if ($digits === 0) {
             $num = $bytes;
         } elseif (!isset($units[$digits])) {
             $num = $bytes / (pow(1024, $maxDigit));
