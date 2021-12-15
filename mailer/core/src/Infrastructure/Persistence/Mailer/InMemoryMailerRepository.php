@@ -126,13 +126,6 @@ class InMemoryMailerRepository implements MailerRepository
         // メールハンドラーをセット
         $this->mail = $mail;
 
-        // 画像アップロードハンドラーをセット
-        $this->fileData = $fileData;
-        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_STRING) ?? []);
-
-        // POSTされたFILE変数を取得
-        $files = $this->fileData->getPostFiles();
-
         // データベースハンドラーをセット
         $this->db = $db;
 
@@ -141,6 +134,13 @@ class InMemoryMailerRepository implements MailerRepository
 
         // POSTデータをサニタイズして格納
         $this->postData = new MailerPostData($posts, $settings);
+
+        // 画像アップロードハンドラーをセット
+        $this->fileData = $fileData;
+        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_STRING) ?? []);
+
+        // POSTされたFILE変数を取得
+        $files = $this->fileData->getPostedFiles();
 
         // POSTデータとFILEデータを統合してバリデーションに格納
         $this->validate->set(array_merge($posts, $files));
@@ -228,10 +228,6 @@ class InMemoryMailerRepository implements MailerRepository
                 throw new \Exception('指定のページ以外から送信されています。');
             }
 
-            // 画像のアップロード
-            // NOTE: エラーの場合は例外をスローします。
-            $this->fileData->run();
-
             // バリデーションチェック
             if (!$this->validate->validateAll()) {
                 throw new \Exception('バリデーションエラー', 400);
@@ -239,6 +235,10 @@ class InMemoryMailerRepository implements MailerRepository
 
             // 固有のメール送信のトークンを生成.
             $this->postData->createMailerToken();
+
+            // 画像のアップロード
+            // NOTE: エラーの場合は例外をスローします。
+            $this->fileData->run();
 
             // 確認画面を生成.
             return [
@@ -255,13 +255,15 @@ class InMemoryMailerRepository implements MailerRepository
                                 <input type="hidden" name="%3$s" value="%4$s">
                                 <input type="hidden" name="_http_referer" value="%5$s" />
                                 %6$s
+                                %7$s
                              </div>',
                             $this->csrf->getTokenNameKey(),
                             $this->csrf->getTokenName(),
                             $this->csrf->getTokenValueKey(),
                             $this->csrf->getTokenValue(),
                             $this->postData->getPageReferer(),
-                            $this->postData->getHiddenQuery()
+                            $this->postData->getTmpPosts(),
+                            $this->fileData->getTmpFiles()
                         ),
                         'reCAPTCHA' => $this->validate->getReCaptchaScript(),
                         'Action' => [
@@ -313,21 +315,17 @@ class InMemoryMailerRepository implements MailerRepository
                 throw new \Exception('指定のページ以外から送信されています。');
             }
 
+            // 画像のアップロード
+            // NOTE: エラーの場合は例外をスローします。
+            $this->fileData->run();
+
             // 確認画面スキップ分岐
             if (empty($formSettings['IS_CONFIRM_SKIP'])) {
                 // 重複投稿をチェックは固有のメールの送信トークンを削除
                 $this->postData->checkinMailerToken();
-
-                // 画像のアップロード
-                // NOTE: 確認画面を挟む場合は引数trueでセッションからアップロード画像を読み込み、エラーの場合は例外をスローします。
-                $this->fileData->run(true);
             } else {
                 // 重複投稿をチェックはCSRFトークンを削除
                 $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
-
-                // 画像のアップロード
-                // NOTE: エラーの場合は例外をスローします。
-                $this->fileData->run();
             }
 
             // バリデーションチェック
