@@ -66,6 +66,13 @@ class MailerPostData
     private $view;
 
     /**
+     * メールテンプレート用のファイル名
+     *
+     * @var array
+     */
+    private $mailFileNames = [];
+
+    /**
      * コンストラクタ
      *
      * @param  array $posts
@@ -212,6 +219,7 @@ class MailerPostData
         // Twig変数にクライアント情報の置換.
         return array_merge(
             $this->postData,
+            $this->mailFileNames,
             [
                 '__SITE_TITLE' => $this->settings->get('siteTitle'),
                 '__SITE_URL' => $this->settings->get('siteUrl'),
@@ -223,6 +231,16 @@ class MailerPostData
                 '__UA' => $status['_ua'],
             ]
         );
+    }
+
+    /**
+     * メールテンプレート用にファイル名を格納
+     *
+     * @return void
+     */
+    public function setMailFileName(array $files): void
+    {
+        $this->mailFileNames = $files;
     }
 
     /**
@@ -341,6 +359,12 @@ class MailerPostData
                 $this->esc($value)
             );
         }
+
+        // ページリファラーを継承.
+        $query .= sprintf(
+            '<input type="hidden" name="_http_referer" value="%1$s" />',
+            $this->getPageReferer()
+        );
         return $query;
     }
 
@@ -385,7 +409,7 @@ class MailerPostData
      *
      * @return void
      */
-    public function setPageReferer($value): void
+    private function setPageReferer($value): void
     {
         $this->pageReferer = $this->esc($value);
     }
@@ -395,7 +419,7 @@ class MailerPostData
      *
      * @return string
      */
-    public function getPageReferer(): string
+    private function getPageReferer(): string
     {
         if (!$this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
             return $this->esc($_SERVER['HTTP_REFERER']);
@@ -409,7 +433,7 @@ class MailerPostData
      * @param  string $name
      * @return string
      */
-    public function nameToLabel(string $name): string
+    private function nameToLabel(string $name): string
     {
         $label = $this->esc($name);
         if (isset($this->formSettings['NAME_FOR_LABELS'][$label])) {
@@ -425,7 +449,7 @@ class MailerPostData
      * @param  string $key
      * @return string
      */
-    public function changeHankaku(string $output, string $key): string
+    private function changeHankaku(string $output, string $key): string
     {
         if (empty($this->formSettings['HANKAKU_ATTRIBUTES']) || !function_exists('mb_convert_kana')) {
             return $output;
@@ -448,7 +472,7 @@ class MailerPostData
      * @param  array $items
      * @return string
      */
-    public function changeJoin(array $items): string
+    private function changeJoin(array $items): string
     {
         $output = '';
         foreach ($items as $key => $val) {

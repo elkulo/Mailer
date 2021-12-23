@@ -47,6 +47,13 @@ interface FileDataHandlerInterface
     public function getDataQuery(): array;
 
     /**
+     * メールテンプレート用にファイル名を取得
+     *
+     * @return array
+     */
+    public function getNameToLabel(): array;
+
+    /**
      * 管理者へのアップロード画像を取得
      *
      * @return array

@@ -142,6 +142,9 @@ class InMemoryMailerRepository implements MailerRepository
         // POSTされたFILE変数を取得
         $files = $this->fileData->getPostedFiles();
 
+        // メールテンプレート用にファイル名を事前に格納
+        $this->postData->setMailFileName($this->fileData->getNameToLabel());
+
         // POSTデータとFILEデータを統合してバリデーションに格納
         $this->validate->set(array_merge($posts, $files));
 
@@ -253,15 +256,13 @@ class InMemoryMailerRepository implements MailerRepository
                             '<div style="display:none">
                                 <input type="hidden" name="%1$s" value="%2$s">
                                 <input type="hidden" name="%3$s" value="%4$s">
-                                <input type="hidden" name="_http_referer" value="%5$s" />
+                                %5$s
                                 %6$s
-                                %7$s
                              </div>',
                             $this->csrf->getTokenNameKey(),
                             $this->csrf->getTokenName(),
                             $this->csrf->getTokenValueKey(),
                             $this->csrf->getTokenValue(),
-                            $this->postData->getPageReferer(),
                             $this->postData->getTmpPosts(),
                             $this->fileData->getTmpFiles()
                         ),
