@@ -235,6 +235,23 @@ class FileDataHandler implements FileDataHandlerInterface
     }
 
     /**
+     * メールテンプレート用にファイル名を取得
+     *
+     * @return array
+     */
+    public function getNameToLabel(): array
+    {
+        $formSettings = $this->settings->get('form');
+        $fileData = $this->fileData;
+        $query = [];
+
+        foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
+            $query[$attr] = isset($fileData[$attr]['name']) ? $this->esc($fileData[$attr]['name']) : '';
+        }
+        return $query;
+    }
+
+    /**
      * 管理者へのアップロード画像を取得
      *
      * @return array
@@ -329,10 +346,8 @@ class FileDataHandler implements FileDataHandlerInterface
             foreach ($formSettings['USER_MAIL_ATTACHMENTS'] as $file) {
                 $renameFile = $uploadDir . mb_encode_mimeheader($file, 'ISO-2022-JP', 'UTF-8');
                 if (file_exists($renameFile)) {
-                    if (is_writable($renameFile) && !unlink($renameFile)) {
+                    if (!is_writable($renameFile) || !unlink($renameFile)) {
                         throw new \Exception('['. $file . ']の削除に失敗しました');
-                    } else {
-                        throw new \Exception('tmpディレクトリに書き込み権限がありません');
                     }
                 }
             }
