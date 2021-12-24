@@ -108,7 +108,7 @@ class SQLiteHandler implements DBHandlerInterface
     /**
      * DBに保存
      *
-     * @param  bool   $success
+     * @param  array  $success
      * @param  string $email
      * @param  string $subject
      * @param  string $body
@@ -146,7 +146,6 @@ class SQLiteHandler implements DBHandlerInterface
      * DBを作成
      *
      * @return bool
-     * @throws Exception
      */
     final public function make(): bool
     {

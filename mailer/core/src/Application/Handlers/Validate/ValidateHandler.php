@@ -45,7 +45,7 @@ class ValidateHandler implements ValidateHandlerInterface
      *
      * @var SettingsInterface
      */
-    private $settings = [];
+    private $settings;
 
     /**
      * バリデーション設定
@@ -351,11 +351,7 @@ class ValidateHandler implements ValidateHandlerInterface
                         ->verify($value, filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
         
                     if (!$response->isSuccess()) {
-                        if ($response->getScore() !== null) {
-                            throw new \Exception('reCAPTCHA score' . (string) $response->getScore());
-                        } else {
-                            throw new \Exception('reCAPTCHA response error.');
-                        }
+                        throw new \Exception('reCAPTCHA score' . (string) $response->getScore());
                     }
                 } else {
                     throw new \Exception('Unknown response.');

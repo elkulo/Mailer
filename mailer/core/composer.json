@@ -45,7 +45,10 @@
     "config": {
         "process-timeout": 0,
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -72,6 +75,6 @@
         "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
         "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
         "phpmd": "phpmd src text cleancode,codesize,design,unusedcode",
-        "phpstan": "phpstan analyse src/"
+        "phpstan": "phpstan analyse app/ src/ helpers/"
     }
 }

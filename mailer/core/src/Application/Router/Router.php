@@ -41,17 +41,16 @@ class Router implements RouterInterface
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function init(Request $request)
+    public function init(Request $request): void
     {
-        if ($request) {
-            $urls = [];
-            foreach (static::$urlNames as $name) {
-                $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
-                $urls[$name] = $this->settings->get('siteUrl') . $dir;
-            }
-            static::$router = $urls;
+        $urls = [];
+        foreach (static::$urlNames as $name) {
+            $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
+            $urls[$name] = $this->settings->get('siteUrl') . $dir;
         }
+        static::$router = $urls;
     }
 
     /**

@@ -14,13 +14,15 @@
     "composer:update": "cd mailer/core/ && composer update",
     "composer:phpcs": "cd mailer/core/ && composer phpcs",
     "composer:phpcbf": "cd mailer/core/ && composer phpcbf",
+    "composer:phpmd": "cd mailer/core/ && composer phpmd",
+    "composer:phpstan": "cd mailer/core/ && composer phpstan",
     "deploy": "sh deploy.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "babel-loader": "^8.2.3",
-    "core-js": "^3.20.0",
+    "core-js": "^3.20.1",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.3.1",
     "eslint": "^8.5.0",
