@@ -14,7 +14,6 @@
     "composer:update": "cd mailer/core/ && composer update",
     "composer:phpcs": "cd mailer/core/ && composer phpcs",
     "composer:phpcbf": "cd mailer/core/ && composer phpcbf",
-    "composer:phpmd": "cd mailer/core/ && composer phpmd",
     "composer:phpstan": "cd mailer/core/ && composer phpstan",
     "deploy": "sh deploy.sh"
   },

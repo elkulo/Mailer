@@ -119,7 +119,7 @@ class FileDataHandler implements FileDataHandlerInterface
                 if (isset($this->tmpFiles[$attr]) && !empty($this->tmpFiles[$attr]['tmp_name'])) {
                     $file = [
                         '_origin_tmp' => $this->tmpFiles[$attr]['tmp_name'],
-                        'name' => $this->tmpFiles[$attr]['name'],
+                        'name' => str_replace(['%22', '&#39;'], '', $this->tmpFiles[$attr]['name']),
                         'type' => $this->tmpFiles[$attr]['type'],
                         'size' => $this->tmpFiles[$attr]['size'],
                         'ext' => pathinfo($this->tmpFiles[$attr]['name'], PATHINFO_EXTENSION),
@@ -249,6 +249,23 @@ class FileDataHandler implements FileDataHandlerInterface
             $query[$attr] = isset($fileData[$attr]['name']) ? $this->esc($fileData[$attr]['name']) : '';
         }
         return $query;
+    }
+
+    /**
+     * ファイル名をCSV形式で取得
+     *
+     * @return string
+     */
+    public function getFileCSV(): string
+    {
+        $formSettings = $this->settings->get('form');
+        $fileData = $this->fileData;
+        $query = [];
+
+        foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
+            $query[] = isset($fileData[$attr]['name']) ? $this->esc($fileData[$attr]['name']) : '';
+        }
+        return implode(', ', preg_replace('/^(.*?)$/', '"$1"', array_filter($query)));
     }
 
     /**
@@ -465,6 +482,25 @@ class FileDataHandler implements FileDataHandlerInterface
             }
         } else {
             return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
+        }
+        return $sanitized;
+    }
+
+    /**
+     * 除去
+     *
+     * @param  array|string $content
+     * @return array|string
+     */
+    private function kses($content)
+    {
+        $sanitized = [];
+        if (is_array($content)) {
+            foreach ($content as $key => $value) {
+                $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
+            }
+        } else {
+            return trim(strip_tags(str_replace("\0", '', $content)));
         }
         return $sanitized;
     }

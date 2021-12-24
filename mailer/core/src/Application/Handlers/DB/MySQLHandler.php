@@ -98,16 +98,24 @@ class MySQLHandler implements DBHandlerInterface
      * @param  string $email
      * @param  string $subject
      * @param  string $body
+     * @param  string $attachment
      * @param  array  $status
      * @return bool
      */
-    final public function save(array $success, string $email, string $subject, string $body, array $status): bool
-    {
+    final public function save(
+        array  $success,
+        string $email,
+        string $subject,
+        string $body,
+        string $attachment,
+        array  $status
+    ): bool {
         $values = [
             'success' => json_encode($success),
             'email' => $email,
             'subject' => $subject,
             'body' => $body,
+            'attachment' => $attachment,
             'date' => $status['_date'],
             'ip' => $status['_ip'],
             'host' => $status['_host'],
@@ -159,6 +167,7 @@ class MySQLHandler implements DBHandlerInterface
                 email VARCHAR(256),
                 subject VARCHAR(78),
                 body VARCHAR(3998),
+                attachment VARCHAR(50),
                 date VARCHAR(50),
                 ip VARCHAR(50),
                 host VARCHAR(50),

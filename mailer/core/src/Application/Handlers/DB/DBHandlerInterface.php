@@ -18,10 +18,18 @@ interface DBHandlerInterface
      * @param  string $email
      * @param  string $subject
      * @param  string $body
+     * @param  string $attachment
      * @param  array  $status
      * @return bool
      */
-    public function save(array $success, string $email, string $subject, string $body, array $status): bool;
+    public function save(
+        array  $success,
+        string $email,
+        string $subject,
+        string $body,
+        string $attachment,
+        array  $status
+    ): bool;
 
     /**
      * DBを作成

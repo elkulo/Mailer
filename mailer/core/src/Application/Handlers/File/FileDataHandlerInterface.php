@@ -54,6 +54,13 @@ interface FileDataHandlerInterface
     public function getNameToLabel(): array;
 
     /**
+     * ファイル名をCSV形式で取得
+     *
+     * @return string
+     */
+    public function getFileCSV(): string;
+
+    /**
      * 管理者へのアップロード画像を取得
      *
      * @return array

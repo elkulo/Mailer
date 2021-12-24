@@ -366,6 +366,7 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->postData->getUserMail(),
                 $this->postData->getMailSubject(),
                 $this->postData->getPostToString(),
+                $this->fileData->getFileCSV(),
                 $this->postData->getPostStatus()
             );
 
