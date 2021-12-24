@@ -135,6 +135,8 @@ class SQLiteHandler implements DBHandlerInterface
                 'ip' => $status['_ip'],
                 'host' => $status['_host'],
                 'referer' => $status['_url'],
+                'uuid' => $status['_uuid'],
+                'ua' => $status['_ua'],
                 'registry_datetime' => date('Y-m-d H:i:s'),
                 'created_at' => time(),
                 'updated_at' => time()
@@ -188,6 +190,8 @@ class SQLiteHandler implements DBHandlerInterface
                     ip VARCHAR(50),
                     host VARCHAR(50),
                     referer VARCHAR(50),
+                    uuid VARCHAR(36),
+                    ua VARCHAR(256),
                     registry_datetime DATETIME,
                     created_at INTEGER,
                     updated_at INTEGER
