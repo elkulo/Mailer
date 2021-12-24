@@ -104,8 +104,8 @@ class MailerPostData
         $mailTemplatePath = [
             $settings->get('appPath') . '/src/Views/mailer/templates/mail'
         ];
-        if (file_exists($settings->get('templatesDirPath') . '/templates/mail')) {
-            array_unshift($mailTemplatePath, $settings->get('templatesDirPath') . '/templates/mail');
+        if (file_exists($settings->get('templatesDirPath') . '/mail')) {
+            array_unshift($mailTemplatePath, $settings->get('templatesDirPath') . '/mail');
         }
         $this->view = new TwigEnvironment(new TwigFileLoader($mailTemplatePath));
     }
@@ -246,7 +246,6 @@ class MailerPostData
     /**
      * 管理者メールヘッダ.
      *
-     * @param  string $type
      * @return array
      */
     public function getMailAdminHeader(): array

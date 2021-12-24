@@ -14,7 +14,7 @@ interface DBHandlerInterface
     /**
      * DBに保存
      *
-     * @param  array   $success
+     * @param  array  $success
      * @param  string $email
      * @param  string $subject
      * @param  string $body
@@ -27,7 +27,6 @@ interface DBHandlerInterface
      * DBを作成
      *
      * @return bool
-     * @throws Exception
      */
     public function make(): bool;
 

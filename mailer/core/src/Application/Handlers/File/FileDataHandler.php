@@ -222,7 +222,7 @@ class FileDataHandler implements FileDataHandlerInterface
             }
 
             // ファイルサイズ
-            $bytes = (string) $this->prettyBytes((int) $file['size'], 2);
+            $bytes = $this->prettyBytes((int) $file['size'], 2);
 
             // 確認をセット
             $query[] = [
@@ -284,7 +284,7 @@ class FileDataHandler implements FileDataHandlerInterface
      */
     public function getUserMailAttachment(): array
     {
-        $templatesAttachmentDir = $this->settings->get('templatesDirPath') . '/templates/attachment/';
+        $templatesAttachmentDir = $this->settings->get('templatesDirPath') . '/attachment/';
         $formSettings = $this->settings->get('form');
         $uploadDir = $this->uploadDir;
         $attachments = [];
@@ -377,11 +377,9 @@ class FileDataHandler implements FileDataHandlerInterface
                         if (is_writable($filePath)) {
                             if (!unlink($filePath)) {
                                 throw new \Exception('['.$file . ']の削除に失敗しました');
-                                break;
                             }
                         } else {
                             throw new \Exception('キャッシュディレクトリに書き込み権限がありません');
-                            break;
                         }
                     }
                 }
@@ -394,7 +392,7 @@ class FileDataHandler implements FileDataHandlerInterface
     /**
      * 確認画面の入力内容の隠しにアップロードIDを出力
      *
-     * @return void
+     * @return string
      */
     public function getTmpFiles(): string
     {
@@ -422,9 +420,9 @@ class FileDataHandler implements FileDataHandlerInterface
      * @param  int  $bytes     バイト数
      * @param  int  $dec       小数点の省略する桁
      * @param  bool $separate  桁区切り
-     * @return int
+     * @return string
      */
-    private function prettyBytes(int $bytes, int $dec = -1, bool $separate = false)
+    private function prettyBytes(int $bytes, int $dec = -1, bool $separate = false): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
         $digits = ($bytes === 0) ? 0 : floor(log($bytes, 1024));

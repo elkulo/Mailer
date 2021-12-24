@@ -13,6 +13,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 interface RouterInterface
 {
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function init(Request $request): void;
+
     /**
      * @param string $urlName
      * @return void

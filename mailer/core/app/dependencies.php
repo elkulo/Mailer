@@ -77,8 +77,8 @@ return function (ContainerBuilder $containerBuilder) {
                 __DIR__ . '/../src/Views/mailer/templates',
                 __DIR__ . '/../src/Views',
             ];
-            if (file_exists($settings->get('templatesDirPath') . '/templates')) {
-                array_unshift($templatePath, $settings->get('templatesDirPath') . '/templates');
+            if (file_exists($settings->get('templatesDirPath'))) {
+                array_unshift($templatePath, $settings->get('templatesDirPath'));
             }
             $twig = Twig::create($templatePath, $settings->get('twig'));
 
@@ -108,7 +108,6 @@ return function (ContainerBuilder $containerBuilder) {
             switch ($mailHandler) {
                 case ('WordPress'):
                     return $c->get(WordPressHandler::class);
-                    break;
                 default:
                     return $c->get(PHPMailerHandler::class);
             }
@@ -126,10 +125,8 @@ return function (ContainerBuilder $containerBuilder) {
                 case ('MariaDB'):
                 case ('MySQL'):
                     return $c->get(MySQLHandler::class);
-                    break;
                 case ('SQLite'):
                     return $c->get(SQLiteHandler::class);
-                    break;
                 default:
                     return null;
             }

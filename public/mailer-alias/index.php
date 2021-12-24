@@ -18,17 +18,16 @@ declare(strict_types=1);
 /**
  * 設定とテンプレート: SETTINGS_DIR_PATH, TEMPLATES_DIR_PATH
  * 
- * 設定ディレクトリの "/settings" やテンプレートディレクトリの "/templates" がある場所を任意に指定すれば、
+ * 設定ディレクトリやテンプレートディレクトリがある場所を任意に指定すれば、
  * 一つのメールプログラムで複数のフォームの設定を分けられます。
- * 設定ディレクトリ名 "settings"、テンプレートディレクトリ名は "templates" である必要があります。
  * デフォルトはMailerプログラム直下になります。
  * 変更がない場合はコメントアウトを解除する必要はありません。
  */
-// 任意の settingsディレクトリがある場所までのパス
-//define('SETTINGS_DIR_PATH', __DIR__);
+// 任意の設定ディレクトリがある場所までのパス
+//define('SETTINGS_DIR_PATH', __DIR__ . '/settings/');
 
-// 任意の templatesディレクトリがある場所までのパス
-//define('TEMPLATES_DIR_PATH', __DIR__);
+// 任意のテンプレートディレクトリがある場所までのパス
+//define('TEMPLATES_DIR_PATH', __DIR__ . '/templates/');
 
 /**
  * WordPressの連携

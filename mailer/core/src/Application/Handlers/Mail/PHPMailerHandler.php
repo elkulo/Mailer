@@ -86,7 +86,7 @@ class PHPMailerHandler implements MailHandlerInterface
                 $mailer->SMTPSecure = $mailSettings['SMTP_ENCRYPT'];
                 $mailer->SMTPAutoTLS = true;
             } else {
-                $mailer->SMTPSecure  = false;
+                $mailer->SMTPSecure  = '';
                 $mailer->SMTPAutoTLS = false;
             }
 

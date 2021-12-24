@@ -27,7 +27,7 @@ abstract class MailerAction extends Action
 
     /**
      * @param LoggerInterface $logger
-     * @param MailerRepository $userRepository
+     * @param MailerRepository $mailerRepository
      * @param Twig $twig
      */
     public function __construct(
