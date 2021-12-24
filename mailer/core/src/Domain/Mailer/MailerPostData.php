@@ -72,6 +72,8 @@ class MailerPostData
      */
     private $mailFileNames = [];
 
+    private $uuid = '';
+
     /**
      * コンストラクタ
      *
@@ -156,17 +158,27 @@ class MailerPostData
     /**
      * POST元のステータス
      *
+     * @param  string $format
      * @return array
      */
-    public function getPostStatus(): array
+    public function getPostStatus(string $format = ''): array
     {
-        return [
+        $status = [
             '_date' => date($this->settings->get('dateFormat'), time()),
             '_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
             '_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
             '_url' => $this->getPageReferer(),
             '_ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
+            '_uuid' => $this->getGenerateUUID(),
         ];
+
+        // Twig出力では[__KEY]の形式に変換.
+        if ($format === 'twig') {
+            foreach ($status as $key => $value) {
+                $status[ '_' . strtoupper($key) ] = $value;
+            }
+        }
+        return $status;
     }
 
     /**
@@ -215,20 +227,15 @@ class MailerPostData
      */
     public function getMailBody(): array
     {
-        $status = $this->getPostStatus();
         // Twig変数にクライアント情報の置換.
         return array_merge(
             $this->postData,
             $this->mailFileNames,
+            $this->getPostStatus('twig'),
             [
                 '__SITE_TITLE' => $this->settings->get('siteTitle'),
                 '__SITE_URL' => $this->settings->get('siteUrl'),
                 '__POST_ALL' => $this->getPostToString(),
-                '__DATE' => $status['_date'],
-                '__IP' => $status['_ip'],
-                '__HOST' => $status['_host'],
-                '__URL' => $status['_url'],
-                '__UA' => $status['_ua'],
             ]
         );
     }
@@ -485,6 +492,28 @@ class MailerPostData
             $output .= $val . $key;
         }
         return $output;
+    }
+
+    /**
+     * UUIDを生成
+     *
+     * @return string
+     */
+    private function getGenerateUUID(): string
+    {
+        if (!$this->uuid) {
+            $chars = str_split('XXXXXXXX-XXXX-4XXX-YXXX-XXXXXXXXXXXX');
+
+            foreach ($chars as $i => $char) {
+                if ('X' === $char) {
+                    $chars[ $i ] = dechex(random_int(0, 15));
+                } elseif ('Y' === $char) {
+                    $chars[ $i ] = dechex(random_int(8, 11));
+                }
+            }
+            $this->uuid = strtoupper(implode('', $chars));
+        }
+        return $this->uuid;
     }
 
     /**

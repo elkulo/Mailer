@@ -378,6 +378,7 @@ class InMemoryMailerRepository implements MailerRepository
                 'template' => 'complete.twig',
                 'data' => array_merge(
                     $this->postData->getPosts(),
+                    $this->postData->getPostStatus('twig'),
                     [
                         'Return' => [
                             'url' => $this->postData->getReturnURL(),

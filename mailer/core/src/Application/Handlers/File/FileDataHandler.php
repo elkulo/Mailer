@@ -485,23 +485,4 @@ class FileDataHandler implements FileDataHandlerInterface
         }
         return $sanitized;
     }
-
-    /**
-     * 除去
-     *
-     * @param  array|string $content
-     * @return array|string
-     */
-    private function kses($content)
-    {
-        $sanitized = [];
-        if (is_array($content)) {
-            foreach ($content as $key => $value) {
-                $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
-            }
-        } else {
-            return trim(strip_tags(str_replace("\0", '', $content)));
-        }
-        return $sanitized;
-    }
 }
