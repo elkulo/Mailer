@@ -72,6 +72,11 @@ class MailerPostData
      */
     private $mailFileNames = [];
 
+    /**
+     * 送信時の識別UUID
+     *
+     * @var string
+     */
     private $uuid = '';
 
     /**
@@ -164,18 +169,18 @@ class MailerPostData
     public function getPostStatus(string $format = ''): array
     {
         $status = [
-            '_date' => date($this->settings->get('dateFormat'), time()),
-            '_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
-            '_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
-            '_url' => $this->getPageReferer(),
-            '_ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
-            '_uuid' => $this->getGenerateUUID(),
+            'date' => date($this->settings->get('dateFormat'), time()),
+            'ip' => $this->esc($_SERVER['REMOTE_ADDR']),
+            'host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
+            'referer' => $this->getPageReferer(),
+            'ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
+            'uuid' => $this->getGenerateUUID(),
         ];
 
         // Twig出力では[__KEY]の形式に変換.
         if ($format === 'twig') {
             foreach ($status as $key => $value) {
-                $status[ '_' . strtoupper($key) ] = $value;
+                $status[ '__' . strtoupper($key) ] = $value;
             }
         }
         return $status;
@@ -413,11 +418,12 @@ class MailerPostData
     /**
      * ページリファラーをセット
      *
+     * @param  string $url
      * @return void
      */
-    private function setPageReferer($value): void
+    private function setPageReferer(string $url): void
     {
-        $this->pageReferer = $this->esc($value);
+        $this->pageReferer = $this->esc($url);
     }
 
     /**
@@ -461,8 +467,8 @@ class MailerPostData
             return $output;
         }
         if (is_array($this->formSettings['HANKAKU_ATTRIBUTES'])) {
-            foreach ($this->formSettings['HANKAKU_ATTRIBUTES'] as $val) {
-                if ($key === $val) {
+            foreach ($this->formSettings['HANKAKU_ATTRIBUTES'] as $value) {
+                if ($key === $value) {
                     $output = mb_convert_kana($output, 'a', 'UTF-8');
                 }
             }
@@ -481,15 +487,15 @@ class MailerPostData
     private function changeJoin(array $items): string
     {
         $output = '';
-        foreach ($items as $key => $val) {
-            if ($key === 0 || $val == '') {
+        foreach ($items as $key => $value) {
+            if ($key === 0 || $value === '') {
                 // 配列が0、または内容が空の場合は連結文字を付加しない
                 $key = '';
-            } elseif (strpos($key, '円') !== false && $val != '' && preg_match('/^[0-9]+$/', $val)) {
+            } elseif (strpos($key, '円') !== false && preg_match('/^[0-9]+$/', $value)) {
                 // 金額の場合には3桁ごとにカンマを追加
-                $val = number_format($val);
+                $value = number_format($value);
             }
-            $output .= $val . $key;
+            $output .= $value . $key;
         }
         return $output;
     }
@@ -511,7 +517,7 @@ class MailerPostData
                     $chars[ $i ] = dechex(random_int(8, 11));
                 }
             }
-            $this->uuid = strtoupper(implode('', $chars));
+            $this->uuid = strtolower(implode('', $chars));
         }
         return $this->uuid;
     }
