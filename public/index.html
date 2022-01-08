@@ -151,6 +151,22 @@
                   <div id="consentHelp" class="form-text">通信はSSLにより暗号化されています。当サイトの個人情報保護方針については<a href="privacy-policy.html" target="_blank" title="プライバシーポリシー">プライバシーポリシー</a>をご覧ください。</div>
                 </div>
 
+                <div class="mb-3">
+                  <label for="UploadFile" class="form-label">添付画像1<small class="d-inline-block text-secondary ms-2">(JPEG/GIF/PNG)</small></label>
+                  <input type="file" id="UploadFile" class="form-control" name="uploadFile" accept="image/jpeg, image/png" required>
+                  <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('UploadFile').value = ''">
+                    画像クリア
+                  </button>
+                </div>
+    
+                <div class="mb-3">
+                  <label for="CustomerAvatar" class="form-label">添付画像2<small class="d-inline-block text-secondary ms-2">(JPEG/GIF/PNG)</small></label>
+                  <input type="file" id="CustomerAvatar" class="form-control" name="attachmentAvatar" accept="image/jpeg, image/png">
+                  <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('CustomerAvatar').value = ''">
+                    画像クリア
+                  </button>
+                </div>
+
                 <div class="d-grid gap-2 col-10 col-sm-6 mt-5 mx-auto">
                   <button type="submit" class="btn btn-primary">上記内容を送信する</button>
                 </div>
@@ -182,8 +198,8 @@
             <h2 class="document-header__title">DOCUMENT</h2>
           </header>
           <div class="document-content">
-            <p>最新パッケージのダウンロードとドキュメントはこちら</p>
-            <p>
+            <div class="document-content__description">最新パッケージのダウンロードとドキュメントはこちら</div>
+            <div class="document-content__btn-group">
               <a href="https://walkyxwalky.com/download/mailer" title="Publisher Blog" target="_blank" class="button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                   <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -191,7 +207,7 @@
                 </svg>
                 Publisher Blog
               </a>
-            </p>
+            </div>
           </div>
         </div>
       </section>

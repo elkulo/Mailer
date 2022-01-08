@@ -23,7 +23,7 @@ defined('ENV_IDENTIFY') || define('ENV_IDENTIFY', '');
 session_name('MAILERID');
 
 // Set up Dotenv
-$env = '.env' . ( ENV_IDENTIFY ? '.' .ENV_IDENTIFY: '' );
+$env = rtrim('.env.' . trim(ENV_IDENTIFY, '.'), '.');
 if ( file_exists( rtrim(ENV_DIR_PATH, '/') . '/' . $env ) ) {
   \Dotenv\Dotenv::createImmutable( rtrim(ENV_DIR_PATH, '/') . '/', $env )->load();
 } else {
@@ -34,9 +34,9 @@ if ( file_exists( rtrim(ENV_DIR_PATH, '/') . '/' . $env ) ) {
 $containerBuilder = new ContainerBuilder();
 
 // Should be set to true in production
-if (false) {
-  $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
-}
+//if (false) {
+//  $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
+//}
 
 // Set up settings
 $settings = require __DIR__ . '/../app/settings.php';
@@ -69,8 +69,9 @@ $settings = $container->get(SettingsInterface::class);
 date_default_timezone_set($settings->get('timeZone'));
 
 // ベースパス.
-if (BASE_URL_PATH !== '/') {
-  $app->setBasePath( '/' . trim(BASE_URL_PATH, '/') );
+$basePath = trim(BASE_URL_PATH, '/');
+if ($basePath) {
+  $app->setBasePath( '/' . $basePath );
 }
 
 // Register routes
