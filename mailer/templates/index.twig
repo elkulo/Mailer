@@ -31,7 +31,7 @@
     <div class="container" style="max-width: 768px">
       <div class="row shadow-sm bg-white border rounded">
         <div class="col p-4 px-sm-5">
-          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate>
+          <form id="mailer-form" class="needs-validation" method="post" action="{{ Action.url }}" novalidate enctype="multipart/form-data">
 
             <div class="mb-3">
               <div class="form-label">件名</div>
@@ -102,6 +102,22 @@
             <div class="mb-3 form-check">
               <input type="checkbox" id="CustomerConsent" class="form-check-input" name="personalInformation" value="同意します" required>
               <label for="CustomerConsent" class="form-check-label" aria-describedby="consentHelp">個人情報の取扱について同意します。</label>
+            </div>
+
+            <div class="mb-3">
+              <label for="UploadFile" class="form-label">添付画像1<small class="d-inline-block text-secondary ms-2">(JPEG/GIF/PNG)</small></label>
+              <input type="file" id="UploadFile" class="form-control" name="uploadFile" accept="image/jpeg, image/png">
+              <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('UploadFile').value = ''">
+                画像クリア
+              </button>
+            </div>
+
+            <div class="mb-3">
+              <label for="CustomerAvatar" class="form-label">添付画像2<small class="d-inline-block text-secondary ms-2">(JPEG/GIF/PNG)</small></label>
+              <input type="file" id="CustomerAvatar" class="form-control" name="attachmentAvatar" accept="image/jpeg, image/png">
+              <button type="button" class="btn btn-sm btn-secondary shadow-none mt-2" onclick="document.getElementById('CustomerAvatar').value = ''">
+                画像クリア
+              </button>
             </div>
 
             <div class="d-grid gap-2 col-10 col-sm-6 mt-3 mx-auto">

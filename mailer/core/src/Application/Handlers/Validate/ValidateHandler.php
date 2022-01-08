@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -45,7 +45,7 @@ class ValidateHandler implements ValidateHandlerInterface
      *
      * @var SettingsInterface
      */
-    private $settings = [];
+    private $settings;
 
     /**
      * バリデーション設定
@@ -316,11 +316,8 @@ class ValidateHandler implements ValidateHandlerInterface
     public function isCheckReferer(): bool
     {
         try {
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                if (strpos($_SERVER['HTTP_REFERER'], $this->settings->get('siteUrl')) === false) {
-                    throw new \Exception('Send from unknown referrer.');
-                }
-            } else {
+            $referer = filter_input(INPUT_SERVER, 'HTTP_REFERER', FILTER_VALIDATE_URL);
+            if (! $referer || strpos($referer, $this->settings->get('siteUrl')) === false) {
                 throw new \Exception('Send from unknown referrer.');
             }
         } catch (\Exception $e) {
@@ -348,17 +345,13 @@ class ValidateHandler implements ValidateHandlerInterface
                     if (! method_exists($this->recaptcha, 'setExpectedHostname')) {
                         throw new \Exception('reCAPTCHA configuration error.');
                     }
-                    $response = $this->recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+                    $response = $this->recaptcha->setExpectedHostname(filter_input(INPUT_SERVER, 'SERVER_NAME'))
                         ->setExpectedAction($action)
                         ->setScoreThreshold($this->threshold)
-                        ->verify($value, $_SERVER['REMOTE_ADDR']);
+                        ->verify($value, filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP));
         
                     if (!$response->isSuccess()) {
-                        if ($response->getScore() !== null) {
-                            throw new \Exception('reCAPTCHA score' . (string) $response->getScore());
-                        } else {
-                            throw new \Exception('reCAPTCHA response error.');
-                        }
+                        throw new \Exception('reCAPTCHA score' . (string) $response->getScore());
                     }
                 } else {
                     throw new \Exception('Unknown response.');
@@ -368,7 +361,7 @@ class ValidateHandler implements ValidateHandlerInterface
                     $this->logger->error($e->getMessage(), [
                         'email' => $this->getHiddenEmail($fields[$this->formSettings['EMAIL_ATTRIBUTE']]),
                         'subject' => $fields[$this->formSettings['SUBJECT_ATTRIBUTE']],
-                        'ip' => isset($_SERVER['REMOTE_ADDR'])? $_SERVER['REMOTE_ADDR']:''
+                        'ip' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP) ?? ''
                     ]);
                 }
                 return false;

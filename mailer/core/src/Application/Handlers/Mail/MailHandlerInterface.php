@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -18,7 +18,14 @@ interface MailHandlerInterface
      * @param  string $subject
      * @param  string $body
      * @param  array $header
+     * @param  array $attachments
      * @return bool
      */
-    public function send(string $to, string $subject, string $body, array $header = array()): bool;
+    public function send(
+        string $to,
+        string $subject,
+        string $body,
+        array $header = array(),
+        array $attachments = array()
+    ): bool;
 }

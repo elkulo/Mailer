@@ -1,13 +1,16 @@
+@use "../../variables/variables" as variable;
+@use "../../mixins/mixins" as mixin;
+
 .site-footer {
 	&__branding {
-		font-family: $font__heading;
+		font-family: variable.$font__heading;
 		font-size: 1.5rem;
 		font-weight: 500;
 		white-space: nowrap;
 		letter-spacing: -0.02em;
 		text-align: center;
 
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			font-size: 2rem;
 		}
 
@@ -23,7 +26,7 @@
 	&__copyright {
 		clear: both;
 		color: #fff;
-		font-family: $font__heading;
+		font-family: variable.$font__heading;
 		text-align: center;
 		font-size: 0.875rem;
 		margin: 3rem 0;

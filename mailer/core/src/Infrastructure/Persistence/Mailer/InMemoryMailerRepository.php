@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -17,6 +17,7 @@ use App\Application\Router\RouterInterface;
 use App\Application\Handlers\Mail\MailHandlerInterface;
 use App\Application\Handlers\DB\DBHandlerInterface;
 use App\Application\Handlers\Validate\ValidateHandlerInterface;
+use App\Application\Handlers\File\FileDataHandlerInterface;
 
 class InMemoryMailerRepository implements MailerRepository
 {
@@ -29,11 +30,18 @@ class InMemoryMailerRepository implements MailerRepository
     private $csrf;
 
     /**
-     * ロジック
+     * POSTロジック
      *
      * @var MailerPostData
      */
     private $postData;
+
+    /**
+     * 画像アップロードハンドラー
+     *
+     * @var FileDataHandlerInterface
+     */
+    private $fileData;
 
     /**
      * ロガー
@@ -86,6 +94,7 @@ class InMemoryMailerRepository implements MailerRepository
      * @param RouterInterface $router
      * @param ValidateHandlerInterface $validate,
      * @param MailHandlerInterface $mail,
+     * @param FileDataHandlerInterface $fileData,
      * @param DBHandlerInterface|null $db
      */
     public function __construct(
@@ -95,6 +104,7 @@ class InMemoryMailerRepository implements MailerRepository
         RouterInterface $router,
         ValidateHandlerInterface $validate,
         MailHandlerInterface $mail,
+        FileDataHandlerInterface $fileData,
         ?DBHandlerInterface $db
     ) {
 
@@ -119,24 +129,35 @@ class InMemoryMailerRepository implements MailerRepository
         // データベースハンドラーをセット
         $this->db = $db;
 
-        // POSTを格納
-        $this->postData = new MailerPostData($_POST, $settings);
+        // POSTデータを取得
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING) ?? [];
 
-        // バリデーション準備
-        $this->validate->set($_POST);
+        // POSTデータをサニタイズして格納
+        $this->postData = new MailerPostData($posts, $settings);
+
+        // 画像アップロードハンドラーをセット
+        $this->fileData = $fileData;
+        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_STRING) ?? []);
+
+        // POSTされたFILE変数を取得
+        $files = $this->fileData->getPostedFiles();
+
+        // メールテンプレート用にファイル名を事前に格納
+        $this->postData->setMailFileName($this->fileData->getNameToLabel());
+
+        // POSTデータとFILEデータを統合してバリデーションに格納
+        $this->validate->set(array_merge($posts, $files));
+
+        // サニタイズしたPOSTデータを取得
+        $postData = $this->postData->getPosts();
 
         // 設定値の取得
         $formSettings = $this->settings->get('form');
 
-        // POSTデータ
-        $postData = $this->postData->getPosts();
-
         // ユーザーメールを形式チェックして格納
         $emailAttr = isset($formSettings['EMAIL_ATTRIBUTE']) ? $formSettings['EMAIL_ATTRIBUTE'] : null;
-        if (isset($postData[$emailAttr])) {
-            if ($this->validate->isCheckMailFormat($postData[$emailAttr])) {
-                $this->postData->setUserMail($postData[$emailAttr]);
-            }
+        if (isset($postData[$emailAttr]) && $this->validate->isCheckMailFormat($postData[$emailAttr])) {
+            $this->postData->setUserMail($postData[$emailAttr]);
         }
     }
 
@@ -149,7 +170,7 @@ class InMemoryMailerRepository implements MailerRepository
     {
         $formSettings = $this->settings->get('form');
         $mailSettings = $this->settings->get('mail');
-        $adminEmail = isset($mailSettings['ADMIN_MAIL'])? $mailSettings['ADMIN_MAIL']: '';
+        $adminEmail = isset($mailSettings['ADMIN_MAIL']) ? $mailSettings['ADMIN_MAIL'] : '';
 
         try {
             // 管理者メールチェック
@@ -174,7 +195,7 @@ class InMemoryMailerRepository implements MailerRepository
                     'reCAPTCHA' => $this->validate->getReCaptchaScript(),
                     'Action' => [
                         'url' => $this->router->getUrl(
-                            empty($formSettings['IS_CONFIRM_SKIP'])? 'mailer.confirm' : 'mailer.complete'
+                            empty($formSettings['IS_CONFIRM_SKIP']) ? 'mailer.confirm' : 'mailer.complete'
                         )
                     ],
                 ],
@@ -197,7 +218,7 @@ class InMemoryMailerRepository implements MailerRepository
     public function confirm(): array
     {
         $mailSettings = $this->settings->get('mail');
-        $adminEmail = isset($mailSettings['ADMIN_MAIL'])? $mailSettings['ADMIN_MAIL']: '';
+        $adminEmail = isset($mailSettings['ADMIN_MAIL']) ? $mailSettings['ADMIN_MAIL'] : '';
 
         try {
             // 管理者メールチェック
@@ -218,24 +239,32 @@ class InMemoryMailerRepository implements MailerRepository
             // 固有のメール送信のトークンを生成.
             $this->postData->createMailerToken();
 
+            // 画像のアップロード
+            // NOTE: エラーの場合は例外をスローします。
+            $this->fileData->run();
+
             // 確認画面を生成.
             return [
                 'template' => 'confirm.twig',
                 'data' => array_merge(
                     $this->postData->getPosts(),
+                    $this->fileData->getFiles(),
                     [
-                        'Posts' => $this->postData->getConfirmQuery(),
+                        'Posts' => $this->postData->getDataQuery(),
+                        'Files' => $this->fileData->getDataQuery(),
                         'CSRF'   => sprintf(
                             '<div style="display:none">
                                 <input type="hidden" name="%1$s" value="%2$s">
                                 <input type="hidden" name="%3$s" value="%4$s">
-                                <input type="hidden" name="_http_referer" value="%5$s" />
+                                %5$s
+                                %6$s
                              </div>',
                             $this->csrf->getTokenNameKey(),
                             $this->csrf->getTokenName(),
                             $this->csrf->getTokenValueKey(),
                             $this->csrf->getTokenValue(),
-                            $this->postData->getPageReferer()
+                            $this->postData->getTmpPosts(),
+                            $this->fileData->getTmpFiles()
                         ),
                         'reCAPTCHA' => $this->validate->getReCaptchaScript(),
                         'Action' => [
@@ -249,7 +278,7 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'validate.twig',
                     'data' => [
-                        'Errors' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                        'Errors' => array_map(fn ($n) => $n[0], $this->validate->errors()),
                     ]
                 ];
             } else {
@@ -274,7 +303,7 @@ class InMemoryMailerRepository implements MailerRepository
         $mailSettings = $this->settings->get('mail');
         $formSettings = $this->settings->get('form');
         $success = ['admin' => false, 'user' => false];
-        $adminEmail = isset($mailSettings['ADMIN_MAIL'])? $mailSettings['ADMIN_MAIL']: '';
+        $adminEmail = isset($mailSettings['ADMIN_MAIL']) ? $mailSettings['ADMIN_MAIL'] : '';
 
         try {
             // 管理者メールチェック
@@ -287,12 +316,16 @@ class InMemoryMailerRepository implements MailerRepository
                 throw new \Exception('指定のページ以外から送信されています。');
             }
 
-            // 重複投稿をチェック
+            // 画像のアップロード
+            // NOTE: エラーの場合は例外をスローします。
+            $this->fileData->run();
+
+            // 確認画面スキップ分岐
             if (empty($formSettings['IS_CONFIRM_SKIP'])) {
-                // 確認画面経由の場合は固有のメールの送信トークンを削除
+                // 重複投稿をチェックは固有のメールの送信トークンを削除
                 $this->postData->checkinMailerToken();
             } else {
-                // 確認画面スキップの場合はCSRFトークンを削除
+                // 重複投稿をチェックはCSRFトークンを削除
                 $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
             }
 
@@ -306,9 +339,10 @@ class InMemoryMailerRepository implements MailerRepository
                 $mailSettings['ADMIN_MAIL'],
                 $this->postData->getMailSubject(),
                 $this->postData->renderAdminMail($this->postData->getMailBody()),
-                $this->postData->getMailAdminHeader()
+                $this->postData->getMailAdminHeader(),
+                $this->fileData->getAdminMailAttachment()
             );
-            if (! $success['admin']) {
+            if (!$success['admin']) {
                 // SMTPサーバー障害や設定ミスによる送信失敗時の致命的なエラーメッセージ.
                 throw new \Exception($this->settings->get('validate')['MESSAGE_FATAL_ERROR']);
             }
@@ -319,7 +353,9 @@ class InMemoryMailerRepository implements MailerRepository
                     $success['user'] = $this->mail->send(
                         $this->postData->getUserMail(),
                         $this->postData->getMailSubject(),
-                        $this->postData->renderUserMail($this->postData->getMailBody())
+                        $this->postData->renderUserMail($this->postData->getMailBody()),
+                        [],
+                        $this->fileData->getUserMailAttachment()
                     );
                 }
             }
@@ -330,14 +366,19 @@ class InMemoryMailerRepository implements MailerRepository
                 $this->postData->getUserMail(),
                 $this->postData->getMailSubject(),
                 $this->postData->getPostToString(),
+                $this->fileData->getFileCSV(),
                 $this->postData->getPostStatus()
             );
+
+            // 添付ファイルを削除.
+            $this->fileData->destroy();
 
             // 完了画面を生成.
             return [
                 'template' => 'complete.twig',
                 'data' => array_merge(
                     $this->postData->getPosts(),
+                    $this->postData->getPostStatus('twig'),
                     [
                         'Return' => [
                             'url' => $this->postData->getReturnURL(),
@@ -350,7 +391,7 @@ class InMemoryMailerRepository implements MailerRepository
                 return [
                     'template' => 'validate.twig',
                     'data' => [
-                        'Errors' => array_map(fn($n) => $n[0], $this->validate->errors()),
+                        'Errors' => array_map(fn ($n) => $n[0], $this->validate->errors()),
                     ]
                 ];
             } else {

@@ -1,6 +1,9 @@
+@use "../variables/variables" as variable;
+@use "../mixins/mixins" as mixin;
+
 ul,
 ol {
-	padding-left: (0.5 * $size__spacing-unit);
+	padding-left: (0.5 * variable.$size__spacing-unit);
 }
 
 ul {
@@ -16,12 +19,12 @@ ol {
 }
 
 li {
-	line-height: $font__line-height-body;
+	line-height: variable.$font__line-height-body;
 }
 
 li > ul,
 li > ol {
-	padding-left: $size__spacing-unit;
+	padding-left: variable.$size__spacing-unit;
 }
 
 dt {
@@ -29,5 +32,5 @@ dt {
 }
 
 dd {
-	margin: 0 $size__spacing-unit $size__spacing-unit;
+	margin: 0 variable.$size__spacing-unit variable.$size__spacing-unit;
 }

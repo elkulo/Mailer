@@ -231,11 +231,21 @@
                   <tr><th>{{'{{ Action.url }}'}}</th><td>formタグのaction属性のURLを自動設定</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr>
                     <th>{{'{% for post in Posts %}'}}<br />
-                        {{'{{ post.name | raw }}'}}<br />
-                        {{'{{ post.value | raw }}'}}<br />
+                        {{'{{ post.name }}'}}<br />
+                        {{'{{ post.value }}'}}<br />
                         {{'{% endfor %}'}}
                     </th>
-                    <td>POSTされた値の配列。<br />配列の中はname属性のラベル名とvalue属性の値を出力。<br />値の継承に隠されたinputタグを含むためraw指定が必要です。</td>
+                    <td>POSTされた値の配列。<br />配列の中はname属性のラベル名とvalue属性の値を出力。</td>
+                    <td>confirm.twig</td>
+                  </tr>
+                  <tr>
+                    <th>{{'{% for file in Files %}'}}<br />
+                        {{'{{ file.name }}'}}<br />
+                        {{'{{ file.value }}'}}<br />
+                        {{'{{ file.size }}'}}<br />
+                        {{'{% endfor %}'}}
+                    </th>
+                    <td>POSTされた添付ファイルの値の配列。<br />配列の中はname属性のラベル名とファイル名、ファイルサイズを出力。</td>
                     <td>confirm.twig</td>
                   </tr>
                   <tr>
@@ -248,7 +258,7 @@
                   </tr>
                   <tr><th>{{'{{ ExceptionMessage }}'}}</th><td>システムが拒否した時のメッセージ</td><td>exception.twig</td></tr>
                   <tr><th>{{'{{ Return.url }}'}}</th><td>設定で指定された戻り先のURL</td><td>complete.twig</td></tr>
-                  <tr><th>{{'{{ CSRF | raw }}'}}</th><td>CSRFタグのHTML</td><td>index.twig<br />confirm.twig</td></tr>
+                  <tr><th>{{'{{ CSRF | raw }}'}}</th><td><strong class="text-danger">送信に必須</strong>のCSRFタグのHTML</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr><th>{{'{{ reCAPTCHA.script | raw }}'}}</th><td>reCAPTCHAのHTML</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr><th>{{'{{ reCAPTCHA.key }}'}}</th><td>reCAPTCHAのサイトキー</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr>
@@ -262,11 +272,12 @@
                     <td>index.twig<br />confirm.twig<br />complete.twig<br />validate.twig<br />exception.twig<br />admin.mail.twig<br />user.mail.twig</td>
                   </tr>
                   <tr><th>{{'{{ __POST_ALL }}'}}</th><td>POSTされたvalue値の一覧を表示<br />また、アンダースコア(_)から始まるname属性のvalue値は除外されます。</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __DATE }}'}}</th><td>POSTされた時刻</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __IP }}'}}</th><td>送信者のIP</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __HOST }}'}}</th><td>送信元のサイトのホスト名</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __URL }}'}}</th><td>送信元のページのURL</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
-                  <tr><th>{{'{{ __UA }}'}}</th><td>送信者のユーザーエージェント</td><td>admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __DATE }}'}}</th><td>POSTされた時刻</td><td>complete.twig<br />admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __IP }}'}}</th><td>送信者のIP</td><td>complete.twig<br />admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __HOST }}'}}</th><td>送信元のサイトのホスト名</td><td>complete.twig<br />admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __URL }}'}}</th><td>送信元のページのURL</td><td>complete.twig<br />admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __UA }}'}}</th><td>送信者のユーザーエージェント</td><td>complete.twig<br />admin.mail.twig<br />user.mail.twig</td></tr>
+                  <tr><th>{{'{{ __UUID }}'}}</th><td>送信メールの識別ID</td><td>complete.twig<br />admin.mail.twig<br />user.mail.twig</td></tr>
                 </tbody>
               </table>
             </div>

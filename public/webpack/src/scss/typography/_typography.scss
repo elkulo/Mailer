@@ -1,37 +1,6 @@
 
-html {
-	font-size: $font__size_base;
-}
+@forward "character";
 
-body {
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	color: $color__text-main;
-	font-family: $font__body;
-	font-weight: 400;
-	font-size: 1rem;
-	line-height: $font__line-height-body;
-	margin: 0;
-	text-rendering: optimizeLegibility;
-	font-size: $font__size-sm;
+@forward "headings";
 
-	@include media(tablet) {
-		font-size: $font__size_base;
-	}	
-}
-
-button,
-input,
-select,
-optgroup,
-textarea {
-	color: $color__text-main;
-	font-family: $font__body;
-	font-weight: 400;
-	line-height: $font__line-height-body;
-	text-rendering: optimizeLegibility;
-}
-
-@import "headings";
-
-@import "copy";
+@forward "copy";
