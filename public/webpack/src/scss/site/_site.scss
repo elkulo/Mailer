@@ -1,21 +1,22 @@
 
 /* Header */
 
-@import 'header/header';
-@import 'header/header-image';
-@import 'header/site-branding';
+@forward 'header/header';
+
+@forward 'header/header-image';
+
+@forward 'header/site-branding';
 
 /* Navigation */
 
-@import 'navigation/main-navigation';
+@forward 'navigation/main-navigation';
 
 /* Footer */
 
-@import 'footer/footer';
+@forward 'footer/footer';
 
 /* Primary */
 
-@import 'primary/page';
-@import 'primary/home';
+@forward 'primary/page';
 
-/* Secondary */
+@forward 'primary/home';

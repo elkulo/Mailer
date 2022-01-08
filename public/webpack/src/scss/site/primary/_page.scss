@@ -1,19 +1,20 @@
-/**/
+@use "../../variables/variables" as variable;
+@use "../../mixins/mixins" as mixin;
+
 .page-section {
 
 	.page-header{
 		text-align: center;
-		margin: ($size__spacing-unit * 5) 0;
+		margin: (variable.$size__spacing-unit * 5) 0;
 
-		.page-title {
-		}
+		//.page-title {}
 
 		.page-summary {
-			font-size: $font__size-sm;
+			font-size: variable.$font__size-sm;
 		}
 	}
 
 	.page-content {
-		margin-bottom: ($size__spacing-unit * 5);
+		margin-bottom: (variable.$size__spacing-unit * 5);
 	}
 }

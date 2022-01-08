@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -51,10 +51,16 @@ class PHPMailerHandler implements MailHandlerInterface
      * @param  string $subject
      * @param  string $body
      * @param  array $header
+     * @param  array $attachments
      * @return bool
      */
-    final public function send(string $to, string $subject, string $body, array $header = array()): bool
-    {
+    final public function send(
+        string $to,
+        string $subject,
+        string $body,
+        array $header = array(),
+        array $attachments = array()
+    ): bool {
         $mailSettings = $this->mailSettings;
         $formSettings = $this->formSettings;
 
@@ -80,7 +86,7 @@ class PHPMailerHandler implements MailHandlerInterface
                 $mailer->SMTPSecure = $mailSettings['SMTP_ENCRYPT'];
                 $mailer->SMTPAutoTLS = true;
             } else {
-                $mailer->SMTPSecure  = false;
+                $mailer->SMTPSecure  = '';
                 $mailer->SMTPAutoTLS = false;
             }
 
@@ -111,6 +117,17 @@ class PHPMailerHandler implements MailHandlerInterface
 
             // 受信失敗時のリターン先.
             $mailer->Sender = $mailSettings['SMTP_MAILADDRESS'];
+
+            // 添付ファイル.
+            if (!empty($attachments)) {
+                foreach ($attachments as $attachment) {
+                    try {
+                        $mailer->addAttachment($attachment);
+                    } catch (Exception $e) {
+                        continue;
+                    }
+                }
+            }
 
             /**
              * デバックレベル 0 ~ 2

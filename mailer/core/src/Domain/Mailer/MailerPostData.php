@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -66,6 +66,20 @@ class MailerPostData
     private $view;
 
     /**
+     * メールテンプレート用のファイル名
+     *
+     * @var array
+     */
+    private $mailFileNames = [];
+
+    /**
+     * 送信時の識別UUID
+     *
+     * @var string
+     */
+    private $uuid = '';
+
+    /**
      * コンストラクタ
      *
      * @param  array $posts
@@ -97,8 +111,8 @@ class MailerPostData
         $mailTemplatePath = [
             $settings->get('appPath') . '/src/Views/mailer/templates/mail'
         ];
-        if (file_exists($settings->get('templatesDirPath') . '/templates/mail')) {
-            array_unshift($mailTemplatePath, $settings->get('templatesDirPath') . '/templates/mail');
+        if (file_exists($settings->get('templatesDirPath') . '/mail')) {
+            array_unshift($mailTemplatePath, $settings->get('templatesDirPath') . '/mail');
         }
         $this->view = new TwigEnvironment(new TwigFileLoader($mailTemplatePath));
     }
@@ -149,17 +163,27 @@ class MailerPostData
     /**
      * POST元のステータス
      *
+     * @param  string $format
      * @return array
      */
-    public function getPostStatus(): array
+    public function getPostStatus(string $format = ''): array
     {
-        return [
-            '_date' => date($this->settings->get('dateFormat'), time()),
-            '_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
-            '_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
-            '_url' => $this->getPageReferer(),
-            '_ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
+        $status = [
+            'date' => date($this->settings->get('dateFormat'), time()),
+            'ip' => $this->esc($_SERVER['REMOTE_ADDR']),
+            'host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
+            'referer' => $this->getPageReferer(),
+            'ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
+            'uuid' => $this->getGenerateUUID(),
         ];
+
+        // Twig出力では[__KEY]の形式に変換.
+        if ($format === 'twig') {
+            foreach ($status as $key => $value) {
+                $status[ '__' . strtoupper($key) ] = $value;
+            }
+        }
+        return $status;
     }
 
     /**
@@ -208,27 +232,32 @@ class MailerPostData
      */
     public function getMailBody(): array
     {
-        $status = $this->getPostStatus();
         // Twig変数にクライアント情報の置換.
         return array_merge(
             $this->postData,
+            $this->mailFileNames,
+            $this->getPostStatus('twig'),
             [
                 '__SITE_TITLE' => $this->settings->get('siteTitle'),
                 '__SITE_URL' => $this->settings->get('siteUrl'),
                 '__POST_ALL' => $this->getPostToString(),
-                '__DATE' => $status['_date'],
-                '__IP' => $status['_ip'],
-                '__HOST' => $status['_host'],
-                '__URL' => $status['_url'],
-                '__UA' => $status['_ua'],
             ]
         );
     }
 
     /**
+     * メールテンプレート用にファイル名を格納
+     *
+     * @return void
+     */
+    public function setMailFileName(array $files): void
+    {
+        $this->mailFileNames = $files;
+    }
+
+    /**
      * 管理者メールヘッダ.
      *
-     * @param  string $type
      * @return array
      */
     public function getMailAdminHeader(): array
@@ -288,11 +317,11 @@ class MailerPostData
     }
 
     /**
-     * 確認画面の入力内容の出力
+     * 確認画面の入力内容の表示の出力
      *
      * @return array
      */
-    public function getConfirmQuery(): array
+    public function getDataQuery(): array
     {
         $query = [];
 
@@ -317,15 +346,36 @@ class MailerPostData
             $output = $this->changeHankaku($output, $name);
 
             // 確認をセット
-            $query[]= [
-                'name' => $this->nameToLabel($name) . sprintf(
-                    '<input type="hidden" name="%1$s" value="%2$s" />',
-                    $this->esc($name),
-                    $this->esc($output)
-                ),
+            $query[] = [
+                'name' => $this->nameToLabel($name),
                 'value' => nl2br($this->esc($output))
             ];
         }
+        return $query;
+    }
+
+    /**
+     * 確認画面の入力内容の隠し出力
+     *
+     * @return string
+     */
+    public function getTmpPosts(): string
+    {
+        $query = '';
+
+        foreach ($this->postData as $name => $value) {
+            $query .= sprintf(
+                '<input type="hidden" name="%1$s" value="%2$s" />',
+                $this->esc($name),
+                $this->esc($value)
+            );
+        }
+
+        // ページリファラーを継承.
+        $query .= sprintf(
+            '<input type="hidden" name="_http_referer" value="%1$s" />',
+            $this->getPageReferer()
+        );
         return $query;
     }
 
@@ -338,7 +388,6 @@ class MailerPostData
     {
         return $this->esc($this->formSettings['RETURN_PAGE']);
     }
-
 
     /**
      * 固有のトークン生成
@@ -369,11 +418,12 @@ class MailerPostData
     /**
      * ページリファラーをセット
      *
+     * @param  string $url
      * @return void
      */
-    public function setPageReferer($value): void
+    private function setPageReferer(string $url): void
     {
-        $this->pageReferer = $this->esc($value);
+        $this->pageReferer = $this->esc($url);
     }
 
     /**
@@ -381,9 +431,9 @@ class MailerPostData
      *
      * @return string
      */
-    public function getPageReferer(): string
+    private function getPageReferer(): string
     {
-        if (! $this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
+        if (!$this->pageReferer && isset($_SERVER['HTTP_REFERER'])) {
             return $this->esc($_SERVER['HTTP_REFERER']);
         }
         return $this->esc($this->pageReferer);
@@ -395,7 +445,7 @@ class MailerPostData
      * @param  string $name
      * @return string
      */
-    public function nameToLabel(string $name): string
+    private function nameToLabel(string $name): string
     {
         $label = $this->esc($name);
         if (isset($this->formSettings['NAME_FOR_LABELS'][$label])) {
@@ -411,14 +461,14 @@ class MailerPostData
      * @param  string $key
      * @return string
      */
-    public function changeHankaku(string $output, string $key): string
+    private function changeHankaku(string $output, string $key): string
     {
         if (empty($this->formSettings['HANKAKU_ATTRIBUTES']) || !function_exists('mb_convert_kana')) {
             return $output;
         }
         if (is_array($this->formSettings['HANKAKU_ATTRIBUTES'])) {
-            foreach ($this->formSettings['HANKAKU_ATTRIBUTES'] as $val) {
-                if ($key === $val) {
+            foreach ($this->formSettings['HANKAKU_ATTRIBUTES'] as $value) {
+                if ($key === $value) {
                     $output = mb_convert_kana($output, 'a', 'UTF-8');
                 }
             }
@@ -434,28 +484,50 @@ class MailerPostData
      * @param  array $items
      * @return string
      */
-    public function changeJoin(array $items): string
+    private function changeJoin(array $items): string
     {
         $output = '';
-        foreach ($items as $key => $val) {
-            if ($key === 0 || $val == '') {
+        foreach ($items as $key => $value) {
+            if ($key === 0 || $value === '') {
                 // 配列が0、または内容が空の場合は連結文字を付加しない
                 $key = '';
-            } elseif (strpos($key, '円') !== false && $val != '' && preg_match('/^[0-9]+$/', $val)) {
+            } elseif (strpos($key, '円') !== false && preg_match('/^[0-9]+$/', $value)) {
                 // 金額の場合には3桁ごとにカンマを追加
-                $val = number_format($val);
+                $value = number_format($value);
             }
-            $output .= $val . $key;
+            $output .= $value . $key;
         }
         return $output;
     }
 
     /**
+     * UUIDを生成
+     *
+     * @return string
+     */
+    private function getGenerateUUID(): string
+    {
+        if (!$this->uuid) {
+            $chars = str_split('XXXXXXXX-XXXX-4XXX-YXXX-XXXXXXXXXXXX');
+
+            foreach ($chars as $i => $char) {
+                if ('X' === $char) {
+                    $chars[ $i ] = dechex(random_int(0, 15));
+                } elseif ('Y' === $char) {
+                    $chars[ $i ] = dechex(random_int(8, 11));
+                }
+            }
+            $this->uuid = strtolower(implode('', $chars));
+        }
+        return $this->uuid;
+    }
+
+    /**
      * エスケープ
      *
-     * @param  mixed $content
+     * @param  array|string $content
      * @param  string $encode
-     * @return mixed
+     * @return array|string
      */
     private function esc($content, string $encode = 'UTF-8')
     {
@@ -473,8 +545,8 @@ class MailerPostData
     /**
      * 除去
      *
-     * @param  mixed $content
-     * @return mixed
+     * @param  array|string $content
+     * @return array|string
      */
     private function kses($content)
     {

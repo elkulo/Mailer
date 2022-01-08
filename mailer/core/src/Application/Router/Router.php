@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -41,17 +41,16 @@ class Router implements RouterInterface
 
     /**
      * @param Request $request
+     * @return void
      */
-    public function init(Request $request)
+    public function init(Request $request): void
     {
-        if ($request) {
-            $urls = [];
-            foreach (static::$urlNames as $name) {
-                $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
-                $urls[$name] = $this->settings->get('siteUrl') . $dir;
-            }
-            static::$router = $urls;
+        $urls = [];
+        foreach (static::$urlNames as $name) {
+            $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
+            $urls[$name] = $this->settings->get('siteUrl') . $dir;
         }
+        static::$router = $urls;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.1.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -94,24 +94,34 @@ class MySQLHandler implements DBHandlerInterface
     /**
      * DBに保存
      *
-     * @param  bool   $success
+     * @param  array  $success
      * @param  string $email
      * @param  string $subject
      * @param  string $body
+     * @param  string $attachment
      * @param  array  $status
      * @return bool
      */
-    final public function save(array $success, string $email, string $subject, string $body, array $status): bool
-    {
+    final public function save(
+        array  $success,
+        string $email,
+        string $subject,
+        string $body,
+        string $attachment,
+        array  $status
+    ): bool {
         $values = [
             'success' => json_encode($success),
             'email' => $email,
             'subject' => $subject,
             'body' => $body,
-            'date' => $status['_date'],
-            'ip' => $status['_ip'],
-            'host' => $status['_host'],
-            'referer' => $status['_url'],
+            'attachment' => $attachment,
+            'date' => $status['date'],
+            'ip' => $status['ip'],
+            'host' => $status['host'],
+            'referer' => $status['referer'],
+            'uuid' => $status['uuid'],
+            'ua' => $status['ua'],
             'registry_datetime' => date('Y-m-d H:i:s'),
             'created_at' => time(),
             'updated_at' => time()
@@ -132,7 +142,6 @@ class MySQLHandler implements DBHandlerInterface
      * DBを作成
      *
      * @return bool
-     * @throws Exception
      */
     final public function make(): bool
     {
@@ -160,10 +169,13 @@ class MySQLHandler implements DBHandlerInterface
                 email VARCHAR(256),
                 subject VARCHAR(78),
                 body VARCHAR(3998),
+                attachment VARCHAR(50),
                 date VARCHAR(50),
                 ip VARCHAR(50),
                 host VARCHAR(50),
                 referer VARCHAR(50),
+                uuid VARCHAR(36),
+                ua VARCHAR(256),
                 registry_datetime DATETIME,
                 created_at INT(11),
                 updated_at INT(11)

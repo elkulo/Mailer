@@ -15,8 +15,8 @@ require __DIR__ . '/../vendor/autoload.php';
 // Define Default set.
 defined('BASE_URL_PATH') || define('BASE_URL_PATH', '/');
 defined('ENV_DIR_PATH') || define('ENV_DIR_PATH', __DIR__ . '/../../');
-defined('SETTINGS_DIR_PATH') || define('SETTINGS_DIR_PATH', __DIR__ . '/../../');
-defined('TEMPLATES_DIR_PATH') || define('TEMPLATES_DIR_PATH', __DIR__ . '/../../');
+defined('SETTINGS_DIR_PATH') || define('SETTINGS_DIR_PATH', __DIR__ . './../../settings/');
+defined('TEMPLATES_DIR_PATH') || define('TEMPLATES_DIR_PATH', __DIR__ . '/../../templates/');
 defined('ENV_IDENTIFY') || define('ENV_IDENTIFY', '');
 
 // SESSION Name.

@@ -11,11 +11,15 @@ return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
 
+            // 定数を取得.
+            $templatesDirPath = rtrim(TEMPLATES_DIR_PATH, '/'); /* @phpstan-ignore-line */
+            $settingsDirPath = rtrim(SETTINGS_DIR_PATH, '/'); /* @phpstan-ignore-line */
+
             // サイト設定値.
-            $site = include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/site.php';
+            $site = include $settingsDirPath . '/site.php';
 
             // ログファイル.
-            $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date("Y-m-d") . '.log';
+            $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date('Y-m-d') . '.log';
 
             return new Settings([
                 'phpMinSupport' => '7.4.0',
@@ -25,10 +29,9 @@ return function (ContainerBuilder $containerBuilder) {
                 'siteLang' => isset($site['SITE_LANG'])? $site['SITE_LANG']: 'ja',
                 'timeZone' => isset($site['TIME_ZONE'])? $site['TIME_ZONE']: 'asia/tokyo',
                 'dateFormat' => isset($site['DATE_FORMAT'])? $site['DATE_FORMAT'] : 'Y/m/d (D) H:i:s',
-                'templatesDirPath' => rtrim(TEMPLATES_DIR_PATH, '/'),
-                'settingsDirPath' => rtrim(SETTINGS_DIR_PATH, '/'),
+                'templatesDirPath' => $templatesDirPath,
+                'settingsDirPath' => $settingsDirPath,
                 'debug' => isset($site['DEBUG']) ? $site['DEBUG'] : false,
-                // Should be set to false in production
                 'displayErrorDetails' => isset($site['DEBUG']) ? $site['DEBUG'] : false,
                 'logError'            => isset($site['DEBUG']) ? ! $site['DEBUG'] : true,
                 'logErrorDetails'     => isset($site['DEBUG']) ? ! $site['DEBUG'] : true,
@@ -44,10 +47,10 @@ return function (ContainerBuilder $containerBuilder) {
                     //'cache' => __DIR__ . '/../var/cache/twig',
                     'cache' => false,
                 ],
-                'database' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/database.php',
-                'form' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/form.php',
-                'mail' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/mail.php',
-                'validate' => include rtrim(SETTINGS_DIR_PATH, '/') . '/settings/validate.php',
+                'database' => include $settingsDirPath . '/database.php',
+                'form' => include $settingsDirPath . '/form.php',
+                'mail' => include $settingsDirPath . '/mail.php',
+                'validate' => include $settingsDirPath . '/validate.php',
             ]);
         }
     ]);

@@ -1,3 +1,6 @@
+@use "../../variables/variables" as variable;
+@use "../../mixins/mixins" as mixin;
+
 /* Demo */
 .demo-section {
 	position: relative;
@@ -5,7 +8,7 @@
 	padding: 0 0 3rem;
 	margin-top: -5rem;
 
-	@include media(tablet) {
+	@include mixin.media(tablet) {
 		padding: 0rem 0 5rem;
 		margin-top: -8rem;
 	}
@@ -19,7 +22,7 @@
 	border-radius: 10px 10px 0 0;
 
 	&__title {
-		color: $color__text-main;
+		color: variable.$color__text-main;
 		text-align: center;
 	}
 
@@ -32,7 +35,7 @@
 		max-width: 600px;
 		font-size: 0.875rem;
 
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			text-align: center;
 		}
 	}
@@ -96,7 +99,7 @@
 	}
 
 	.license-content {
-		@include media(tablet) {
+		@include mixin.media(tablet) {
 			padding: 0 1rem;
 		}
 	}
