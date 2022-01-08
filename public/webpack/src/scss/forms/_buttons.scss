@@ -21,7 +21,7 @@ input[type="submit"] {
 	@include mixin.button-all-transition;
 	background: linear-gradient(to right, variable.$color__background-button, variable.$color__background-button-hover);
 	background-size: 200% 100%;
-	background-position: 0 0;
+	background-position: 100% 0;
 	border: 0;
 	border-radius: 30px;
 	box-sizing: border-box;
@@ -32,13 +32,13 @@ input[type="submit"] {
 	padding: (variable.$size__spacing-unit * 0.625) variable.$size__spacing-unit;
 	text-decoration: none;
 	vertical-align: bottom;
-	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) inset, 0 0 0 2px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 2px rgba(0, 0, 0, 0.15);
 	text-shadow: 0 0 1px #000;
 
 	&:hover {
-		background-position: 100% 0;
+		background-position: 0% 0;
 		color: variable.$color__text-button;
-		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) inset, 0 0 0 2px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 2px rgba(0, 0, 0, 0.15);
 	}
 
 	&:visited {
@@ -48,8 +48,8 @@ input[type="submit"] {
 
 	&:focus {
 		//background: variable.$color__background-button-hover;
-		background-position: 100% 0;
-		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3) inset, 0 0 0 2px rgba(0, 0, 0, 0.2);
+		background-position: 0% 0;
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 0 2px rgba(0, 0, 0, 0.15);
 		outline: thin dotted;
 		outline-offset: -4px;
 	}

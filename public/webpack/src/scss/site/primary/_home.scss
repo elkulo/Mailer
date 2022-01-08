@@ -15,7 +15,7 @@
 }
 
 .demo-header {
-	background: linear-gradient(45deg, #a24bcf, #3f67b1, #41aeb8);
+	background: linear-gradient(45deg, #3f67b1 0%, #a24bcf 45%, #a24bcf 55%, #41aeb8 100%);
 	background-attachment: fixed;
 	padding: 2rem 1rem;
 	box-shadow: 0 -2px 8px 1px #000;
@@ -107,8 +107,11 @@
 
 /* Document */
 .document-section {
+	margin: 3rem 0;
 	padding: 5rem 0;
 	text-align: center;
+	background: linear-gradient(45deg, #3f67b1 0%, #a24bcf 45%, #a24bcf 55%, #41aeb8 100%);
+	background-attachment: fixed;
 
 	.document-header {
 		position: relative;
@@ -133,6 +136,16 @@
 	}
 
 	.document-content {
+
+		&__description {
+			font-size: 1.25rem;
+			font-weight: 700;
+		}
+
+		&__btn-group {
+			margin-top: 2rem;
+		}
+
 		.button {
 			.bi {
 				margin: 0 0.125em 0.125em 0;

@@ -178,7 +178,7 @@ return [
    * 配列で添付したいファイル名を指定してください。
    * 「attachment」ディレクトリがなければ作成する必要があります。
    */
-  'USER_MAIL_ATTACHMENTS' => ['テストファイル.png'],
+  'USER_MAIL_ATTACHMENTS' => [],
 
   /**(21)
    * 

@@ -1,2 +1,9 @@
 parameters:
   level: 4
+  paths:
+    - ./
+  excludePaths:
+    analyse:
+      - ./logs
+      - ./var
+      - ./vendor
