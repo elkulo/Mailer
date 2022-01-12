@@ -134,7 +134,12 @@ class MailerPostData
      */
     public function getPostToString(): string
     {
+        $formSettings = $this->formSettings;
         $response = '';
+
+        // 区切り文字
+        $separator = empty($formSettings['TWIG_LABEL_SEPARATOR'])? ': ': $formSettings['TWIG_LABEL_SEPARATOR'];
+
         foreach ($this->postData as $name => $value) {
             $output = '';
             if (is_array($value)) {
@@ -155,7 +160,7 @@ class MailerPostData
             $output = $this->changeHankaku($output, $name);
 
             // 結合.
-            $response .= $this->nameToLabel($name) . ': ' . $output . PHP_EOL;
+            $response .= $this->nameToLabel($name) . $separator . $output . PHP_EOL;
         }
         return $this->esc($response);
     }

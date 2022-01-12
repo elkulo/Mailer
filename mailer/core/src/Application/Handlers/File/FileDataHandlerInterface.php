@@ -51,7 +51,7 @@ interface FileDataHandlerInterface
      *
      * @return array
      */
-    public function getNameToLabel(): array;
+    public function getFileNames(): array;
 
     /**
      * ファイル名をCSV形式で取得

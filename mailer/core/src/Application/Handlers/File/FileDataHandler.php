@@ -239,15 +239,37 @@ class FileDataHandler implements FileDataHandlerInterface
      *
      * @return array
      */
-    public function getNameToLabel(): array
+    public function getFileNames(): array
     {
         $formSettings = $this->settings->get('form');
         $fileData = $this->fileData;
         $query = [];
+        $response = '';
 
+        // ファイル名を格納.
         foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $attr) {
             $query[$attr] = isset($fileData[$attr]['name']) ? $this->esc($fileData[$attr]['name']) : '';
         }
+
+        // name属性をラベル名に変換.
+        $NameToLabel = function (string $label) use ($formSettings) {
+            if (isset($formSettings['NAME_FOR_LABELS'][$label])) {
+                $label = $formSettings['NAME_FOR_LABELS'][$label];
+            }
+            return $label;
+        };
+
+        // 区切り文字
+        $separator = empty($formSettings['TWIG_LABEL_SEPARATOR'])? ': ': $formSettings['TWIG_LABEL_SEPARATOR'];
+
+        // ラベルとファイル名を結合.
+        foreach ($formSettings['ATTACHMENT_ATTRIBUTES'] as $label) {
+            $fileName = isset($fileData[$label]['name']) ? $fileData[$label]['name'] : '';
+            $response .= $NameToLabel($label) . $separator . $fileName . PHP_EOL;
+        }
+
+        // ラベルとファイル名を結合した一覧を追加.
+        $query['__FILE_ALL'] = $this->esc($response);
         return $query;
     }
 
