@@ -196,4 +196,11 @@ return [
    */
   'TEMPLATE_USER_MAIL' => '',
 
+  /**(23)
+   * 
+   * POST一覧の区切り文字
+   * テンプレート出力時の一覧の区切り文字を変更します。
+   * 次のテンプレートで使用 __POST_ALL, __FILE_ALL
+   */
+  'TWIG_LABEL_SEPARATOR' => ': ',
 ];
