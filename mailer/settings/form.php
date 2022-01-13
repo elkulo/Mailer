@@ -67,8 +67,7 @@ return [
     'phoneNumber' => '電話番号',
     'requestContent' => 'ご要望',
     'personalInformation' => '個人情報取扱',
-    'uploadFile' => '添付ファイル1',
-    'attachmentAvatar' => '添付ファイル2'
+    'uploadFile' => '添付ファイル',
   ],
 
   /**(9)
@@ -83,7 +82,6 @@ return [
     'email',
     'requestContent',
     'personalInformation',
-    'uploadFile'
   ],
 
   /**(10)
@@ -96,13 +94,11 @@ return [
 
   /**(11)
    * 
-   * フォームからの添付ファイル送信を許可
+   * フォームからの添付ファイルのname属性
+   * 指定のないname属性からのアップロードは許可されません。
    * 「type="file"」のname属性の値
    */
-  'ATTACHMENT_ATTRIBUTES' => [
-    'uploadFile',
-    'attachmentAvatar'
-  ],
+  'ATTACHMENT_ATTRIBUTES' => ['uploadFile'],
 
   /**(12)
    * 
