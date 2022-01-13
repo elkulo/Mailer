@@ -36,12 +36,15 @@ return function (App $app) {
         $group->get('/api/v1/json', APIAction::class)->setName('api-json');
         $router->set('api-json');
 
-        // CSRF for Javascript
-        $group->get('/assets/csrf-min-js', [AssetsAction::class, 'csrfScript'])->setName('csrf.min.js');
-        $router->set('csrf.min.js');
+        // Guard for Javascript (Nonce Token).
+        $group->get('/assets/guard-min-js', [AssetsAction::class, 'guardJavaScript'])->setName('guard.min.js');
+        $router->set('guard.min.js');
 
         // reCAPTCHA for JavaScript.
-        $group->get('/assets/recaptcha-min-js', [AssetsAction::class, 'recaptchaScript'])->setName('recaptcha.min.js');
+        $group->get(
+            '/assets/recaptcha-min-js',
+            [AssetsAction::class, 'recaptchaJavaScript']
+        )->setName('recaptcha.min.js');
         $router->set('recaptcha.min.js');
 
         // Bootstrap for CSS.
@@ -49,7 +52,10 @@ return function (App $app) {
         $router->set('bootstrap.min.css');
 
         // Bootstrap for JavaScript.
-        $group->get('/assets/bootstrap-min-js', [AssetsAction::class, 'bootstrapScript'])->setName('bootstrap.min.js');
+        $group->get(
+            '/assets/bootstrap-min-js',
+            [AssetsAction::class, 'bootstrapJavaScript']
+        )->setName('bootstrap.min.js');
         $router->set('bootstrap.min.js');
 
         // 最後のスラッシュを強制.

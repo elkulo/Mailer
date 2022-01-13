@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -26,7 +26,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      *
      * @var Guard
      */
-    private $csrf;
+    private $guard;
 
     /**
      * フラッシュメッセージ
@@ -80,7 +80,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
     /**
      * InMemoryHealthCheckRepository constructor.
      *
-     * @param Guard $csrf,
+     * @param Guard $guard,
      * @param Messages $messages
      * @param SettingsInterface $settings
      * @param RouterInterface $router
@@ -89,7 +89,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
      * @param DBHandlerInterface|null $db
      */
     public function __construct(
-        Guard $csrf,
+        Guard $guard,
         Messages $messages,
         SettingsInterface $settings,
         RouterInterface $router,
@@ -98,7 +98,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         ?DBHandlerInterface $db
     ) {
         // CSRF
-        $this->csrf = $csrf;
+        $this->guard = $guard;
 
         // フラッシュメッセージ
         $this->flash = $messages;
@@ -157,13 +157,13 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'data' => [
                 'SectionTitle' => '送受信テスト',
                 'SectionDescription' => 'メールの送受信に問題がないかテストを行います。ヘルスチェックを開始するには、管理者のメールアドレス宛に確認コードが送信されます。',
-                'CSRF'   => [
+                'Guard'   => [
                     'keys' => [
-                        'name'  => $this->csrf->getTokenNameKey(),
-                        'value' => $this->csrf->getTokenValueKey(),
+                        'name'  => $this->guard->getTokenNameKey(),
+                        'value' => $this->guard->getTokenValueKey(),
                     ],
-                    'name'  => $this->csrf->getTokenName(),
-                    'value' => $this->csrf->getTokenValue(),
+                    'name'  => $this->guard->getTokenName(),
+                    'value' => $this->guard->getTokenValue(),
                 ],
                 'Action' => [
                     'url' => $this->router->getUrl('health-check.confirm'),
@@ -235,13 +235,13 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
             'data' => [
                 'SectionTitle' => '確認コード',
                 'SectionDescription' => '管理者のメールアドレス宛に確認コードを送信しました。受信された確認コードを入力してください。',
-                'CSRF'   => [
+                'Guard'   => [
                     'keys' => [
-                        'name'  => $this->csrf->getTokenNameKey(),
-                        'value' => $this->csrf->getTokenValueKey(),
+                        'name'  => $this->guard->getTokenNameKey(),
+                        'value' => $this->guard->getTokenValueKey(),
                     ],
-                    'name'  => $this->csrf->getTokenName(),
-                    'value' => $this->csrf->getTokenValue(),
+                    'name'  => $this->guard->getTokenName(),
+                    'value' => $this->guard->getTokenValue(),
                 ],
                 'Action' => [
                     'url' => $this->router->getUrl('health-check.result'),

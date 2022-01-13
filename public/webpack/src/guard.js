@@ -1,11 +1,11 @@
 /*!
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 import axios from 'axios';
 
-const setCSRF = ( formID, path = '' ) => {
+const setGuard = ( formID, path = '' ) => {
 
 	const formElement = document.querySelector( formID );
 
@@ -25,22 +25,22 @@ const setCSRF = ( formID, path = '' ) => {
 
 	// CSRF用のDOM生成.
 	const inputElement = {
-		csrfName: document.createElement( 'input' ),
-		csrfValue: document.createElement( 'input' ),
+		guardName: document.createElement( 'input' ),
+		guardValue: document.createElement( 'input' ),
 	};
 
 	// APIからCSRFを取得
 	axios
 		.get( api )
 		.then( ({ data }) => {
-			const { csrf } = data.data;
+			const { guard } = data.data;
 			Object.keys( inputElement ).forEach( ( key ) => {
-				if ( key === 'csrfName' ) {
-					inputElement[key].setAttribute( 'name', csrf.keys.name );
-					inputElement[key].setAttribute( 'value', csrf.name );
-				} else if ( key === 'csrfValue' ) {
-					inputElement[key].setAttribute( 'name', csrf.keys.value );
-					inputElement[key].setAttribute( 'value', csrf.value );
+				if ( key === 'guardName' ) {
+					inputElement[key].setAttribute( 'name', guard.keys.name );
+					inputElement[key].setAttribute( 'value', guard.name );
+				} else if ( key === 'guardValue' ) {
+					inputElement[key].setAttribute( 'name', guard.keys.value );
+					inputElement[key].setAttribute( 'value', guard.value );
 				}
 				inputElement[key].setAttribute( 'type', 'hidden' );
 				wrapper.appendChild( inputElement[key]);
@@ -50,8 +50,8 @@ const setCSRF = ( formID, path = '' ) => {
 			/* console.warn( error ); */
 		});
 };
-window.applyCSRF = ( element, path = '' ) => {
+window.applyGuard = ( element, path = '' ) => {
 	document.addEventListener( 'DOMContentLoaded', () => {
-		setCSRF( element, path );
+		setGuard( element, path );
 	}, false );
 };
