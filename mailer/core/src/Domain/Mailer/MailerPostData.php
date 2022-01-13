@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -353,7 +353,7 @@ class MailerPostData
             // 確認をセット
             $query[] = [
                 'name' => $this->nameToLabel($name),
-                'value' => nl2br($this->esc($output))
+                'value' => $this->esc($output)
             ];
         }
         return $query;
@@ -401,7 +401,7 @@ class MailerPostData
      */
     public function createMailerToken(): void
     {
-        // セッションにNonceを保存
+        // セッションに固有のトークンを保存
         $_SESSION['mailerToken'] = sha1(uniqid((string)mt_rand(), true));
     }
 

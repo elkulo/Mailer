@@ -14,12 +14,12 @@
  #  {{Action.url}}            自動生成された次へ進むフォームアクションのURL
  #  {% for post in Posts %}   POSTされた配列
  #   |- {{post.name}}         フォームの項目のラベルのテキスト
- #   |- {{post.value}}        フォームの項目の投稿内容のテキスト
+ #   |- {{post.value|nl2br}}  フォームの項目の投稿内容のテキスト。テキストエリアの改行を許可する場合はnl2brを付ける。
  #  {% for file in Files %}   POSTと同時にアップロードされた添付ファイルの配列
  #   |- {{file.name}}         添付ファイルのフォームの項目のラベルのテキスト
  #   |- {{file.value}}        添付ファイルのフォームの項目の投稿内容のテキスト
  #   |- {{file.size}}         添付ファイルのサイズのテキスト
- #  {{CSRF|raw}}              CSRFタグのHTML
+ #  {{Guard|raw}}             NonceトークンのHTML
  #  {{reCAPTCHA.script|raw}}  reCAPTCHAのHTML
  #  {{reCAPTCHA.key}}         reCAPTCHAのサイトキー
  #}
@@ -48,7 +48,7 @@
               {% for post in Posts %}
                 <tr>
                   <th class="d-block d-md-table-cell table-light text-nowrap">{{ post.name }}</th>
-                  <td class="d-block d-md-table-cell">{{ post.value }}</td>
+                  <td class="d-block d-md-table-cell">{{ post.value|nl2br }}</td>
                 </tr>
               {% endfor %}
             </table>
@@ -68,8 +68,8 @@
               </div>
             </div>
 
-            {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
-            {{ CSRF|raw }}
+            {# NOTE: CSRFセキュリティのためNonceトークンをFormタグの内側に出力 #}
+            {{ Guard|raw }}
           </form>
         </div>
       </div>

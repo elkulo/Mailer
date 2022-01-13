@@ -60,7 +60,7 @@ return function (ContainerBuilder $containerBuilder) {
 
         // クロスサイトリクエストフォージェリ.
         Guard::class => function () {
-            $guard = new Guard(new ResponseFactory(), '_csrf');
+            $guard = new Guard(new ResponseFactory(), '_guard');
             $guard->setPersistentTokenMode(true);
             return $guard;
         },

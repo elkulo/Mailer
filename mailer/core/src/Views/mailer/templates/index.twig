@@ -13,7 +13,7 @@
  #  {{__SITE_URL}}    サイトURL
  #
  # Twig変数
- #  {{CSRF|raw}}              CSRFタグのHTML
+ #  {{Guard|raw}}             NonceトークンのHTML
  #  {{reCAPTCHA.script|raw}}  reCAPTCHAのHTML
  #  {{reCAPTCHA.key}}         reCAPTCHAのサイトキー
  #}
@@ -124,8 +124,8 @@
               <button type="submit" class="btn btn-primary">上記内容を送信する</button>
             </div>
 
-            {# NOTE: CSRFセキュリティのためFormタグの内側に必須 #}
-            {{ CSRF|raw }}
+            {# NOTE: CSRFセキュリティのためNonceトークンをFormタグの内側に出力 #}
+            {{ Guard|raw }}
           </form>
         </div>
       </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -50,11 +50,11 @@ class AssetsAction extends Action
      * @param array $args
      * @return Response
      */
-    public function csrfScript(Request $request, Response $response, array $args): Response
+    public function guardJavaScript(Request $request, Response $response, array $args): Response
     {
         return $this->view->render(
             $response,
-            'assets/csrf.min.js.twig'
+            'assets/guard.min.js.twig'
         )->withHeader('Content-Type', 'text/javascript');
     }
 
@@ -64,7 +64,7 @@ class AssetsAction extends Action
      * @param array $args
      * @return Response
      */
-    public function recaptchaScript(Request $request, Response $response, array $args): Response
+    public function recaptchaJavaScript(Request $request, Response $response, array $args): Response
     {
         return $this->view->render(
             $response,
@@ -92,7 +92,7 @@ class AssetsAction extends Action
      * @param array $args
      * @return Response
      */
-    public function bootstrapScript(Request $request, Response $response, array $args): Response
+    public function bootstrapJavaScript(Request $request, Response $response, array $args): Response
     {
         return $this->view->render(
             $response,

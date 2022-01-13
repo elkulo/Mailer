@@ -90,23 +90,23 @@
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">CSRFトークンの導入</div>
+                  <div class="h4 fw-bold">Nonceトークンの発行</div>
                   <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
                     <div class="mb-1 fw-bold">CSRF対策</div>
-                    <p class="m-0">外部からの悪意ある攻撃からWebアプリケーションを守るために、メールプログラムはCSRFトークンを持たないリクエストを一切受け付けません。</p>
+                    <p class="m-0">外部からの悪意ある攻撃からWebアプリケーションを守るために、メールプログラムはNonceトークンを持たないリクエストを一切受け付けません。</p>
                   </div>
                   <div class="mb-1 fw-bold">(A) 独自のHTMLページからPOSTする場合</div>
-                  <p>Ajaxで <a href="{{Router.api.json}}" target="_blank">API経由</a> のCSRFトークンを挿入する必要があります。Ajaxに必要なJavaScriptはすべて同梱しています。</p>
-                  <p>こちらの <a href="{{Router.csrf.js}}" target="_blank">JavaScriptファイル</a> を読み込み、
-                    formタグのidまたはclassを <code>applyCSRF()</code> の第一引数に渡します。指定のformタグ内にCSRFタグが自動で挿入されます。</p>
-                  <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
-&lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
+                  <p>Ajaxで <a href="{{Router.api.json}}" target="_blank">API経由</a> のNonceトークンを挿入する必要があります。Ajaxに必要なJavaScriptはすべて同梱しています。</p>
+                  <p>こちらの <a href="{{Router.guard.js}}" target="_blank">JavaScriptファイル</a> を読み込み、
+                    formタグのidまたはclassを <code>applyGuard()</code> の第一引数に渡します。指定のformタグ内にNonceトークンのHTMLタグが自動で挿入されます。</p>
+                  <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.guard.js}}"&gt;&lt;/script&gt;
+&lt;script&gt;window.applyGuard('#mailer-form');&lt;/script&gt;</code></pre>
                   <hr />
                   <div class="mb-1 fw-bold">(B) Twigファイルを使用する場合</div>
-                  <p>Twigファイルでは、あらかじめ用意されたTwig変数でCSRFトークンを設置できます。formタグ内に直接 <code>{{ '{{CSRF|raw}}' }}</code> を記載します。JavaScriptは不要で最も簡単なやり方です。</p>
+                  <p>Twigファイルでは、あらかじめ用意されたTwig変数でNonceトークンのHTMLタグを設置できます。formタグ内に直接 <code>{{ '{{Guard|raw}}' }}</code> を記載します。JavaScriptは不要で最も簡単なやり方です。</p>
                   <pre class="rounded text-secondary p-3 mt-2"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
   :
-  {{ '{{CSRF|raw}}' }}
+  {{ '{{Guard|raw}}' }}
 &lt;/form&gt;</code></pre>
                 </div>
               </li>
@@ -163,11 +163,11 @@
             <ul class="list-group list-group-flush border-bottom">
               <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
                 <div class="w-100">
-                  <div class="h4 fw-bold">CSRF JavaScript</div>
-                  <a href="{{ Router.csrf.js }}" target="_blank">{{ Router.csrf.js }}</a><br />
-                  指定したformタグ内に CSRFトークン をAjaxで取得して挿入します。
-<pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.csrf.js}}"&gt;&lt;/script&gt;
-&lt;script&gt;window.applyCSRF('#mailer-form');&lt;/script&gt;</code></pre>
+                  <div class="h4 fw-bold">CSRF Guard JavaScript</div>
+                  <a href="{{ Router.guard.js }}" target="_blank">{{ Router.guard.js }}</a><br />
+                  指定したformタグ内に Nonceトークン をAjaxで取得して挿入します。
+<pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.guard.js}}"&gt;&lt;/script&gt;
+&lt;script&gt;window.applyGuard('#mailer-form');&lt;/script&gt;</code></pre>
                 </div>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
@@ -231,18 +231,18 @@
                   <tr><th>{{'{{ Action.url }}'}}</th><td>formタグのaction属性のURLを自動設定</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr>
                     <th>{{'{% for post in Posts %}'}}<br />
-                        {{'{{ post.name }}'}}<br />
-                        {{'{{ post.value }}'}}<br />
+                        &nbsp;&nbsp;{{'{{ post.name }}'}}<br />
+                        &nbsp;&nbsp;{{'{{ post.value | nl2br }}'}}<br />
                         {{'{% endfor %}'}}
                     </th>
-                    <td>POSTされた値の配列。<br />配列の中はname属性のラベル名とvalue属性の値を出力。</td>
+                    <td>POSTされた値の配列。<br />配列の中はname属性のラベル名とvalue属性の値を出力。<br />テキストエリアの改行を許可する場合はnl2brを付ける。</td>
                     <td>confirm.twig</td>
                   </tr>
                   <tr>
                     <th>{{'{% for file in Files %}'}}<br />
-                        {{'{{ file.name }}'}}<br />
-                        {{'{{ file.value }}'}}<br />
-                        {{'{{ file.size }}'}}<br />
+                        &nbsp;&nbsp;{{'{{ file.name }}'}}<br />
+                        &nbsp;&nbsp;{{'{{ file.value }}'}}<br />
+                        &nbsp;&nbsp;{{'{{ file.size }}'}}<br />
                         {{'{% endfor %}'}}
                     </th>
                     <td>POSTされた添付ファイルの値の配列。<br />配列の中はname属性のラベル名とファイル名、ファイルサイズを出力。</td>
@@ -250,7 +250,7 @@
                   </tr>
                   <tr>
                     <th>{{'{% for message in Errors %}'}}<br />
-                        {{'{{ message }}'}}<br />
+                        &nbsp;&nbsp;{{'{{ message }}'}}<br />
                         {{'{% endfor %}'}}
                     </th>
                     <td>検証されたエラー内容の配列。<br />配列の中はバリデーション結果のエラーメッセージ</td>
@@ -258,7 +258,7 @@
                   </tr>
                   <tr><th>{{'{{ ExceptionMessage }}'}}</th><td>システムが拒否した時のメッセージ</td><td>exception.twig</td></tr>
                   <tr><th>{{'{{ Return.url }}'}}</th><td>設定で指定された戻り先のURL</td><td>complete.twig</td></tr>
-                  <tr><th>{{'{{ CSRF | raw }}'}}</th><td><strong class="text-danger">送信に必須</strong>のCSRFタグのHTML</td><td>index.twig<br />confirm.twig</td></tr>
+                  <tr><th>{{'{{ Guard | raw }}'}}</th><td><strong class="text-danger">[送信に必須]</strong>CSRF対策のNonceトークンを導入するためのHTMLタグを出力</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr><th>{{'{{ reCAPTCHA.script | raw }}'}}</th><td>reCAPTCHAのHTML</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr><th>{{'{{ reCAPTCHA.key }}'}}</th><td>reCAPTCHAのサイトキー</td><td>index.twig<br />confirm.twig</td></tr>
                   <tr>
