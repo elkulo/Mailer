@@ -49,6 +49,8 @@ class AssetsAction extends Action
      * @param Response $response
      * @param array $args
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function guardJavaScript(Request $request, Response $response, array $args): Response
     {
@@ -63,6 +65,8 @@ class AssetsAction extends Action
      * @param Response $response
      * @param array $args
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function recaptchaJavaScript(Request $request, Response $response, array $args): Response
     {
@@ -77,6 +81,8 @@ class AssetsAction extends Action
      * @param Response $response
      * @param array $args
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function bootstrapStyle(Request $request, Response $response, array $args): Response
     {
@@ -91,6 +97,8 @@ class AssetsAction extends Action
      * @param Response $response
      * @param array $args
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function bootstrapJavaScript(Request $request, Response $response, array $args): Response
     {
