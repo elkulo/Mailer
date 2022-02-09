@@ -71,10 +71,22 @@
         "post-install-cmd": "@init-config",
         "post-update-cmd": "@init-config",
         "test": "phpunit",
-        "test-version": "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-",
+        "test-version": [
+            "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 8.0-",
+            "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-"
+        ],
         "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
         "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
-        "phpmd": "phpmd src text cleancode,codesize,design,unusedcode",
-        "phpstan": "phpstan analyse --memory-limit 256M"
+        "phpmd": "phpmd src text design,unusedcode",
+        "phpstan": "phpstan analyse --memory-limit 256M",
+        "analyse": [
+            "@composer phpstan",
+            "@composer phpcs",
+            "@composer test-version"
+        ],
+        "format": [
+            "@composer phpcbf",
+            "@composer phpmd"
+        ]
     }
 }
