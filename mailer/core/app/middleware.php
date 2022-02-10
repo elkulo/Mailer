@@ -39,7 +39,7 @@ return function (App $app) {
     // Router.
     $app->add(
         function ($request, $next) use ($app) {
-            $app->getContainer()->get(RouterInterface::class)->init($request);
+            $app->getContainer()->get(RouterInterface::class)->init($app, $request);
             return $next->handle($request);
         }
     );

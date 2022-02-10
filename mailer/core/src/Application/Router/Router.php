@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Router;
 
+use Slim\App;
 use Slim\Routing\RouteContext;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -27,12 +28,9 @@ class Router implements RouterInterface
     private static $router = [];
 
     /**
-     * @var array
-     */
-    private static $urlNames = [];
-
-    /**
      * Router constructor.
+     *
+     * @param SettingsInterface $settings
      */
     public function __construct(SettingsInterface $settings)
     {
@@ -40,29 +38,33 @@ class Router implements RouterInterface
     }
 
     /**
+     * URLを調べて保存
+     *
+     * @param App     $app
      * @param Request $request
      * @return void
      */
-    public function init(Request $request): void
+    public function init(App $app, Request $request): void
     {
         $urls = [];
-        foreach (static::$urlNames as $name) {
-            $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
-            $urls[$name] = $this->settings->get('siteUrl') . $dir;
+
+        // ルート一覧を取得.
+        $routes = $app->getRouteCollector()->getRoutes();
+        foreach ($routes as $route) {
+            // 固有のルート名を取得.
+            $name = $route->getName();
+            if ($name) {
+                $dir = RouteContext::fromRequest($request)->getRouteParser()->urlFor($name);
+                $urls[$name] = $this->settings->get('siteUrl') . $dir;
+            }
         }
+        // 絶対URLで格納.
         static::$router = $urls;
     }
 
     /**
-     * @param string $urlName
-     * @return void
-     */
-    public function set(string $urlName): void
-    {
-        static::$urlNames[] = $urlName;
-    }
-
-    /**
+     * 絶対URLを取得
+     *
      * @param string $key
      * @return mixed
      */
@@ -72,6 +74,8 @@ class Router implements RouterInterface
     }
 
     /**
+     * 絶対URLでリダイレクト
+     *
      * @param string $name
      * @param Request $request
      * @param Response $response

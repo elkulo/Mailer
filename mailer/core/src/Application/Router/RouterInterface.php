@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Application\Router;
 
+use Slim\App;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -15,24 +16,25 @@ interface RouterInterface
 {
 
     /**
+     * URLを調べて保存
+     *
+     * @param App     $app
      * @param Request $request
      * @return void
      */
-    public function init(Request $request): void;
+    public function init(App $app, Request $request): void;
 
     /**
-     * @param string $urlName
-     * @return void
-     */
-    public function set(string $urlName): void;
-
-    /**
+     * 絶対URLを取得
+     *
      * @param string $key
      * @return mixed
      */
     public function getUrl(string $key = '');
 
     /**
+     * 絶対URLでリダイレクト
+     *
      * @param string $name
      * @param Request $request
      * @param Response $response
