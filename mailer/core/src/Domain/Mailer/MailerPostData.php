@@ -175,10 +175,10 @@ class MailerPostData
     {
         $status = [
             'date' => date($this->settings->get('dateFormat'), time()),
-            'ip' => $this->esc($_SERVER['REMOTE_ADDR']),
-            'host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
-            'referer' => $this->getPageReferer(),
-            'ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
+            'user_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
+            'user_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
+            'http_referer' => $this->getPageReferer(),
+            'user_agent' => $this->esc($_SERVER['HTTP_USER_AGENT']),
             'uuid' => $this->getGenerateUUID(),
         ];
 
