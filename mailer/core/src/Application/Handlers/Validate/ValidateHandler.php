@@ -316,8 +316,9 @@ class ValidateHandler implements ValidateHandlerInterface
     public function isCheckReferer(): bool
     {
         try {
-            $referer = filter_input(INPUT_SERVER, 'HTTP_REFERER', FILTER_VALIDATE_URL);
-            if (! $referer || strpos($referer, $this->settings->get('siteUrl')) === false) {
+            $referer = isset($_SERVER['HTTP_REFERER'])?
+                htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8'): '';
+            if (strpos($referer, $this->settings->get('siteUrl')) === false) {
                 throw new \Exception('Send from unknown referrer.');
             }
         } catch (\Exception $e) {

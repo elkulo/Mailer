@@ -130,14 +130,14 @@ class InMemoryMailerRepository implements MailerRepository
         $this->db = $db;
 
         // POSTデータを取得
-        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING) ?? [];
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? [];
 
         // POSTデータをサニタイズして格納
         $this->postData = new MailerPostData($posts, $settings);
 
         // 画像アップロードハンドラーをセット
         $this->fileData = $fileData;
-        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_STRING) ?? []);
+        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? []);
 
         // POSTされたFILE変数を取得
         $files = $this->fileData->getPostedFiles();

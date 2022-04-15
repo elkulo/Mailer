@@ -119,7 +119,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $this->db = $db;
 
         // POSTデータを取得
-        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING)?? [];
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS)?? [];
 
         // POSTデータをサニタイズして格納
         $this->postData = new HealthCheckPostData($posts, $settings);
@@ -291,7 +291,7 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
                     ],
                     3 => [
                         'description' => 'HTTPSで暗号化されたサイト接続ですか？',
-                        'success' => filter_input(INPUT_SERVER, 'HTTPS')? true: false
+                        'success' => (isset($_SERVER['HTTPS'])) ? true : false
                     ],
                     4 => [
                         'description' => 'SSL/TLSで暗号化されたメールを送信されていますか？',

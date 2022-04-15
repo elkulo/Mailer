@@ -81,7 +81,7 @@ class FileDataHandler implements FileDataHandlerInterface
         $this->tmpFiles = $files;
         $getSessionFileData = function (): array {
             $sessionFileData = [];
-            $postUploadFileID = filter_input(INPUT_POST, '_upload_file_id', FILTER_SANITIZE_STRING) ?? '';
+            $postUploadFileID = filter_input(INPUT_POST, '_upload_file_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
             if (isset($_SESSION['uploadFiles'], $_SESSION['uploadFileID']) &&
                 $_SESSION['uploadFileID'] === $postUploadFileID
             ) {
