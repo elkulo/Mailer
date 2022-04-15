@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -27,7 +27,7 @@ class InMemoryMailerRepository implements MailerRepository
      *
      * @var Guard
      */
-    private $csrf;
+    private $guard;
 
     /**
      * POSTロジック
@@ -88,7 +88,7 @@ class InMemoryMailerRepository implements MailerRepository
     /**
      * InMemoryMailerRepository constructor.
      *
-     * @param Guard $csrf,
+     * @param Guard $guard,
      * @param LoggerInterface $logger,
      * @param SettingsInterface $settings
      * @param RouterInterface $router
@@ -98,7 +98,7 @@ class InMemoryMailerRepository implements MailerRepository
      * @param DBHandlerInterface|null $db
      */
     public function __construct(
-        Guard $csrf,
+        Guard $guard,
         LoggerInterface $logger,
         SettingsInterface $settings,
         RouterInterface $router,
@@ -109,7 +109,7 @@ class InMemoryMailerRepository implements MailerRepository
     ) {
 
         // CSRF
-        $this->csrf = $csrf;
+        $this->guard = $guard;
 
         // ロガーをセット
         $this->logger = $logger;
@@ -143,7 +143,7 @@ class InMemoryMailerRepository implements MailerRepository
         $files = $this->fileData->getPostedFiles();
 
         // メールテンプレート用にファイル名を事前に格納
-        $this->postData->setMailFileName($this->fileData->getNameToLabel());
+        $this->postData->setMailFileName($this->fileData->getFileNames());
 
         // POSTデータとFILEデータを統合してバリデーションに格納
         $this->validate->set(array_merge($posts, $files));
@@ -182,15 +182,15 @@ class InMemoryMailerRepository implements MailerRepository
             return [
                 'template' => 'index.twig',
                 'data' => [
-                    'CSRF'   => sprintf(
+                    'Guard'   => sprintf(
                         '<div style="display:none">
                             <input type="hidden" name="%1$s" value="%2$s">
                             <input type="hidden" name="%3$s" value="%4$s">
                          </div>',
-                        $this->csrf->getTokenNameKey(),
-                        $this->csrf->getTokenName(),
-                        $this->csrf->getTokenValueKey(),
-                        $this->csrf->getTokenValue()
+                        $this->guard->getTokenNameKey(),
+                        $this->guard->getTokenName(),
+                        $this->guard->getTokenValueKey(),
+                        $this->guard->getTokenValue()
                     ),
                     'reCAPTCHA' => $this->validate->getReCaptchaScript(),
                     'Action' => [
@@ -252,17 +252,17 @@ class InMemoryMailerRepository implements MailerRepository
                     [
                         'Posts' => $this->postData->getDataQuery(),
                         'Files' => $this->fileData->getDataQuery(),
-                        'CSRF'   => sprintf(
+                        'Guard'   => sprintf(
                             '<div style="display:none">
                                 <input type="hidden" name="%1$s" value="%2$s">
                                 <input type="hidden" name="%3$s" value="%4$s">
                                 %5$s
                                 %6$s
                              </div>',
-                            $this->csrf->getTokenNameKey(),
-                            $this->csrf->getTokenName(),
-                            $this->csrf->getTokenValueKey(),
-                            $this->csrf->getTokenValue(),
+                            $this->guard->getTokenNameKey(),
+                            $this->guard->getTokenName(),
+                            $this->guard->getTokenValueKey(),
+                            $this->guard->getTokenValue(),
                             $this->postData->getTmpPosts(),
                             $this->fileData->getTmpFiles()
                         ),
@@ -325,8 +325,8 @@ class InMemoryMailerRepository implements MailerRepository
                 // 重複投稿をチェックは固有のメールの送信トークンを削除
                 $this->postData->checkinMailerToken();
             } else {
-                // 重複投稿をチェックはCSRFトークンを削除
-                $this->csrf->removeTokenFromStorage($this->csrf->getTokenName());
+                // 重複投稿をチェックはNonceトークンを削除
+                $this->guard->removeTokenFromStorage($this->guard->getTokenName());
             }
 
             // バリデーションチェック

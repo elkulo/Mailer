@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -132,14 +132,13 @@ class SQLiteHandler implements DBHandlerInterface
                 'body' => $body,
                 'attachment' => $attachment,
                 'date' => $status['date'],
-                'ip' => $status['ip'],
-                'host' => $status['host'],
-                'referer' => $status['referer'],
                 'uuid' => $status['uuid'],
-                'ua' => $status['ua'],
-                'registry_datetime' => date('Y-m-d H:i:s'),
-                'created_at' => time(),
-                'updated_at' => time()
+                'user_ip' => $status['user_ip'],
+                'user_host' => $status['user_host'],
+                'user_agent' => $status['user_agent'],
+                'http_referer' => $status['http_referer'],
+                'registry_date' => date(DATE_ATOM),
+                'registry_date_gmt' => gmdate(DATE_ATOM),
             ];
 
             if ($this->db) {
@@ -187,14 +186,13 @@ class SQLiteHandler implements DBHandlerInterface
                     body VARCHAR(3998),
                     attachment VARCHAR(50),
                     date VARCHAR(50),
-                    ip VARCHAR(50),
-                    host VARCHAR(50),
-                    referer VARCHAR(50),
                     uuid VARCHAR(36),
-                    ua VARCHAR(256),
-                    registry_datetime DATETIME,
-                    created_at INTEGER,
-                    updated_at INTEGER
+                    user_ip VARCHAR(50),
+                    user_host VARCHAR(50),
+                    user_agent VARCHAR(256),
+                    http_referer VARCHAR(50),
+                    registry_date DATETIME,
+                    registry_date_gmt DATETIME
                 )");
 
                 // メタテーブル存在チェック

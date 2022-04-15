@@ -55,6 +55,7 @@ return [
    * 
    * name属性とラベルの紐付け（日本語変換の場合）
    * 省略された場合はname属性を出力に使用されます。
+   * アンダースコア(_)から始まるname属性はシステムの予約語のため使用できません。
    */
   'NAME_FOR_LABELS' => [
     'customerTitle' => '件名',
@@ -66,8 +67,7 @@ return [
     'phoneNumber' => '電話番号',
     'requestContent' => 'ご要望',
     'personalInformation' => '個人情報取扱',
-    'uploadFile' => '添付ファイル1',
-    'attachmentAvatar' => '添付ファイル2'
+    'uploadFile' => '添付ファイル',
   ],
 
   /**(9)
@@ -82,7 +82,6 @@ return [
     'email',
     'requestContent',
     'personalInformation',
-    'uploadFile'
   ],
 
   /**(10)
@@ -95,13 +94,11 @@ return [
 
   /**(11)
    * 
-   * フォームからの添付ファイル送信を許可
+   * フォームからの添付ファイルのname属性
+   * 指定のないname属性からのアップロードは許可されません。
    * 「type="file"」のname属性の値
    */
-  'ATTACHMENT_ATTRIBUTES' => [
-    'uploadFile',
-    'attachmentAvatar'
-  ],
+  'ATTACHMENT_ATTRIBUTES' => ['uploadFile'],
 
   /**(12)
    * 
@@ -196,4 +193,11 @@ return [
    */
   'TEMPLATE_USER_MAIL' => '',
 
+  /**(23)
+   * 
+   * POST一覧の区切り文字
+   * テンプレート出力時の一覧の区切り文字を変更します。
+   * 次のテンプレートで使用 __POST_ALL, __FILE_ALL
+   */
+  'TWIG_LABEL_SEPARATOR' => ': ',
 ];

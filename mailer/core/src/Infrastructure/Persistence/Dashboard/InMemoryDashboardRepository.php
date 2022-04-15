@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -43,7 +43,7 @@ class InMemoryDashboardRepository implements DashboardRepository
      *
      * @var Guard
      */
-    protected $csrf;
+    protected $guard;
 
     /**
      * フラッシュメッセージ
@@ -58,14 +58,14 @@ class InMemoryDashboardRepository implements DashboardRepository
      * @param SettingsInterface $settings
      * @param RouterInterface $router
      * @param ValidateHandlerInterface $validate
-     * @param Guard $csrf
+     * @param Guard $guard
      * @param Messages $messages
      */
     public function __construct(
         SettingsInterface $settings,
         RouterInterface $router,
         ValidateHandlerInterface $validate,
-        Guard $csrf,
+        Guard $guard,
         Messages $messages
     ) {
         // 設定
@@ -78,7 +78,7 @@ class InMemoryDashboardRepository implements DashboardRepository
         $this->validate = $validate;
 
         // CSRF
-        $this->csrf = $csrf;
+        $this->guard = $guard;
 
         // フラッシュメッセージ
         $this->flash = $messages;
@@ -118,8 +118,8 @@ class InMemoryDashboardRepository implements DashboardRepository
                     'api' => [
                         'json' => $this->router->getUrl('api-json'),
                     ],
-                    'csrf' => [
-                        'js' => $this->router->getUrl('csrf.min.js'),
+                    'guard' => [
+                        'js' => $this->router->getUrl('guard.min.js'),
                     ],
                     'recaptcha' => [
                         'js' => $this->router->getUrl('recaptcha.min.js'),
@@ -141,13 +141,13 @@ class InMemoryDashboardRepository implements DashboardRepository
     public function api(): array
     {
         return [
-            'csrf'   => [
+            'guard'   => [
                 'keys' => [
-                    'name'  => $this->csrf->getTokenNameKey(),
-                    'value' => $this->csrf->getTokenValueKey(),
+                    'name'  => $this->guard->getTokenNameKey(),
+                    'value' => $this->guard->getTokenValueKey(),
                 ],
-                'name'  => $this->csrf->getTokenName(),
-                'value' => $this->csrf->getTokenValue(),
+                'name'  => $this->guard->getTokenName(),
+                'value' => $this->guard->getTokenValue(),
             ]
         ];
     }

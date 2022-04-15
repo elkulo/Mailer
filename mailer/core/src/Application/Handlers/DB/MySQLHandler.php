@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -110,24 +110,23 @@ class MySQLHandler implements DBHandlerInterface
         string $attachment,
         array  $status
     ): bool {
-        $values = [
-            'success' => json_encode($success),
-            'email' => $email,
-            'subject' => $subject,
-            'body' => $body,
-            'attachment' => $attachment,
-            'date' => $status['date'],
-            'ip' => $status['ip'],
-            'host' => $status['host'],
-            'referer' => $status['referer'],
-            'uuid' => $status['uuid'],
-            'ua' => $status['ua'],
-            'registry_datetime' => date('Y-m-d H:i:s'),
-            'created_at' => time(),
-            'updated_at' => time()
-        ];
-
         try {
+            $values = [
+                'success' => json_encode($success),
+                'email' => $email,
+                'subject' => $subject,
+                'body' => $body,
+                'attachment' => $attachment,
+                'date' => $status['date'],
+                'uuid' => $status['uuid'],
+                'user_ip' => $status['user_ip'],
+                'user_host' => $status['user_host'],
+                'user_agent' => $status['user_agent'],
+                'http_referer' => $status['http_referer'],
+                'registry_date' => date(DATE_ATOM),
+                'registry_date_gmt' => gmdate(DATE_ATOM),
+            ];
+    
             if ($this->db) {
                 $this->db->table('mailer')->insert($values); // prefixは省略
             }
@@ -171,14 +170,13 @@ class MySQLHandler implements DBHandlerInterface
                 body VARCHAR(3998),
                 attachment VARCHAR(50),
                 date VARCHAR(50),
-                ip VARCHAR(50),
-                host VARCHAR(50),
-                referer VARCHAR(50),
                 uuid VARCHAR(36),
-                ua VARCHAR(256),
-                registry_datetime DATETIME,
-                created_at INT(11),
-                updated_at INT(11)
+                user_ip VARCHAR(50),
+                user_host VARCHAR(50),
+                user_agent VARCHAR(256),
+                http_referer VARCHAR(50),
+                registry_date DATETIME,
+                registry_date_gmt DATETIME
             ) engine=innodb default charset={$db['DB_CHARSET']}";
 
             // メタテーブル存在チェック

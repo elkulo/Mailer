@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.2.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -134,7 +134,12 @@ class MailerPostData
      */
     public function getPostToString(): string
     {
+        $formSettings = $this->formSettings;
         $response = '';
+
+        // 区切り文字
+        $separator = empty($formSettings['TWIG_LABEL_SEPARATOR'])? ': ': $formSettings['TWIG_LABEL_SEPARATOR'];
+
         foreach ($this->postData as $name => $value) {
             $output = '';
             if (is_array($value)) {
@@ -155,7 +160,7 @@ class MailerPostData
             $output = $this->changeHankaku($output, $name);
 
             // 結合.
-            $response .= $this->nameToLabel($name) . ': ' . $output . PHP_EOL;
+            $response .= $this->nameToLabel($name) . $separator . $output . PHP_EOL;
         }
         return $this->esc($response);
     }
@@ -170,10 +175,10 @@ class MailerPostData
     {
         $status = [
             'date' => date($this->settings->get('dateFormat'), time()),
-            'ip' => $this->esc($_SERVER['REMOTE_ADDR']),
-            'host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
-            'referer' => $this->getPageReferer(),
-            'ua' => $this->esc($_SERVER['HTTP_USER_AGENT']),
+            'user_ip' => $this->esc($_SERVER['REMOTE_ADDR']),
+            'user_host' => $this->esc(getHostByAddr($_SERVER['REMOTE_ADDR'])),
+            'http_referer' => $this->getPageReferer(),
+            'user_agent' => $this->esc($_SERVER['HTTP_USER_AGENT']),
             'uuid' => $this->getGenerateUUID(),
         ];
 
@@ -348,7 +353,7 @@ class MailerPostData
             // 確認をセット
             $query[] = [
                 'name' => $this->nameToLabel($name),
-                'value' => nl2br($this->esc($output))
+                'value' => $this->esc($output)
             ];
         }
         return $query;
@@ -396,7 +401,7 @@ class MailerPostData
      */
     public function createMailerToken(): void
     {
-        // セッションにNonceを保存
+        // セッションに固有のトークンを保存
         $_SESSION['mailerToken'] = sha1(uniqid((string)mt_rand(), true));
     }
 
