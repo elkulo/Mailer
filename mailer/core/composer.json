@@ -12,7 +12,7 @@
     "license": "LGPL-2.1-only",
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.4 || ^8.0 || ^8.1",
+        "php": "^8.0 || ^8.1",
         "ext-json": "*",
         "egulias/email-validator": "^3.1",
         "filp/whoops": "^2.14",
@@ -72,8 +72,8 @@
         "post-update-cmd": "@init-config",
         "test": "phpunit",
         "test-version": [
-            "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 8.0-",
-            "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 7.4-"
+            "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 8.1-",
+            "phpcs -p --colors --report-width=120 --standard=PHPCompatibility --ignore=*/vendor/* --extensions=php ./ --runtime-set testVersion 8.0-"
         ],
         "phpcs": "phpcs -p --colors --report-width=120 --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
         "phpcbf": "phpcbf -p --standard=PSR2 --ignore=*/vendor/* --extensions=php app/ src/ helpers/",
