@@ -5,10 +5,10 @@
  */
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import BootstrapValidate from './js/BootstrapValidate';
-import DrawerNavi from './js/DrawerNavi';
-import SmoothScroll from './js/SmoothScroll';
-import './scss/global.scss';
+import BootstrapValidate from './scripts/BootstrapValidate';
+import DrawerNavi from './scripts/DrawerNavi';
+import SmoothScroll from './scripts/SmoothScroll';
+import './styles/global.scss';
 
 // Bootstrap バリデーション.
 BootstrapValidate();
