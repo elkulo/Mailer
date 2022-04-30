@@ -1,12 +1,12 @@
 /*!
- * Mailer | el.kulo v3.3.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.3.1 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2022 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 const setPasscode = () => {
 
 	// Emailの入力.
-	document.querySelector( '#admin-email' ) && document.querySelector( '#admin-email' ).focus();
+	document.querySelector( '#admin-email' )?.focus();
 
 	// パスコードの入力
 	const passcodes = document.querySelectorAll( '.passcode' );
@@ -20,7 +20,7 @@ const setPasscode = () => {
 					if ( idx < passcodes.length - 1 ) {
 						setTimeout( () => passcodes[idx + 1].focus(), 10 );
 					} else {
-						setTimeout( () => document.querySelector( '#inputPasscodeSubmit' ).focus(), 10 );
+						setTimeout( () => document.querySelector( '#inputPasscodeSubmit' )?.focus(), 10 );
 					}
 				} else if ( idx && e.key === 'Backspace' ) {
 					setTimeout( () => passcodes[idx - 1].focus(), 10 );
@@ -54,4 +54,4 @@ const setPasscode = () => {
 		});
 	}
 };
-document.addEventListener( 'DOMContentLoaded', setPasscode, false );
+document.addEventListener( 'DOMContentLoaded', () => setPasscode(), false );

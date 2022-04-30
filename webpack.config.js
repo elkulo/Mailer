@@ -1,7 +1,7 @@
 /**
  * Webpack 5
  *
- * @version 2022.01.13
+ * @version 2022.05.01
  */
 const dirscript = "./public/webpack";
 
@@ -35,6 +35,7 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-transform-runtime"],
           },
         },
       },

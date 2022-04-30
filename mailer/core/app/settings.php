@@ -22,7 +22,7 @@ return function (ContainerBuilder $containerBuilder) {
             $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date('Y-m-d') . '.log';
 
             return new Settings([
-                'phpMinSupport' => '7.4.0',
+                'phpMinSupport' => '8.0.0',
                 'appPath' => rtrim(__DIR__ . '/../', '/'),
                 'siteTitle' => isset($site['SITE_TITLE'])? $site['SITE_TITLE']: 'Nameless',
                 'siteUrl' => (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . rtrim($site['SITE_DOMAIN'], '/'),
