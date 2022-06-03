@@ -12,6 +12,9 @@
       .container {
         max-width: 960px;
       }
+      h1 {
+        color: #607d8b;
+      }
       pre {
         background: #f4f4f4;
         font-size: 0.75rem;
@@ -29,7 +32,7 @@
     {% if Debug %}
     {% include '/utils/flash-message.twig' %}
 
-    <div class="container-fluid mt-5 mb-3">
+    <div class="container-fluid mt-3">
       <div class="row">
         <div class="col">
           <h1 class="h5 text-center fw-lighter">DASHBOARD</h1>
@@ -37,29 +40,15 @@
       </div>
     </div>
 
-    <div class="container mb-5">
-      <div class="row">
-        <div class="col">
-          <h2 class="h1 card-title fw-lighter border-top pt-4">SETUP.</h2>
-          <p class="card-text mt-3">
-            設定ファイルを変更した場合は、必ずヘルスチェックをオススメします。ヘルスチェックではメールの送受信テストから、データベースの作成および書き込みテストを行います。
-          </p>
-          <p class="text-danger">
-            <small>本番環境に公開する時はデバッグモードを無効にしてください。デバッグモードが無効の時はこのページは表示されませんが、ヘルスチェックは利用できます。</small>
-          </p>
-          <div class="mt-3">
-            <a href="{{Router.health_check}}" class="btn btn-dark shadow-none px-5">ヘルスチェック</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <ul class="nav nav-tabs justify-content-sm-center px-3" role="tablist">
+    <ul class="nav nav-tabs justify-content-center px-1 mt-1" style="font-size:0.875rem" role="tablist">
       <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="how-to-tab" data-bs-toggle="tab" href="#how-to" role="tab" aria-controls="how-to" aria-selected="true">HTML</a>
+        <a class="nav-link active" id="setup-tab" data-bs-toggle="tab" href="#setup" role="tab" aria-controls="setup" aria-selected="true">SETUP</a>
       </li>
       <li class="nav-item" role="presentation">
-        <a class="nav-link" id="library-tab" data-bs-toggle="tab" href="#library" role="tab" aria-controls="library" aria-selected="false">CSS and JavaScript</a>
+        <a class="nav-link" id="how-to-tab" data-bs-toggle="tab" href="#how-to" role="tab" aria-controls="how-to" aria-selected="true">HTML</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="library-tab" data-bs-toggle="tab" href="#library" role="tab" aria-controls="library" aria-selected="false">CSS / JavaScript</a>
       </li>
       <li class="nav-item" role="presentation">
         <a class="nav-link" id="twig-tab" data-bs-toggle="tab" href="#twig" role="tab" aria-controls="twig" aria-selected="false">Twig</a>
@@ -70,10 +59,56 @@
       <div class="container py-5">
 
         <div class="tab-content">
-          <div class="tab-pane active" id="how-to" role="tabpanel" aria-labelledby="how-to-tab">
-            <h2 class="h6 text-secondary fw-light">How to use</h2>
+
+          <div class="tab-pane active" id="setup" role="tabpanel" aria-labelledby="setup-tab">
+            <div class="row">
+              <div class="col">
+                <h3 class="h1 card-title fw-lighter mb-3">SETUP.</h3>
+                <p class="card-text">
+                  設定ファイルを変更した場合は、必ずヘルスチェックをオススメします。ヘルスチェックではメールの送受信テストから、データベースの作成および書き込みテストを行います。
+                </p>
+                <p class="text-danger">
+                  <small>本番環境に公開する時はデバッグモードを無効にしてください。デバッグモードが無効の時はこのページは表示されませんが、ヘルスチェックは利用できます。</small>
+                </p>
+                <div class="my-3">
+                  <a href="{{Router.health_check}}" class="btn btn-lg btn-dark shadow-none px-5">ヘルスチェック</a>
+                </div>
+              </div>
+            </div>
+
+            <h2 class="h6 text-secondary fw-light mt-4">How to use</h2>
             <ol class="list-group list-group-numbered rounded-0">
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0 rounded-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">環境設定</div>
+                  <p>env.sample.txt を .env にリネームして内容を編集します。.envの環境設定は必ず settings ディレクトリ内の各PHPファイルで読み込まれ定義されます。</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">HTMLフォーム情報</div>
+                  <p>設置するフォームに合わせて settings/form.php を編集しましょう。また、CMSやフレームワークとの連携があれば必要に応じて settings ディレクト内の database.php, validate.php, mail.php 等も編集し環境設定を上書きできます。</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">フォームの雛形</div>
+                  <p>templatesディレクトリ内の各Twigファイルを編集して、フォームのデザインをカスタマイズします。</p>
+                </div>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0">
+                <div class="ms-2 me-auto w-100">
+                  <div class="h4 fw-bold">メールの雛形</div>
+                  <p>送信メールのテンプレートは templates/mailディレクトリ内にある admin.mail.twig と user.mail.twig を編集してカスタマイズします。</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="tab-pane" id="how-to" role="tabpanel" aria-labelledby="how-to-tab">
+            <h2 class="h6 text-secondary fw-light">User's manual</h2>
+            <ol class="list-group list-group-numbered rounded-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0 rounded-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">formタグの指定</div>
                   <p>action属性に <code>action="{{Router.mailer}}"</code> を、method属性に <code>method="post"</code> を設定します。
@@ -88,7 +123,7 @@
                   <p class="mb-1 text-danger" style="font-size:0.875rem">※ アンダースコア(_)から始まるname属性はシステムの予約語で使われるため使用できません。</p>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">Nonceトークンの発行</div>
                   <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
@@ -103,14 +138,14 @@
 &lt;script&gt;window.applyGuard('#mailer-form');&lt;/script&gt;</code></pre>
                   <hr />
                   <div class="mb-1 fw-bold">(B) Twigファイルを使用する場合</div>
-                  <p>Twigファイルでは、あらかじめ用意されたTwig変数でNonceトークンのHTMLタグを設置できます。formタグ内に直接 <code>{{ '{{Guard|raw}}' }}</code> を記載します。JavaScriptは不要で最も簡単なやり方です。</p>
+                  <p>Twigファイルでは、あらかじめ用意されたTwig変数でNonceトークンのHTMLタグを設置できます。formタグ内に直接 <code>{{ '{{Guard|raw}}' }}</code> を記載するだけの最も簡単なやり方です。</p>
                   <pre class="rounded text-secondary p-3 mt-2"><code>&lt;form id="mailer-form" method="post" action="{{Router.mailer}}"&gt;
   :
   {{ '{{Guard|raw}}' }}
 &lt;/form&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 pt-3 border-start-0 border-end-0">
                 <div class="ms-2 me-auto w-100">
                   <div class="h4 fw-bold">reCAPTCHAの導入</div>
                   <div class="my-3 py-2 px-3 rounded border border-success text-success" style="font-size:0.875rem">
@@ -131,37 +166,13 @@
 &lt;script&gt;window.applyReCaptcha('#mailer-form', '{{'{{reCAPTCHA.key}}'}}');&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
-                <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">環境設定</div>
-                  <p>env.sample.txt を .env にリネームして内容を編集します。.envの環境設定は必ず settings ディレクトリ内の各PHPファイルで読み込まれ定義されます。</p>
-                </div>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
-                <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">HTMLフォーム情報</div>
-                  <p>設置するフォームの要素に合わせて settings/form.php を編集しましょう。また、他のCMSやフレームワーク等との連携があれば必要に応じて settings ディレクト内の database.php, validate.php, mail.php 等も編集し環境設定を上書きできます。</p>
-                </div>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
-                <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">フォームの雛形</div>
-                  <p>templatesディレクトリ内の各Twigファイルを編集して、フォームのデザインをカスタマイズします。</p>
-                </div>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent ps-0 ps-sm-3 border-start-0 border-end-0">
-                <div class="ms-2 me-auto w-100">
-                  <div class="h4 fw-bold">メールの雛形</div>
-                  <p>送信メールのテンプレートは templates/mailディレクトリ内にある admin.mail.twig と user.mail.twig を編集してカスタマイズします。</p>
-                </div>
-              </li>
             </ol>
           </div>
 
           <div class="tab-pane" id="library" role="tabpanel" aria-labelledby="library-tab">
             <h2 class="h6 text-secondary fw-light pb-2 border-bottom">Built-in Library</h2>
             <ul class="list-group list-group-flush border-bottom">
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 pt-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">CSRF Guard JavaScript</div>
                   <a href="{{ Router.guard.js }}" target="_blank">{{ Router.guard.js }}</a><br />
@@ -170,7 +181,7 @@
 &lt;script&gt;window.applyGuard('#mailer-form');&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 pt-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">reCAPTCHA JavaScript</div>
                   <a href="{{ Router.recaptcha.js }}" target="_blank">{{ Router.recaptcha.js }}</a><br />
@@ -180,7 +191,7 @@
 &lt;script&gt;window.applyReCaptcha( '#mailer-form', 'YOUR_SITE_KEY' );&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 pt-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">Bootstrap JavaScript</div>
                   <a href="{{ Router.bootstrap.js }}" target="_blank">{{ Router.bootstrap.js }}</a><br />
@@ -188,7 +199,7 @@
 <pre class="rounded text-secondary p-3 mt-2"><code>&lt;script type="text/javascript" src="{{Router.bootstrap.js}}"&gt;&lt;/script&gt;</code></pre>
                 </div>
               </li>
-              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 border-start-0 border-end-0">
+              <li class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0 px-sm-3 pt-3 border-start-0 border-end-0">
                 <div class="w-100">
                   <div class="h4 fw-bold">Bootstrap Style</div>
                   <a href="{{ Router.bootstrap.css }}" target="_blank">{{ Router.bootstrap.css }}</a><br />
