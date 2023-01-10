@@ -1,7 +1,7 @@
 /**
  * Webpack 5
  *
- * @version 2022.05.01
+ * @version 2023.01.10
  */
 const dirscript = "./public/webpack";
 

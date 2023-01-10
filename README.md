@@ -17,7 +17,7 @@ HTMLファイルからの送信、または内部Twigテンプレートからの
 提供する機能はメールの送信プロセスに特化しているため、パスワードを必要とする管理画面を持ちません。
 それはセキュリティ面でのリスク回避と、他CMSやフレームワークとの連携を容易にします。
 
-**PHPバージョンは2022年5月現在 v8.0 および v8.1 をサポートします。**
+本プログラムは2023年1月現在 v8.0 - v8.2.x のPHPバージョンをサポートします。
 
 ## 機能
 
@@ -151,6 +151,6 @@ coreディレクトリ の中の logs にはメール送信失敗などのログ
 ---
 
 [Mailer](https://github.com/elkulo/Mailer/)  
-Copyright 2020-2022 A.Sudo  
+Copyright 2020-2023 A.Sudo  
 Licensed under LGPL-2.1-only  
 https://github.com/elkulo/Mailer/blob/main/LICENSE

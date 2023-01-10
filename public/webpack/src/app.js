@@ -1,6 +1,6 @@
 /*!
- * Mailer | el.kulo v3.3.2 (https://github.com/elkulo/Mailer/)
- * Copyright 2020-2022 A.Sudo
+ * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 import 'bootstrap';
