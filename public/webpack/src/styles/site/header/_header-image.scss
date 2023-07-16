@@ -76,11 +76,11 @@
 
 		&__phpver {
 			margin-top: 0.5rem;
-			color: #eee;
-			text-shadow: 0 0 3px #000;
+			color: #fff;
+			text-shadow: 0 0 1px #000, 0 0 1px #000, 0 0 3px #000;
 			font-family: variable.$font__code;
-			font-size: variable.$font__size-sm;
-			font-weight: 400;
+			font-size: variable.$font__size-md;
+			font-weight: 700;
 		}
 	}
 }

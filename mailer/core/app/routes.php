@@ -34,7 +34,7 @@ return function (App $app) {
         $group->get('/', IndexDashboardAction::class)->setName('dashboard');
 
         // API for JSON.
-        $group->get('/api/v1/json', APIAction::class)->setName('api-json');
+        $group->get('/api/v1/mailer-json', APIAction::class)->setName('mailer-json');
 
         // Guard for Javascript (Nonce Token).
         $group->get('/assets/guard-min-js', [AssetsAction::class, 'guardJavaScript'])->setName('guard.min.js');
