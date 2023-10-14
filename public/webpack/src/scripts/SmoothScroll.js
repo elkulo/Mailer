@@ -1,5 +1,5 @@
 /*!
- * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.5.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -39,7 +39,7 @@ const SmoothScroll = ( headHeight = 0 ) => {
 			}
 
 			// 現在のスクロール値
-			let nowY = window.pageYOffset;
+			let nowY = window.scrollY;
 			let toY;
 
 			// ターゲットの座標取得

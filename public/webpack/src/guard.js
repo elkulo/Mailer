@@ -1,5 +1,5 @@
 /*!
- * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.5.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -28,7 +28,7 @@ const setGuard = ( formID, path = '' ) => {
 	const init = () => {
 
 		// APIのURLを取得
-		const api = path || actionURL.substr( 0, actionURL.indexOf( '/post' ) ) + '/api/v1/json';
+		const api = path || actionURL.substr( 0, actionURL.indexOf( '/post' ) ) + '/api/v1/mailer-json';
 
 		// Wrapperの配置.
 		virtualDOM.wrapper.style.display = 'none';

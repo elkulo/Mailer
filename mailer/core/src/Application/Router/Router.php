@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.5.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -59,7 +59,7 @@ class Router implements RouterInterface
             }
         }
         // 絶対URLで格納.
-        static::$router = $urls;
+        static::$router = $urls; // @phpstan-ignore-line
     }
 
     /**
@@ -70,7 +70,7 @@ class Router implements RouterInterface
      */
     public function getUrl(string $key = '')
     {
-        return isset(static::$router[$key]) ? static::$router[$key]: false;
+        return isset(static::$router[$key]) ? static::$router[$key]: false; // @phpstan-ignore-line
     }
 
     /**

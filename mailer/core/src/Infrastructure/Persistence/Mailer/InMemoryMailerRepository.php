@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.5.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -130,14 +130,17 @@ class InMemoryMailerRepository implements MailerRepository
         $this->db = $db;
 
         // POSTデータを取得
-        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? [];
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $posts = $posts ? $posts : [];
 
         // POSTデータをサニタイズして格納
         $this->postData = new MailerPostData($posts, $settings);
 
         // 画像アップロードハンドラーをセット
         $this->fileData = $fileData;
-        $this->fileData->set(filter_var_array($_FILES, FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? []);
+        $fileVars = filter_var_array($_FILES, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $fileVars = $fileVars ? $fileVars : [];
+        $this->fileData->set($fileVars);
 
         // POSTされたFILE変数を取得
         $files = $this->fileData->getPostedFiles();

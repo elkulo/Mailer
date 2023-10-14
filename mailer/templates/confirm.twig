@@ -39,7 +39,7 @@
         <div class="col py-4 px-3 px-sm-5">
           <h1 class="h4 pb-2 border-bottom border-secondary text-secondary text-center">入力内容の確認</h1>
           <p style="font-size:0.875rem">
-            <strong class="d-inline-block px-1 border border-warning text-warning" style="font-size:0.75rem">未送信</strong>
+            <strong class="d-inline-block px-1 border border-danger text-danger" style="font-size:0.75rem">未送信</strong>
             次の内容でお間違いなければ、下記の<strong class="text-primary">送信するボタン</strong>を押してください。
           </p>
           <form id="confirm-form" action="{{ Action.url }}" method="POST">
@@ -75,7 +75,7 @@
       </div>
       <div class="row justify-content-center align-items-center mt-3">
         <div class="col-auto">
-          <button onClick="history.back()" class="btn btn-link shadow-none">キャンセル</button>
+          <button type="button" onClick="window.history.back()" class="btn btn-link shadow-none">キャンセル</button>
         </div>
       </div>
     </div>

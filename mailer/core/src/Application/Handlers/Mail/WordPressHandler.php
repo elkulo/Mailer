@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.5.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -34,7 +34,7 @@ class WordPressHandler implements MailHandlerInterface
         try {
             // WordPress関数で送信.
             if (function_exists('wp_mail')) {
-                // phpcs:ignore @phpstan-ignore-next-line
+                // phpcs:ignore
                 if (!\wp_mail($to, $subject, $body, $header, $attachments)) {
                     throw new \Exception('Error wp_mail.');
                 }

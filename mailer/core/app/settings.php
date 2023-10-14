@@ -12,8 +12,8 @@ return function (ContainerBuilder $containerBuilder) {
         SettingsInterface::class => function () {
 
             // 定数を取得.
-            $templatesDirPath = rtrim(TEMPLATES_DIR_PATH, '/'); /* @phpstan-ignore-line */
-            $settingsDirPath = rtrim(SETTINGS_DIR_PATH, '/'); /* @phpstan-ignore-line */
+            $templatesDirPath = rtrim(TEMPLATES_DIR_PATH, '/');
+            $settingsDirPath = rtrim(SETTINGS_DIR_PATH, '/');
 
             // サイト設定値.
             $site = include $settingsDirPath . '/site.php';
@@ -22,7 +22,7 @@ return function (ContainerBuilder $containerBuilder) {
             $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date('Y-m-d') . '.log';
 
             return new Settings([
-                'phpMinSupport' => '8.0.0',
+                'phpMinSupport' => '8.2.0',
                 'appPath' => rtrim(__DIR__ . '/../', '/'),
                 'siteTitle' => isset($site['SITE_TITLE'])? $site['SITE_TITLE']: 'Nameless',
                 'siteUrl' => (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . rtrim($site['SITE_DOMAIN'], '/'),

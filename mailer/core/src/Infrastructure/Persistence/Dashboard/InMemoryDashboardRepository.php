@@ -1,6 +1,6 @@
 <?php
 /**
- * Mailer | el.kulo v3.4.0 (https://github.com/elkulo/Mailer/)
+ * Mailer | el.kulo v3.5.0 (https://github.com/elkulo/Mailer/)
  * Copyright 2020-2023 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
@@ -116,7 +116,7 @@ class InMemoryDashboardRepository implements DashboardRepository
                     'mailer' => $this->router->getUrl('mailer'),
                     'health_check' => $this->router->getUrl('health-check'),
                     'api' => [
-                        'json' => $this->router->getUrl('api-json'),
+                        'json' => $this->router->getUrl('mailer-json'),
                     ],
                     'guard' => [
                         'js' => $this->router->getUrl('guard.min.js'),
