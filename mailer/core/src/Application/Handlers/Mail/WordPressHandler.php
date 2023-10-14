@@ -34,7 +34,7 @@ class WordPressHandler implements MailHandlerInterface
         try {
             // WordPress関数で送信.
             if (function_exists('wp_mail')) {
-                // phpcs:ignore @phpstan-ignore-next-line
+                // phpcs:ignore
                 if (!\wp_mail($to, $subject, $body, $header, $attachments)) {
                     throw new \Exception('Error wp_mail.');
                 }

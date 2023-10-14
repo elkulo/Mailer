@@ -119,7 +119,8 @@ class InMemoryHealthCheckRepository implements HealthCheckRepository
         $this->db = $db;
 
         // POSTデータを取得
-        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS)?? [];
+        $posts = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $posts = $posts ? $posts : [];
 
         // POSTデータをサニタイズして格納
         $this->postData = new HealthCheckPostData($posts, $settings);

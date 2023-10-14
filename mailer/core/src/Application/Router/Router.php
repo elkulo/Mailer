@@ -59,7 +59,7 @@ class Router implements RouterInterface
             }
         }
         // 絶対URLで格納.
-        static::$router = $urls;
+        static::$router = $urls; // @phpstan-ignore-line
     }
 
     /**
@@ -70,7 +70,7 @@ class Router implements RouterInterface
      */
     public function getUrl(string $key = '')
     {
-        return isset(static::$router[$key]) ? static::$router[$key]: false;
+        return isset(static::$router[$key]) ? static::$router[$key]: false; // @phpstan-ignore-line
     }
 
     /**
