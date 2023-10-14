@@ -73,9 +73,9 @@ HTMLファイルからの送信、または内部Twigテンプレートからの
 
 ヘルスチェックは本プログラムのルートURLの後ろに /health-check でアクセスできます。また、ヘルスチェックはデバッグモードがオフでも利用できます。
 
-~~~
+```text
 https://www.example.com/your/public/path/health-check
-~~~
+```
 
 ---
 
@@ -95,9 +95,9 @@ https://www.example.com/your/public/path/health-check
 publicフォルダは任意の場所に移動ができます。
 移動させたら本プログラムのルートにある bootstrap.php までのパスを指定してください。
 
-~~~
+```php
 require_once __DIR__ . '/../../mailer/bootstrap.php';
-~~~
+```
 
 ### Step.2
 
@@ -122,7 +122,7 @@ require_once __DIR__ . '/../../mailer/bootstrap.php';
 
 **本プログラムの core ディレクトリは公開ディレクトリの外（HTTPでアクセスできない場所）に設置することを推奨します。**
 
-### !!プログラムを公開ディレクトリ内に設置している場合!!
+### !!プログラムを公開ディレクトリ内に設置している場合
 
 公開ディレクトリにプログラムを設置している場合は、coreディレクトリ にアクセス制限をかけましょう。
 coreディレクトリ の中の logs にはメール送信失敗などのログファイルが残ります。
@@ -153,4 +153,4 @@ coreディレクトリ の中の logs にはメール送信失敗などのログ
 [Mailer](https://github.com/elkulo/Mailer/)  
 Copyright 2020-2023 A.Sudo  
 Licensed under LGPL-2.1-only  
-https://github.com/elkulo/Mailer/blob/main/LICENSE
+[https://github.com/elkulo/Mailer/blob/main/LICENSE](https://github.com/elkulo/Mailer/blob/main/LICENSE)
