@@ -39,7 +39,7 @@ const SmoothScroll = ( headHeight = 0 ) => {
 			}
 
 			// 現在のスクロール値
-			let nowY = window.pageYOffset;
+			let nowY = window.scrollY;
 			let toY;
 
 			// ターゲットの座標取得
