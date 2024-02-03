@@ -138,7 +138,7 @@ class MailerPostData
         $response = '';
 
         // 区切り文字
-        $separator = empty($formSettings['TWIG_LABEL_SEPARATOR'])? ': ': $formSettings['TWIG_LABEL_SEPARATOR'];
+        $separator = empty($formSettings['TWIG_LABEL_SEPARATOR']) ? ': ' : $formSettings['TWIG_LABEL_SEPARATOR'];
 
         foreach ($this->postData as $name => $value) {
             $output = '';
@@ -185,7 +185,7 @@ class MailerPostData
         // Twig出力では[__KEY]の形式に変換.
         if ($format === 'twig') {
             foreach ($status as $key => $value) {
-                $status[ '__' . strtoupper($key) ] = $value;
+                $status['__' . strtoupper($key)] = $value;
             }
         }
         return $status;
@@ -333,8 +333,8 @@ class MailerPostData
         foreach ($this->postData as $name => $value) {
             $output = '';
 
-            // チェックボックス（配列）の結合
             if (is_array($value)) {
+                // checkboxの配列を結合.
                 foreach ($value as $item) {
                     if (is_array($item)) {
                         $output .= $this->changeJoin($item);
@@ -369,6 +369,11 @@ class MailerPostData
         $query = '';
 
         foreach ($this->postData as $name => $value) {
+            // checkboxの配列を結合.
+            if (is_array($value)) {
+                $value = implode(', ', $value);
+            }
+            // 引き継ぎの隠しデータ.
             $query .= sprintf(
                 '<input type="hidden" name="%1$s" value="%2$s" />',
                 $this->esc($name),
@@ -517,9 +522,9 @@ class MailerPostData
 
             foreach ($chars as $i => $char) {
                 if ('X' === $char) {
-                    $chars[ $i ] = dechex(random_int(0, 15));
+                    $chars[$i] = dechex(random_int(0, 15));
                 } elseif ('Y' === $char) {
-                    $chars[ $i ] = dechex(random_int(8, 11));
+                    $chars[$i] = dechex(random_int(8, 11));
                 }
             }
             $this->uuid = strtolower(implode('', $chars));
@@ -539,7 +544,14 @@ class MailerPostData
         $sanitized = [];
         if (is_array($content)) {
             foreach ($content as $key => $value) {
-                $sanitized[$key] = trim(htmlspecialchars($value, ENT_QUOTES, $encode));
+                if (is_array($value)) {
+                    // checkboxの配列を再分配.
+                    foreach ($value as $checkbox_value) {
+                        $sanitized[$key][] = trim(htmlspecialchars($checkbox_value, ENT_QUOTES, $encode));
+                    }
+                } else {
+                    $sanitized[$key] = trim(htmlspecialchars($value, ENT_QUOTES, $encode));
+                }
             }
         } else {
             return trim(htmlspecialchars($content, ENT_QUOTES, $encode));
@@ -558,7 +570,14 @@ class MailerPostData
         $sanitized = [];
         if (is_array($content)) {
             foreach ($content as $key => $value) {
-                $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
+                if (is_array($value)) {
+                    // checkboxの配列を再分配.
+                    foreach ($value as $checkbox_value) {
+                        $sanitized[$key][] = trim(strip_tags(str_replace("\0", '', $checkbox_value)));
+                    }
+                } else {
+                    $sanitized[$key] = trim(strip_tags(str_replace("\0", '', $value)));
+                }
             }
         } else {
             return trim(strip_tags(str_replace("\0", '', $content)));
