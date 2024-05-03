@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
-use Monolog\Logger;
+use Monolog\Level;
 use App\Application\Settings\Settings;
 use App\Application\Settings\SettingsInterface;
 
@@ -22,7 +22,7 @@ return function (ContainerBuilder $containerBuilder) {
             $logFile = isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app-' . date('Y-m-d') . '.log';
 
             return new Settings([
-                'phpMinSupport' => '8.2.0',
+                'phpMinSupport' => '8.3.0',
                 'appPath' => rtrim(__DIR__ . '/../', '/'),
                 'siteTitle' => isset($site['SITE_TITLE'])? $site['SITE_TITLE']: 'Nameless',
                 'siteUrl' => (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . rtrim($site['SITE_DOMAIN'], '/'),
@@ -38,7 +38,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logger' => [
                     'name' => 'mailer',
                     'path' => $logFile,
-                    'level' => Logger::DEBUG,
+                    'level' => Level::Debug,
                 ],
                 'twig' => [
                     'debug' => isset($site['DEBUG']) ? $site['DEBUG'] === 'true' : false,
