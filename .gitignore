@@ -93,7 +93,6 @@ nb-configuration.xml
 # Dependency directories
 node_modules/
 jspm_packages/
-package-lock.json
 
 # Monolog
 **/logs/*
