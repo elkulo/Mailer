@@ -10,7 +10,7 @@
     "format": "eslint --fix './public/webpack/src/**/*.js'",
     "build": "webpack --mode production",
     "serve": "php -S localhost:8000 -t ./public",
-    "composer:install": "cd mailer/core/ && composer install",
+    "composer:init": "cd mailer/core/ && composer install",
     "composer:update": "cd mailer/core/ && composer update",
     "composer:analyse": "cd mailer/core/ && composer analyse",
     "composer:format": "cd mailer/core/ && composer format",

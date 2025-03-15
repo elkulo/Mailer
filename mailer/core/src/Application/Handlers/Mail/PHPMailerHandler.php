@@ -200,7 +200,7 @@ class PHPMailerHandler implements MailHandlerInterface
 
                     // "Foo <mail@example.com>" を "Foo" と "mail@example.com" に分解.
                     if (preg_match('/(.*)<(.+)>/', $address, $matches)) {
-                        if (count($matches) == 3) {
+                        if (count((array)$matches) === 3) {
                             $recipient = $matches[1];
                             $address   = $matches[2];
                         }
