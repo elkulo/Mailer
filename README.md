@@ -151,6 +151,6 @@ coreディレクトリ の中の logs にはメール送信失敗などのログ
 ---
 
 [Mailer](https://github.com/elkulo/Mailer/)  
-Copyright 2020-2024 A.Sudo  
+Copyright 2020-2025 A.Sudo  
 Licensed under LGPL-2.1-only  
 [https://github.com/elkulo/Mailer/blob/main/LICENSE](https://github.com/elkulo/Mailer/blob/main/LICENSE)
