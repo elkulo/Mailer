@@ -1,3 +1,4 @@
+@use "sass:color";
 
 // Backgrounds
 $color__background-body: #191919;
@@ -5,32 +6,32 @@ $color__background-input: #fff;
 $color__background-screen: #f1f1f1;
 $color__background-hr: #ccc;
 $color__background-button: #0d6efd;
-$color__background-button-hover: darken( $color__background-button, 12.5% );;
+$color__background-button-hover: color.adjust($color__background-button, $lightness: 12.5%);
 $color__background-pre: #eee;
 $color__background-ins: #fff9c0;
-$color__background_selection: mix( $color__background-body, $color__background-button, 75% );
+$color__background_selection: color.mix($color__background-body, $color__background-button, 75%);
 
 // Text
 $color__text-main: #f1f1f1;
 $color__text-light: #ddd;
-$color__text-hover: lighten( $color__text-main, 22.5% );
+$color__text-hover: color.adjust($color__text-main, $lightness: 22.5%);
 $color__text-screen: #21759b;
 $color__text-input: #666;
 $color__text-input-focus: #111;
 $color__text-header: #fff;
-$color__text_accent: #B69649;
+$color__text_accent: #b69649;
 $color__text-button: #f1f1f1;
-$color__text_selection: #f1f1f1; // lighten( salmon, 22.5% ); // lighten( #0999d4, 48% );
+$color__text_selection: #f1f1f1;
 
 // Links
 $color__link: #3283b6;
 $color__link-visited: #3283b6;
-$color__link-hover: lighten( $color__link, 16.6% );
+$color__link-hover: color.adjust($color__link, $lightness: 16.6%);
 
 // Borders
 $color__border: #333;
 $color__border-link: #4994c2;
-$color__border-link-hover: darken( $color__link, 10% );
+$color__border-link-hover: color.adjust($color__link, $lightness: 10%);
 $color__border-button: #ccc #ccc #bbb;
 $color__border-button-hover: #ccc #bbb #aaa;
 $color__border-button-focus: #aaa #bbb #bbb;
