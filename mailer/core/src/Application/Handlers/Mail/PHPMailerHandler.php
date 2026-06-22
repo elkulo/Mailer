@@ -1,7 +1,7 @@
 <?php
 /**
- * Mailer | el.kulo v3.6.0 (https://github.com/elkulo/Mailer/)
- * Copyright 2020-2024 A.Sudo
+ * Mailer | el.kulo v3.7.1 (https://github.com/elkulo/Mailer/)
+ * Copyright 2020-2025 A.Sudo
  * Licensed under LGPL-2.1-only (https://github.com/elkulo/Mailer/blob/main/LICENSE)
  */
 declare(strict_types=1);
@@ -200,7 +200,7 @@ class PHPMailerHandler implements MailHandlerInterface
 
                     // "Foo <mail@example.com>" を "Foo" と "mail@example.com" に分解.
                     if (preg_match('/(.*)<(.+)>/', $address, $matches)) {
-                        if (count($matches) == 3) {
+                        if (count((array)$matches) === 3) {
                             $recipient = $matches[1];
                             $address   = $matches[2];
                         }
